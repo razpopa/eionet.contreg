@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <entry key="addLabel.name">Add rdfs:label from column</entry>
+    <entry key="addLabel.script">
+<![CDATA[
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+INSERT INTO ?harvestedSource {
+    ?rowuri rdfs:label ?label
+}
+FROM ?harvestedSource
+WHERE {
+    ?rowuri [TABLECOLUMN] ?label
+}
+]]></entry>
+
+
+    <entry key="countryCodeMatching.name">Match country codes with the EEA contries vocabulary (fast)</entry>
+    <entry key="countryCodeMatching.script">
+<![CDATA[
+PREFIX eea: <http://rdfdata.eionet.europa.eu/eea/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+INSERT INTO ?harvestedSource {
+    ?rowuri eea:forCountry ?countryuri
+}
+WHERE {
+  GRAPH ?harvestedSource {
+    ?rowuri [TABLECOLUMN] ?value
+  }
+  GRAPH <http://rdfdata.eionet.europa.eu/eea/countries.rdf> {
+    {
+     ?countryuri skos:notation ?value
+    } UNION {
+     ?countryuri eea:publishingCode ?value
+    }
+  }
+}
+]]></entry>
+
+
+    <entry key="countryNameMatching.name">Match country codes or names with the EEA contries vocabulary (slow)</entry>
+    <entry key="countryNameMatching.script">
+<![CDATA[
+PREFIX eea: <http://rdfdata.eionet.europa.eu/eea/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+INSERT INTO ?harvestedSource {
+    ?rowuri eea:forCountry ?countryuri
+}
+WHERE {
+  GRAPH ?harvestedSource {
+    ?rowuri [TABLECOLUMN] ?value
+  }
+  GRAPH <http://rdfdata.eionet.europa.eu/eea/countries.rdf> {
+    {
+      ?countryuri skos:notation ?label
+    } UNION {
+      ?countryuri skos:prefLabel ?label
+    } UNION {
+      ?countryuri skos:altLabel ?label
+    } UNION {
+      ?countryuri skos:hiddenLabel ?label
+    }
+  }
+  FILTER (LANG(?label) IN ("","en") && bif:lower(?label) = bif:lower(?value))
+}
+]]></entry>
+
+
+    <entry key="decimalViolation.name">QA on whether values can be converted to DECIMAL</entry>
+    <entry key="decimalViolation.script"><![CDATA[
+PREFIX spin: <http://spinrdf.org/spin#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+INSERT INTO ?harvestedSource {
+    _:cv a spin:ConstraintViolation;
+        rdfs:label "Error: value is not convertible to decimal";
+        spin:violationRoot ?record;
+        spin:violationPath [TABLECOLUMN]
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value FILTER(bif:isnull(xsd:decimal(?value)))
+    }
+}
+]]></entry>
+
+
+    <entry key="integerViolation.name">QA on whether values can be converted to INTEGER</entry>
+    <entry key="integerViolation.script"><![CDATA[
+PREFIX spin: <http://spinrdf.org/spin#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+INSERT INTO ?harvestedSource {
+    _:cv a spin:ConstraintViolation;
+        rdfs:label "Error: value is not convertible to integer";
+        spin:violationRoot ?record;
+        spin:violationPath [TABLECOLUMN]
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value FILTER(bif:isnull(xsd:integer(?value)))
+    }
+}
+]]></entry>
+
+
+<!-- See http://docs.openlinksw.com/virtuoso/sparqlextensions.html#rdfsparulexamples7 -->
+    <entry key="decimalConvert.name">Convert values that can be converted to DECIMAL data type</entry>
+    <entry key="decimalConvert.script"><![CDATA[
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?value
+}
+INSERT {
+    ?record [TABLECOLUMN] `xsd:decimal(?value)`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value FILTER(DATATYPE(?value) = xsd:string && !bif:isnull(xsd:decimal(?value)))
+    }
+}
+]]></entry>
+
+
+    <entry key="integerConvert.name">Convert values that can be converted to INTEGER data type</entry>
+    <entry key="integerConvert.script"><![CDATA[
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?value
+}
+INSERT {
+    ?record [TABLECOLUMN] `xsd:integer(?value)`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value FILTER(DATATYPE(?value) = xsd:string && !bif:isnull(xsd:integer(?value)))
+    }
+}
+]]></entry>
+
+
+    <entry key="ynConvert.name">Convert 'Yes' and 'No' to boolean datatype</entry>
+    <entry key="ynConvert.script"><![CDATA[
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?yval.
+    ?record [TABLECOLUMN] ?nval.
+}
+INSERT {
+    ?recordY [TABLECOLUMN] true.
+    ?recordN [TABLECOLUMN] false.
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        {?recordY [TABLECOLUMN] ?yval FILTER(?yval IN ('Y','y','YES', 'Yes','yes')) } UNION
+        {?recordN [TABLECOLUMN] ?nval FILTER(?nval IN ('N','n','NO', 'No','no')) }
+    }
+}
+]]></entry>
+
+    <entry key="deleteColumn.name">Delete column</entry>
+    <entry key="deleteColumn.script"><![CDATA[
+DELETE FROM ?harvestedSource {
+    ?s [TABLECOLUMN] ?o
+}
+FROM ?harvestedSource
+WHERE {
+    ?s [TABLECOLUMN] ?o
+}
+]]></entry>
+
+    <entry key="commaConvert.name">Convert numbers with comma and thousands separator to decimal point format</entry>
+    <entry key="commaConvert.script"><![CDATA[
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?val.
+}
+INSERT {
+    ?record [TABLECOLUMN] `bif:replace(bif:regexp_replace(?val,'[ .]',''),',','.')`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?val
+    }
+}
+]]></entry>
+
+
+    <entry key="ddmmyyyyConvert.name">Convert dates in MM/DD/YYYY format to xsd:date</entry>
+    <entry key="ddmmyyyyConvert.script"><![CDATA[
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?val.
+}
+INSERT {
+    ?record [TABLECOLUMN] `xsd:date(bif:regexp_replace(?val,
+               '^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]((19|20)[0-9][0-9])$',
+                          '\\3-\\2-\\1'))`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?val
+           FILTER(REGEX(?val,'^0[1-9]|[12][0-9]|3[01][- /.]0[1-9]|1[012][- /.](19|20)[0-9][0-9]$'))
+    }
+}
+]]></entry>
+
+    <entry key="xsddateConvert.name">Convert values that can be converted to DATE data type</entry>
+    <entry key="xsddateConvert.script"><![CDATA[
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?value
+}
+INSERT {
+    ?record [TABLECOLUMN] `xsd:date(?value)`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value FILTER(DATATYPE(?value) = xsd:string && !bif:isnull(xsd:date(?value)))
+    }
+}
+]]></entry>
+
+    <entry key="trimConvert.name">Trim spaces from beginning and end</entry>
+    <entry key="trimConvert.script"><![CDATA[
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?value
+}
+INSERT {
+    ?record [TABLECOLUMN] `bif:trim(?value)`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value
+        FILTER(DATATYPE(?value) = xsd:string && bif:trim(?value) != ?value)
+    }
+}
+]]></entry>
+
+    <entry key="addLangConvert.name">Add English language code</entry>
+    <entry key="addLangConvert.script"><![CDATA[
+MODIFY GRAPH ?harvestedSource
+DELETE {
+    ?record [TABLECOLUMN] ?value
+}
+INSERT {
+    ?record [TABLECOLUMN] `STRLANG(STR(?value),'en')`
+}
+WHERE {
+    GRAPH ?harvestedSource {
+        ?record [TABLECOLUMN] ?value
+        FILTER(DATATYPE(?value) = xsd:string)
+    }
+}
+]]></entry>
+
+</properties>

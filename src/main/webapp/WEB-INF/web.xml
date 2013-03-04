@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+     version="2.4">
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- context parameters -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <display-name>${application.displayName}</display-name>
+
+    <context-param>
+        <param-name>appDispName</param-name>
+        <param-value>${application.displayName}</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>useEeaTemplate</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>templateCacheFolder</param-name>
+        <param-value>${application.eea.template.folder}</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>useCentralAuthenticationService</param-name>
+        <param-value>${useCentralAuthenticationService}</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>enableEEAFunctionality</param-name>
+        <param-value>${enableEEAFunctionality}</param-value>
+    </context-param>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- filters -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <filter>
+        <filter-name>HomespaceUrlFilter</filter-name>
+        <filter-class>eionet.cr.web.filters.HomespaceUrlFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>HomespaceUrlFilter</filter-name>
+        <url-pattern>/home/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>HomespaceUrlFilter</filter-name>
+        <url-pattern>/project/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>SparqlBookmarksUrlFilter</filter-name>
+        <filter-class>eionet.cr.web.filters.SparqlBookmarksUrlFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SparqlBookmarksUrlFilter</filter-name>
+        <url-pattern>/sparqlbookmarks/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <description>
+            Provides essential configuration and request processing services
+            for the Stripes framework.
+        </description>
+        <display-name>Stripes Filter</display-name>
+        <filter-name>StripesFilter</filter-name>
+        <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+        <init-param>
+            <param-name>ActionResolver.Packages</param-name>
+            <param-value>eionet.cr.web.action</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ActionBeanContext.Class</param-name>
+            <param-value>eionet.cr.web.context.CRActionBeanContext</param-value>
+        </init-param>
+        <init-param>
+            <param-name>Interceptor.Classes</param-name>
+            <param-value>
+                eionet.cr.web.interceptor.ActionEventInterceptor
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExceptionHandler.Class</param-name>
+            <param-value>eionet.cr.web.util.StripesExceptionHandler</param-value>
+        </init-param>
+        <init-param>
+            <param-name>LocalePicker.Class</param-name>
+            <param-value>eionet.cr.web.util.LocalePicker</param-value>
+        </init-param>
+        <init-param>
+            <param-name>trimSpaces</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>FileUpload.MaximumPostSize</param-name>
+            <param-value>35000000</param-value>
+        </init-param>
+
+    </filter>
+
+    <filter-mapping>
+        <filter-name>StripesFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>StripesFilter</filter-name>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>CAS Filter</filter-name>
+        <filter-class>eionet.cr.web.security.EionetCASFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CAS Filter</filter-name>
+        <url-pattern>/login</url-pattern>
+    </filter-mapping>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- listeners -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <listener>
+        <listener-class>eionet.cr.web.util.ApplicationCache</listener-class>
+    </listener>
+    <listener>
+        <listener-class>eionet.cr.common.JobScheduler</listener-class>
+    </listener>
+    <listener>
+        <listener-class>eionet.cr.harvest.scheduled.HarvestingJob</listener-class>
+    </listener>
+    <listener>
+        <listener-class>eionet.cr.util.FileDeletionJob</listener-class>
+    </listener>
+    <listener>
+        <listener-class>net.sf.ehcache.constructs.web.ShutdownListener</listener-class>
+    </listener>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- servlets -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- StripesDispatcher -->
+
+    <servlet>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <servlet-class>net.sourceforge.stripes.controller.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/dispatcher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/action/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>*.action</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/project/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/home/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/sparql</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/sparqlclient</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/documentation/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/sitemap.xml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/void.rdf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StripesDispatcher</servlet-name>
+        <url-pattern>/ping</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>rpcrouter</servlet-name>
+        <servlet-class>com.tee.uit.servlets.XmlRpcRouter</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rpcrouter</servlet-name>
+        <url-pattern>/rpcrouter</url-pattern>
+    </servlet-mapping>
+
+    <!-- AMP feed servlet -->
+
+    <servlet>
+        <servlet-name>AmpServlet</servlet-name>
+        <servlet-class>eionet.cr.api.feeds.amp.AmpFeedServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AmpServlet</servlet-name>
+        <url-pattern>/ampService</url-pattern>
+    </servlet-mapping>
+
+    <!-- Update template servlet -->
+
+    <servlet>
+        <servlet-name>RefreshTemplateServlet</servlet-name>
+        <servlet-class>eea.template.RefreshTemplateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RefreshTemplateServlet</servlet-name>
+        <url-pattern>/refreshtemplate</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- XmlConvServlet -->
+
+    <servlet>
+        <servlet-name>XmlConvServlet</servlet-name>
+        <servlet-class>eionet.cr.api.feeds.xmlconv.XmlConvFeedServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>XmlConvServlet</servlet-name>
+        <url-pattern>/xmlConvService</url-pattern>
+    </servlet-mapping>
+
+    <!-- File download servlet -->
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>eionet.cr.web.action.DownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+
+    <!-- Tabular data servlet -->
+
+    <servlet>
+        <servlet-name>TabularDataServlet</servlet-name>
+        <servlet-class>eionet.cr.web.action.TabularDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TabularDataServlet</servlet-name>
+        <url-pattern>/tabularData</url-pattern>
+    </servlet-mapping>
+
+    <!-- For login duration -->
+    <session-config>
+        <session-timeout>120</session-timeout> <!-- minutes -->
+    </session-config>
+
+    <!-- welcome file list -->
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>

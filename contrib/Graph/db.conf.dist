@@ -1,0 +1,4 @@
+[endpoint]
+url: http://cr3.eionet.europa.eu/sparql
+user: userid
+password: dbpassword

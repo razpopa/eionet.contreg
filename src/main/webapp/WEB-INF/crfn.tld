@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+
+    <description>CR local JSTL functions library.</description>
+    <display-name>CR JSTL static functions.</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>crfn</short-name>
+    <uri>http://cr.eionet.europa.eu/jstl/functions</uri>
+
+
+    <tag>
+        <description>
+           A custom Form tag, which extends Stripes form tag. This tag skips creation of _sourcePage and _fp.
+           Those parameters are needed for redirecting user back to the form in case of validation errors.
+
+        </description>
+        <display-name>form</display-name>
+        <name>form</name>
+        <tag-class>eionet.cr.web.util.CRFormTag</tag-class>
+        <body-content>JSP</body-content>
+
+        <attribute>
+            <description>
+                The URL to which this form will post. Expected to be a web-app relative path - the
+                tag will prepend the context path to any action that begins with a slash and does
+                not already begin with the context path. Should match a URL to which an ActionBean
+                has been bound.  Required unless 'beanclass' is provided.
+            </description>
+            <name>action</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                The fully qualified name of an ActionBean class, or alternatively a Class instance
+                for an ActionBean class.  An alternative to the 'action' attribute, the 'beanclass'
+                attribute will generate an action appropriate for the ActionBean identified. Note
+                that if an "ActionBean" that does not yet exist is identified an exception will
+                be thrown!
+            </description>
+            <name>beanclass</name><required>false</required><rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+        <attribute>
+            <description>
+                The name of the form field that should receive focus when the page is loaded. Two
+                special values are recognized, 'first' and the empty string; these values cause
+                the form to set focus on the first element in the form.  If any value is set,
+                and the form has validation errors, the behaviour is altered and the first field
+                with validation errors is focused instead.
+            </description>
+            <name>focus</name><required>false</required><rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>A comma separated list of content types that it is acceptable to submit through this form. (HTML Pass-through)</description>
+            <name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>A comma separated list of possible character sets for form data. Will be written to the page as accept-charset. (HTML Pass-through)</description>
+            <name>acceptcharset</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                The mime type used to encode the content of this form. This value will be overridden if one or more Stripes
+                file input tags is used within the body of the form.
+            </description>
+            <name>enctype</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The HTTP method used for sending data to the server. Options are GET and POST. Default is GET. (HTML Pass-through)</description>
+            <name>method</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>The unique name of the form. (HTML Pass-through)</description>
+            <name>name</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>Where the target URL is to be opened. One of _blank, _self, _parent and _top. (HTML Pass-through)</description>
+            <name>target</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>Scripting code run when the form is reset. (HTML Pass-through)</description>
+            <name>onreset</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>Scripting code run prior to the form being submitted to the server, (HTML Pass-through)</description>
+            <name>onsubmit</name><required>false</required><rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <!-- Start: Standard HTML attributes -->
+        <attribute><description>The CSS class to be applied to the element. (HTML Pass-through)</description><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Text direction. (HTML Pass-through)</description><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>A unique identifier for the HTML tag on the pgae. (HTML Pass-through)</description><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>The language code of the element. (HTML Pass-through)</description><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run on each mouse click. (HTML Pass-through)</description><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run on a double-click of the mouse. (HTML Pass-through)</description><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when a key is depressed. (HTML Pass-through)</description><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when a key is pressed and released. (HTML Pass-through)</description><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when a key is released. (HTML Pass-through)</description><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when a mouse button is depressed. (HTML Pass-through)</description><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when the mouse pointer is moved. (HTML Pass-through)</description><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when the mouse pointer moves out of the element. (HTML Pass-through)</description><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when the mouse pointer moves over the element. (HTML Pass-through)</description><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Scripting code run when a mouse button is released. (HTML Pass-through)</description><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Inline CSS style fragment that applies to the element (HTML Pass-through)</description><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><description>Tool-tip text for the element. (HTML Pass-through)</description><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <!-- End: Standard HTML attributes -->
+        <dynamic-attributes>false</dynamic-attributes>
+    </tag>
+
+    <tag>
+        <name>template</name>
+        <tag-class>eionet.cr.web.util.TemplateTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+              <name>file</name>
+              <type>java.lang.String</type>
+        </attribute>
+      </tag>
+
+    <function>
+        <description>Cuts the given string at the first word whose length exceeds that of the given integer.</description>
+        <name>cutAtFirstLongToken</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String cutAtFirstLongToken(java.lang.String, int)</function-signature>
+        <example>
+            ${cutAtFirstLongToken(someString, 50)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Checks if the given string (after being trimmed first) contains any whitespace. If yes, returns
+             the given string surrounded by quotes. Otherwise returns the given string.
+         </description>
+        <name>addQuotesIfWhitespaceInside</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String addQuotesIfWhitespaceInside(java.lang.String)</function-signature>
+        <example>
+            ${addQuotesIfWhitespaceInside(someString)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Checks if the given user has the given permission in the given acl.
+            The 1st input string is the user name, the 2nd is the acl name and the 3rd is the permission identifier.
+            If any of the three is null or zero length, returns false.
+         </description>
+        <name>hasPermission</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>boolean hasPermission(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+        <example>
+            ${hasPermission("roug", "/", "u")}
+        </example>
+    </function>
+
+     <function>
+        <description>
+            Checks if the authenticated user or anonymous user has the given permission in the given acl.
+            The 1st parameter is user attribute in HTTP session, the 2nd is the acl name and the 3rd is the permission identifier.
+            If any of the three is null or zero length, returns false.
+         </description>
+        <name>userHasPermission</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>boolean userHasPermission(javax.servlet.http.HttpSession, java.lang.String, java.lang.String)</function-signature>
+        <example>
+            ${hasPermission(sessionScope.crUser, "/", "u")}
+        </example>
+    </function>
+
+
+    <function>
+        <description>
+            Returns a string that is constructed by concatenating the given bean request's getRequestURI() + "?" +
+             the given bean request's getQueryString(), and replacing the sort predicate with the given one.
+             The present sort order is replaced by the opposite.
+        </description>
+        <name>sortUrl</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String sortUrl(eionet.cr.web.action.AbstractActionBean, eionet.cr.web.util.columns.SearchResultColumn)</function-signature>
+        <example>
+            ${sortUrl(actionBean, column)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Finds the label for the given predicate in the given predicate-label map.
+             If there is no match, then looks for the last occurrence of '#' or '/' or ':' in the predicate.
+             If such an occurrence is found, returns everything after that occurrence.
+             Otherwise returns the predicate as it was given.
+        </description>
+        <name>getPredicateLabel</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String getPredicateLabel(java.util.Map, java.lang.String)</function-signature>
+        <example>
+            ${getPredicateLabel(predicateLabelsMap, label)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>subjectHasPredicateObject</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String subjectHasPredicateObject(eionet.cr.dto.SubjectDTO, java.util.Set, java.lang.String)</function-signature>
+        <example>
+            ${subjectHasPredicateObject(subjectDTO, predicateSet, objectValue)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>isSourceToAny</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String isSourceToAny(long, java.util.Collection)</function-signature>
+        <example>
+            ${isSourceToAny(objectHash, collectionOfObjects)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Returns a HEX color code for the given source string.
+        </description>
+        <name>colorForSource</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String colorForSource(java.lang.String)</function-signature>
+        <example>
+            ${colorForSource(source)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Encodes the given string for inclusion into a URL.
+        </description>
+        <name>urlEncode</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String urlEncode(java.lang.String)</function-signature>
+        <example>
+            ${urlEncode(str)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>format</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String format(eionet.cr.web.util.columns.SearchResultColumn, java.lang.Object, eionet.cr.web.action.AbstractActionBean)</function-signature>
+        <example>
+            ${format(column, object, actionBean)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>spoHash</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>long spoHash(java.lang.String)</function-signature>
+        <example>
+            ${spoHash(someString)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>getObjectLiteral</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String getObjectLiteral(eionet.cr.dto.SubjectDTO, java.lang.String)</function-signature>
+        <example>
+            ${getObjectLiteral(subjectDTO, predicateUri)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>isObjectInAcceptedLanguage</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>boolean isObjectInAcceptedLanguage(eionet.cr.web.action.AbstractActionBean, eionet.cr.dto.ObjectDTO)</function-signature>
+        <example>
+            ${isObjectInAcceptedLanguage(actionBean, objectDTO)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>rawModeTitle</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String rawModeTitle(eionet.cr.dto.ObjectDTO, java.util.Collection)</function-signature>
+        <example>
+            ${rawModeTitle(particularObject, allObjectsOfThisPredicate)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>isObjectValueDisplayed</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>boolean isObjectValueDisplayed(java.lang.String, java.lang.String, javax.servlet.jsp.PageContext)</function-signature>
+        <example>
+            ${isObjectValueDisplayed(predicate, objectValue, pageContext)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>getStackTrace</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String getStackTrace(java.lang.Throwable)</function-signature>
+        <example>
+            ${getStackTrace(throwable)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>formatStackTrace</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String formatStackTrace(java.lang.String)</function-signature>
+        <example>
+            ${formatStackTrace(stackTrace)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>predicateExpandLink</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String predicateExpandLink(eionet.cr.web.action.factsheet.FactsheetActionBean, java.lang.String, int)</function-signature>
+        <example>
+            ${predicateExpandLink(factsheetActionBean, predicateUri, pageNumber)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>predicateCollapseLink</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String predicateCollapseLink(eionet.cr.web.action.factsheet.FactsheetActionBean, java.lang.String)</function-signature>
+        <example>
+            ${predicateCollapseLink(factsheetActionBean, predicateUri)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>numberOfPages</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>int numberOfPages(int, int)</function-signature>
+        <example>
+            ${numberOfPages(matchCount, pageSize)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+        </description>
+        <name>conditional</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.Object conditional(boolean, java.lang.Object, java.lang.Object)</function-signature>
+        <example>
+            ${conditional(condition, ifTrue, ifFalse)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Removes root home URI part from given URI
+        </description>
+        <name>removeHomeUri</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String removeHomeUri(java.lang.String)</function-signature>
+        <example>
+            ${removeHomeUri(folderUri)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Extracts folder from uri.
+        </description>
+        <name>extractFolder</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String extractFolder(java.lang.String)</function-signature>
+        <example>
+            ${extractFolder(folderUri)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Returns the result of org.apache.commons.lang.StringEscapeUtils.escapeHtml(String).
+        </description>
+        <name>escapeHtml</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String escapeHtml(java.lang.String)</function-signature>
+        <example>
+            ${escapeHtml(str)}
+        </example>
+    </function>
+
+    <function>
+        <description>
+            Returns true if the given array or collection (i.e. the first input parameter)
+            contains the given object (i.e. the second input parameter).
+        </description>
+        <name>contains</name>
+        <function-class>eionet.web.util.JstlFunctions</function-class>
+        <function-signature>boolean contains(java.lang.Object, java.lang.Object)</function-signature>
+        <example>
+        </example>
+    </function>
+
+</taglib>

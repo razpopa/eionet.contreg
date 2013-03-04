@@ -1,0 +1,26 @@
+digraph linkednode {
+rankdir=LR;
+node [shape=record,fontsize=9];
+edge [fontsize=9];
+S4a680e5670867837f7e1baafc3850363 [label="http://identi.ca/user/45563"];
+S4a680e5670867837f7e1baafc3850363 -> S3b1fed4016ea3410e7b39f0cf0331513 [label="type"];
+S4a680e5670867837f7e1baafc3850363 -> S8d0bdea0da34fcf0577f6f94c5e564c8 [label="seeAlso"];
+S4a680e5670867837f7e1baafc3850363 -> S913e3e93a1c8eb3f029b6f085e8b564e [label="knows"];
+S4a680e5670867837f7e1baafc3850363 -> S90056dc233fb97554761c2c3758065b3 [label="knows"];
+S4a680e5670867837f7e1baafc3850363 -> Sda20190d949c4d37069422955ed4e469 [label="knows"];
+S4a680e5670867837f7e1baafc3850363 -> Sc2dfae79fb0cd0c140e5da79e78fb1da [label="account"];
+Sa194e299b535dee7bdeb93dc9c48413a -> S4a680e5670867837f7e1baafc3850363 [label="sameAs"];
+S8d0bdea0da34fcf0577f6f94c5e564c8 -> S4a680e5670867837f7e1baafc3850363 [label="maker"];
+S90056dc233fb97554761c2c3758065b3 -> S4a680e5670867837f7e1baafc3850363 [label="knows"];
+Sda20190d949c4d37069422955ed4e469 -> S4a680e5670867837f7e1baafc3850363 [label="knows"];
+S913e3e93a1c8eb3f029b6f085e8b564e -> S4a680e5670867837f7e1baafc3850363 [label="knows"];
+S8d0bdea0da34fcf0577f6f94c5e564c8 -> S4a680e5670867837f7e1baafc3850363 [label="primaryTopic"];
+Sc2dfae79fb0cd0c140e5da79e78fb1da -> S4a680e5670867837f7e1baafc3850363 [label="account_of"];
+S90056dc233fb97554761c2c3758065b3 [label="http://identi.ca/user/12704|name:Michael Hausenblas\lmbox_sha1sum:327b61f3721afbd39dceadf5e5b4fc2d79d5dcc8\lolb:Web of Data engineer\l"];
+Sa194e299b535dee7bdeb93dc9c48413a [label="http://www.w3.org/People/Berners-Lee/card#i|label:Tim Berners-Lee\lname:Timothy Berners-Lee\lmbox_sha1sum:965c47c5a70db7407210cef6e4e6f5374a525c5c\ltitle:Sir\lnick:timbl\lnick:TimBL\lgivenname:Timothy\lfamily_name:Berners-Lee\lpreferredURI:http://www.w3.org/People/Berners-Lee/card#i\l"];
+Sc2dfae79fb0cd0c140e5da79e78fb1da [label="http://identi.ca/user/45563#acct|accountName:timbl\laccountName:timbl\laccountName:timbl\laccountName:timbl\laccountName:timbl\l"];
+S3b1fed4016ea3410e7b39f0cf0331513 [label="http://xmlns.com/foaf/0.1/Agent|label:Agent\lcomment:An agent (eg. person, group, software or physical\l    artifact).\lterm_status:stable\lscopeNote:Used to describe any \"agent\" related to\l    bibliographic items. Such agents can be persons,\l    organizations or groups of any kind.\l"];
+Sda20190d949c4d37069422955ed4e469 [label="http://identi.ca/user/33|name:Sarven Capadisli\lmbox_sha1sum:7618deaa9b5b74f5a5c87da6bb3684d75cf3c91c\lolb:I am.\l"];
+S913e3e93a1c8eb3f029b6f085e8b564e [label="http://identi.ca/user/226|name:Dan Brickley\lmbox_sha1sum:748934f32135cfcf6f8c06e253c53442721e15e7\lolb:Euro-Bristolian, FOAF, ex-W3C, Semantic Web,\l    widgetarian, weekend freetard.\l"];
+S8d0bdea0da34fcf0577f6f94c5e564c8 [label="http://identi.ca/timbl/foaf"];
+}
