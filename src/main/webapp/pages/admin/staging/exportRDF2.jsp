@@ -11,10 +11,28 @@
                 $(document).ready(
                     function(){
 
+                        // Ensure a property select box title is updated with the hint of the currently selected property.
                         $("select[id$=propertySelect]").change(function() {
                             $(this).attr("title", $("option:selected",this).attr('title'));
                             return true;
                         });
+
+                        <c:if test="${actionBean.testRun != null && actionBean.testRun.foundMissingConcepts}">
+                        // Open the missing concepts popup
+                        $("#openMissingConceptsPopup").click(function() {
+                            $('#missingConceptsPopup').dialog('open');
+                            return false;
+                        });
+
+                        // Setup the tables and columns popup
+                        $('#missingConceptsPopup').dialog({
+                            autoOpen: false,
+                            height: 400,
+                            width: 800,
+                            maxHeight: 800,
+                            maxWidth: 800
+                        });
+                        </c:if>
                     });
             } ) ( jQuery );
         // ]]>
@@ -76,8 +94,8 @@
                             <td>
                                 <stripes:select id="selIndicator" name="queryConf.indicator" value="${actionBean.queryConf.indicator}">
                                     <stripes:option value="" label=""/>
-                                    <c:forEach items="${actionBean.indicators}" var="indicator">
-                                        <stripes:option value="${indicator.right}" label="${indicator.right}"/>
+                                    <c:forEach items="${actionBean.indicators}" var="indicatorPair">
+                                        <stripes:option value="${indicatorPair.value}" label="${indicatorPair.value}"/>
                                     </c:forEach>
                                 </stripes:select>&nbsp;<span style="font-size:0.8em">(must be selected, unless indicator has been mapped to one of the selected columns above)</span>
                             </td>
@@ -96,13 +114,106 @@
                 </fieldset>
                 <div style="margin-top:20px">
                     <stripes:submit name="backToStep1" value="< Back"/>&nbsp;
-                    <stripes:submit name="step2" id="runButton" value="Run"/>&nbsp;
+                    <stripes:submit name="test" id="testButton" value="Test"/>&nbsp;
+                    <stripes:submit name="run" id="runButton" value="Run"/>&nbsp;
                     <stripes:submit name="cancel" value="Cancel"/>
                 </div>
             </crfn:form>
+
+            <c:if test="${actionBean.context.eventName eq 'test' && actionBean.testRun != null && not empty actionBean.testRun.testResults}">
+
+                <div style="width:100%;padding-top:20px">
+
+                    <p>
+                        <c:if test="${actionBean.testRun.rowCount > actionBean.testRun.maxTestResults}">
+                            <strong>Test results (${actionBean.testRun.rowCount} found, displaying first ${actionBean.testRun.maxTestResults}):</strong>
+                        </c:if>
+                        <c:if test="${actionBean.testRun.rowCount <= actionBean.testRun.maxTestResults}">
+                            <strong>Test results (${actionBean.testRun.rowCount} found):</strong>
+                        </c:if>
+                        <c:if test="${actionBean.testRun.foundMissingConcepts}">
+                            <a href="#" id="openMissingConceptsPopup" class="important-msg" style="float:right">No metadata exists for these found concepts &#187;</a>
+                        </c:if>
+                    </p>
+
+                    <display:table name="${actionBean.testRun.testResults}" id="testResultRow" class="datatable" sort="list" pagesize="20" requestURI="${actionBean.urlBinding}" style="width:100%;margin-top:20px">
+
+                        <display:setProperty name="paging.banner.item_name" value="row"/>
+                        <display:setProperty name="paging.banner.items_name" value="rows"/>
+                        <display:setProperty name="paging.banner.all_items_found" value=""/>
+                        <display:setProperty name="paging.banner.one_item_found" value=""/>
+                        <display:setProperty name="paging.banner.onepage" value=""/>
+                        <display:setProperty name="paging.banner.some_items_found" value='<span class="pagebanner">Rows {2} to {3}.</span>'/>
+
+                        <c:forEach items="${testResultRow}" var="testResultRowEntry">
+                            <display:column property="${testResultRowEntry.key}" title="${testResultRowEntry.key}"/>
+                        </c:forEach>
+
+                    </display:table>
+
+                    <c:if test="${actionBean.testRun.foundMissingConcepts}">
+                        <div id="missingConceptsPopup" title="Concepts with no metadta in the system yet">
+                            <table class="datatable" style="width:100%">
+                                <tr>
+                                    <c:if test="${not empty actionBean.testRun.missingIndicators}">
+                                        <th>Indicators</th>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingBreakdowns}">
+                                        <th>Breakdowns</th>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingUnits}">
+                                        <th>Units</th>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingRefAreas}">
+                                        <th>Ref. areas</th>
+                                    </c:if>
+                                </tr>
+                                <tr>
+                                    <c:if test="${not empty actionBean.testRun.missingIndicators}">
+                                        <td>
+                                            <c:forEach items="${actionBean.testRun.missingIndicators}" var="missingIndicator">
+                                                <ul style="list-style-type:none">
+                                                    <li><c:out value="${missingIndicator}"/></li>
+                                                </ul>
+                                             </c:forEach>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingBreakdowns}">
+                                        <td>
+                                            <c:forEach items="${actionBean.testRun.missingBreakdowns}" var="missingBreakdown">
+                                                <ul style="list-style-type:none">
+                                                    <li><c:out value="${missingBreakdown}"/></li>
+                                                </ul>
+                                            </c:forEach>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingUnits}">
+                                        <td>
+                                            <c:forEach items="${actionBean.testRun.missingUnits}" var="missingUnit">
+                                                <ul style="list-style-type:none">
+                                                    <li><c:out value="${missingUnit}"/></li>
+                                                </ul>
+                                            </c:forEach>
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.testRun.missingRefAreas}">
+                                        <td>
+                                            <c:forEach items="${actionBean.testRun.missingRefAreas}" var="missingRefArea">
+                                                <ul style="list-style-type:none">
+                                                    <li><c:out value="${missingRefArea}"/></li>
+                                                </ul>
+                                            </c:forEach>
+                                        </td>
+                                    </c:if>
+                                </tr>
+                            </table>
+                        </div>
+                    </c:if>
+
+                </div>
+
+            </c:if>
         </div>
-
-
 
     </stripes:layout-component>
 </stripes:layout-render>

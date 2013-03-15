@@ -49,6 +49,9 @@ public final class TempFilePathGenerator {
     /** */
     public static final Collection<File> TEMP_FILE_DIRECTORIES;
 
+    /**
+     *
+     */
     static {
         TEMP_FILE_DIRECTORIES =
             Collections.singleton(new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION)));
@@ -58,6 +61,17 @@ public final class TempFilePathGenerator {
     public static File generate() {
 
         String fileName = PREFIX + System.currentTimeMillis() + DASH + UUID.randomUUID();
+        return new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION), fileName);
+    }
+
+    /**
+     *
+     * @param fixedName
+     * @return
+     */
+    public static File generate(String fixedName) {
+
+        String fileName = PREFIX + fixedName;
         return new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION), fileName);
     }
 }

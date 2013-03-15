@@ -51,6 +51,23 @@
                             return true;
                         });
 
+                        <c:if test="${actionBean.exportDTO.status.finished && not empty actionBean.missingConcepts}">
+                        // Open the missing concepts popup
+                        $("#openMissingConceptsPopup").click(function() {
+                            $('#missingConceptsPopup').dialog('open');
+                            return false;
+                        });
+
+                        // Setup the tables and columns popup
+                        $('#missingConceptsPopup').dialog({
+                            autoOpen: false,
+                            height: 400,
+                            width: 800,
+                            maxHeight: 800,
+                            maxWidth: 800
+                        });
+                        </c:if>
+
                     });
             } ) ( jQuery );
         // ]]>
@@ -119,6 +136,10 @@
                     </tr>
                     <c:if test="${actionBean.exportDTO.status.finished}">
                         <tr>
+                            <th class="question" style="text-align:right" title="The number of rows returned by the executed query">Row count:</th>
+                            <td><c:out value="${actionBean.exportDTO.rowCount}"/></td>
+                        </tr>
+                        <tr>
                             <th class="question" style="text-align:right" title="The number of objects that were exported">Objects exported:</th>
                             <td><c:out value="${actionBean.exportDTO.noOfSubjects}"/></td>
                         </tr>
@@ -136,6 +157,11 @@
                 </table>
 
                 <c:if test="${actionBean.exportDTO.status.finished}">
+
+                    <c:if test="${not empty actionBean.missingConcepts}">
+                        <a href="#" id="openMissingConceptsPopup" class="important-msg" style="float:right" title="Click to open the list of concepts for which no metadata was found">No metadata was found for these concepts &#187;</a>
+                    </c:if>
+
                     <div style="width:100%;padding-top:10px;">
 
                         <p><strong>The following objects were exported:</strong></p>
@@ -157,24 +183,7 @@
                             </display:table>
 
                         </c:if>
-                        <%--
-                        <p>The results of this export were stored into the following dataset(s):</p>
-                        <c:if test="${not empty actionBean.exportDTO.graphs}">
-                            <c:set var="newline" value="\n"/>
-                            <c:set var="graphs" value="${fn:split(actionBean.exportDTO.graphs, newLine)}"/>
-                            <ul style="list-style:none;margin:0;padding:0;">
-                                <c:forEach items="${graphs}" var="graphUri">
-                                    <li>
-                                        <stripes:link beanclass="${actionBean.objectsInSourceActionBeanClass.name}">
-                                            <c:out value="${graphUri}"/>
-                                            <stripes:param name="search" value=""/>
-                                            <stripes:param name="uri" value="${graphUri}"/>
-                                        </stripes:link>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:if>
-                        --%>
+
                     </div>
                 </c:if>
             </div>
@@ -186,6 +195,31 @@
                 <%-- Assume this has already been XML-escaped. --%>
                 ${actionBean.queryConfigurationDump}
             </div>
+
+            <c:if test="${actionBean.exportDTO.status.finished && not empty actionBean.missingConcepts}">
+                <div id="missingConceptsPopup" title="Concepts with no metadata in the system yet">
+                    <table class="datatable" style="width:100%">
+                        <tr>
+                            <c:forEach items="${actionBean.missingConcepts}" var="missingConceptsEntry">
+                                <th>
+                                    <c:out value="${missingConceptsEntry.key}"/>
+                                </th>
+                            </c:forEach>
+                        </tr>
+                        <tr>
+                            <c:forEach items="${actionBean.missingConcepts}" var="missingConceptsEntry">
+                                <td>
+                                    <c:forEach items="${missingConceptsEntry.value}" var="missingConcept">
+                                        <ul style="list-style-type:none">
+                                            <li><c:out value="${missingConcept}"/></li>
+                                        </ul>
+                                    </c:forEach>
+                                </td>
+                            </c:forEach>
+                        </tr>
+                    </table>
+                </div>
+            </c:if>
 
         </c:if>
 

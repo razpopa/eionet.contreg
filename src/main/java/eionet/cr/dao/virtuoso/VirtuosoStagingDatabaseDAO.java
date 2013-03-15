@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -57,7 +58,6 @@ import eionet.cr.staging.exp.ExportRunner;
 import eionet.cr.staging.exp.ExportStatus;
 import eionet.cr.staging.exp.QueryConfiguration;
 import eionet.cr.staging.imp.ImportStatus;
-import eionet.cr.util.Pair;
 import eionet.cr.util.sql.PairReader;
 import eionet.cr.util.sql.SQLUtil;
 import eionet.cr.util.sql.SingleObjectReader;
@@ -73,14 +73,29 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
     private static final Logger LOGGER = Logger.getLogger(VirtuosoStagingDatabaseDAO.class);
 
     /** */
-    private static final String GET_INDICATORS_SPARQL = "select ?s as ?" + PairReader.LEFTCOL + " ?notation as ?"
+    private static final String GET_INDICATORS_SPARQL = "select distinct ?s as ?" + PairReader.LEFTCOL + " ?notation as ?"
             + PairReader.RIGHTCOL + " where {" + " ?s a <http://semantic.digital-agenda-data.eu/def/class/Indicator>."
             + " ?s <http://www.w3.org/2004/02/skos/core#notation> ?notation}" + " order by ?notation";
 
     /** */
-    private static final String GET_EXPORTED_RESOURCES_SPARQL = "SELECT distinct ?o WHERE {"
-            + "<http://semantic.digital-agenda-data.eu/import/@id@> <http://semantic.digital-agenda-data.eu/importedResource> ?o}"
-            + " order by ?o";
+    private static final String GET_BREAKDOWNS_SPARQL = "select distinct ?s as ?" + PairReader.LEFTCOL + " ?notation as ?"
+            + PairReader.RIGHTCOL + " where {" + " ?s a <http://semantic.digital-agenda-data.eu/def/class/Breakdown>."
+            + " ?s <http://www.w3.org/2004/02/skos/core#notation> ?notation}" + " order by ?notation";
+
+    /** */
+    private static final String GET_UNITS_SPARQL = "select distinct ?s as ?" + PairReader.LEFTCOL + " ?notation as ?"
+            + PairReader.RIGHTCOL + " where {" + " ?s a <http://semantic.digital-agenda-data.eu/def/class/UnitMeasure>."
+            + " ?s <http://www.w3.org/2004/02/skos/core#notation> ?notation}" + " order by ?notation";
+
+    /** */
+    private static final String GET_REFAREAS_SPARQL = "select distinct ?s as ?" + PairReader.LEFTCOL + " ?notation as ?"
+            + PairReader.RIGHTCOL + " where {?s a <http://www.w3.org/2004/02/skos/core#Concept>."
+            + " ?s <http://www.w3.org/2004/02/skos/core#inScheme> <http://eurostat.linked-statistics.org/dic/geo>."
+            + " ?s <http://www.w3.org/2004/02/skos/core#notation> ?notation} order by ?notation";
+
+    /** */
+    private static final String GET_EXPORTED_RESOURCES_SPARQL = "SELECT distinct ?s FROM <" + ExportRunner.EXPORT_URI_PREFIX
+            + "@id@> WHERE {?s ?p ?o} order by ?s";
 
     /** */
     private static final String ADD_NEW_DB_SQL =
@@ -112,7 +127,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /** */
     private static final String FINISH_RDF_EXPORT_SQL =
-            "update STAGING_DB_RDF_EXPORT set FINISHED=?,STATUS=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,GRAPHS=? where EXPORT_ID=?";
+            "update STAGING_DB_RDF_EXPORT set FINISHED=?,STATUS=?,ROW_COUNT=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,MISSING_CONCEPTS=? where EXPORT_ID=?";
 
     /** */
     private static final String ADD_EXPORT_LOG_MESSAGE_SQL =
@@ -269,9 +284,10 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
         ArrayList<Object> params = new ArrayList<Object>();
         params.add(new Date());
         params.add(status.name());
+        params.add(exportRunner.getRowCount());
         params.add(exportRunner.getSubjectCount());
         params.add(exportRunner.getTripleCount());
-        params.add(StringUtils.join(exportRunner.getDistinctGraphs(), '\n'));
+        params.add(exportRunner.missingConceptsToString());
         params.add(exportId);
 
         Connection conn = null;
@@ -493,9 +509,12 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
     /**
      * Deletes the given databases from Virtuoso.
      *
-     * @param dbNames The database names.
-     * @param conn The SQL connection to use.
-     * @throws SQLException When database access error happens.
+     * @param dbNames
+     *            The database names.
+     * @param conn
+     *            The SQL connection to use.
+     * @throws SQLException
+     *             When database access error happens.
      */
     private void deleteDatabases(List<String> dbNames, Connection conn) throws SQLException {
 
@@ -725,8 +744,49 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
      * @see eionet.cr.dao.StagingDatabaseDAO#getIndicators()
      */
     @Override
-    public List<Pair<String, String>> getIndicators() throws DAOException {
+    public LinkedHashMap<String, String> getIndicators() throws DAOException {
 
-        return executeSPARQL(GET_INDICATORS_SPARQL, null, new PairReader<String, String>());
+        PairReader<String, String> reader = new PairReader<String, String>();
+        executeSPARQL(GET_INDICATORS_SPARQL, null, reader);
+        return reader.getResultMap();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.StagingDatabaseDAO#getBreakdowns()
+     */
+    @Override
+    public LinkedHashMap<String, String> getBreakdowns() throws DAOException {
+
+        PairReader<String, String> reader = new PairReader<String, String>();
+        executeSPARQL(GET_BREAKDOWNS_SPARQL, null, reader);
+        return reader.getResultMap();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.StagingDatabaseDAO#getUnits()
+     */
+    @Override
+    public LinkedHashMap<String, String> getUnits() throws DAOException {
+
+        PairReader<String, String> reader = new PairReader<String, String>();
+        executeSPARQL(GET_UNITS_SPARQL, null, reader);
+        return reader.getResultMap();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.StagingDatabaseDAO#getRefAreas()
+     */
+    @Override
+    public LinkedHashMap<String, String> getRefAreas() throws DAOException {
+
+        PairReader<String, String> reader = new PairReader<String, String>();
+        executeSPARQL(GET_REFAREAS_SPARQL, null, reader);
+        return reader.getResultMap();
     }
 }

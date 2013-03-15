@@ -82,6 +82,9 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
     /** */
     private List<StagingDatabaseTableColumnDTO> tablesColumns;
 
+    /** Indicates if the file where the database will be created from is a compressed file. Relevant for "add" method only. */
+    private boolean isCompressedFile;
+
     /**
      * The bean's default event handler method.
      *
@@ -182,9 +185,10 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
      */
     public Resolution add() throws DAOException {
 
-        LOGGER.debug("file: " + file);
+        String method = getContext().getRequest().getMethod();
+        LOGGER.debug(method.toUpperCase() + ": going to create staging database from this file: " + file);
 
-        if (getContext().getRequest().getMethod().equalsIgnoreCase("GET")) {
+        if (method.equalsIgnoreCase("GET")) {
             return new ForwardResolution(ADD_STAGING_DATABASE_JSP);
         }
 
@@ -213,6 +217,14 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
      */
     public Resolution backToDbList() {
         return new RedirectResolution(StagingDatabasesActionBean.class);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Resolution toAvailableFilesList() {
+        return new RedirectResolution(AvailableFilesActionBean.class);
     }
 
     /**

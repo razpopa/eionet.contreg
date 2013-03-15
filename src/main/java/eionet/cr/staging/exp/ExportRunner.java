@@ -26,9 +26,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -51,7 +53,6 @@ import eionet.cr.util.LogUtil;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.SQLUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * A thread runs a given RDF export query with a given query configuration on a given staging database.
  *
@@ -60,7 +61,25 @@ import eionet.cr.util.sql.SQLUtil;
 public class ExportRunner extends Thread {
 
     /** */
+    public static final String EXPORT_URI_PREFIX = "http://semantic.digital-agenda-data.eu/import/";
+
+    /**  */
+    private static final String REF_AREA = "refArea";
+
+    /**  */
+    private static final String UNIT = "unit";
+
+    /**  */
+    private static final String BREAKDOWN = "breakdown";
+
+    /**  */
+    private static final String INDICATOR = "indicator";
+
+    /** */
     private static final Logger LOGGER = Logger.getLogger(ExportRunner.class);
+
+    /** */
+    private static final int MAX_TEST_RESULTS = 500;
 
     /** */
     private StagingDatabaseDTO dbDTO;
@@ -87,9 +106,6 @@ public class ExportRunner extends Thread {
     private int subjectCount;
 
     /** */
-    private HashSet<String> distinctGraphs = new HashSet<String>();
-
-    /** */
     private Logger exportLogger;
 
     /** The {@link StagingDatabaseDAO} used by this thread to access the database. */
@@ -105,17 +121,40 @@ public class ExportRunner extends Thread {
     private URI graphURI;
     private URI indicatorPredicateURI;
     private URI indicatorValueURI;
-    private URI importURI;
-    private URI importedResourceURI;
+    private URI exportURI;
+    private URI exportedResourceURI;
+
+    /** */
+    private Set<String> existingIndicators;
+    private Set<String> existingBreakdowns;
+    private Set<String> existingUnits;
+    private Set<String> existingRefAreas;
+
+    /** */
+    private Set<String> missingIndicators = new LinkedHashSet<String>();
+    private Set<String> missingBreakdowns = new LinkedHashSet<String>();
+    private Set<String> missingUnits = new LinkedHashSet<String>();
+    private Set<String> missingRefAreas = new LinkedHashSet<String>();
+
+    /** */
+    private List<Map<String, String>> testResults = new ArrayList<Map<String, String>>();
+
+    /** */
+    private int rowCount;
 
     /**
-     * Private class constructor.
+     * Private class constructor, to be used for running the export.
      *
-     * @param dbDTO The DTO of the staging database on which the query shall be run.
-     * @param exportId The ID of the export being run.
-     * @param exportName The export's descriptive name.
-     * @param userName User who initiated the export.
-     * @param queryConf The query configuration to run.
+     * @param dbDTO
+     *            The DTO of the staging database on which the query shall be run.
+     * @param exportId
+     *            The ID of the export being run.
+     * @param exportName
+     *            The export's descriptive name.
+     * @param userName
+     *            User who initiated the export.
+     * @param queryConf
+     *            The query configuration to run.
      */
     private ExportRunner(StagingDatabaseDTO dbDTO, int exportId, String exportName, String userName, QueryConfiguration queryConf) {
 
@@ -142,9 +181,26 @@ public class ExportRunner extends Thread {
     }
 
     /**
+     * Private class constructor, to be used for test-running the export.
+     *
+     * @param dbDTO
+     * @param queryConf
+     */
+    private ExportRunner(StagingDatabaseDTO dbDTO, QueryConfiguration queryConf) {
+
+        if (dbDTO == null || queryConf == null) {
+            throw new IllegalArgumentException("Staging database DTO and query configuration must not be null!");
+        }
+
+        this.dbDTO = dbDTO;
+        this.queryConf = queryConf;
+    }
+
+    /**
      * Creates the logger.
      *
-     * @param exportId the export id
+     * @param exportId
+     *            the export id
      * @return the export logger
      */
     private ExportLogger createLogger(int exportId) {
@@ -197,7 +253,8 @@ public class ExportRunner extends Thread {
     /**
      * Update export status.
      *
-     * @param status the status
+     * @param status
+     *            the status
      */
     private void updateExportStatus(ExportStatus status) {
         try {
@@ -210,11 +267,15 @@ public class ExportRunner extends Thread {
     /**
      * Do run.
      *
-     * @param repoConn the repo conn
-     * @throws RepositoryException the repository exception
-     * @throws SQLException the sQL exception
+     * @param repoConn
+     *            the repo conn
+     * @throws RepositoryException
+     *             the repository exception
+     * @throws SQLException
+     *             the sQL exception
+     * @throws DAOException
      */
-    private void doRun(RepositoryConnection repoConn) throws RepositoryException, SQLException {
+    private void doRun(RepositoryConnection repoConn) throws RepositoryException, SQLException, DAOException {
 
         // Nothing to do here if query or column mappings is empty.
         if (StringUtils.isBlank(queryConf.getQuery()) || queryConf.getColumnMappings().isEmpty()) {
@@ -231,13 +292,14 @@ public class ExportRunner extends Thread {
             sqlConn = SesameUtil.getSQLConnection(dbDTO.getName());
             pstmt = sqlConn.prepareStatement(queryConf.getQuery());
             rs = pstmt.executeQuery();
-            int rowIndex = 1;
+
+            rowCount = 0;
             while (rs.next()) {
-                exportRow(rs, rowIndex, repoConn, valueFactory);
-                if (rowIndex % 1000 == 0) {
-                    LogUtil.debug(rowIndex + " rows exported so far", exportLogger, LOGGER);
+                rowCount++;
+                exportRow(rs, rowCount, repoConn, valueFactory);
+                if (rowCount % 1000 == 0) {
+                    LogUtil.debug(rowCount + " rows exported so far", exportLogger, LOGGER);
                 }
-                rowIndex++;
             }
         } finally {
             SQLUtil.close(rs);
@@ -256,7 +318,6 @@ public class ExportRunner extends Thread {
 
         objectTypeURI = vf.createURI(queryConf.getObjectTypeUri());
         rdfTypeURI = vf.createURI(Predicates.RDF_TYPE);
-        graphURI = vf.createURI("http://semantic.digital-agenda-data.eu/dataset/scoreboard");
         indicatorPredicateURI = vf.createURI("http://semantic.digital-agenda-data.eu/def/property/indicator");
 
         String indicator = queryConf.getIndicator();
@@ -264,14 +325,17 @@ public class ExportRunner extends Thread {
             indicatorValueURI = vf.createURI("http://semantic.digital-agenda-data.eu/codelist/indicator/" + indicator);
         }
 
-        importURI = vf.createURI("http://semantic.digital-agenda-data.eu/import/"+ exportId);
-        importedResourceURI = vf.createURI("http://semantic.digital-agenda-data.eu/importedResource");
+        exportURI = vf.createURI(EXPORT_URI_PREFIX + exportId);
+        // graphURI = vf.createURI("http://semantic.digital-agenda-data.eu/dataset/scoreboard");
+        graphURI = exportURI;
+        exportedResourceURI = vf.createURI("http://semantic.digital-agenda-data.eu/importedResource");
     }
 
     /**
      * Sets the predicate ur is.
      *
-     * @param vf the new predicate ur is
+     * @param vf
+     *            the new predicate ur is
      */
     private void setPredicateURIs(ValueFactory vf) {
 
@@ -285,27 +349,32 @@ public class ExportRunner extends Thread {
     /**
      * Export row.
      *
-     * @param rs the rs
-     * @param rowIndex the row index
-     * @param repoConn the repo conn
-     * @param vf the vf
-     * @throws SQLException the sQL exception
-     * @throws RepositoryException the repository exception
+     * @param rs
+     *            the rs
+     * @param rowIndex
+     *            the row index
+     * @param repoConn
+     *            the repo conn
+     * @param vf
+     *            the vf
+     * @throws SQLException
+     *             the sQL exception
+     * @throws RepositoryException
+     *             the repository exception
+     * @throws DAOException
      */
     private void exportRow(ResultSet rs, int rowIndex, RepositoryConnection repoConn, ValueFactory vf) throws SQLException,
-    RepositoryException {
+            RepositoryException, DAOException {
+
+        if (rowIndex == 1) {
+            loadExistingConcepts();
+        }
 
         // Prepare subject ID on the basis of ID template in query configuration. If it's blank, auto-generate it.
         String subjectId = queryConf.getObjectIdTemplate();
         if (StringUtils.isBlank(subjectId)) {
             subjectId = String.valueOf(exportId) + "_" + rowIndex;
         }
-
-        // The dataset (i.e. target graph) ID is the value of the columns designated as "dataset column" in query configuration.
-        // String datasetId = queryConf.getDatasetIdTemplate();
-        // if (StringUtils.isBlank(datasetId)) {
-        // datasetId = String.valueOf(exportId);
-        // }
 
         // Prepare the map of ObjectDTO to be added to the subject later.
         LinkedHashMap<URI, ArrayList<Value>> valuesByPredicate = new LinkedHashMap<URI, ArrayList<Value>>();
@@ -328,39 +397,38 @@ public class ExportRunner extends Thread {
             String colName = entry.getKey();
             String colValue = rs.getString(colName);
             ObjectProperty property = entry.getValue();
-            if (property.getId().equals("indicator")) {
+            if (property.getId().equals(INDICATOR)) {
                 hasIndicatorMapping = true;
             }
 
             if (StringUtils.isNotBlank(colValue)) {
 
-                // Replace this column's place-holder in the subject ID template and dataset (i.e. graph) ID template.
-                // subjectId = StringUtils.replace(subjectId, "<" + colName + ">", colValue);
-                // datasetId = StringUtils.replace(datasetId, "<" + colName + ">", colValue);
-
+                // Replace property place-holders in subject ID
                 subjectId = StringUtils.replace(subjectId, "<" + property.getId() + ">", colValue);
 
                 URI predicateURI = property.getPredicateURI();
                 if (predicateURI != null) {
 
-                    String valueStr = property.getValueTemplate();
-                    if (valueStr == null) {
-                        valueStr = colValue;
+                    String propertyValue = property.getValueTemplate();
+                    if (propertyValue == null) {
+                        propertyValue = colValue;
                     } else {
-                        // Replace the column's value placeholder in the value template (the latter cannot be specified by user)
-                        valueStr = StringUtils.replace(valueStr, "<value>", colValue);
+                        // Replace the column value place-holder in the value template (the latter cannot be specified by user)
+                        propertyValue = StringUtils.replace(propertyValue, "<value>", colValue);
                     }
+
+                    recordMissingConcepts(property, colValue, propertyValue);
 
                     Value value = null;
                     if (property.isLiteralRange()) {
                         try {
                             String dataTypeUri = property.getDataType();
-                            value = vf.createLiteral(valueStr, dataTypeUri == null ? null : vf.createURI(dataTypeUri));
+                            value = vf.createLiteral(propertyValue, dataTypeUri == null ? null : vf.createURI(dataTypeUri));
                         } catch (IllegalArgumentException e) {
-                            value = vf.createLiteral(valueStr);
+                            value = vf.createLiteral(propertyValue);
                         }
                     } else {
-                        value = vf.createURI(valueStr);
+                        value = vf.createURI(propertyValue);
                     }
 
                     addPredicateValue(valuesByPredicate, predicateURI, value);
@@ -388,7 +456,6 @@ public class ExportRunner extends Thread {
 
             int tripleCountBefore = tripleCount;
             URI subjectURI = vf.createURI(queryConf.getObjectIdNamespace() + subjectId);
-            // URI graphURI = vf.createURI(queryConf.getDatasetIdNamespace() + datasetId);
             for (Entry<URI, ArrayList<Value>> entry : valuesByPredicate.entrySet()) {
 
                 ArrayList<Value> values = entry.getValue();
@@ -400,7 +467,6 @@ public class ExportRunner extends Thread {
                         if (tripleCount % 5000 == 0) {
                             LOGGER.debug(tripleCount + " triples exported so far");
                         }
-                        //                        distinctGraphs.add(graphURI.toString());
                     }
                 }
             }
@@ -409,16 +475,20 @@ public class ExportRunner extends Thread {
                 subjectCount++;
             }
 
-            repoConn.add(importURI, importedResourceURI, subjectURI, importURI);
+            // Create relation between import URI and the imported subject
+            // repoConn.add(importURI, importedResourceURI, subjectURI, importURI);
         }
     }
 
     /**
      * Adds the predicate value.
      *
-     * @param valuesByPredicate the values by predicate
-     * @param predicateURI the predicate uri
-     * @param value the value
+     * @param valuesByPredicate
+     *            the values by predicate
+     * @param predicateURI
+     *            the predicate uri
+     * @param value
+     *            the value
      */
     private void addPredicateValue(LinkedHashMap<URI, ArrayList<Value>> valuesByPredicate, URI predicateURI, Value value) {
 
@@ -447,12 +517,17 @@ public class ExportRunner extends Thread {
     /**
      * Start.
      *
-     * @param dbDTO the db dto
-     * @param exportName the export name
-     * @param userName the user name
-     * @param queryConf the query conf
+     * @param dbDTO
+     *            the db dto
+     * @param exportName
+     *            the export name
+     * @param userName
+     *            the user name
+     * @param queryConf
+     *            the query conf
      * @return the export runner
-     * @throws DAOException the dAO exception
+     * @throws DAOException
+     *             the dAO exception
      */
     public static synchronized ExportRunner start(StagingDatabaseDTO dbDTO, String exportName, String userName,
             QueryConfiguration queryConf) throws DAOException {
@@ -494,15 +569,6 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * Gets the distinct graphs.
-     *
-     * @return the distinctGraphs
-     */
-    public HashSet<String> getDistinctGraphs() {
-        return distinctGraphs;
-    }
-
-    /**
      * Gets the export name.
      *
      * @return the exportName
@@ -514,7 +580,8 @@ public class ExportRunner extends Thread {
     /**
      * Sets the hidden properties values.
      *
-     * @param vf the new hidden properties values
+     * @param vf
+     *            the new hidden properties values
      */
     private void setHiddenPropertiesValues(ValueFactory vf) {
 
@@ -523,5 +590,239 @@ public class ExportRunner extends Thread {
                 hiddenProperty.setValues(vf);
             }
         }
+    }
+
+    /**
+     *
+     * @param dbDTO
+     * @param queryConf
+     * @return
+     * @throws SQLException
+     * @throws DAOException
+     * @throws RepositoryException
+     */
+    public static ExportRunner test(StagingDatabaseDTO dbDTO, QueryConfiguration queryConf) throws RepositoryException,
+            DAOException, SQLException {
+
+        ExportRunner exportRunner = new ExportRunner(dbDTO, queryConf);
+        exportRunner.test();
+        return exportRunner;
+    }
+
+    /**
+     *
+     * @throws SQLException
+     * @throws RepositoryException
+     * @throws DAOException
+     */
+    private void test() throws RepositoryException, SQLException, DAOException {
+
+        // Nothing to do here if query or column mappings is empty.
+        if (StringUtils.isBlank(queryConf.getQuery()) || queryConf.getColumnMappings().isEmpty()) {
+            return;
+        }
+
+        ResultSet rs = null;
+        Connection sqlConn = null;
+        PreparedStatement pstmt = null;
+        RepositoryConnection repoConn = null;
+
+        try {
+            sqlConn = SesameUtil.getSQLConnection(dbDTO.getName());
+            repoConn = SesameUtil.getRepositoryConnection();
+
+            pstmt = sqlConn.prepareStatement(queryConf.getQuery());
+            rs = pstmt.executeQuery();
+
+            rowCount = 0;
+            while (rs.next()) {
+                rowCount++;
+                testRow(rs, rowCount);
+            }
+        } finally {
+            SQLUtil.close(rs);
+            SQLUtil.close(pstmt);
+            SQLUtil.close(sqlConn);
+            SesameUtil.close(repoConn);
+        }
+    }
+
+    /**
+     *
+     * @param rs
+     * @param rowIndex
+     * @throws SQLException
+     * @throws DAOException
+     */
+    private void testRow(ResultSet rs, int rowIndex) throws SQLException, DAOException {
+
+        if (rowIndex == 1) {
+            loadExistingConcepts();
+        }
+
+        LinkedHashMap<String, String> rowMap = new LinkedHashMap<String, String>();
+        for (Entry<String, ObjectProperty> entry : queryConf.getColumnMappings().entrySet()) {
+
+            ObjectProperty property = entry.getValue();
+            String colName = entry.getKey();
+            String colValue = rs.getString(colName);
+
+            String valueTemplate = property.getValueTemplate();
+            String propertyValue = valueTemplate == null ? colValue : StringUtils.replace(valueTemplate, "<value>", colValue);
+            recordMissingConcepts(property, colValue, propertyValue);
+
+            if (rowIndex <= MAX_TEST_RESULTS) {
+                rowMap.put(colName, colValue);
+            }
+        }
+
+        if (!rowMap.isEmpty()) {
+            testResults.add(rowMap);
+        }
+    }
+
+    /**
+     * @param property
+     * @param colValue
+     * @param propertyValue
+     */
+    private void recordMissingConcepts(ObjectProperty property, String colValue, String propertyValue) {
+
+        if (INDICATOR.equals(property.getId()) && !existingIndicators.contains(propertyValue)) {
+            missingIndicators.add(colValue);
+        }
+        if (BREAKDOWN.equals(property.getId()) && !existingBreakdowns.contains(propertyValue)) {
+            missingBreakdowns.add(colValue);
+        }
+        if (UNIT.equals(property.getId()) && !existingUnits.contains(propertyValue)) {
+            missingUnits.add(colValue);
+        }
+        if (REF_AREA.equals(property.getId()) && !existingRefAreas.contains(propertyValue)) {
+            missingRefAreas.add(colValue);
+        }
+    }
+
+    /**
+     * @throws DAOException
+     */
+    private void loadExistingConcepts() throws DAOException {
+
+        existingIndicators = getDao().getIndicators().keySet();
+        existingBreakdowns = getDao().getBreakdowns().keySet();
+        existingUnits = getDao().getUnits().keySet();
+        existingRefAreas = getDao().getRefAreas().keySet();
+    }
+
+    /**
+     * @return the testResults
+     */
+    public List<Map<String, String>> getTestResults() {
+        return testResults;
+    }
+
+    /**
+     * @return the missingIndicators
+     */
+    public Set<String> getMissingIndicators() {
+        return missingIndicators;
+    }
+
+    /**
+     * @return the missingBreakdowns
+     */
+    public Set<String> getMissingBreakdowns() {
+        return missingBreakdowns;
+    }
+
+    /**
+     * @return the missingUnits
+     */
+    public Set<String> getMissingUnits() {
+        return missingUnits;
+    }
+
+    /**
+     * @return the missingRefAreas
+     */
+    public Set<String> getMissingRefAreas() {
+        return missingRefAreas;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getMaxTestResults() {
+        return MAX_TEST_RESULTS;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isFoundMissingConcepts() {
+
+        return !missingIndicators.isEmpty() || !missingBreakdowns.isEmpty() || !missingUnits.isEmpty()
+                || !missingRefAreas.isEmpty();
+    }
+
+    /**
+     * @return the rowCount
+     */
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String missingConceptsToString() {
+
+        if (!isFoundMissingConcepts()) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (!missingIndicators.isEmpty()) {
+            sb.append("Indicators: ").append(missingIndicators).append("\n");
+        }
+        if (!missingBreakdowns.isEmpty()) {
+            sb.append("Breakdowns: ").append(missingBreakdowns).append("\n");
+        }
+        if (!missingUnits.isEmpty()) {
+            sb.append("Units: ").append(missingUnits).append("\n");
+        }
+        if (!missingRefAreas.isEmpty()) {
+            sb.append("Ref. areas: ").append(missingRefAreas).append("\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     *
+     * @param str
+     * @return
+     */
+    public static LinkedHashMap<String, List<String>> missingConceptsFromString(String str) {
+
+        LinkedHashMap<String, List<String>> result = new LinkedHashMap<String, List<String>>();
+        if (StringUtils.isNotBlank(str)) {
+            String[] lines = StringUtils.split(str, '\n');
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i].trim();
+                String type = StringUtils.substringBefore(line, ":").trim();
+                if (StringUtils.isNotBlank(type)) {
+                    String csv = StringUtils.substringBefore(StringUtils.substringAfter(line, "["), "]").trim();
+                    if (StringUtils.isNotBlank(csv)) {
+                        List<String> values = Arrays.asList(StringUtils.split(csv, ", "));
+                        if (!values.isEmpty()) {
+                            result.put(type, values);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

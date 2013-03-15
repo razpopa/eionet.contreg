@@ -43,7 +43,8 @@ public class ExportDTO {
     private String exportLog;
     private int noOfSubjects;
     private int noOfTriples;
-    private String graphs;
+    private int rowCount;
+    private String missingConcepts;
 
     /**
      * @return the exportId
@@ -186,20 +187,6 @@ public class ExportDTO {
     }
 
     /**
-     * @return the graphs
-     */
-    public String getGraphs() {
-        return graphs;
-    }
-
-    /**
-     * @param graphs the graphs to set
-     */
-    public void setGraphs(String graphs) {
-        this.graphs = graphs;
-    }
-
-    /**
      * @return the exportName
      */
     public String getExportName() {
@@ -225,5 +212,33 @@ public class ExportDTO {
      */
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
+    }
+
+    /**
+     * @return the rowCount
+     */
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    /**
+     * @param rowCount the rowCount to set
+     */
+    public void setRowCount(int rowCount) {
+        this.rowCount = rowCount;
+    }
+
+    /**
+     * @return the missingConcepts
+     */
+    public String getMissingConcepts() {
+        return missingConcepts;
+    }
+
+    /**
+     * @param missingConcepts the missingConcepts to set
+     */
+    public void setMissingConcepts(String missingConcepts) {
+        this.missingConcepts = missingConcepts;
     }
 }

@@ -21,6 +21,7 @@
 
 package eionet.cr.dao;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,6 @@ import eionet.cr.staging.exp.ExportRunner;
 import eionet.cr.staging.exp.ExportStatus;
 import eionet.cr.staging.exp.QueryConfiguration;
 import eionet.cr.staging.imp.ImportStatus;
-import eionet.cr.util.Pair;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -251,10 +251,38 @@ public interface StagingDatabaseDAO extends DAO {
     boolean existsRDFExport(int databaseId, String exportName) throws DAOException;
 
     /**
-     * Returns the list of available indicators. Each given by a pair, where the left member is the indicator's URI while the right
-     * member is the indicator's label.
-     * @return The list.
+     * Returns a {@link LinkedHashMap} of available indicator-notation pairs. i.e. the map's keys are indicator URIs, the values
+     * are the corresponding notations (i.e. labels).
+     *
+     * @return The map.
      * @throws DAOException If a database access error happens.
      */
-    List<Pair<String, String>> getIndicators() throws DAOException;
+    LinkedHashMap<String, String> getIndicators() throws DAOException;
+
+    /**
+     * Returns a {@link LinkedHashMap} of available breakdown-notation pairs. i.e. the map's keys are breakdown URIs, the values
+     * are the corresponding notations (i.e. labels).
+     *
+     * @return The map.
+     * @throws DAOException If a database access error happens.
+     */
+    LinkedHashMap<String, String> getBreakdowns() throws DAOException;
+
+    /**
+     * Returns a {@link LinkedHashMap} of available unit-notation pairs. i.e. the map's keys are unit URIs, the values
+     * are the corresponding notations (i.e. labels).
+     *
+     * @return The map.
+     * @throws DAOException If a database access error happens.
+     */
+    LinkedHashMap<String, String> getUnits() throws DAOException;
+
+    /**
+     * Returns a {@link LinkedHashMap} of available referenceArea-notation pairs. i.e. the map's keys are reference area URIs, the
+     * values are the corresponding notations (i.e. labels).
+     *
+     * @return The map.
+     * @throws DAOException If a database access error happens.
+     */
+    LinkedHashMap<String, String> getRefAreas() throws DAOException;
 }

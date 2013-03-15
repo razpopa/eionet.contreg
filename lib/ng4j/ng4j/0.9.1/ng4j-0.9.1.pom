@@ -1,0 +1,6 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ng4j</groupId>
+  <artifactId>ng4j</artifactId>
+  <version>0.9.1</version>
+</project>

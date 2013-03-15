@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.FilterConfig;
@@ -40,12 +41,16 @@ import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import eionet.cr.staging.AvailableFile;
 import eionet.cr.staging.FileDownloader;
+import eionet.cr.staging.imp.msaccess.MSAccessImporter;
+import eionet.cr.util.CompressUtil;
 import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.URLUtil;
 import eionet.cr.web.action.AbstractActionBean;
@@ -83,6 +88,18 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     /** */
     private List<String> fileNames;
 
+    /** */
+    private String selectedFileName;
+
+    /** */
+    private String uncompressedFileName;
+
+    /** */
+    private List<ArchiveEntry> archiveEntries;
+
+    /** */
+    private List<String> extractEntries;
+
     /**
      * List all available files.
      *
@@ -101,10 +118,11 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     }
 
     /**
-     * Upload.
+     * Handles the "upload" event.
      *
      * @return the resolution
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     public Resolution upload() throws IOException {
 
@@ -116,7 +134,7 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     }
 
     /**
-     * Download.
+     * Handles the the "download" event.
      *
      * @return the resolution
      */
@@ -129,7 +147,7 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     }
 
     /**
-     * Delete.
+     * Handles the "delete" event.
      *
      * @return the resolution
      */
@@ -156,6 +174,109 @@ public class AvailableFilesActionBean extends AbstractActionBean {
         }
 
         return new RedirectResolution(this.getClass());
+    }
+
+    /**
+     * Event that is triggered when the user has clicked a file name in the list of available files.
+     *
+     * @return the resulting resolution
+     */
+    public Resolution select() {
+
+        this.selectedFileName = getContext().getRequestParameter("select");
+        if (StringUtils.isBlank(selectedFileName)) {
+            addGlobalValidationError("No file selected!");
+            return list();
+        }
+
+        File selectedFile = new File(FileDownloader.FILES_DIR, selectedFileName);
+        if (!selectedFile.exists() || !selectedFile.isFile()) {
+            addGlobalValidationError("No such file existing!");
+            return new RedirectResolution(getClass());
+        }
+
+        uncompressedFileName = CompressUtil.getUncompressedFileName(selectedFile);
+        archiveEntries = CompressUtil.getArchiveEntries(selectedFile);
+
+        if (isCompressedFile() || isArchiveFile()) {
+            return list();
+        } else if (!MSAccessImporter.isMSAccessFile(selectedFile)) {
+            addWarningMessage("The selected file is not compressed or archive, and it is not a MicrosoftAccess file either!");
+            return new RedirectResolution(getClass());
+        } else {
+            return new RedirectResolution(StagingDatabaseActionBean.class, "add").addParameter("fileName", selectedFileName);
+        }
+    }
+
+    /**
+     * Event that is triggered when the user has chosen to uncompress a particular compressed file.
+     *
+     * @return the resulting resolution
+     * @throws IOException
+     */
+    public Resolution uncompress() throws IOException {
+
+        String fileName = getContext().getRequestParameter("uncompress");
+        if (StringUtils.isBlank(fileName)) {
+            addGlobalValidationError("No file selected!");
+        }
+
+        File file = new File(FileDownloader.FILES_DIR, fileName);
+        if (!file.exists() || !file.isFile()) {
+            addGlobalValidationError("Found no such file: " + fileName);
+        }
+
+        File uncompressedFile = new File(FileDownloader.FILES_DIR, CompressUtil.getUncompressedFileName(file));
+        if (uncompressedFile.exists()) {
+            addWarningMessage("Uncompression failed! A file by this name already exists: " + uncompressedFile.getName());
+        } else {
+            CompressUtil.uncompress(file, uncompressedFile);
+            addSystemMessage("File successfully uncompressed to thyis file: " + uncompressedFile.getName());
+        }
+
+        return new RedirectResolution(getClass());
+    }
+
+    /**
+     * Event that is triggered when the user has chosen to extract a particular archive file.
+     *
+     * @return the resulting resolution
+     * @throws IOException
+     */
+    public Resolution extract() throws IOException {
+
+        String fileName = getContext().getRequestParameter("extract");
+        if (StringUtils.isBlank(fileName)) {
+            addGlobalValidationError("No file selected!");
+        }
+
+        File file = new File(FileDownloader.FILES_DIR, fileName);
+        if (!file.exists() || !file.isFile()) {
+            addGlobalValidationError("Found no such file to extract from: " + fileName);
+        }
+
+        if (extractEntries == null || extractEntries.isEmpty()) {
+            addSystemMessage("No entries were selected for extraction!");
+        } else {
+            LinkedHashMap<String, String> entryToNewName = new LinkedHashMap<String, String>();
+            for (String entry : extractEntries) {
+                String newName = getContext().getRequestParameter(DigestUtils.md5Hex(entry) + "_newName");
+                if (StringUtils.isNotBlank(newName)) {
+                    entryToNewName.put(entry, newName);
+                } else {
+                    entryToNewName.put(entry, entry);
+                }
+            }
+            CompressUtil.extract(file, entryToNewName);
+
+            String msg = "Selected entries were extracted to the following files:";
+            for (String newName : entryToNewName.values()) {
+                msg += "\n" + newName;
+            }
+            addSystemMessage(msg);
+        }
+
+        return new RedirectResolution(getClass());
     }
 
     /**
@@ -236,7 +357,8 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     /**
      * Sets the upload file.
      *
-     * @param uploadFile the uploadFile to set
+     * @param uploadFile
+     *            the uploadFile to set
      */
     public void setUploadFile(FileBean uploadFile) {
         this.uploadFile = uploadFile;
@@ -245,7 +367,8 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     /**
      * Sets the download url.
      *
-     * @param downloadUrl the downloadUrl to set
+     * @param downloadUrl
+     *            the downloadUrl to set
      */
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
@@ -254,7 +377,8 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     /**
      * Sets the new file name.
      *
-     * @param newFileName the newFileName to set
+     * @param newFileName
+     *            the newFileName to set
      */
     public void setNewFileName(String newFileName) {
         this.newFileName = newFileName;
@@ -305,9 +429,59 @@ public class AvailableFilesActionBean extends AbstractActionBean {
     /**
      * Sets the file names.
      *
-     * @param fileNames the fileNames to set
+     * @param fileNames
+     *            the fileNames to set
      */
     public void setFileNames(List<String> fileNames) {
         this.fileNames = fileNames;
     }
+
+    /**
+     *
+     * @return
+     */
+    public String getSelectedFileName() {
+        return selectedFileName;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getUncompressedFileName() {
+        return uncompressedFileName;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<ArchiveEntry> getArchiveEntries() {
+        return archiveEntries;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isCompressedFile() {
+        return StringUtils.isNotBlank(uncompressedFileName);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isArchiveFile() {
+        return archiveEntries != null && !archiveEntries.isEmpty();
+    }
+
+    /**
+     *
+     * @param extractEntries
+     */
+    public void setExtractEntries(List<String> extractEntries) {
+        this.extractEntries = extractEntries;
+    }
+
 }

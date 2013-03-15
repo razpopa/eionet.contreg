@@ -21,6 +21,7 @@
 
 package eionet.cr.web.action.admin.staging;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -38,6 +39,7 @@ import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.StagingDatabaseDAO;
 import eionet.cr.staging.exp.ExportDTO;
+import eionet.cr.staging.exp.ExportRunner;
 import eionet.cr.staging.util.ImportExportLogUtil;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.admin.AdminWelcomeActionBean;
@@ -63,6 +65,9 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /** */
     private List<String> exportedResources;
+
+    /** */
+    private LinkedHashMap<String, List<String>> missingConcepts;
 
     /**
      * Default event handler.
@@ -238,5 +243,19 @@ public class RDFExportActionBean extends AbstractActionBean {
      */
     public Class getFactsheetActionBeanClass() {
         return FactsheetActionBean.class;
+    }
+
+    /**
+     * A lazy getter for {@link #missingConcepts}.
+     *
+     * @return
+     */
+    public LinkedHashMap<String, List<String>> getMissingConcepts() {
+
+        if (missingConcepts == null) {
+            missingConcepts = ExportRunner.missingConceptsFromString(exportDTO == null ? null : exportDTO.getMissingConcepts());
+        }
+
+        return missingConcepts;
     }
 }

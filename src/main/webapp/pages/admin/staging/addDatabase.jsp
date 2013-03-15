@@ -2,7 +2,7 @@
 
 <%@ include file="/pages/common/taglibs.jsp"%>
 
-<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Staging databases">
+<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Add a staging database">
 
     <stripes:layout-component name="contents">
 
@@ -25,7 +25,13 @@
                            From file:
                         </td>
                         <td>
-                           <c:out value="${actionBean.fileName}"/>&nbsp;(<fmt:formatNumber value="${actionBean.fileSize / 1000}" maxFractionDigits="0"/>&nbsp;KB)
+                           <c:out value="${actionBean.fileName}"/>&nbsp;
+                           <c:if test="${actionBean.fileSize < 1000}">
+                               (<c:out value="${actionBean.fileSize}"/> bytes)
+                           </c:if>
+                           <c:if test="${actionBean.fileSize >= 1000}">
+                               (<fmt:formatNumber value="${actionBean.fileSize / 1000}" maxFractionDigits="0"/>&nbsp;KB)
+                           </c:if>
                         </td>
                     </tr>
                     <tr>
@@ -48,7 +54,7 @@
                         <td>&nbsp;</td>
                         <td>
                             <stripes:submit name="add" value="Submit"/>
-                            <stripes:submit name="backToDbList" value="Cancel"/>
+                            <stripes:submit name="toAvailableFilesList" value="Cancel"/>
                         </td>
                     </tr>
                 </table>

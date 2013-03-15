@@ -58,7 +58,8 @@ public class MSAccessImporter implements ImporterIF {
     /**
      * Constructs a new instance with the given {@link ImportLoggerImpl}.
      *
-     * @param importLogger the import logger
+     * @param importLogger
+     *            the import logger
      */
     public MSAccessImporter(Logger importLogger) {
 
@@ -95,7 +96,8 @@ public class MSAccessImporter implements ImporterIF {
 
                 if (!structOnly) {
 
-                    LogUtil.info("Going to process the " + table.getRowCount() + " rows of table " + tableName, LOGGER, importLogger);
+                    LogUtil.info("Going to process the " + table.getRowCount() + " rows of table " + tableName, LOGGER,
+                            importLogger);
 
                     int rowNum = 0;
                     for (Map<String, Object> row : table) {
@@ -120,10 +122,13 @@ public class MSAccessImporter implements ImporterIF {
     /**
      * Gets the table.
      *
-     * @param database the database
-     * @param tableName the table name
+     * @param database
+     *            the database
+     * @param tableName
+     *            the table name
      * @return the table
-     * @throws ImportException the import exception
+     * @throws ImportException
+     *             the import exception
      */
     private Table getTable(Database database, String tableName) throws ImportException {
         try {
@@ -136,9 +141,11 @@ public class MSAccessImporter implements ImporterIF {
     /**
      * Gets the table names.
      *
-     * @param database the database
+     * @param database
+     *            the database
      * @return the table names
-     * @throws ImportException the import exception
+     * @throws ImportException
+     *             the import exception
      */
     private Set<String> getTableNames(Database database) throws ImportException {
 
@@ -152,9 +159,11 @@ public class MSAccessImporter implements ImporterIF {
     /**
      * Open database.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the database
-     * @throws ImportException the import exception
+     * @throws ImportException
+     *             the import exception
      */
     private Database openDatabase(File file) throws ImportException {
         try {
@@ -171,15 +180,34 @@ public class MSAccessImporter implements ImporterIF {
     /**
      * Close.
      *
-     * @param database the database
+     * @param database
+     *            the database
      */
-    private void close(Database database) {
+    private static void close(Database database) {
         if (database != null) {
             try {
                 database.close();
             } catch (IOException e) {
                 // Deliberately ignore closing exceptions
             }
+        }
+    }
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+    public static boolean isMSAccessFile(File file) {
+
+        Database database = null;
+        try {
+            database = Database.open(file);
+            return database != null;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            close(database);
         }
     }
 }

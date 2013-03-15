@@ -21,10 +21,13 @@
 
 package eionet.cr.web.action.admin.staging;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,8 @@ import net.sourceforge.stripes.controller.LifecycleStage;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.openrdf.repository.RepositoryException;
 
 import virtuoso.jdbc3.VirtuosoException;
 import eionet.cr.dao.DAOException;
@@ -57,7 +62,6 @@ import eionet.cr.staging.exp.ObjectType;
 import eionet.cr.staging.exp.ObjectTypes;
 import eionet.cr.staging.exp.QueryConfiguration;
 import eionet.cr.util.LinkedCaseInsensitiveMap;
-import eionet.cr.util.Pair;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
@@ -70,6 +74,9 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 @SessionScope
 @UrlBinding("/admin/exportRDF.action")
 public class RDFExportWizardActionBean extends AbstractActionBean {
+
+    /** */
+    private static final Logger LOGGER = Logger.getLogger(RDFExportWizardActionBean.class);
 
     /** */
     private static final SimpleDateFormat DEFAULT_EXPORT_NAME_DATE_FORMAT = new SimpleDateFormat("yyMMdd_HHmmss");
@@ -108,13 +115,17 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     private StagingDatabaseDTO dbDTO;
 
     /** */
-    private List<Pair<String, String>> indicators;
+    private LinkedHashMap<String, String> indicators;
+
+    /** */
+    private ExportRunner testRun;
 
     /**
      * Event handler for the wizard's first step.
      *
      * @return the resolution
-     * @throws DAOException the dAO exception
+     * @throws DAOException
+     *             the dAO exception
      */
     @DefaultHandler
     public Resolution step1() throws DAOException {
@@ -170,23 +181,59 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
-     * Step2.
+     * GET request to the wizard's 2nd step.
      *
-     * @return the resolution
-     * @throws DAOException the dAO exception
+     * @return
+     * @throws DAOException
      */
     public Resolution step2() throws DAOException {
 
-        // If GET request, just forward to the JSP and that's all.
-        if (getContext().getRequest().getMethod().equalsIgnoreCase("GET")) {
-            return new ForwardResolution(STEP2_JSP);
-        }
+        // Just forward to the JSP and that's all.
+        return new ForwardResolution(STEP2_JSP);
+    }
+
+    /**
+     *
+     * @return the resolution
+     * @throws DAOException
+     *             the dAO exception
+     */
+    public Resolution run() throws DAOException {
 
         StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
         ExportRunner.start(dbDTO, exportName, getUserName(), queryConf);
 
         addSystemMessage("RDF export successfully started! Use operations menu to list ongoing and finished RDF exports from this database.");
         return new RedirectResolution(StagingDatabaseActionBean.class).addParameter("dbName", dbName);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Resolution test() {
+
+        try {
+            StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
+            testRun = ExportRunner.test(dbDTO, queryConf);
+            int rowCount = testRun.getRowCount();
+            if (rowCount > 0) {
+                addSystemMessage("Test run successful, see results below!");
+            } else {
+                addSystemMessage("The test returned no results!");
+            }
+        } catch (RepositoryException e) {
+            LOGGER.error("A repository access error occurred", e);
+            addGlobalValidationError("A repository access error occurred:\n" + e.getMessage());
+        } catch (DAOException e) {
+            LOGGER.error("Error when reading existing concepts", e);
+            addGlobalValidationError("Error when reading existing concepts:\n" + e.getMessage());
+        } catch (SQLException e) {
+            LOGGER.error("A query execution error occurred", e);
+            addGlobalValidationError("A query execution error occurred:\n" + e.getMessage());
+        }
+
+        return new ForwardResolution(STEP2_JSP);
     }
 
     /**
@@ -217,10 +264,10 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
-     * Validate step2.
+     * Validate the GET request to step 2 or the POST request submitted from step2 page (i.e. the Run event)
      */
-    @ValidationMethod(on = {"step2"})
-    public void validateStep2() {
+    @ValidationMethod(on = {"step2", "run", "test"})
+    public void validateStep2AndRun() {
 
         boolean hasIndicatorMapping = false;
         // Ensure that all selected columns have been mapped to a property.
@@ -258,20 +305,20 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
         }
 
         // Ensure that the dataset ID template has been provided and is valid.
-        //        String datasetIdTemplate = queryConf.getDatasetIdTemplate();
-        //        if (StringUtils.isBlank(datasetIdTemplate)) {
-        //            addGlobalValidationError("You must specify the dataset identifier template!");
-        //        } else if (!validateColumnPlaceholders(datasetIdTemplate, colMappings == null ? null : colMappings.keySet())) {
-        //            addGlobalValidationError("A placeholder in dataset identifier template does not match any of the selected columns!");
-        //        }
+        // String datasetIdTemplate = queryConf.getDatasetIdTemplate();
+        // if (StringUtils.isBlank(datasetIdTemplate)) {
+        // addGlobalValidationError("You must specify the dataset identifier template!");
+        // } else if (!validateColumnPlaceholders(datasetIdTemplate, colMappings == null ? null : colMappings.keySet())) {
+        // addGlobalValidationError("A placeholder in dataset identifier template does not match any of the selected columns!");
+        // }
         //
-        //        // Ensure that the object ID template has been provided and is valid.
-        //        String objectIdTemplate = queryConf.getObjectIdTemplate();
-        //        if (StringUtils.isBlank(objectIdTemplate)) {
-        //            addGlobalValidationError("You must specify the objects identifier template!");
-        //        } else if (!validateColumnPlaceholders(objectIdTemplate, colMappings == null ? null : colMappings.keySet())) {
-        //            addGlobalValidationError("A placeholder in objects identifier template does not match any of the selected columns!");
-        //        }
+        // // Ensure that the object ID template has been provided and is valid.
+        // String objectIdTemplate = queryConf.getObjectIdTemplate();
+        // if (StringUtils.isBlank(objectIdTemplate)) {
+        // addGlobalValidationError("You must specify the objects identifier template!");
+        // } else if (!validateColumnPlaceholders(objectIdTemplate, colMappings == null ? null : colMappings.keySet())) {
+        // addGlobalValidationError("A placeholder in objects identifier template does not match any of the selected columns!");
+        // }
 
         getContext().setSourcePageResolution(new ForwardResolution(STEP2_JSP));
     }
@@ -279,7 +326,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     /**
      * Validate step1.
      *
-     * @throws DAOException the dAO exception
+     * @throws DAOException
+     *             the dAO exception
      */
     @ValidationMethod(on = {"step1"})
     public void validateStep1() throws DAOException {
@@ -325,7 +373,7 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     public void beforeBindingAndValidation() {
 
         String eventName = getContext().getEventName();
-        if (eventName != null && (eventName.equals("backToStep1") || eventName.equals("step2"))) {
+        if (Arrays.asList("backToStep1", "step2", "run", "test").contains(eventName)) {
 
             ObjectType objectType = getObjectType();
             if (objectType != null) {
@@ -363,6 +411,7 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
 
     /**
      * To be called when database name has changed.
+     *
      * @throws DAOException
      */
     private void dbNameChanged() throws DAOException {
@@ -398,7 +447,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     /**
      * To be called when selected columns changed.
      *
-     * @param selectedColumns the selected columns
+     * @param selectedColumns
+     *            the selected columns
      */
     private void selectedColumnsChanged(Set<String> selectedColumns) {
 
@@ -435,8 +485,10 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     /**
      * Return true if the two given string sets are equal case insensitively.
      *
-     * @param set1 the set1
-     * @param set2 the set2
+     * @param set1
+     *            the set1
+     * @param set2
+     *            the set2
      * @return true, if equal, otherwise false
      */
     private boolean equalsCaseInsensitive(Set<String> set1, Set<String> set2) {
@@ -478,7 +530,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param dbName the dbName to set
+     * @param dbName
+     *            the dbName to set
      */
     public void setDbName(String dbName) {
         this.dbName = dbName;
@@ -492,7 +545,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param queryConf the queryConf to set
+     * @param queryConf
+     *            the queryConf to set
      */
     public void setQueryConf(QueryConfiguration queryConf) {
         this.queryConf = queryConf;
@@ -554,7 +608,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param exportName the exportName to set
+     * @param exportName
+     *            the exportName to set
      */
     public void setExportName(String exportName) {
         this.exportName = exportName;
@@ -563,8 +618,10 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     /**
      * Validate column place-holders in the given template, using the given set of column names.
      *
-     * @param template the template
-     * @param colNames the col names
+     * @param template
+     *            the template
+     * @param colNames
+     *            the col names
      * @return true, if successful
      */
     private boolean validateColumnPlaceholders(String template, Set<String> colNames) {
@@ -595,7 +652,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
      * Returns list of {@link StagingDatabaseTableColumnDTO} for the currently selected database.
      *
      * @return the list of {@link StagingDatabaseTableColumnDTO}
-     * @throws DAOException when a database error happens
+     * @throws DAOException
+     *             when a database error happens
      */
     public List<StagingDatabaseTableColumnDTO> getTablesColumns() throws DAOException {
 
@@ -628,11 +686,18 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
      * @return the indicators
      * @throws DAOException
      */
-    public List<Pair<String, String>> getIndicators() throws DAOException {
+    public LinkedHashMap<String, String> getIndicators() throws DAOException {
 
         if (indicators == null) {
             indicators = DAOFactory.get().getDao(StagingDatabaseDAO.class).getIndicators();
         }
         return indicators;
+    }
+
+    /**
+     * @return the testRun
+     */
+    public ExportRunner getTestRun() {
+        return testRun;
     }
 }

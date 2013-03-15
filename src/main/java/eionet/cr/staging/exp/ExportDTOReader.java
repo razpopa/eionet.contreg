@@ -57,9 +57,10 @@ public class ExportDTOReader extends SQLResultSetBaseReader<ExportDTO> {
         exportDTO.setFinished(rs.getTimestamp("FINISHED"));
         exportDTO.setStatus(Enum.valueOf(ExportStatus.class, rs.getString("STATUS")));
         exportDTO.setExportLog(rs.getString("EXPORT_LOG"));
+        exportDTO.setRowCount(rs.getInt("ROW_COUNT"));
         exportDTO.setNoOfSubjects(rs.getInt("NOOF_SUBJECTS"));
         exportDTO.setNoOfTriples(rs.getInt("NOOF_TRIPLES"));
-        exportDTO.setGraphs(rs.getString("GRAPHS"));
+        exportDTO.setMissingConcepts(rs.getString("MISSING_CONCEPTS"));
 
         String colName = "DATABASE_NAME";
         try {

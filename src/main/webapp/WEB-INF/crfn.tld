@@ -429,4 +429,16 @@
         </example>
     </function>
 
+    <function>
+        <description>
+            Returns hexadecimal MD5 hash of the given input object's toString() result.
+        </description>
+        <name>md5Hex</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String md5Hex(java.lang.Object)</function-signature>
+        <example>
+            ${md5Hex(str)}
+        </example>
+    </function>
+
 </taglib>

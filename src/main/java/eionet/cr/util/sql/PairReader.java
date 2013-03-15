@@ -22,6 +22,7 @@ package eionet.cr.util.sql;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.openrdf.model.Value;
@@ -34,7 +35,7 @@ import eionet.cr.util.Pair;
 /**
  * @author Aleksandr Ivanov <a href="mailto:aleksandr.ivanov@tietoenator.com">contact</a>
  */
-public class PairReader<T, T1> extends ResultSetMixedReader<Pair<T, T1>> {
+public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
     /**
      * Field name for left column in query.
@@ -45,12 +46,15 @@ public class PairReader<T, T1> extends ResultSetMixedReader<Pair<T, T1>> {
      */
     public static final String RIGHTCOL = "RCOL";
 
+    /** */
+    private LinkedHashMap<L, R> resultMap = new LinkedHashMap<L, R>();
+
     /*
      * (non-Javadoc)
      * @see eionet.cr.dao.readers.ResultSetMixedReader#getResultList()
      */
     @Override
-    public List<Pair<T, T1>> getResultList() {
+    public List<Pair<L, R>> getResultList() {
         return resultList;
     }
 
@@ -62,9 +66,10 @@ public class PairReader<T, T1> extends ResultSetMixedReader<Pair<T, T1>> {
     @SuppressWarnings("unchecked")
     public void readRow(ResultSet rs) throws SQLException, ResultSetReaderException {
 
-        T left = (T) rs.getObject(LEFTCOL);
-        T1 right = (T1) rs.getObject(RIGHTCOL);
-        resultList.add(new Pair<T, T1>(left, right));
+        L left = (L) rs.getObject(LEFTCOL);
+        R right = (R) rs.getObject(RIGHTCOL);
+        resultList.add(new Pair<L, R>(left, right));
+        resultMap.put(left, right);
     }
 
     /*
@@ -75,6 +80,7 @@ public class PairReader<T, T1> extends ResultSetMixedReader<Pair<T, T1>> {
     @Override
     @SuppressWarnings("unchecked")
     public void readRow(BindingSet bindingSet) {
+
         if (bindingSet != null && bindingSet.size() > 0) {
             Value lcol = bindingSet.getValue(LEFTCOL);
             Value rcol = bindingSet.getValue(RIGHTCOL);
@@ -86,9 +92,17 @@ public class PairReader<T, T1> extends ResultSetMixedReader<Pair<T, T1>> {
                 strRCol = rcol.stringValue();
             }
 
-            resultList.add(new Pair<T, T1>((T) strLcol, (T1) strRCol));
+            L left = (L) strLcol;
+            R right = (R) strRCol;
+            resultList.add(new Pair<L, R>(left, right));
+            resultMap.put(left, right);
         }
-
     }
 
+    /**
+     * @return the resultMap
+     */
+    public LinkedHashMap<L, R> getResultMap() {
+        return resultMap;
+    }
 }

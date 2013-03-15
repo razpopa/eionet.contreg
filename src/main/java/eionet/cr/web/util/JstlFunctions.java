@@ -35,6 +35,7 @@ import javax.servlet.jsp.PageContext;
 
 import net.sourceforge.stripes.action.UrlBinding;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -578,5 +579,14 @@ public final class JstlFunctions {
         }
 
         return false;
+    }
+
+    /**
+     *
+     * @param object
+     * @return
+     */
+    public static String md5Hex(Object object) {
+        return DigestUtils.md5Hex(object == null ? null : object.toString());
     }
 }
