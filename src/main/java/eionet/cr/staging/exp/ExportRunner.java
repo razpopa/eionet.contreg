@@ -79,7 +79,7 @@ public class ExportRunner extends Thread {
     private static final Logger LOGGER = Logger.getLogger(ExportRunner.class);
 
     /** */
-    private static final int MAX_TEST_RESULTS = 500;
+    public static final int MAX_TEST_RESULTS = 500;
 
     /** */
     private StagingDatabaseDTO dbDTO;

@@ -46,12 +46,20 @@
         <h1>RDF export: step 2</h1>
 
         <div style="margin-top:20px">
-            Your query has been compiled on the database side, and the following selected columns have been detected.<br/>
-            For each column, please specify a mapping to the corresponding RDF property.<br/>
-            If none of the selected columns is mapped to the "Indicator (code)" property, please also select an indicator from picklist.<br/>
-            It is also mandatory to select the dataset where the query's returned objects will go into.<br/>
-            Defaults have been selected by the system where possible.<br/>
-            Mandatory inputs are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>. Conditional inputs are marked with <img src="${pageContext.request.contextPath}/images/conditional.gif"/>.
+            <p>
+	            Your query has been compiled on the database side, and the following selected columns have been detected.<br/>
+	            For each column, please specify a mapping to the corresponding RDF property.<br/>
+	            If none of the selected columns is mapped to the "Indicator (code)" property, please also select an indicator from picklist.<br/>
+	            It is also mandatory to select the dataset where the query's returned objects will go into.<br/>
+	            Defaults have been selected by the system where possible.
+	            Mandatory inputs are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>. Conditional inputs are marked with <img src="${pageContext.request.contextPath}/images/conditional.gif"/>.
+            </p>
+            <p>
+                <strong>NB!</strong>
+                It is advised that you click "Test" before you click "Run". This will run the query without actually exporting anything yet,<br/>
+                but it will display the first ${actionBean.maxTestResults} rows that the query returned, and you will get a notification if the results contained<br/>
+                any concepts for which there is no metadata in the system yet!
+            </p>
         </div>
 
         <%-- The form --%>
@@ -125,10 +133,10 @@
                 <div style="width:100%;padding-top:20px">
 
                     <p>
-                        <c:if test="${actionBean.testRun.rowCount > actionBean.testRun.maxTestResults}">
-                            <strong>Test results (${actionBean.testRun.rowCount} found, displaying first ${actionBean.testRun.maxTestResults}):</strong>
+                        <c:if test="${actionBean.testRun.rowCount > actionBean.maxTestResults}">
+                            <strong>Test results (${actionBean.testRun.rowCount} found, displaying first ${actionBean.maxTestResults}):</strong>
                         </c:if>
-                        <c:if test="${actionBean.testRun.rowCount <= actionBean.testRun.maxTestResults}">
+                        <c:if test="${actionBean.testRun.rowCount <= actionBean.maxTestResults}">
                             <strong>Test results (${actionBean.testRun.rowCount} found):</strong>
                         </c:if>
                         <c:if test="${actionBean.testRun.foundMissingConcepts}">

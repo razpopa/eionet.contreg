@@ -700,4 +700,12 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     public ExportRunner getTestRun() {
         return testRun;
     }
+
+    /**
+     *
+     * @return
+     */
+    public int getMaxTestResults() {
+        return ExportRunner.MAX_TEST_RESULTS;
+    }
 }
