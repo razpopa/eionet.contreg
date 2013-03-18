@@ -11,7 +11,6 @@ import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
@@ -56,12 +55,20 @@ public class JenaUtil {
 
                 Statement statement = statements.next();
 
-                Resource jenaSubject = statement.getSubject();
-                Property jenaPredicate = statement.getPredicate();
-                RDFNode jenaObject = statement.getObject();
+                com.hp.hpl.jena.rdf.model.Resource jenaSubject = statement.getSubject();
+                String subjectUri = jenaSubject.getURI();
+                org.openrdf.model.Resource sesameSubject =
+                        subjectUri != null ? vf.createURI(subjectUri) : vf.createBNode(jenaSubject.getId().toString());
 
-                URI sesameSubject = vf.createURI(jenaSubject.getURI());
-                URI sesamePredicate = vf.createURI(jenaPredicate.getURI());
+                Property jenaPredicate = statement.getPredicate();
+                String predicateUri = jenaPredicate.getURI();
+                // Skip anonymous predicates as they should be theoretically impossible, and in case practically useless.
+                if (predicateUri == null) {
+                    continue;
+                }
+                URI sesamePredicate = vf.createURI(predicateUri);
+
+                RDFNode jenaObject = statement.getObject();
                 Value sesameObject = null;
 
                 if (jenaObject.isLiteral()) {
@@ -79,7 +86,13 @@ public class JenaUtil {
                         }
                     }
                 } else {
-                    sesameObject = vf.createURI(jenaObject.asResource().getURI());
+                    com.hp.hpl.jena.rdf.model.Resource jenaResource = jenaObject.asResource();
+                    String uri = jenaResource.getURI();
+                    if (uri != null) {
+                        sesameObject = vf.createURI(uri);
+                    } else {
+                        sesameObject = vf.createBNode(jenaResource.getId().toString());
+                    }
                 }
 
                 repoConn.add(sesameSubject, sesamePredicate, sesameObject, graphURI);

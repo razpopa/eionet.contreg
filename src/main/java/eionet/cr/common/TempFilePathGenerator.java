@@ -47,6 +47,9 @@ public final class TempFilePathGenerator {
     private static final String DASH = "-";
 
     /** */
+    private static final String PERIOD = ".";
+
+    /** */
     public static final Collection<File> TEMP_FILE_DIRECTORIES;
 
     /**
@@ -66,12 +69,12 @@ public final class TempFilePathGenerator {
 
     /**
      *
-     * @param fixedName
+     * @param extension
      * @return
      */
-    public static File generate(String fixedName) {
+    public static File generate(String extension) {
 
-        String fileName = PREFIX + fixedName;
+        String fileName = PREFIX + System.currentTimeMillis() + DASH + UUID.randomUUID() + PERIOD + extension;
         return new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION), fileName);
     }
 }

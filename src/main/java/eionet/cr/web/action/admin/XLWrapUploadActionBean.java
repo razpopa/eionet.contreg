@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
 
 import at.jku.xlwrap.common.XLWrapException;
+import eionet.cr.common.TempFilePathGenerator;
 import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
@@ -41,7 +42,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     public static final String JSP = "/pages/admin/staging/xlwUpload.jsp";
 
     /** */
-    private XLWrapUploadType uploadType = XLWrapUploadType.INDICATORS;
+    private XLWrapUploadType uploadType = XLWrapUploadType.INDICATOR;
 
     /**
      * @return the uploadType
@@ -65,11 +66,9 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     /**
      *
      * @return
-     * @throws IOException
-     * @throws OpenRDFException
-     * @throws XLWrapException
+     * @throws Exception
      */
-    public Resolution upload() throws IOException, XLWrapException, OpenRDFException {
+    public Resolution upload() {
 
         if (uploadType == null) {
             addGlobalValidationError("Missing upload type!");
@@ -79,15 +78,37 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             return new ForwardResolution(JSP);
         }
 
-        File xlsFile = uploadType.getXlsFile();
+        File spreadsheetFile = TempFilePathGenerator.generate("xls");
         try {
-            fileBean.save(xlsFile);
-            int stmtCount = XLWrapUtil.importMapping(uploadType.getMappingFileURL(), uploadType.getGraphUri());
-            addSystemMessage(stmtCount + " triples successfully imported!");
+            fileBean.save(spreadsheetFile);
+        } catch (IOException e) {
+            addCautionMessage("Failed saving the upload file to a temporary location!");
+            LOGGER.error("Failed saving " + fileBean.getFileName() + " to " + spreadsheetFile);
+            return new ForwardResolution(JSP);
+        }
 
+        try {
+            int stmtCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile);
+            addSystemMessage(stmtCount + " triples successfully imported!");
             return new RedirectResolution(getClass());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+            addCautionMessage("An I/O error occurred!");
+            return new ForwardResolution(JSP);
+        } catch (XLWrapException e) {
+            LOGGER.error(e.getMessage(), e);
+            addCautionMessage("A mapping failure occurred!");
+            return new ForwardResolution(JSP);
+        } catch (OpenRDFException e) {
+            LOGGER.error(e.getMessage(), e);
+            addCautionMessage("A repository access error occurred!");
+            return new ForwardResolution(JSP);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            addCautionMessage("An unexpected technical error occurred!");
+            return new ForwardResolution(JSP);
         } finally {
-            FileDeletionJob.register(xlsFile);
+            FileDeletionJob.register(spreadsheetFile);
         }
     }
 

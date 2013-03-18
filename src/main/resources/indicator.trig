@@ -30,7 +30,7 @@
     xl:offline "false"^^xsd:boolean ;
 
     xl:template [
-        xl:fileName "file:///${harvester.tempFileDir}/eionet.cr.tempfile-units.xls" ;
+        xl:fileName "@FILE_URL@" ;
         xl:sheetNumber "0" ;
         xl:constantGraph :CodelistSetup ;
         xl:templateGraph :Codelist ;
@@ -38,8 +38,8 @@
             a rdf:Seq ;
             rdf:_1 [
                 a xl:RowShift ;
-                xl:restriction "A2:E2" ;
-                xl:breakCondition "ALLEMPTY(A2:E2)" ;
+                xl:restriction "A2:H2" ;
+                xl:breakCondition "ALLEMPTY(A2:H2)" ; 
                 xl:steps "1" ;
             ] ;
         ]
@@ -47,27 +47,30 @@
 }
 
 :Codelist {
-    [ xl:uri "'http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(A2)"^^xl:Expr ] a skos:Concept ; a dad-class:UnitMeasure ;
-    skos:topConceptOf "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure')"^^xl:Expr ;
-    skos:prefLabel "B2"^^xl:Expr ;
+    [ xl:uri "'http://semantic.digital-agenda-data.eu/codelist/indicator/' & URLENCODE(LCASE(A2))"^^xl:Expr ] a skos:Concept ; a dad-class:Indicator ;
+    skos:topConceptOf "URI('http://semantic.digital-agenda-data.eu/codelist/indicator')"^^xl:Expr ;
     skos:notation "A2"^^xl:Expr ;
+    skos:prefLabel "B2"^^xl:Expr ;
     skos:altLabel "C2"^^xl:Expr ;
     skos:definition "D2"^^xl:Expr ;
-    rdfs:seeAlso "URI(E2)"^^xl:Expr .
-
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/unit-measure"]
-    skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(A2))"^^xl:Expr .
+    skos:notes "E2"^^xl:Expr ;
+    dad-prop:membership [ 
+        dad-prop:member-of "URI('http://semantic.digital-agenda-data.eu/codelist/indicator-group/' & URLENCODE(LCASE(F2)))"^^xl:Expr ;
+        dad-prop:order "G2"^^xl:Expr 
+    ];
+    dcterms:source "URI('http://semantic.digital-agenda-data.eu/codelist/source/' & URLENCODE(LCASE(H2)))"^^xl:Expr .
+    
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator"] 
+    skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/indicator/' & URLENCODE(LCASE(A2)))"^^xl:Expr .
 }
 
 :CodelistSetup {
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/unit-measure"]
-      a skos:ConceptScheme ;
-      a sdmx:CodeList ;
-      skos:prefLabel "Code list for units of measure used by Digital Agenda Scoreboard" ;
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator"] 
+      a skos:ConceptScheme ; a sdmx:CodeList ;
+      skos:prefLabel "Code list for indicators used by Digital Agenda Scoreboard"; 
       skos:inScheme "URI('http://semantic.digital-agenda-data.eu/def/scheme')"^^xl:Expr ;
-      skos:notation "CL_UNIT_MEASURE" ;
-      rdfs:isDefinedBy "URI('http://digital-agenda-data.eu/')"^^xl:Expr ;
-      rdfs:seeAlso "URI('http://eurostat.linked-statistics.org/dic/unit')"^^xl:Expr .
+      skos:notation "UCASE(SHEETNAME(A2))"^^xl:Expr ;
+      rdfs:isDefinedBy "URI('http://digital-agenda-data.eu/')"^^xl:Expr .
 
 }
 

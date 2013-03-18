@@ -1,42 +1,52 @@
 package eionet.cr.util.xlwrap;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-import eionet.cr.common.TempFilePathGenerator;
+import eionet.cr.common.CRRuntimeException;
 
 public enum XLWrapUploadType {
 
-    INDICATORS("Indicators metadata", "File containing metadata of the Digital Agenda Scoreboard indicators", "http://semantic.digital-agenda-data.eu/metadata/indicators"),
-    BREAKDOWNS("Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns", "http://semantic.digital-agenda-data.eu/metadata/breakdowns"),
-    UNITS("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units", "http://semantic.digital-agenda-data.eu/metadata/units");
+    INDICATOR("Indicators metadata", "File containing metadata of the Digital Agenda Scoreboard indicators"),
+    INDICATOR_GROUP("Indicator groups metadata", "File containing metadata of the Digital Agenda Scoreboard indicator groups"),
+    BREAKDOWN("Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns"),
+    BREAKDOWN_GROUP("Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
+    UNIT("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
+    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"),
+    OBSERVATION("Observations metadata", "File containing metadata of certain Digital Agenda Scoreboard observations");
+
+    /** */
+    private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@/";
+    public static final String MAPPING_FILE_EXTENSION = "trig";
 
     /** */
     private String title;
     private String hint;
-    private String graphUri;
 
     /** */
-    private File xlsFile;
-    private URL mappingFileURL;
+    private String graphUri;
+    private File mappingTemplate;
 
     /**
      * Constructor.
      * @param title
      * @param hint
-     * @param xlsFileName
-     * @param trigFileName
-     * @param graphUri
      */
-    private XLWrapUploadType(String title, String hint, String graphUri) {
+    private XLWrapUploadType(String title, String hint) {
 
         this.title = title;
         this.hint = hint;
-        this.graphUri = graphUri;
 
-        String lowerName = name().toLowerCase();
-        this.xlsFile = TempFilePathGenerator.generate(lowerName + ".xls");
-        this.mappingFileURL = getClass().getClassLoader().getResource(lowerName + ".trig");
+        String normalizedName = name().toLowerCase().replace('_', '-');
+        this.graphUri = GRAPH_TEMPLATE.replace("@type@", normalizedName);
+
+        URL mappingTemplateURL = getClass().getClassLoader().getResource(normalizedName + "." + MAPPING_FILE_EXTENSION);
+        try {
+            this.mappingTemplate = new File(mappingTemplateURL.toURI());
+        } catch (URISyntaxException e) {
+            throw new CRRuntimeException("Invalid mapping template URI: " + mappingTemplateURL, e);
+        }
     }
 
     /**
@@ -61,24 +71,17 @@ public enum XLWrapUploadType {
     }
 
     /**
-     * @return the xlsFile
-     */
-    public File getXlsFile() {
-        return xlsFile;
-    }
-
-    /**
-     * @return the mappingFileURL
-     */
-    public URL getMappingFileURL() {
-        return mappingFileURL;
-    }
-
-    /**
      *
      * @return
      */
     public String getName() {
         return name();
+    }
+
+    /**
+     * @return the mappingTemplate
+     */
+    public File getMappingTemplate() {
+        return mappingTemplate;
     }
 }
