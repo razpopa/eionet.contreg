@@ -88,13 +88,14 @@
                         <c:set var="editAllowed" value="${registrationsAllowed && !subject.anonymous}"/>
                         <c:set var="harvestAllowed" value="${editAllowed && subjectUrl!=null && !actionBean.currentlyHarvested && !actionBean.uriIsFolder}"/>
                         <c:set var="sourceReadActionsAllowed" value="${actionBean.uriIsHarvestSource}"/>
+                        <c:set var="uriIsGraph" value="${actionBean.uriIsGraph}"/>
                         <c:set var="downloadAllowed" value="${actionBean.subjectDownloadable}"/>
                         <c:set var="addBookmarkAllowed" value="${registrationsAllowed && !actionBean.subjectIsUserBookmark}"/>
                         <c:set var="removeBookmarkAllowed" value="${actionBean.subjectIsUserBookmark}"/>
                         <c:set var="addReviewAllowed" value="${registrationsAllowed && subjectUrl!=null}"/>
                         <c:set var="addToCompiledDataset" value="${sourceReadActionsAllowed && actionBean.adminLoggedIn && !actionBean.compiledDataset && not empty actionBean.userCompiledDatasets}"/>
 
-                        <c:set var="displayOperations" value="${editAllowed || harvestAllowed || sourceReadActionsAllowed || downloadAllowed || addBookmarkAllowed || removeBookmarkAllowed || addReviewAllowed}"/>
+                        <c:set var="displayOperations" value="${editAllowed || harvestAllowed || sourceReadActionsAllowed || uriIsGraph || downloadAllowed || addBookmarkAllowed || removeBookmarkAllowed || addReviewAllowed}"/>
 
                         <c:if test="${displayOperations}">
                             <ul id="dropdown-operations">
@@ -124,6 +125,8 @@
                                                     <stripes:param name="uri" value="${subjectUrl}"/>
                                                 </stripes:link>
                                             </li>
+                                        </c:if>
+                                        <c:if test="${uriIsGraph || sourceReadActionsAllowed}">
                                             <li>
                                                 <stripes:link class="link-plain" href="/source.action?export=&harvestSource.url=${subjectUrl}">Export triples</stripes:link>
                                             </li>
@@ -271,12 +274,17 @@
                     <c:otherwise>
                         <c:choose>
                             <c:when test="${not empty actionBean.uri}">
-                                <c:if test='${crfn:userHasPermission(pageContext.session, "/registrations", "u")}'>
+                                <c:if test='${actionBean.uriIsGraph || crfn:userHasPermission(pageContext.session, "/registrations", "u")}'>
                                     <c:if test="${not empty actionBean.url}">
                                         <ul id="dropdown-operations">
                                             <li>
                                                 <a href="#">Operations</a>
                                                 <ul>
+                                                    <c:if test="${actionBean.uriIsGraph}">
+                                                        <li>
+                                                            <stripes:link class="link-plain" href="/source.action?export=&harvestSource.url=${actionBean.uri}">Export triples</stripes:link>
+                                                        </li>
+                                                    </c:if>
                                                     <c:if test="${actionBean.currentlyHarvested==false}">
                                                         <li>
                                                             <stripes:url value="${actionBean.urlBinding}" event="harvestAjax"  var="url">

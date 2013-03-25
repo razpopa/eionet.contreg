@@ -27,7 +27,9 @@ import java.util.List;
 import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
+import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.HarvestSourceDAO;
+import eionet.cr.dao.HelperDAO;
 import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.SubjectDTO;
 
@@ -41,8 +43,9 @@ public final class FactsheetTabMenuHelper {
     /** The subject data object found by the requestd URI or URI hash. */
     private final SubjectDTO subject;
 
-    private final boolean uriIsHarvestSource;
-    private final boolean mapDisplayable;
+    private boolean uriIsGraph;
+    private boolean uriIsHarvestSource;
+    private boolean mapDisplayable;
     private boolean sparqlBookmarkType;
     private boolean compiledDatasetType;
     private boolean folderType;
@@ -77,6 +80,7 @@ public final class FactsheetTabMenuHelper {
 
         harvestSourceDTO = harvesterSourceDao.getHarvestSourceByUrl(subject.getUri());
         uriIsHarvestSource = harvestSourceDTO != null;
+        uriIsGraph = DAOFactory.get().getDao(HelperDAO.class).isGraphExists(uri);
 
         //TODO: mapDisplayable = Subjects.WGS_SPATIAL_THING.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
         mapDisplayable = subject.getObject(Predicates.WGS_LAT) != null && subject.getObject(Predicates.WGS_LONG) != null;
@@ -144,7 +148,7 @@ public final class FactsheetTabMenuHelper {
         te2.addParam("uri", subject.getUri());
         result.add(te2);
 
-        if (uriIsHarvestSource) {
+        if (uriIsGraph || uriIsHarvestSource) {
             TabElement te3 = new TabElement(TabTitle.OBJECTS_IN_SOURCE, "/objectsInSource.action", selected);
             te3.setEvent("search");
             te3.addParam("uri", subject.getUri());
@@ -280,5 +284,12 @@ public final class FactsheetTabMenuHelper {
      */
     public HarvestSourceDTO getHarvestSourceDTO() {
         return harvestSourceDTO;
+    }
+
+    /**
+     * @return the uriIsGraph
+     */
+    public boolean isUriIsGraph() {
+        return uriIsGraph;
     }
 }

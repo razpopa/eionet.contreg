@@ -123,6 +123,9 @@ public class FactsheetActionBean extends AbstractActionBean {
     /** True, if URI is harvest source. */
     private boolean uriIsHarvestSource;
 
+    /** True, if URI is a graph. */
+    private boolean uriIsGraph;
+
     /** True, if URI is local folder. */
     private boolean uriIsFolder;
 
@@ -172,6 +175,7 @@ public class FactsheetActionBean extends AbstractActionBean {
 
             tabs = tabsHelper.getTabs(FactsheetTabMenuHelper.TabTitle.RESOURCE_PROPERTIES);
             uriIsHarvestSource = tabsHelper.isUriIsHarvestSource();
+            uriIsGraph = tabsHelper.isUriIsGraph();
             uriIsFolder = tabsHelper.isUriFolder();
             harvestSourceDTO = tabsHelper.getHarvestSourceDTO();
         }
@@ -842,6 +846,13 @@ public class FactsheetActionBean extends AbstractActionBean {
      */
     public HarvestSourceDTO getHarvestSourceDTO() {
         return harvestSourceDTO;
+    }
+
+    /**
+     * @return the uriIsGraph
+     */
+    public boolean isUriIsGraph() {
+        return uriIsGraph;
     }
 
 }

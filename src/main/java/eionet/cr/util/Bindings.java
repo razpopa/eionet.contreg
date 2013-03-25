@@ -150,6 +150,24 @@ public class Bindings {
 
     /**
      *
+     * @param name
+     * @param value
+     */
+    public void set(String name, String value) {
+        if (URIUtil.isSchemedURI(value)) {
+            try {
+                bindings.put(name, new URI(value));
+            } catch (URISyntaxException e) {
+                bindings.put(name, value);
+            }
+        }
+        else{
+            bindings.put(name, value);
+        }
+    }
+
+    /**
+     *
      * @param query
      * @param valueFactory
      */

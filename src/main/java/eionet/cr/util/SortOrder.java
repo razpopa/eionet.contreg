@@ -21,6 +21,7 @@
 package eionet.cr.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.displaytag.properties.SortOrderEnum;
 
 /**
  *
@@ -68,6 +69,14 @@ public enum SortOrder {
             return DESCENDING;
         else
             return ASCENDING;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public SortOrderEnum toDisplayTagEnum() {
+        return this.equals(ASCENDING) ? SortOrderEnum.ASCENDING : SortOrderEnum.DESCENDING;
     }
 
     /**

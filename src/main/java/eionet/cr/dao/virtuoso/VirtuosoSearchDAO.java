@@ -71,9 +71,11 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * @see eionet.cr.dao.SearchDAO#searchByFreeText(eionet.cr.dao.util.SearchExpression,
      *      eionet.cr.dao.helpers.FreeTextSearchHelper.FilterType, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest)
-     * @param exactMatch indicates if only exact amtch of String is searched
+     * @param exactMatch
+     *            indicates if only exact amtch of String is searched
      * @return
-     * @throws DAOException if query fails.
+     * @throws DAOException
+     *             if query fails.
      */
     @Override
     public SearchResultDTO<SubjectDTO> searchByFreeText(final SearchExpression expression, final FilterType filterType,
@@ -172,7 +174,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      */
     private SearchResultDTO<SubjectDTO> searchByFilters_alternative(Map<String, String> filters, boolean checkFiltersRange,
             PagingRequest pagingRequest, SortingRequest sortingRequest, List<String> selectPredicates, boolean useInference)
-                    throws DAOException {
+            throws DAOException {
 
         SearchResultDTO<SubjectDTO> result = new SearchResultDTO<SubjectDTO>();
         Bindings bindings = new Bindings();
@@ -357,7 +359,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
     @Override
     public SearchResultDTO<SubjectDTO> searchByFilters(Map<String, String> filters, boolean checkFiltersRange,
             PagingRequest pagingRequest, SortingRequest sortingRequest, List<String> selectPredicates, boolean useInference)
-                    throws DAOException {
+            throws DAOException {
 
         SearchResultDTO<SubjectDTO> result = new SearchResultDTO<SubjectDTO>();
 
@@ -643,12 +645,17 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      *
      * @see eionet.cr.dao.SearchDAO#searchByTags(java.util.List, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest, java.util.List)
-     * @param tags List<String> - tag names
-     * @param selectedPredicates List<String> - predicates to be shown
-     * @param pagingRequest sortingRequest PagingRequest
-     * @param sortingRequest pagingRequest SortingRequest
+     * @param tags
+     *            List<String> - tag names
+     * @param selectedPredicates
+     *            List<String> - predicates to be shown
+     * @param pagingRequest
+     *            sortingRequest PagingRequest
+     * @param sortingRequest
+     *            pagingRequest SortingRequest
      * @return Pair <Integer, List<SubjectDTO>>
-     * @throws DAOException if query fails
+     * @throws DAOException
+     *             if query fails
      */
     @Override
     public SearchResultDTO<SubjectDTO> searchByTags(final List<String> tags, final PagingRequest pagingRequest,
@@ -872,7 +879,8 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
     /**
      * Helper method to convert array of tag to a map required by search method.
      *
-     * @param tags List<String> tag names
+     * @param tags
+     *            List<String> tag names
      * @return Map<String, String> in format [tag predicate: tag name]
      */
     private Map<String, String> buildTagsInputParameter(final List<String> tags) {
@@ -969,5 +977,101 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
         List<SubjectDTO> resultList = getFoundSubjectsData(typeUris, neededPredicates);
         return resultList;
+    }
+
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see eionet.cr.dao.SearchDAO#searchDataCubeObservations(eionet.cr.dto.ObservationDTO, java.lang.String,
+//     * eionet.cr.util.SortOrder)
+//     */
+//    @Override
+//    public List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order)
+//            throws DAOException {
+//
+//        if (filter == null) {
+//            throw new IllegalArgumentException("The filter object must not be null!");
+//        }
+//
+//        LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
+//
+//        Hashtable<String, String> predicateAliases = new Hashtable<String, String>();
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("select\n");
+//        sb.append("  ?s ?dataset ?indicator ?breakdown ?refArea ?timePeriod ?unit ?obsValue\n");
+//        sb.append("where {\n");
+//        sb.append("  ?s a <").append(Subjects.DCTYPE_DATASET_CLASS).append(">");
+//
+//        Bindings bindings = new Bindings();
+//        String filterStr = "?s <predicateUri> ?predicateAlias. filter (?predicateAlias = ?predicateAliasValue)";
+//
+//        for (Entry<String, String> entry : filterMap.entrySet()) {
+//
+//            String predicateUri = entry.getKey();
+//            String value = entry.getValue();
+//            String predicateAlias = predicateAliases.get(predicateUri);
+//
+//            filterStr = StringUtils.replace(filterStr, "predicateUri", predicateUri);
+//            filterStr = StringUtils.replace(filterStr, "predicateAlias", predicateAlias);
+//
+//            sb.append(".\n  ").append(filterStr);
+//            bindings.set(predicateAlias + "Value", value);
+//        }
+//
+//        String optionalStr = "optional {?s <predicateUri> ?predicateAlias}";
+//        for (Entry<String, String> entry : predicateAliases.entrySet()) {
+//
+//            String predicateUri = entry.getKey();
+//            if (!filterMap.containsKey(predicateUri)) {
+//
+//                String predicateAlias = entry.getValue();
+//                optionalStr = StringUtils.replace(optionalStr, "predicateUri", predicateUri);
+//                optionalStr = StringUtils.replace(optionalStr, "predicateAlias", predicateAlias);
+//                sb.append(".\n  ").append(filterStr);
+//            }
+//        }
+//
+//        sb.append("\n}");
+//
+//        if (sortAlias != null && predicateAliases.values().contains(sortAlias)) {
+//            sb.append("\norder by ").append(order == null ? "" : order).append("?").append(sortAlias);
+//        }
+//
+//        return null;
+//    }
+
+    public static void main(String[] args) throws DAOException {
+
+        HashMap<String, String> filters = new HashMap<String, String>();
+        filters.put(Predicates.RDF_TYPE, "http://purl.org/linked-data/cube#Observation");
+        //filters.put(Predicates.DAS_INDICATOR, "http://semantic.digital-agenda-data.eu/codelist/indicator/i_csk_ge_me");
+        filters.put(Predicates.DAS_UNITMEASURE, "http://semantic.digital-agenda-data.eu/codelist/unit-measure/pc_ind");
+        //filters.put(Predicates.DAS_TIMEPERIOD, "http://reference.data.gov.uk/id/year/2006");
+
+        int pageNo = 16;
+        PagingRequest pagingRequest = PagingRequest.create(pageNo);
+        SortingRequest sortRequest =
+                new SortingRequest("http://semantic.digital-agenda-data.eu/def/property/ref-area", SortOrder.DESCENDING);
+
+        SearchDAO dao = DAOFactory.get().getDao(SearchDAO.class);
+
+        long start = System.currentTimeMillis();
+        SearchResultDTO<SubjectDTO> result = dao.searchByFilters(filters, false, pagingRequest, sortRequest, null, false);
+        long durationMillis = System.currentTimeMillis() - start;
+
+        result.getMatchCount();
+        List<SubjectDTO> items = result.getItems();
+
+        if (items == null || items.isEmpty()) {
+            System.out.println("None found!");
+        } else {
+            int size = result.getMatchCount() == 0 ? items.size() : result.getMatchCount();
+            System.out.println(size + " found! Time taken in ms: " + durationMillis);
+            System.out.println("Displaying page #" + pageNo);
+            for (SubjectDTO subjectDTO : items) {
+                System.out.println(subjectDTO.getUri());
+            }
+        }
     }
 }

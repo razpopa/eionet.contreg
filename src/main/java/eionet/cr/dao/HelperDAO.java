@@ -441,4 +441,22 @@ public interface HelperDAO extends DAO {
      * @throws DAOException if deleting fails
      */
     void deleteProjectBookmark(String uri) throws DAOException;
+
+    /**
+     *
+     * @param rdfType
+     * @param labelPredicates
+     * @return
+     * @throws DAOException
+     */
+    List<Pair<String, String>> getUriLabels(String rdfType, String... labelPredicates) throws DAOException;
+
+    /**
+     *
+     * @param predicateUri
+     * @param labelPredicates
+     * @return
+     * @throws DAOException
+     */
+    List<Pair<String, String>> getDistinctObjectLabels(String predicateUri, String... labelPredicates) throws DAOException;
 }

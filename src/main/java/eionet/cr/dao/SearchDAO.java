@@ -175,4 +175,14 @@ public interface SearchDAO extends DAO {
      * @throws DAOException if query fails.
      */
     List<SubjectDTO> getTypes() throws DAOException;
+
+//    /**
+//     *
+//     * @param filter
+//     * @param sortAlias
+//     * @param order
+//     * @return
+//     * @throws DAOException
+//     */
+//    List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order) throws DAOException;
 }

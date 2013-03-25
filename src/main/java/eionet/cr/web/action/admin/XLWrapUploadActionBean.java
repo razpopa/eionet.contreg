@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -13,6 +15,7 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
 
@@ -22,6 +25,7 @@ import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
 import eionet.cr.web.action.AbstractActionBean;
+import eionet.cr.web.action.factsheet.ObjectsInSourceActionBean;
 
 /**
  * Action bean for uploading an MS Excel or OpenDocument spreadsheet file into the RDF model and triple store. Pre-configured types
@@ -36,6 +40,9 @@ import eionet.cr.web.action.AbstractActionBean;
 public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /** */
+    private static final String UPLOADED_GRAPH_ATTR = XLWrapUploadActionBean.class.getSimpleName() + ".uploadedGraph";
+
+    /** */
     private static final Logger LOGGER = Logger.getLogger(XLWrapUploadActionBean.class);
 
     /** */
@@ -44,15 +51,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     /** */
     private XLWrapUploadType uploadType = XLWrapUploadType.INDICATOR;
 
-    /**
-     * @return the uploadType
-     */
-    public XLWrapUploadType getUploadType() {
-        return uploadType;
-    }
-
     /** */
     private FileBean fileBean;
+
+    /** */
+    private String uploadedGraphUri;
 
     /**
      *
@@ -60,6 +63,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     @DefaultHandler
     public Resolution get() {
+        HttpSession session = getContext().getRequest().getSession();
+        if (session != null) {
+            uploadedGraphUri = ObjectUtils.toString(session.getAttribute(UPLOADED_GRAPH_ATTR), null);
+            session.removeAttribute(UPLOADED_GRAPH_ATTR);
+        }
         return new ForwardResolution(JSP);
     }
 
@@ -88,9 +96,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         }
 
         try {
-            int stmtCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile);
-            addSystemMessage(stmtCount + " triples successfully imported!");
+            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, true);
+            addSystemMessage(resourceCount + " objects successfully imported!\n Please click on the link below to explore them.");
+            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, uploadType.getGraphUri());
             return new RedirectResolution(getClass());
+
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
             addCautionMessage("An I/O error occurred!");
@@ -156,5 +166,27 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public List<XLWrapUploadType> getUploadTypes() {
         return Arrays.asList(XLWrapUploadType.values());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Class getObjectsInSourceActionBeanClass() {
+        return ObjectsInSourceActionBean.class;
+    }
+
+    /**
+     * @return the uploadType
+     */
+    public XLWrapUploadType getUploadType() {
+        return uploadType;
+    }
+
+    /**
+     * @return the uploadedGraphUri
+     */
+    public String getUploadedGraphUri() {
+        return uploadedGraphUri;
     }
 }

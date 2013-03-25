@@ -34,26 +34,44 @@ public abstract class DisplaytagSearchActionBean extends AbstractActionBean {
     protected String dir = SortOrder.ASCENDING.toString();
     protected String sort = null;
 
+    /**
+     * @return
+     */
     public int getPage() {
         return page;
     }
 
+    /**
+     * @param page
+     */
     public void setPage(int page) {
         this.page = page;
     }
 
+    /**
+     * @return
+     */
     public String getDir() {
         return dir;
     }
 
+    /**
+     * @param dir
+     */
     public void setDir(String dir) {
         this.dir = dir;
     }
 
+    /**
+     * @return
+     */
     public String getSort() {
         return sort;
     }
 
+    /**
+     * @param sort
+     */
     public void setSort(String sort) {
         this.sort = sort;
     }

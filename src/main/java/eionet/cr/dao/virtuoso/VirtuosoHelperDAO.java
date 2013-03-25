@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
@@ -161,12 +162,12 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             if (rdfType.equals(Subjects.ROD_OBLIGATION_CLASS)) {
                 // properties for obligations
                 String[] neededPredicatesObl =
-                    {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
+                        {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
                 neededPredicates = neededPredicatesObl;
             } else if (rdfType.equals(Subjects.ROD_DELIVERY_CLASS)) {
                 // properties for deliveries
                 String[] neededPredicatesDeliveries =
-                    {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
+                        {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
                 neededPredicates = neededPredicatesDeliveries;
             }
 
@@ -617,7 +618,7 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         // (but set harvest interval minutes to 0, since we don't really want it to be harvested )
         // by background harvester)
         DAOFactory.get().getDao(HarvestSourceDAO.class)
-        .addSourceIgnoreDuplicate(HarvestSourceDTO.create(user.getBookmarksUri(), true, 0, user.getUserName()));
+                .addSourceIgnoreDuplicate(HarvestSourceDTO.create(user.getBookmarksUri(), true, 0, user.getUserName()));
 
     }
 
@@ -955,7 +956,8 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
     /**
      * Deletes the triple from the store.
      *
-     * @param triple Triple object to be deleted
+     * @param triple
+     *            Triple object to be deleted
      * @param conn
      *            current Virtuoso connextion
      * @throws RepositoryException
@@ -1332,7 +1334,6 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         return executeSPARQL(SPARQL_BOOKMARKS_SPARQL, bindings, new MapReader());
     }
 
-
     /**
      * Query returns project bookmarks and calculates project name from the bookmarks uri.
      */
@@ -1399,8 +1400,8 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
         StringBuilder query = new StringBuilder();
         query.append("select distinct ?s ?date where {graph ?g {?s ?p ?o}. filter (?s in (")
-        .append(SPARQLQueryUtil.urisToCSV(resourceUris, "sValue", bindings)).append(")). ?g <")
-        .append(Predicates.CR_LAST_MODIFIED).append("> ?date}");
+                .append(SPARQLQueryUtil.urisToCSV(resourceUris, "sValue", bindings)).append(")). ?g <")
+                .append(Predicates.CR_LAST_MODIFIED).append("> ?date}");
 
         HashMap<String, Date> result = new HashMap<String, Date>();
         MapReader reader = new MapReader();
@@ -1602,6 +1603,11 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.HelperDAO#deleteProjectBookmark(java.lang.String)
+     */
     @Override
     public void deleteProjectBookmark(String uri) throws DAOException {
         TripleDTO triple = new TripleDTO(uri, null, null);
@@ -1610,4 +1616,102 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.HelperDAO#getUriLabels(java.lang.String, java.lang.String[])
+     */
+    @Override
+    public List<Pair<String, String>> getUriLabels(String rdfType, String... labelPredicates) throws DAOException {
+
+        if (!URIUtil.isURI(rdfType)) {
+            throw new IllegalArgumentException("rdfType must not be blank and it must be a legal URI!");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select").append("\n");
+        sb.append("  ?s as ?").append(PairReader.LEFTCOL).append("\n");
+
+        if (ArrayUtils.isEmpty(labelPredicates)) {
+            sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
+                    .append(PairReader.RIGHTCOL).append("\n");
+        } else {
+            sb.append("  coalesce(");
+            for (int i = 0; i < labelPredicates.length; i++) {
+                if (i > 0) {
+                    sb.append(", ");
+                }
+                sb.append("?label").append(i);
+            }
+            sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
+                    .append(PairReader.RIGHTCOL).append("\n");
+        }
+
+        sb.append("where {").append("\n");
+        sb.append("  ?s a ?rdfType filter(?rdfType = ?rdfTypeValue)").append("\n");
+
+        Bindings bindings = new Bindings();
+        bindings.setURI("rdfTypeValue", rdfType);
+
+        String s = "  optional {?s ?labelPred0 ?label0}\n";
+        for (int i = 0; i < labelPredicates.length; i++) {
+            sb.append(StringUtils.replace(s, "0", String.valueOf(i)));
+            bindings.setURI("labelPred" + i, labelPredicates[i]);
+        }
+        sb.append("}\n");
+        sb.append("order by ?").append(PairReader.RIGHTCOL);
+
+        List<Pair<String, String>> result = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.HelperDAO#getDistinctObjectLabels(java.lang.String, java.lang.String[])
+     */
+    @Override
+    public List<Pair<String, String>> getDistinctObjectLabels(String predicateUri, String... labelPredicates) throws DAOException {
+
+        if (!URIUtil.isURI(predicateUri)) {
+            throw new IllegalArgumentException("predicateUri must not be blank and it must be a legal URI!");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select distinct").append("\n");
+        sb.append("  ?s as ?").append(PairReader.LEFTCOL).append("\n");
+
+        if (ArrayUtils.isEmpty(labelPredicates)) {
+            sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
+                    .append(PairReader.RIGHTCOL).append("\n");
+        } else {
+            sb.append("  coalesce(");
+            for (int i = 0; i < labelPredicates.length; i++) {
+                if (i > 0) {
+                    sb.append(", ");
+                }
+                sb.append("?label").append(i);
+            }
+            sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
+                    .append(PairReader.RIGHTCOL).append("\n");
+        }
+
+        sb.append("where {").append("\n");
+        sb.append("  ?subj ?pred ?s").append("\n");
+
+        Bindings bindings = new Bindings();
+        bindings.setURI("pred", predicateUri);
+
+        String s = "  optional {?s ?labelPred0 ?label0}\n";
+        for (int i = 0; i < labelPredicates.length; i++) {
+            sb.append(StringUtils.replace(s, "0", String.valueOf(i)));
+            bindings.setURI("labelPred" + i, labelPredicates[i]);
+        }
+        sb.append("}\n");
+        sb.append("order by ?").append(PairReader.RIGHTCOL);
+
+        List<Pair<String, String>> result = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
+        return result;
+
+    }
 }

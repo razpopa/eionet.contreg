@@ -1,5 +1,7 @@
 package eionet.cr.util.jena;
 
+import java.util.HashSet;
+
 import org.apache.commons.lang.StringUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.URI;
@@ -14,6 +16,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
+import eionet.cr.util.Pair;
 import eionet.cr.util.sesame.SesameUtil;
 
 public class JenaUtil {
@@ -36,11 +39,13 @@ public class JenaUtil {
      *
      * @param model
      * @param graphUri
+     * @param clearGraph
      * @return
      * @throws OpenRDFException
      */
-    public static int saveModel(Model model, String graphUri) throws OpenRDFException {
+    public static Pair<Integer, Integer> saveModel(Model model, String graphUri, boolean clearGraph) throws OpenRDFException {
 
+        HashSet<String> distinctResources = new HashSet<String>();
         RepositoryConnection repoConn = null;
         try {
             repoConn = SesameUtil.getRepositoryConnection();
@@ -95,15 +100,20 @@ public class JenaUtil {
                     }
                 }
 
+                // If first triple to be added, and the graph should be cleared, then do so here now.
+                if (clearGraph && addedStmtCounter == 0) {
+                    repoConn.clear(graphURI);
+                }
                 repoConn.add(sesameSubject, sesamePredicate, sesameObject, graphURI);
                 addedStmtCounter++;
+                distinctResources.add(sesameSubject.stringValue());
             }
 
             if (addedStmtCounter > 0) {
                 repoConn.commit();
             }
 
-            return addedStmtCounter;
+            return new Pair<Integer, Integer>(addedStmtCounter, distinctResources.size());
         } catch (Error e) {
             SesameUtil.rollback(repoConn);
             throw e;

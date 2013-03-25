@@ -55,6 +55,20 @@
                     </tr>
                 </table>
 
+                <c:if test="${not empty actionBean.uploadedGraphUri}">
+                    <div class="tip-msg">
+                        <strong>Tip</strong>
+                        <p>
+                            The objects were imported into the following graph. Please click on this link to explore its contents:<br/>
+                            <stripes:link beanclass="${actionBean.objectsInSourceActionBeanClass.name}">
+                                <stripes:param name="search" value=""/>
+                                <stripes:param name="uri" value="${actionBean.uploadedGraphUri}"/>
+                                <c:out value="${actionBean.uploadedGraphUri}"/>
+                            </stripes:link>
+                        </p>
+                    </div>
+                </c:if>
+
             </crfn:form>
         </div>
 

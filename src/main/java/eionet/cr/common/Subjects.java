@@ -21,8 +21,7 @@
 package eionet.cr.common;
 
 /**
- *
- * Type definition ...
+ * Constants indicating commonly used RDF subjects, mostly classes.
  *
  * @author Jaanus Heinlaid
  */
@@ -76,4 +75,11 @@ public interface Subjects {
     String RSSNG_ANNOUNCEMENT_CLASS = "http://cr.eionet.europa.eu/ontologies/news.rdf#Announcement";
     String RSSNG_TEXTINPUT_CLASS = "http://cr.eionet.europa.eu/ontologies/news.rdf#TextInput";
     String RSSNG_IMAGE_CLASS = "http://cr.eionet.europa.eu/ontologies/news.rdf#Image";
+
+    String DATACUBE_OBSERVATION = "http://purl.org/linked-data/cube#Observation";
+    String DATACUBE_DATASET = "http://purl.org/linked-data/cube#DataSet";
+
+    String DAS_INDICATOR = "http://semantic.digital-agenda-data.eu/def/class/Indicator";
+    String DAS_BREAKDOWN = "http://semantic.digital-agenda-data.eu/def/class/Breakdown";
+    String DAS_UNIT = "http://semantic.digital-agenda-data.eu/def/class/UnitMeasure";
 }

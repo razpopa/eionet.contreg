@@ -441,4 +441,18 @@
         </example>
     </function>
 
+    <function>
+        <description>
+            Joins the given collection's objects' toString() results using the given separator char.
+            If the boolean is true, the result will be sorted.
+            The integer input indicates the maximum number of collection items to include.
+        </description>
+        <name>joinCollection</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String joinCollection(java.util.Collection, char, boolean, int)</function-signature>
+        <example>
+            ${joinCollection(coll, ',', true, 3)}
+        </example>
+    </function>
+
 </taglib>

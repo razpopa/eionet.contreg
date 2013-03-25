@@ -16,6 +16,9 @@
                 <li><a href="#">Operations</a>
                     <ul>
                         <li>
+                            <stripes:link class="link-plain" href="/source.action?export=&harvestSource.url=${actionBean.uri}">Export triples</stripes:link>
+                        </li>
+                        <li>
                             <stripes:link class="link-plain" href="/sparql">
                                 <stripes:param name="default-graph-uri" value="${actionBean.uri}" />
                                 SPARQL endpoint

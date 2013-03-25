@@ -65,7 +65,9 @@ public interface Predicates {
     String RDFS_SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf";
     String RDFS_COMMENT = "http://www.w3.org/2000/01/rdf-schema#comment";
 
+    String SKOS_NOTATION = "http://www.w3.org/2004/02/skos/core#notation";
     String SKOS_PREF_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
+    String SKOS_ALT_LABEL = "http://www.w3.org/2004/02/skos/core#altLabel";
 
     String ROD_OBLIGATION_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#obligation";
     String ROD_INSTRUMENT_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#instrument";
@@ -138,4 +140,15 @@ public interface Predicates {
     String RSSNG_SUMMARY = "http://cr.eionet.europa.eu/ontologies/news.rdf#summary";
     String RSSNG_IMAGE = "http://cr.eionet.europa.eu/ontologies/news.rdf#image";
     String RSSNG_TEXTINPUT = "http://cr.eionet.europa.eu/ontologies/news.rdf#textInput";
+
+    String SDMX_OBSVALUE = "http://purl.org/linked-data/sdmx/2009/measure#obsValue";
+    String DATACUBE_DATA_SET = "http://purl.org/linked-data/cube#dataSet";
+
+    String DAS_INDICATOR = "http://semantic.digital-agenda-data.eu/def/property/indicator";
+    String DAS_BREAKDOWN = "http://semantic.digital-agenda-data.eu/def/property/breakdown";
+    String DAS_REFAREA = "http://semantic.digital-agenda-data.eu/def/property/ref-area";
+    String DAS_TIMEPERIOD = "http://semantic.digital-agenda-data.eu/def/property/time-period";
+    String DAS_UNITMEASURE = "http://semantic.digital-agenda-data.eu/def/property/unit-measure";
+    String DAS_FLAG = "http://semantic.digital-agenda-data.eu/def/property/flag";
+    String DAS_NOTE = "http://semantic.digital-agenda-data.eu/def/property/note";
 }

@@ -20,6 +20,7 @@
         <li><a href="${pageContext.request.contextPath}/tagSearch.action">Tag search</a></li>
         <li><a href="${pageContext.request.contextPath}/recentUploads.action">Recent uploads</a></li>
         <li><a href="${pageContext.request.contextPath}/browseDatasets.action">Browse datasets</a></li>
+        <li><a href="${pageContext.request.contextPath}/observations">Browse observations</a></li>
         <li><a href="${pageContext.request.contextPath}/sparql">SPARQL endpoint</a></li>
         <li><a href="${pageContext.request.contextPath}/sharedSparqlBookmarks.action">Shared SPARQL bookmarks</a></li>
         <li><a href="${pageContext.request.contextPath}/sources.action">Harvesting sources</a></li>

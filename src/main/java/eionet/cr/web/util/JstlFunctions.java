@@ -22,9 +22,12 @@ package eionet.cr.web.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -46,6 +49,7 @@ import eionet.cr.dto.SubjectDTO;
 import eionet.cr.util.Hashes;
 import eionet.cr.util.QueryString;
 import eionet.cr.util.SortOrder;
+import eionet.cr.util.URIUtil;
 import eionet.cr.util.Util;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.factsheet.FactsheetActionBean;
@@ -333,7 +337,7 @@ public final class JstlFunctions {
         if (object != null) {
 
             buf.append("[Type: ")
-            .append(object.isLiteral() ? "Literal" : object.isAnonymous() ? "Anonymous resource" : "Resource");
+                    .append(object.isLiteral() ? "Literal" : object.isAnonymous() ? "Anonymous resource" : "Resource");
             buf.append("]   [Inferred from object: ").append(getMatchingObjectValue(object.getSourceObjectHash(), allObjects));
             buf.append("]   [Inferred from source: ").append(
                     StringUtils.isBlank(object.getDerivSourceUri()) ? object.getDerivSourceHash() : object.getDerivSourceUri());
@@ -435,7 +439,7 @@ public final class JstlFunctions {
 
             try {
                 link.append("&").append(FactsheetActionBean.PAGE_PARAM_PREFIX).append(pageNumber).append("=")
-                .append(URLEncoder.encode(predicateUri, "UTF-8"));
+                        .append(URLEncoder.encode(predicateUri, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 throw new CRRuntimeException("Unsupported encoding", e);
             }
@@ -474,7 +478,7 @@ public final class JstlFunctions {
                         if (!isPageParam || !paramValue.equals(predicateUri)) {
                             try {
                                 link.append(URLEncoder.encode(paramName, "UTF-8")).append("=")
-                                .append(URLEncoder.encode(paramValue, "UTF-8")).append("&");
+                                        .append(URLEncoder.encode(paramValue, "UTF-8")).append("&");
                             } catch (UnsupportedEncodingException e) {
                                 throw new CRRuntimeException("Unsupported encoding", e);
                             }
@@ -588,5 +592,64 @@ public final class JstlFunctions {
      */
     public static String md5Hex(Object object) {
         return DigestUtils.md5Hex(object == null ? null : object.toString());
+    }
+
+    /**
+     *
+     * @param coll
+     * @param separator
+     * @param sort
+     * @param max
+     * @return
+     */
+    public static String joinCollection(Collection coll, char separator, boolean sort, int max) {
+
+        if (coll == null || coll.isEmpty()) {
+            return "";
+        }
+
+        // First, convert the collection objects to set (i.e. excluding duplicates) of strings, using every object's toString(),
+        // or if the object is ObjectDTO, then special treatment.
+        HashSet<String> set = new HashSet<String>();
+        for (Object object : coll) {
+
+            if (object != null) {
+                String str = null;
+                if (object instanceof ObjectDTO) {
+                    ObjectDTO objectDTO = (ObjectDTO) object;
+                    str = objectDTO.getValue();
+                    if (!objectDTO.isLiteral()) {
+                        str = URIUtil.extractURILabel(str, str);
+                    }
+                } else {
+                    str = object.toString();
+                }
+                if (StringUtils.isNotBlank(str)) {
+                    set.add(str);
+                }
+            }
+        }
+
+        // If set empty, then return.
+        if (set.isEmpty()) {
+            return "";
+        }
+
+        // Now convert the set to list.
+        List<String> list = new ArrayList<String>(set);
+
+        // If sorting requested, then do so.
+        if (sort == true) {
+            Collections.sort(list);
+        }
+
+        // Get first "max" elements if max is > 0 and smaller than list size
+        if (max > 0 && max < list.size()){
+            list = list.subList(0, max);
+            list.add("...");
+        }
+
+        // Finally, join the result by separator.
+        return StringUtils.join(list, separator);
     }
 }

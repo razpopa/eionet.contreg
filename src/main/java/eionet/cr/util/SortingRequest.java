@@ -81,4 +81,24 @@ public class SortingRequest {
     public void setSortByPredicateObjectHash(boolean sortByPredicateObjectHash) {
         this.sortByPredicateObjectHash = sortByPredicateObjectHash;
     }
+
+    /**
+     *
+     * @param sortCol
+     * @param sortOrd
+     * @return
+     */
+    public static SortingRequest create(String sortCol, SortOrder sortOrd) {
+        return new SortingRequest(sortCol, sortOrd);
+    }
+
+    /**
+     *
+     * @param sortCol
+     * @param sortOrd
+     * @return
+     */
+    public static SortingRequest create(String sortCol, String sortOrd) {
+        return new SortingRequest(sortCol, SortOrder.parse(sortOrd));
+    }
 }
