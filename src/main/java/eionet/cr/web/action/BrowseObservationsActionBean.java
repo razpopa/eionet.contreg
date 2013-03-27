@@ -87,6 +87,15 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     public Resolution search() {
 
         ForwardResolution resolution = new ForwardResolution(JSP);
+
+        if (getContext().getRequestParameter("loadFilters") != null) {
+            try {
+                loadFilterValues();
+            } catch (DAOException e) {
+                addWarningMessage("A technical error occurred when loading available search filter values: " + e.getMessage());
+            }
+        }
+
         HashMap<String, String> filters = getFiltersFromRequest();
         if (filters.isEmpty()) {
             return resolution;

@@ -127,6 +127,7 @@
                                                     <c:out value="Browse observations"/>
                                                     <stripes:param name="dataSet" value="${subjectUri}"/>
                                                     <stripes:param name="search" value=""/>
+                                                    <stripes:param name="loadFilters" value=""/>
                                                 </stripes:link>
                                             </li>
                                         </c:if>
