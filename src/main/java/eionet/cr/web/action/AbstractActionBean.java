@@ -372,4 +372,20 @@ public abstract class AbstractActionBean implements ActionBean {
 
         return isWebBrowser;
     }
+
+    /**
+     *
+     * @return
+     */
+    public Class getBrowseObservationsActionBeanClass() {
+        return BrowseObservationsActionBean.class;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Class getBrowseCodelistsActionBeanClass() {
+        return BrowseCodelistsActionBean.class;
+    }
 }

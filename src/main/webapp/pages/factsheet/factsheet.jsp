@@ -89,13 +89,15 @@
                         <c:set var="harvestAllowed" value="${editAllowed && subjectUrl!=null && !actionBean.currentlyHarvested && !actionBean.uriIsFolder}"/>
                         <c:set var="sourceReadActionsAllowed" value="${actionBean.uriIsHarvestSource}"/>
                         <c:set var="uriIsGraph" value="${actionBean.uriIsGraph}"/>
+                        <c:set var="uriIsDataCubeDataset" value="${actionBean.dataCubeDataset}"/>
+                        <c:set var="uriIsScoreboardCodelist" value="${actionBean.scoreboardCodelist}"/>
                         <c:set var="downloadAllowed" value="${actionBean.subjectDownloadable}"/>
                         <c:set var="addBookmarkAllowed" value="${registrationsAllowed && !actionBean.subjectIsUserBookmark}"/>
                         <c:set var="removeBookmarkAllowed" value="${actionBean.subjectIsUserBookmark}"/>
                         <c:set var="addReviewAllowed" value="${registrationsAllowed && subjectUrl!=null}"/>
                         <c:set var="addToCompiledDataset" value="${sourceReadActionsAllowed && actionBean.adminLoggedIn && !actionBean.compiledDataset && not empty actionBean.userCompiledDatasets}"/>
 
-                        <c:set var="displayOperations" value="${editAllowed || harvestAllowed || sourceReadActionsAllowed || uriIsGraph || downloadAllowed || addBookmarkAllowed || removeBookmarkAllowed || addReviewAllowed}"/>
+                        <c:set var="displayOperations" value="${editAllowed || harvestAllowed || sourceReadActionsAllowed || uriIsGraph || uriIsDataCubeDataset || uriIsScoreboardCodelist || downloadAllowed || addBookmarkAllowed || removeBookmarkAllowed || addReviewAllowed}"/>
 
                         <c:if test="${displayOperations}">
                             <ul id="dropdown-operations">
@@ -117,6 +119,23 @@
                                                         <stripes:param name="uri" value="${actionBean.uri}"/>
                                                 </stripes:url>
                                                 <a id="wait_link" href="${oldUrl}" onclick="javascript:loadAndWait('The resource is being harvested. Please wait ...', '${url}', '${pageContext.request.contextPath}'); return false;">Harvest</a>
+                                            </li>
+                                        </c:if>
+                                        <c:if test="${uriIsDataCubeDataset}">
+                                            <li>
+                                                <stripes:link class="link-plain" beanclass="${actionBean.browseObservationsActionBeanClass.name}" title="Browse observations in this DataCube dataset">
+                                                    <c:out value="Browse observations"/>
+                                                    <stripes:param name="dataSet" value="${subjectUri}"/>
+                                                    <stripes:param name="search" value=""/>
+                                                </stripes:link>
+                                            </li>
+                                        </c:if>
+                                        <c:if test="${uriIsScoreboardCodelist}">
+                                            <li>
+                                                <stripes:link class="link-plain" beanclass="${actionBean.browseCodelistsActionBeanClass.name}" title="List members of this codelist">
+                                                    <c:out value="Codelist members"/>
+                                                    <stripes:param name="codelistUri" value="${subjectUri}"/>
+                                                </stripes:link>
                                             </li>
                                         </c:if>
                                         <c:if test="${sourceReadActionsAllowed}">

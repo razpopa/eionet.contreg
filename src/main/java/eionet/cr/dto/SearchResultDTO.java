@@ -40,6 +40,21 @@ public class SearchResultDTO<T> {
     private String query;
 
     /**
+     */
+    public SearchResultDTO() {
+        super();
+    }
+
+    /**
+     * @param items
+     * @param matchCount
+     */
+    public SearchResultDTO(List<T> items, int matchCount) {
+        this.items = items;
+        this.matchCount = matchCount;
+    }
+
+    /**
      * @return the items
      */
     public List<T> getItems() {
@@ -80,5 +95,4 @@ public class SearchResultDTO<T> {
     public void setQuery(String query) {
         this.query = query;
     }
-
 }

@@ -71,6 +71,7 @@ import eionet.cr.util.Pair;
 import eionet.cr.util.URLUtil;
 import eionet.cr.util.Util;
 import eionet.cr.web.action.AbstractActionBean;
+import eionet.cr.web.action.BrowseCodelistsActionBean;
 import eionet.cr.web.action.source.ViewSourceActionBean;
 import eionet.cr.web.util.ApplicationCache;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
@@ -153,6 +154,9 @@ public class FactsheetActionBean extends AbstractActionBean {
     /** */
     private HarvestSourceDTO harvestSourceDTO;
 
+    /** */
+    private SubjectDTO fullSubjectDTO;
+
     /**
      *
      * @return Resolution
@@ -170,6 +174,9 @@ public class FactsheetActionBean extends AbstractActionBean {
             setAdminLoggedIn(getUser() != null && getUser().isAdministrator());
 
             subject = helperDAO.getFactsheet(uri, null, getPredicatePageNumbers());
+            if (subject != null) {
+                fullSubjectDTO = helperDAO.getSubject(uri);
+            }
 
             FactsheetTabMenuHelper tabsHelper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
 
@@ -215,7 +222,7 @@ public class FactsheetActionBean extends AbstractActionBean {
         if (subjectDto != null && CsvImportUtil.isSourceTableFile(subjectDto)) {
             // Harvest table file
             try {
-                //harvestTableFile();
+                // harvestTableFile();
                 List<String> warnings = CsvImportUtil.harvestTableFile(subjectDto, uri, getUserName());
                 for (String msg : warnings) {
                     addWarningMessage(msg);
@@ -367,10 +374,10 @@ public class FactsheetActionBean extends AbstractActionBean {
         // since user registrations URI was used as triple source, add it to HARVEST_SOURCE too
         // (but set interval minutes to 0, to avoid it being background-harvested)
         DAOFactory
-        .get()
-        .getDao(HarvestSourceDAO.class)
-        .addSourceIgnoreDuplicate(
-                HarvestSourceDTO.create(getUser().getRegistrationsUri(), true, 0, getUser().getUserName()));
+                .get()
+                .getDao(HarvestSourceDAO.class)
+                .addSourceIgnoreDuplicate(
+                        HarvestSourceDTO.create(getUser().getRegistrationsUri(), true, 0, getUser().getUserName()));
 
         return new RedirectResolution(this.getClass(), "edit").addParameter("uri", uri);
     }
@@ -855,4 +862,35 @@ public class FactsheetActionBean extends AbstractActionBean {
         return uriIsGraph;
     }
 
+    /**
+     *
+     * @return
+     */
+    public boolean isDataCubeDataset() {
+
+        if (fullSubjectDTO == null) {
+            return false;
+        }
+
+        Collection<String> types = fullSubjectDTO.getObjectValues(Predicates.RDF_TYPE);
+        return types != null && types.contains(Subjects.DATACUBE_DATA_SET);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isScoreboardCodelist() {
+
+        if (fullSubjectDTO == null) {
+            return false;
+        }
+
+        Collection<String> types = fullSubjectDTO.getObjectValues(Predicates.RDF_TYPE);
+        if (types != null && types.contains(Subjects.SKOS_CONCEPT_SCHEME)) {
+            return fullSubjectDTO.getUri().startsWith(BrowseCodelistsActionBean.CODELISTS_PREFIX);
+        } else {
+            return false;
+        }
+    }
 }

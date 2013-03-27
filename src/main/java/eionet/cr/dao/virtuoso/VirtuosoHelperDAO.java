@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -60,6 +61,7 @@ import eionet.cr.dto.FactsheetDTO;
 import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.ObjectDTO;
 import eionet.cr.dto.PredicateDTO;
+import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SubjectDTO;
 import eionet.cr.dto.TripleDTO;
 import eionet.cr.dto.UploadDTO;
@@ -70,6 +72,8 @@ import eionet.cr.util.FolderUtil;
 import eionet.cr.util.Hashes;
 import eionet.cr.util.ObjectLabelPair;
 import eionet.cr.util.Pair;
+import eionet.cr.util.SortOrder;
+import eionet.cr.util.SortingRequest;
 import eionet.cr.util.URIUtil;
 import eionet.cr.util.URLUtil;
 import eionet.cr.util.Util;
@@ -1619,17 +1623,23 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
     /*
      * (non-Javadoc)
      *
-     * @see eionet.cr.dao.HelperDAO#getUriLabels(java.lang.String, java.lang.String[])
+     * @see eionet.cr.dao.HelperDAO#getUriLabels(java.lang.String, eionet.cr.util.pagination.PagingRequest,
+     * eionet.cr.util.SortingRequest, java.lang.String[])
      */
     @Override
-    public List<Pair<String, String>> getUriLabels(String rdfType, String... labelPredicates) throws DAOException {
+    public SearchResultDTO<Pair<String, String>> getUriLabels(String rdfType, PagingRequest pageRequest,
+            SortingRequest sortRequest, String... labelPredicates) throws DAOException {
 
         if (!URIUtil.isURI(rdfType)) {
             throw new IllegalArgumentException("rdfType must not be blank and it must be a legal URI!");
         }
 
+        if (sortRequest == null) {
+            sortRequest = SortingRequest.create(PairReader.RIGHTCOL, SortOrder.ASCENDING);
+        }
+
         StringBuilder sb = new StringBuilder();
-        sb.append("select").append("\n");
+        sb.append("select distinct").append("\n");
         sb.append("  ?s as ?").append(PairReader.LEFTCOL).append("\n");
 
         if (ArrayUtils.isEmpty(labelPredicates)) {
@@ -1659,22 +1669,42 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             bindings.setURI("labelPred" + i, labelPredicates[i]);
         }
         sb.append("}\n");
-        sb.append("order by ?").append(PairReader.RIGHTCOL);
+        sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
+                .append(")");
 
-        List<Pair<String, String>> result = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
-        return result;
+        if (pageRequest != null) {
+            sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
+        }
+
+        List<Pair<String, String>> list = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
+        int totalMatchCount = list.size();
+        if (pageRequest != null) {
+            String countQuery = "select count(distinct ?s) where {?s a ?rdfType filter(?rdfType = ?rdfTypeValue)}";
+            bindings = new Bindings();
+            bindings.setURI("rdfTypeValue", rdfType);
+            String count = executeUniqueResultSPARQL(countQuery, bindings, new SingleObjectReader<String>());
+            totalMatchCount = NumberUtils.toInt(count);
+        }
+
+        return new SearchResultDTO<Pair<String, String>>(list, totalMatchCount);
     }
 
     /*
      * (non-Javadoc)
      *
-     * @see eionet.cr.dao.HelperDAO#getDistinctObjectLabels(java.lang.String, java.lang.String[])
+     * @see eionet.cr.dao.HelperDAO#getDistinctObjectLabels(java.lang.String, eionet.cr.util.pagination.PagingRequest,
+     * eionet.cr.util.SortingRequest, java.lang.String[])
      */
     @Override
-    public List<Pair<String, String>> getDistinctObjectLabels(String predicateUri, String... labelPredicates) throws DAOException {
+    public SearchResultDTO<Pair<String, String>> getDistinctObjectLabels(String predicateUri, PagingRequest pageRequest,
+            SortingRequest sortRequest, String... labelPredicates) throws DAOException {
 
         if (!URIUtil.isURI(predicateUri)) {
             throw new IllegalArgumentException("predicateUri must not be blank and it must be a legal URI!");
+        }
+
+        if (sortRequest == null) {
+            sortRequest = SortingRequest.create(PairReader.RIGHTCOL, SortOrder.ASCENDING);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -1708,10 +1738,23 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             bindings.setURI("labelPred" + i, labelPredicates[i]);
         }
         sb.append("}\n");
-        sb.append("order by ?").append(PairReader.RIGHTCOL);
+        sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
+                .append(")");
 
-        List<Pair<String, String>> result = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
-        return result;
+        if (pageRequest != null) {
+            sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
+        }
 
+        List<Pair<String, String>> list = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
+        int totalMatchCount = list.size();
+        if (pageRequest != null) {
+            String countQuery = "select count(distinct ?s) where {?subj ?pred ?s}";
+            bindings = new Bindings();
+            bindings.setURI("pred", predicateUri);
+            String count = executeUniqueResultSPARQL(countQuery, bindings, new SingleObjectReader<String>());
+            totalMatchCount = NumberUtils.toInt(count);
+        }
+
+        return new SearchResultDTO<Pair<String, String>>(list, totalMatchCount);
     }
 }

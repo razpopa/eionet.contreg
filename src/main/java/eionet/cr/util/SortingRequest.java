@@ -37,7 +37,7 @@ public class SortingRequest {
      */
     public SortingRequest(String sortingColumnName, SortOrder sortingColumnOrder) {
         this.sortingColumnName = sortingColumnName;
-        this.sortOrder = sortingColumnOrder;
+        this.sortOrder = sortingColumnOrder == null ? SortOrder.ASCENDING : sortingColumnOrder;
     }
 
     /**

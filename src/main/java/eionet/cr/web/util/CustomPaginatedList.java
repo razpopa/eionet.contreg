@@ -35,16 +35,18 @@ public class CustomPaginatedList<T> implements PaginatedList {
      */
     public CustomPaginatedList(DisplaytagSearchActionBean actionBean, SearchResultDTO<T> searchResult, int pageSize) {
 
-        List<T> items = searchResult.getItems();
+        List<T> items = searchResult == null ? null : searchResult.getItems();
         int itemsSize = items == null ? 0 : items.size();
-        int totalMatchCount = searchResult.getMatchCount();
+        int totalMatchCount = searchResult == null ? 0 : searchResult.getMatchCount();
 
         fullListSize = totalMatchCount > 0 ? totalMatchCount : itemsSize;
         list = items;
         objectsPerPage = pageSize;
-        pageNumber = actionBean.getPage();
-        sortCriterion = actionBean.getSort();
-        sortDirection = SortOrder.parse(actionBean.getDir()).toDisplayTagEnum();
+        if (actionBean != null) {
+            pageNumber = actionBean.getPage();
+            sortCriterion = actionBean.getSort();
+            sortDirection = SortOrder.parse(actionBean.getDir()).toDisplayTagEnum();
+        }
     }
 
     /*

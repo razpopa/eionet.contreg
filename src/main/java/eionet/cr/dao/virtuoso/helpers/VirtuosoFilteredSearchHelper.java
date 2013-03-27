@@ -127,7 +127,10 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
             strBuilder.append("(bif:lcase(bif:subseq (bif:replace (?sortObject, '/', '#'), bif:strrchr (bif:replace ").append(
                     "(?sortObject, '/', '#'), '#')+1)))");
             // sort by date
-        } else {
+        } else if ("uri".equals(sortPredicate)) {
+            strBuilder.append("(?s)");
+        }
+        else{
             strBuilder.append("(bif:lcase(?sortObject))");
         }
 
@@ -192,11 +195,12 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
                     result += " . filter(?" + objectVariable + " = ?" + objectValueVariable + ")";
                     bindings.setURI(objectValueVariable, objectValue);
                 } else {
-                    result += " . filter bif:contains(?" + objectVariable + ", ?" + objectValueVariable + ")";
+                    // result += " . filter bif:contains(?" + objectVariable + ", ?" + objectValueVariable + ")";
                     // Quotes are added for bif:contains expression
-                    objectValue = "\"" + objectValue + "\"";
+                    // objectValue = "\"" + objectValue + "\"";
+                    // requiresFullTextSearch = Boolean.TRUE;
+                    result += " . filter (regex(?" + objectVariable + ", ?" + objectValueVariable + ", \"i\"))";
                     bindings.setString(objectValueVariable, objectValue);
-                    requiresFullTextSearch = Boolean.TRUE;
                 }
             }
         }

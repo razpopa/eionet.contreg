@@ -8,6 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import eionet.cr.common.Predicates;
 
 /**
+ * A DTO for representing a DataCube observation.
+ *
  * @author jaanus
  */
 public class ObservationDTO {

@@ -2,7 +2,7 @@
 
 <%@ include file="/pages/common/taglibs.jsp"%>
 
-<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Simple search">
+<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Browse DataCube observations">
 
     <stripes:layout-component name="head">
         <script type="text/javascript">
@@ -64,7 +64,7 @@
 		        </display:column>
 
 		        <c:forEach items="${actionBean.availColumns}" var="column" varStatus="columnsLoopStatus">
-		            <display:column title="${column.title}" sortable="${column.sortable}" sortProperty="${column.alias}" style="width:16%">
+		            <display:column title="${column.title}" sortable="${column.sortable}" sortProperty="${column.alias}" style="width:${column.width}">
                         <c:out value="${crfn:joinCollection(observation.predicates[column.predicate], ',', true, 3)}"/>
                     </display:column>
 		        </c:forEach>

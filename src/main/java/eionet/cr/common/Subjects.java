@@ -77,9 +77,12 @@ public interface Subjects {
     String RSSNG_IMAGE_CLASS = "http://cr.eionet.europa.eu/ontologies/news.rdf#Image";
 
     String DATACUBE_OBSERVATION = "http://purl.org/linked-data/cube#Observation";
-    String DATACUBE_DATASET = "http://purl.org/linked-data/cube#DataSet";
+    String DATACUBE_DATA_SET = "http://purl.org/linked-data/cube#DataSet";
 
     String DAS_INDICATOR = "http://semantic.digital-agenda-data.eu/def/class/Indicator";
     String DAS_BREAKDOWN = "http://semantic.digital-agenda-data.eu/def/class/Breakdown";
     String DAS_UNIT = "http://semantic.digital-agenda-data.eu/def/class/UnitMeasure";
+
+    String SKOS_CONCEPT = "http://www.w3.org/2004/02/skos/core#Concept";
+    String SKOS_CONCEPT_SCHEME = "http://www.w3.org/2004/02/skos/core#ConceptScheme";
 }

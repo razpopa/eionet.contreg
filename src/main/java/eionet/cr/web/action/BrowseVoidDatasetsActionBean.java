@@ -44,14 +44,14 @@ import eionet.cr.web.action.factsheet.FactsheetActionBean;
  *
  * @author jaanus
  */
-@UrlBinding("/browseDatasets.action")
-public class BrowseDatasetsActionBean extends AbstractActionBean {
+@UrlBinding("/browseVoidDatasets.action")
+public class BrowseVoidDatasetsActionBean extends AbstractActionBean {
 
     /** */
-    private static final Logger LOGGER = Logger.getLogger(BrowseDatasetsActionBean.class);
+    private static final Logger LOGGER = Logger.getLogger(BrowseVoidDatasetsActionBean.class);
 
     /** Forward path to the JSP that handles the display and faceted browsing of VoID datasets. */
-    private static final String BROWSE_DATASETS_JSP = "/pages/browseDatasets.jsp";
+    private static final String BROWSE_DATASETS_JSP = "/pages/browseVoidDatasets.jsp";
 
     /** The creator (http://purl.org/dc/terms/creator) to search by. */
     private List<String> creator;

@@ -37,16 +37,16 @@ import eionet.cr.web.util.CustomPaginatedList;
  * @author jaanus
  */
 @UrlBinding("/observations")
-public class ObservationsActionBean extends DisplaytagSearchActionBean {
+public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
 
     /** */
-    private static final Logger LOGGER = Logger.getLogger(ObservationsActionBean.class);
+    private static final Logger LOGGER = Logger.getLogger(BrowseObservationsActionBean.class);
 
     /** */
     private static final String[] LABEL_PREDICATES = {};
 
     /** */
-    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = ObservationsActionBean.class.getSimpleName() + ".alias.values";
+    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName() + ".alias.values";
 
     /** */
     private static final String JSP = "/pages/observations.jsp";
@@ -156,9 +156,9 @@ public class ObservationsActionBean extends DisplaytagSearchActionBean {
 
             try {
                 if (StringUtils.isNotBlank(range)) {
-                    values = dao.getUriLabels(range, LABEL_PREDICATES);
+                    values = dao.getUriLabels(range, null, null, LABEL_PREDICATES).getItems();
                 } else {
-                    values = dao.getDistinctObjectLabels(predicate, LABEL_PREDICATES);
+                    values = dao.getDistinctObjectLabels(predicate, null, null, LABEL_PREDICATES).getItems();
                 }
             } catch (DAOException e) {
                 LOGGER.error("Error when loading values fo filter: " + alias, e);

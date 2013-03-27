@@ -37,6 +37,9 @@ import eionet.cr.util.Pair;
  */
 public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
+    /** */
+    public enum SortColumn {LEFT, RIGHT};
+
     /**
      * Field name for left column in query.
      */
