@@ -455,4 +455,17 @@
         </example>
     </function>
 
+    <function>
+        <description>
+            Extracts label from the given URI. The given string can actually be any string. If it isn't a URI, the string itself
+            is returned. Also, if it is a URI but label cannot be extracted for some reason, the URI itself is returned.
+        </description>
+        <name>extractUriLabel</name>
+        <function-class>eionet.cr.web.util.JstlFunctions</function-class>
+        <function-signature>java.lang.String extractUriLabel(java.lang.String)</function-signature>
+        <example>
+            ${extractUriLabel(uri)}
+        </example>
+    </function>
+
 </taglib>

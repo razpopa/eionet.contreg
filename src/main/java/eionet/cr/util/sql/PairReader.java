@@ -52,6 +52,30 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
     /** */
     private LinkedHashMap<L, R> resultMap = new LinkedHashMap<L, R>();
 
+    /** */
+    private String leftColumn = LEFTCOL;
+    private String rightColumn = RIGHTCOL;
+
+    /**
+     *
+     * Class constructor.
+     */
+    public PairReader() {
+        super();
+    }
+
+    /**
+     *
+     * Class constructor.
+     * @param leftColumn
+     * @param rightColumn
+     */
+    public PairReader(String leftColumn, String rightColumn) {
+        super();
+        this.leftColumn = leftColumn;
+        this.rightColumn = rightColumn;
+    }
+
     /*
      * (non-Javadoc)
      * @see eionet.cr.dao.readers.ResultSetMixedReader#getResultList()
@@ -69,8 +93,8 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
     @SuppressWarnings("unchecked")
     public void readRow(ResultSet rs) throws SQLException, ResultSetReaderException {
 
-        L left = (L) rs.getObject(LEFTCOL);
-        R right = (R) rs.getObject(RIGHTCOL);
+        L left = (L) rs.getObject(leftColumn);
+        R right = (R) rs.getObject(rightColumn);
         resultList.add(new Pair<L, R>(left, right));
         resultMap.put(left, right);
     }
@@ -85,8 +109,8 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
     public void readRow(BindingSet bindingSet) {
 
         if (bindingSet != null && bindingSet.size() > 0) {
-            Value lcol = bindingSet.getValue(LEFTCOL);
-            Value rcol = bindingSet.getValue(RIGHTCOL);
+            Value lcol = bindingSet.getValue(leftColumn);
+            Value rcol = bindingSet.getValue(rightColumn);
             String strLcol = "", strRCol = "";
             if (lcol != null) {
                 strLcol = lcol.stringValue();

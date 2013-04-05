@@ -46,7 +46,8 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     private static final String[] LABEL_PREDICATES = {};
 
     /** */
-    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName() + ".alias.values";
+    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName()
+            + ".alias.values";
 
     /** */
     private static final String JSP = "/pages/observations.jsp";
@@ -263,7 +264,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Dataset");
         map.put("hint", "Dataset");
         map.put("predicate", Predicates.DATACUBE_DATA_SET);
-        //map.put("range", Subjects.DATACUBE_DATASET);
+        // map.put("range", Subjects.DATACUBE_DATASET);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -272,7 +273,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Indicator");
         map.put("hint", "Indicator");
         map.put("predicate", Predicates.DAS_INDICATOR);
-        //map.put("range", Subjects.DAS_INDICATOR);
+        // map.put("range", Subjects.DAS_INDICATOR);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -281,7 +282,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Breakdown");
         map.put("hint", "Indicator");
         map.put("predicate", Predicates.DAS_BREAKDOWN);
-        //map.put("range", Subjects.DAS_BREAKDOWN);
+        // map.put("range", Subjects.DAS_BREAKDOWN);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -306,7 +307,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Unit");
         map.put("hint", "Unit");
         map.put("predicate", Predicates.DAS_UNITMEASURE);
-        //map.put("range", Subjects.DAS_UNIT);
+        // map.put("range", Subjects.DAS_UNIT);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 

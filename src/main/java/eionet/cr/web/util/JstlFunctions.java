@@ -652,4 +652,13 @@ public final class JstlFunctions {
         // Finally, join the result by separator.
         return StringUtils.join(list, separator);
     }
+
+    /**
+     *
+     * @param uri
+     * @return
+     */
+    public static String extractUriLabel(String uri) {
+        return URIUtil.extractURILabel(uri, uri);
+    }
 }

@@ -1,10 +1,12 @@
 package eionet.cr.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import eionet.cr.common.Subjects;
 import eionet.cr.dto.SkosItemDTO;
 import eionet.cr.util.Pair;
+import eionet.cr.web.util.ObservationFilter;
 
 /**
  * A DAO interface for the SPARQL queries specific to the DG Connect's Digital Agenda Scoreboard project.
@@ -31,4 +33,13 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException If database access error happens.
      */
     List<SkosItemDTO> getCodelistItems(String codelistUri) throws DAOException;
+
+    /**
+     *
+     * @param selections
+     * @param filter
+     * @return
+     * @throws DAOException
+     */
+    List<Pair<String, String>> getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter) throws DAOException;
 }

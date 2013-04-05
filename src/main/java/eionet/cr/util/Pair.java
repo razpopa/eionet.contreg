@@ -59,7 +59,8 @@ public class Pair<L, R> implements Serializable {
     }
 
     /**
-     * @param left the left to set
+     * @param left
+     *            the left to set
      */
     public void setLeft(L id) {
         this.left = id;
@@ -73,7 +74,8 @@ public class Pair<L, R> implements Serializable {
     }
 
     /**
-     * @param right the right to set
+     * @param right
+     *            the right to set
      */
     public void setRight(R value) {
         this.right = value;
@@ -81,6 +83,7 @@ public class Pair<L, R> implements Serializable {
 
     /*
      * (non-Javadoc)
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -90,10 +93,23 @@ public class Pair<L, R> implements Serializable {
 
     /*
      * (non-Javadoc)
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj, EXCLUDE_FROM_EQUALS);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        String leftStr = left == null ? "null" : left.toString();
+        String rightStr = right == null ? "null" : right.toString();
+        return leftStr + " = " + rightStr;
     }
 }
