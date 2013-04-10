@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -47,11 +48,15 @@ import org.openrdf.repository.RepositoryException;
 import eionet.cr.common.Predicates;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
+import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.StagingDatabaseDAO;
+import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.StagingDatabaseDTO;
+import eionet.cr.harvest.OnDemandHarvester;
 import eionet.cr.util.LogUtil;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.SQLUtil;
+import eionet.cr.web.security.CRUser;
 
 /**
  * A thread runs a given RDF export query with a given query configuration on a given staging database.
@@ -59,6 +64,12 @@ import eionet.cr.util.sql.SQLUtil;
  * @author jaanus
  */
 public class ExportRunner extends Thread {
+
+    /** */
+    private static final String DEFAULT_INDICATOR_CODE = "*";
+
+    /** */
+    private static final String DEFAULT_BREAKDOWN_CODE = "total";
 
     /** */
     public static final String EXPORT_URI_PREFIX = "http://semantic.digital-agenda-data.eu/import/";
@@ -119,10 +130,15 @@ public class ExportRunner extends Thread {
 
     /** */
     private URI graphURI;
+
+    /** */
+    private URI datasetPredicateURI;
+    private URI datasetValueURI;
+    private String datasetIdentifier;
+
+    /** */
     private URI indicatorPredicateURI;
     private URI indicatorValueURI;
-    private URI exportURI;
-    private URI exportedResourceURI;
 
     /** */
     private Set<String> existingIndicators;
@@ -140,7 +156,12 @@ public class ExportRunner extends Thread {
     private List<Map<String, String>> testResults = new ArrayList<Map<String, String>>();
 
     /** */
+    private HashSet<String> graphs = new HashSet<String>();
+
+    /** */
     private int rowCount;
+
+    private HashSet<String> harvestUris = new HashSet<String>();
 
     /**
      * Private class constructor, to be used for running the export.
@@ -226,6 +247,11 @@ public class ExportRunner extends Thread {
         boolean failed = false;
         RepositoryConnection repoConn = null;
         try {
+            if (queryConf.isClearDataset() && StringUtils.isNotBlank(queryConf.getDatasetUri())) {
+                LogUtil.debug("Clearing the dataset: " + queryConf.getDatasetUri(), exportLogger, LOGGER);
+                DAOFactory.get().getDao(HarvestSourceDAO.class).clearGraph(queryConf.getDatasetUri());
+            }
+
             repoConn = SesameUtil.getRepositoryConnection();
             repoConn.setAutoCommit(false);
 
@@ -242,6 +268,8 @@ public class ExportRunner extends Thread {
         } finally {
             SesameUtil.close(repoConn);
         }
+
+        startPostHarvests();
 
         try {
             getDao().finishRDFExport(exportId, this, failed ? ExportStatus.ERROR : ExportStatus.COMPLETED);
@@ -318,17 +346,22 @@ public class ExportRunner extends Thread {
 
         objectTypeURI = vf.createURI(queryConf.getObjectTypeUri());
         rdfTypeURI = vf.createURI(Predicates.RDF_TYPE);
-        indicatorPredicateURI = vf.createURI("http://semantic.digital-agenda-data.eu/def/property/indicator");
 
-        String indicator = queryConf.getIndicator();
-        if (StringUtils.isNotBlank(indicator)) {
-            indicatorValueURI = vf.createURI("http://semantic.digital-agenda-data.eu/codelist/indicator/" + indicator);
+        indicatorPredicateURI = vf.createURI(Predicates.DAS_INDICATOR);
+        String indicatorUri = queryConf.getIndicatorUri();
+        if (StringUtils.isNotBlank(indicatorUri)) {
+            indicatorValueURI = vf.createURI(indicatorUri);
         }
 
-        exportURI = vf.createURI(EXPORT_URI_PREFIX + exportId);
-        // graphURI = vf.createURI("http://semantic.digital-agenda-data.eu/dataset/scoreboard");
-        graphURI = exportURI;
-        exportedResourceURI = vf.createURI("http://semantic.digital-agenda-data.eu/importedResource");
+        String datasetUri = queryConf.getDatasetUri();
+        datasetIdentifier = StringUtils.substringAfterLast(datasetUri, "/");
+        if (StringUtils.isBlank(datasetIdentifier)) {
+            throw new IllegalArgumentException("Unable to extract identifier from this dataset URI: " + datasetUri);
+        }
+        datasetPredicateURI = vf.createURI(Predicates.DATACUBE_DATA_SET);
+        datasetValueURI = vf.createURI(datasetUri);
+
+        graphURI = datasetValueURI;
     }
 
     /**
@@ -370,17 +403,21 @@ public class ExportRunner extends Thread {
             loadExistingConcepts();
         }
 
-        // Prepare subject ID on the basis of ID template in query configuration. If it's blank, auto-generate it.
-        String subjectId = queryConf.getObjectIdTemplate();
-        if (StringUtils.isBlank(subjectId)) {
-            subjectId = String.valueOf(exportId) + "_" + rowIndex;
+        // Prepare subject URI on the basis of the template in the query configuration.
+        String subjectUri = queryConf.getObjectUriTemplate();
+        if (StringUtils.isBlank(subjectUri)) {
+            throw new IllegalArgumentException("The object URI template in the query configuration must not be blank!");
         }
+        subjectUri = StringUtils.replace(subjectUri, "<dataset>", datasetIdentifier);
 
         // Prepare the map of ObjectDTO to be added to the subject later.
         LinkedHashMap<URI, ArrayList<Value>> valuesByPredicate = new LinkedHashMap<URI, ArrayList<Value>>();
 
         // Add rdf:type predicate-value.
         addPredicateValue(valuesByPredicate, rdfTypeURI, objectTypeURI);
+
+        // Add the DataCube dataset predicate-value. Assume this point cannot be reached if dataset value is empty.
+        addPredicateValue(valuesByPredicate, datasetPredicateURI, datasetValueURI);
 
         // Add predicate-value pairs for hidden properties.
         if (hiddenProperties != null) {
@@ -404,7 +441,7 @@ public class ExportRunner extends Thread {
             if (StringUtils.isNotBlank(colValue)) {
 
                 // Replace property place-holders in subject ID
-                subjectId = StringUtils.replace(subjectId, "<" + property.getId() + ">", colValue);
+                subjectUri = StringUtils.replace(subjectUri, "<" + property.getId() + ">", colValue);
 
                 URI predicateURI = property.getPredicateURI();
                 if (predicateURI != null) {
@@ -436,26 +473,31 @@ public class ExportRunner extends Thread {
             }
         }
 
-        if (!hasIndicatorMapping && StringUtils.isNotBlank(queryConf.getIndicator())) {
+        // If there was no column mapping for the indicator, but a fixed indicator URI has been provided then use the latter.
+        if (!hasIndicatorMapping && indicatorValueURI != null) {
             addPredicateValue(valuesByPredicate, indicatorPredicateURI, indicatorValueURI);
         }
 
-        if (subjectId.indexOf("<indicator>") != -1) {
-            String indicator = queryConf.getIndicator();
-            if (StringUtils.isBlank(indicator)) {
-                indicator = "*";
+        // If <indicator> column placeholder not replaced yet, then use the fixed indicator URI if given.
+        if (subjectUri.indexOf("<indicator>") != -1) {
+            String indicatorCode = StringUtils.substringAfterLast(queryConf.getIndicatorUri(), "/");
+            if (StringUtils.isBlank(indicatorCode)) {
+                // No fixed indicator URI given either, resort to the default.
+                indicatorCode = DEFAULT_INDICATOR_CODE;
             }
-            subjectId = StringUtils.replace(subjectId, "<indicator>", indicator);
+            subjectUri = StringUtils.replace(subjectUri, "<indicator>", indicatorCode);
         }
 
-        if (subjectId.indexOf("<breakdown>") != -1) {
-            subjectId = StringUtils.replace(subjectId, "<breakdown>", "total");
+        // If <breakdown> column placeholder not replaced yet, then use the default.
+        if (subjectUri.indexOf("<breakdown>") != -1) {
+            subjectUri = StringUtils.replace(subjectUri, "<breakdown>", DEFAULT_BREAKDOWN_CODE);
         }
 
+        // Loop over predicate-value pairs and create the triples in the triple store.
         if (!valuesByPredicate.isEmpty()) {
 
             int tripleCountBefore = tripleCount;
-            URI subjectURI = vf.createURI(queryConf.getObjectIdNamespace() + subjectId);
+            URI subjectURI = vf.createURI(subjectUri);
             for (Entry<URI, ArrayList<Value>> entry : valuesByPredicate.entrySet()) {
 
                 ArrayList<Value> values = entry.getValue();
@@ -463,9 +505,17 @@ public class ExportRunner extends Thread {
                     URI predicateURI = entry.getKey();
                     for (Value value : values) {
                         repoConn.add(subjectURI, predicateURI, value, graphURI);
+                        graphs.add(graphURI.stringValue());
                         tripleCount++;
                         if (tripleCount % 5000 == 0) {
                             LOGGER.debug(tripleCount + " triples exported so far");
+                        }
+
+                        // Time periods should be harvested afterwards.
+                        if (Predicates.DAS_TIMEPERIOD.equals(predicateURI.stringValue())) {
+                            if (value instanceof URI) {
+                                harvestUris.add(value.stringValue());
+                            }
                         }
                     }
                 }
@@ -474,9 +524,6 @@ public class ExportRunner extends Thread {
             if (tripleCount > tripleCountBefore) {
                 subjectCount++;
             }
-
-            // Create relation between import URI and the imported subject
-            // repoConn.add(importURI, importedResourceURI, subjectURI, importURI);
         }
     }
 
@@ -824,5 +871,50 @@ public class ExportRunner extends Thread {
             }
         }
         return result;
+    }
+
+    /**
+     * @return the graphs
+     */
+    public Set<String> getGraphs() {
+        return graphs;
+    }
+
+    /**
+     *
+     */
+    private void startPostHarvests() {
+
+        if (harvestUris.isEmpty()) {
+            return;
+        }
+
+        HarvestSourceDAO dao = DAOFactory.get().getDao(HarvestSourceDAO.class);
+        for (String uri : harvestUris) {
+            LOGGER.debug("Going to harvest " + uri);
+            startPostHarvest(uri, dao);
+        }
+    }
+
+    /**
+     *
+     * @param uri
+     * @param dao
+     */
+    private void startPostHarvest(String uri, HarvestSourceDAO dao) {
+
+        HarvestSourceDTO dto = new HarvestSourceDTO();
+        dto.setUrl(StringUtils.substringBefore(uri, "#"));
+        dto.setEmails("");
+        dto.setIntervalMinutes(0);
+        dto.setPrioritySource(false);
+        dto.setOwner(null);
+        try {
+            dao.addSourceIgnoreDuplicate(dto);
+            OnDemandHarvester.harvest(dto.getUrl(), CRUser.APPLICATION.getUserName());
+        } catch (Exception e) {
+            LOGGER.error("Failed to harvest " + uri, e);
+            LogUtil.warn("Failed to harvest " + uri, exportLogger, LOGGER);
+        }
     }
 }

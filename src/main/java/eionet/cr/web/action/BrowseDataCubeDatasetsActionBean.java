@@ -7,8 +7,10 @@ import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,6 +20,7 @@ import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.HelperDAO;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.util.Pair;
 import eionet.cr.util.SortingRequest;
@@ -49,6 +52,11 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     /** */
     private CustomPaginatedList<Pair<String, String>> datasets;
 
+    /** Properties submitted from the "create new dataset" form. */
+    private String identifier;
+    private String dctermsTitle;
+    private String dctermsDescription;
+
     /**
      *
      * @return
@@ -71,6 +79,59 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
 
         datasets = new CustomPaginatedList<Pair<String, String>>(this, searchResult, pageRequest.getItemsPerPage());
         return new ForwardResolution(JSP);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Resolution createNew() {
+
+        try {
+            DAOFactory.get().getDao(ScoreboardSparqlDAO.class).createDataCubeDataset(identifier, dctermsTitle, dctermsDescription);
+            addSystemMessage("A new dataset with identifier \"" + identifier + "\" successfully created!");
+        } catch (DAOException e) {
+            LOGGER.error("Dataset creation failed with technical error", e);
+            addWarningMessage("Dataset creation failed with technical error: " + e.getMessage());
+        }
+
+        return new RedirectResolution(getClass());
+    }
+
+    /**
+     * @throws DAOException
+     *
+     */
+    @ValidationMethod(on = {"createNew"})
+    public void validateCreateNew() throws DAOException {
+
+        if (getUser() == null || !getUser().isAdministrator()) {
+            addGlobalValidationError("You are not authorized for this operation!");
+            getContext().setSourcePageResolution(new RedirectResolution(getClass()));
+            return;
+        }
+
+        if (StringUtils.isBlank(identifier)) {
+            addGlobalValidationError("The identifier is mandatory!");
+        }
+        else {
+            String s = identifier.replaceAll("[^a-zA-Z0-9-._]+", "");
+            if (!s.equals(identifier)) {
+                addGlobalValidationError("Only digits, latin letters, underscores and dashes allowed in the identifier!");
+            }
+            else{
+                boolean datasetExists = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).datasetExists(identifier);
+                if (datasetExists) {
+                    addGlobalValidationError("A dataset already exists by this identifier: " + identifier);
+                }
+            }
+        }
+
+        if (StringUtils.isBlank(dctermsTitle)) {
+            addGlobalValidationError("The title is mandatory!");
+        }
+
+        getContext().setSourcePageResolution(defaultEvent());
     }
 
     /**
@@ -144,5 +205,26 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
         list.add(map);
 
         return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * @param dctermsTitle the dctermsTitle to set
+     */
+    public void setDctermsTitle(String dctermsTitle) {
+        this.dctermsTitle = dctermsTitle;
+    }
+
+    /**
+     * @param dctermsDescription the dctermsDescription to set
+     */
+    public void setDctermsDescription(String dctermsDescription) {
+        this.dctermsDescription = dctermsDescription;
+    }
+
+    /**
+     * @param identifier the identifier to set
+     */
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

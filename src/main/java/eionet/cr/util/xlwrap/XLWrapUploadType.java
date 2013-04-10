@@ -12,12 +12,12 @@ public enum XLWrapUploadType {
     INDICATOR_GROUP("Indicator groups metadata", "File containing metadata of the Digital Agenda Scoreboard indicator groups"),
     BREAKDOWN("Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns"),
     BREAKDOWN_GROUP("Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
-    UNIT("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
-    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"),
-    OBSERVATION("Observations metadata", "File containing metadata of certain Digital Agenda Scoreboard observations");
+    UNIT_MEASURE("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
+    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources");
+//    OBSERVATION("Observations metadata", "File containing metadata of certain Digital Agenda Scoreboard observations");
 
     /** */
-    private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@/";
+    private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@";
     public static final String MAPPING_FILE_EXTENSION = "trig";
 
     /** */
@@ -41,7 +41,12 @@ public enum XLWrapUploadType {
         String normalizedName = name().toLowerCase().replace('_', '-');
         this.graphUri = GRAPH_TEMPLATE.replace("@type@", normalizedName);
 
-        URL mappingTemplateURL = getClass().getClassLoader().getResource(normalizedName + "." + MAPPING_FILE_EXTENSION);
+        String mappingTemplateFileName = normalizedName + "." + MAPPING_FILE_EXTENSION;
+        URL mappingTemplateURL = getClass().getClassLoader().getResource(mappingTemplateFileName);
+        if (mappingTemplateURL == null) {
+            throw new CRRuntimeException("Could not locate mapping template by the name of " + mappingTemplateFileName);
+        }
+
         try {
             this.mappingTemplate = new File(mappingTemplateURL.toURI());
         } catch (URISyntaxException e) {

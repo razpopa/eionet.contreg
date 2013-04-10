@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.BNode;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -45,7 +46,7 @@ public class JenaUtil {
      */
     public static Pair<Integer, Integer> saveModel(Model model, String graphUri, boolean clearGraph) throws OpenRDFException {
 
-        HashSet<String> distinctResources = new HashSet<String>();
+        HashSet<String> distinctNonAnonymousResources = new HashSet<String>();
         RepositoryConnection repoConn = null;
         try {
             repoConn = SesameUtil.getRepositoryConnection();
@@ -106,14 +107,16 @@ public class JenaUtil {
                 }
                 repoConn.add(sesameSubject, sesamePredicate, sesameObject, graphURI);
                 addedStmtCounter++;
-                distinctResources.add(sesameSubject.stringValue());
+                if (!(sesameSubject instanceof BNode)) {
+                    distinctNonAnonymousResources.add(sesameSubject.stringValue());
+                }
             }
 
             if (addedStmtCounter > 0) {
                 repoConn.commit();
             }
 
-            return new Pair<Integer, Integer>(addedStmtCounter, distinctResources.size());
+            return new Pair<Integer, Integer>(addedStmtCounter, distinctNonAnonymousResources.size());
         } catch (Error e) {
             SesameUtil.rollback(repoConn);
             throw e;

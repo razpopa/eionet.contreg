@@ -17,6 +17,23 @@
                             return true;
                         });
 
+                        // Actions for the display/closing of the "create new dataset" popup
+                        $("#createNewDatasetLink").click(function() {
+                            $('#createNewDatasetDialog').dialog('option','width', 800);
+                            $('#createNewDatasetDialog').dialog('open');
+                            return false;
+                        });
+
+                        $('#createNewDatasetDialog').dialog({
+                            autoOpen: false,
+                            width: 800
+                        });
+
+                        $("#closeCreateNewDatasetDialog").click(function() {
+                            $('#createNewDatasetDialog').dialog("close");
+                            return true;
+                        });
+
                         <c:if test="${actionBean.testRun != null && actionBean.testRun.foundMissingConcepts}">
                         // Open the missing concepts popup
                         $("#openMissingConceptsPopup").click(function() {
@@ -47,12 +64,12 @@
 
         <div style="margin-top:20px">
             <p>
-	            Your query has been compiled on the database side, and the following selected columns have been detected.<br/>
-	            For each column, please specify a mapping to the corresponding RDF property.<br/>
-	            If none of the selected columns is mapped to the "Indicator (code)" property, please also select an indicator from picklist.<br/>
-	            It is also mandatory to select the dataset where the query's returned objects will go into.<br/>
-	            Defaults have been selected by the system where possible.
-	            Mandatory inputs are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>. Conditional inputs are marked with <img src="${pageContext.request.contextPath}/images/conditional.gif"/>.
+                Your query has been compiled on the database side, and the following selected columns have been detected.<br/>
+                For each column, please specify a mapping to the corresponding RDF property.<br/>
+                If none of the selected columns is mapped to the "Indicator (code)" property, please also select an indicator from picklist.<br/>
+                It is also mandatory to select the dataset where the query's returned objects will go into.<br/>
+                Defaults have been selected by the system where possible.
+                Mandatory inputs are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>. Conditional inputs are marked with <img src="${pageContext.request.contextPath}/images/conditional.gif"/>.
             </p>
             <p>
                 <strong>NB!</strong>
@@ -100,22 +117,32 @@
                                 <label for="selIndicator" title="Indicator of the selected observations." style="padding-right: 12px;background: url(${pageContext.request.contextPath}/images/conditional.gif) center right no-repeat;">Indicator:</label>
                             </td>
                             <td>
-                                <stripes:select id="selIndicator" name="queryConf.indicator" value="${actionBean.queryConf.indicator}">
+                                <stripes:select id="selIndicator" name="queryConf.indicatorUri" value="${actionBean.queryConf.indicatorUri}">
                                     <stripes:option value="" label=""/>
                                     <c:forEach items="${actionBean.indicators}" var="indicatorPair">
-                                        <stripes:option value="${indicatorPair.value}" label="${indicatorPair.value}"/>
+                                        <stripes:option value="${indicatorPair.left}" label="${indicatorPair.right}" title="${indicatorPair.left}"/>
                                     </c:forEach>
                                 </stripes:select>&nbsp;<span style="font-size:0.8em">(must be selected, unless indicator has been mapped to one of the selected columns above)</span>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align:right">
-                                <label for="selDataset" title="The dataset where the selected observations will go into." class="required">Dataset:</label>
+                            <td style="text-align:right;vertical-align:top">
+                                <stripes:label for="selDataset" class="required" title="The target dataset where the export's results will go to.">Dataset:</stripes:label>
                             </td>
                             <td>
-                                <stripes:select id="selDataset" name="queryConf.dataset">
-                                    <stripes:option value="http://semantic.digital-agenda-data.eu/dataset/scoreboard" label="Unit C4 - Economic and statistical analysis"/>
-                                </stripes:select>
+                                <stripes:select name="queryConf.datasetUri" id="selDataset" value="${actionBean.queryConf.datasetUri}">
+                                    <c:if test="${empty actionBean.datasets}">
+                                        <stripes:option value="" label=" - none found - "/>
+                                    </c:if>
+                                    <c:if test="${not empty actionBean.datasets}">
+                                        <stripes:option value="" label=""/>
+                                        <c:forEach items="${actionBean.datasets}" var="dataset">
+                                            <stripes:option value="${dataset.left}" label="${dataset.right}"/>
+                                        </c:forEach>
+                                    </c:if>
+                                </stripes:select>&nbsp;&nbsp;<a href="#" id="createNewDatasetLink" title="Opens a pop-up where you can start a brand new dataset.">Create new &#187;</a><br/>
+                                <input type="checkbox" name="clearDataset" id="chkClear" value="true"/>
+                                <stripes:label for="chkClear" title="If checked, the contents of the selected dataset will be cleared before the export runs." style="font-size:0.8em">Clear dataset before the export</stripes:label>
                             </td>
                         </tr>
                     </table>
@@ -123,7 +150,7 @@
                 <div style="margin-top:20px">
                     <stripes:submit name="backToStep1" value="< Back"/>&nbsp;
                     <stripes:submit name="test" id="testButton" value="Test"/>&nbsp;
-                    <stripes:submit name="run" id="runButton" value="Run"/>&nbsp;
+                    <stripes:submit name="run" id="runButton" value="Run" onclick="return this.form.elements['chkClear'].checked ? confirm('You have chosen to clear the dataset before the export is run? Click OK to confirm, otherwise click Cancel.') : true;"/>&nbsp;
                     <stripes:submit name="cancel" value="Cancel"/>
                 </div>
             </crfn:form>
@@ -221,6 +248,44 @@
                 </div>
 
             </c:if>
+        </div>
+
+        <%-- The "create new dataset" popup. Displayed when user clicks on the relevant popup link. --%>
+
+        <div id="createNewDatasetDialog" title="Create a new dataset">
+            <stripes:form beanclass="${actionBean.class.name}" method="post">
+
+                <p>
+                    The following properties are sufficient to create a new dataset. The ones mandatory, are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>.<br/>
+                    More information is displayed when placing the mouse over properties' labels.<br/>
+                    Once the dataset is created, you can add more properties on the dataset's detailed view page.
+                </p>
+
+                <table>
+                    <tr>
+                        <td><stripes:label for="txtTitle" class="question required" title="The dataset's unique identifier used by the system to distinguish it from others. Only digits, latin letters, underscores and dashes allowed!">Identifier:</stripes:label></td>
+                        <td><stripes:text name="newDatasetIdentifier" id="txtIdentifier" size="60"/></td>
+                    </tr>
+                    <tr>
+                        <td><stripes:label for="txtTitle" class="question required" title="The human-readable title of the dataset. Any free text.">Title:</stripes:label></td>
+                        <td><stripes:text name="newDatasetTitle" id="txtTitle" size="80"/></td>
+                    </tr>
+                    <tr>
+                        <td><stripes:label for="txtDescription" class="question" title="The human-readable short description of the dataset. Any free text.">Description:</stripes:label></td>
+                        <td>
+                            <stripes:textarea name="newDatasetDescription" id="txtDescription" cols="80" rows="10"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-top:10px">
+                            <stripes:submit name="createNewDataset" value="Create"/>
+                            <input type="button" id="closeCreateNewDatasetDialog" value="Cancel"/>
+                        </td>
+                    </tr>
+                </table>
+
+            </stripes:form>
         </div>
 
     </stripes:layout-component>

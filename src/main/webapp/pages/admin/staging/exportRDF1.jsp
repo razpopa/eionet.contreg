@@ -11,13 +11,13 @@
                 $(document).ready(
                     function(){
 
-                        // Open the tables and columns popup
+                        //////////////////////////////////////////////////
+
                         $("#openTableAndColumnsPopup").click(function() {
                             $('#tableAndColumnsPopup').dialog('open');
                             return false;
                         });
 
-                        // Setup the tables and columns popup
                         $('#tableAndColumnsPopup').dialog({
                             autoOpen: false,
                             height: 400,
@@ -26,9 +26,26 @@
                             maxWidth: 800
                         });
 
-                        // Close the tables and columns popup
                         $("#closeTableAndColumnsPopup").click(function() {
                             $('#tableAndColumnsPopup').dialog("close");
+                            return true;
+                        });
+
+                        //////////////////////////////////////////////////
+
+                        $("#createNewDatasetLink").click(function() {
+                            $('#createNewDatasetDialog').dialog('option','width', 800);
+                            $('#createNewDatasetDialog').dialog('open');
+                            return false;
+                        });
+
+                        $('#createNewDatasetDialog').dialog({
+                            autoOpen: false,
+                            width: 800
+                        });
+
+                        $("#closeCreateNewDatasetDialog").click(function() {
+                            $('#createNewDatasetDialog').dialog("close");
                             return true;
                         });
 
@@ -58,7 +75,7 @@
                 <table>
                     <tr>
                         <td style="text-align:right;vertical-align:top">
-                            <stripes:label for="txtName" class="question required">Name:</stripes:label>
+                            <stripes:label for="txtName" class="question required" title="Human-readable name of this export that will help to distinguish it from other exports when viewing exports' history.">Name:</stripes:label>
                         </td>
                         <td>
                             <stripes:text id="txtName" name="exportName" size="80" value="${actionBean.defaultExportName}"/>&nbsp;&nbsp;<a href="#" id="openTableAndColumnsPopup">View tables and columns &#187;</a>
@@ -66,7 +83,7 @@
                     </tr>
                     <tr>
                          <td style="text-align:right;vertical-align:top">
-                             <stripes:label for="txtQuery" class="question required">Query:</stripes:label>
+                             <stripes:label for="txtQuery" class="question required" title="SQL query whose results are to be exported.">Query:</stripes:label>
                          </td>
                          <td>
                              <stripes:textarea id="txtQuery" name="queryConf.query" cols="80" rows="15" value="${actionBean.dbDTO.defaultQuery}"/>
@@ -74,10 +91,10 @@
                      </tr>
                     <tr>
                         <td style="text-align:right;vertical-align:top">
-                            <stripes:label for="selObjectsType" class="question required">Objects type:</stripes:label>
+                            <stripes:label for="selObjectsType" class="question required" title="The type of objects that the query will return.">Objects type:</stripes:label>
                         </td>
                         <td>
-                            <stripes:select name="queryConf.objectTypeUri" id="selObjectType">
+                            <stripes:select name="queryConf.objectTypeUri" id="selObjectType" value="${actionBean.queryConf.objectTypeUri}">
                                 <c:forEach items="${actionBean.objectTypes}" var="objectType">
                                     <stripes:option value="${objectType.uri}" label="${objectType.label}"/>
                                 </c:forEach>
@@ -94,6 +111,8 @@
                 </table>
             </crfn:form>
         </div>
+
+        <%-- The tables and columns popup. Displayed when user clicks on the relevant popup link. --%>
 
         <div id="tableAndColumnsPopup" title="Tables and columns in this database">
 

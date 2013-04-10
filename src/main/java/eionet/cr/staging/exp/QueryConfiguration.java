@@ -46,37 +46,17 @@ public class QueryConfiguration implements Serializable {
     /** The column mappings. */
     private LinkedCaseInsensitiveMap<ObjectProperty> columnMappings = new LinkedCaseInsensitiveMap<ObjectProperty>();
 
-    /** The object id template. */
-    private String objectIdTemplate;
-
-    /** The object id namespace. */
-    private String objectIdNamespace;
-
-    /** Template for the dataset ID. */
-    private String datasetIdTemplate;
-
-    /** The dataset namespace. */
-    private String datasetIdNamespace;
+    /** */
+    private String objectUriTemplate;
 
     /** The indicator URI. */
-    private String indicator;
+    private String indicatorUri;
 
-    /** The dataset URI. */
-    private String dataset;
+    /** The datasetUri URI. */
+    private String datasetUri;
 
-    /**
-     * @return the datasetIdTemplate
-     */
-    public String getDatasetIdTemplate() {
-        return datasetIdTemplate;
-    }
-
-    /**
-     * @param datasetIdTemplate the datasetIdTemplate to set
-     */
-    public void setDatasetIdTemplate(String datasetIdTemplate) {
-        this.datasetIdTemplate = datasetIdTemplate;
-    }
+    /** If true, the dataset should be cleared before the export query is executed. */
+    private boolean clearDataset;
 
     /**
      * @return the query
@@ -104,20 +84,6 @@ public class QueryConfiguration implements Serializable {
      */
     public void setObjectTypeUri(String objectTypeUri) {
         this.objectTypeUri = objectTypeUri;
-    }
-
-    /**
-     * @return the objectIdTemplate
-     */
-    public String getObjectIdTemplate() {
-        return objectIdTemplate;
-    }
-
-    /**
-     * @param objectIdTemplate the objectIdTemplate to set
-     */
-    public void setObjectIdTemplate(String objectIdTemplate) {
-        this.objectIdTemplate = objectIdTemplate;
     }
 
     /**
@@ -157,58 +123,39 @@ public class QueryConfiguration implements Serializable {
     }
 
     /**
-     * @return the objectIdNamespace
+     * @param columnMappings the columnMappings to set
      */
-    public String getObjectIdNamespace() {
-        return objectIdNamespace;
+    public void setColumnMappings(LinkedCaseInsensitiveMap<ObjectProperty> columnMappings) {
+        this.columnMappings = columnMappings;
     }
 
     /**
-     * @param objectIdNamespace the objectIdNamespace to set
+     * @return the indicatorUri
      */
-    public void setObjectIdNamespace(String objectIdNamespace) {
-        this.objectIdNamespace = objectIdNamespace;
+    public String getIndicatorUri() {
+        return indicatorUri;
     }
 
     /**
-     * @return the datasetIdNamespace
+     * @param indicatorUri the indicatorUri to set
      */
-    public String getDatasetIdNamespace() {
-        return datasetIdNamespace;
+    public void setIndicatorUri(String indicator) {
+        this.indicatorUri = indicator;
     }
 
     /**
-     * @param datasetIdNamespace the datasetIdNamespace to set
+     * @return the datasetUri
      */
-    public void setDatasetIdNamespace(String datasetIdNamespace) {
-        this.datasetIdNamespace = datasetIdNamespace;
+    public String getDatasetUri() {
+        return datasetUri;
     }
 
-    //    /**
-    //     * Sets the defaults.
-    //     */
-    //    public void setDefaults() {
-    //
-    //        if (objectTypeUri == null || objectTypeUri.isEmpty()) {
-    //            return;
-    //        }
-    //
-    //        ObjectType objectType = ObjectTypes.getByUri(objectTypeUri);
-    //        if (objectType != null) {
-    //
-    //            for (Entry<String, ObjectProperty> entry : columnMappings.entrySet()) {
-    //                String column = entry.getKey();
-    //                ObjectProperty defaultProperty = objectType.getDefaultProperty(column);
-    //                entry.setValue(defaultProperty);
-    //            }
-    //
-    //            objectIdTemplate = objectType.getObjectIdTemplate();
-    //            datasetIdTemplate = objectType.getDatasetIdTemplate();
-    //
-    //            objectIdNamespace = objectType.getObjectIdNamespace();
-    //            datasetIdNamespace = objectType.getDatasetIdNamespace();
-    //        }
-    //    }
+    /**
+     * @param datasetUri the datasetUri to set
+     */
+    public void setDatasetUri(String dataset) {
+        this.datasetUri = dataset;
+    }
 
     /**
      * Returns a string "dump" of this {@link QueryConfiguration} that is suitable for storage into the RDF export table in the
@@ -227,47 +174,39 @@ public class QueryConfiguration implements Serializable {
         }
         sb.append(LINE_BREAK);
         sb.append("[Other settings]").append(LINE_BREAK);
-        //        sb.append("Dataset identifier template: ").append(datasetIdTemplate).append(LINE_BREAK);
-        //        sb.append("Objects identifier template: ").append(objectIdTemplate);
-        sb.append("Indicator: ").append(indicator).append(LINE_BREAK);
-        sb.append("Dataset: ").append(dataset);
+        sb.append("Objects type: ").append(objectTypeUri).append(LINE_BREAK);
+        sb.append("Indicator: ").append(indicatorUri).append(LINE_BREAK);
+        sb.append("Dataset: ").append(datasetUri);
         sb.append(LINE_BREAK);
 
         return sb.toString();
     }
 
     /**
-     * @param columnMappings the columnMappings to set
+     * @return the objectUriTemplate
      */
-    public void setColumnMappings(LinkedCaseInsensitiveMap<ObjectProperty> columnMappings) {
-        this.columnMappings = columnMappings;
+    public String getObjectUriTemplate() {
+        return objectUriTemplate;
     }
 
     /**
-     * @return the indicator
+     * @param objectUriTemplate the objectUriTemplate to set
      */
-    public String getIndicator() {
-        return indicator;
+    public void setObjectUriTemplate(String objectUriTemplate) {
+        this.objectUriTemplate = objectUriTemplate;
     }
 
     /**
-     * @param indicator the indicator to set
+     * @param clearDataset the clearDataset to set
      */
-    public void setIndicator(String indicator) {
-        this.indicator = indicator;
+    public void setClearDataset(boolean clearDataset) {
+        this.clearDataset = clearDataset;
     }
 
     /**
-     * @return the dataset
+     * @return the clearDataset
      */
-    public String getDataset() {
-        return dataset;
-    }
-
-    /**
-     * @param dataset the dataset to set
-     */
-    public void setDataset(String dataset) {
-        this.dataset = dataset;
+    public boolean isClearDataset() {
+        return clearDataset;
     }
 }

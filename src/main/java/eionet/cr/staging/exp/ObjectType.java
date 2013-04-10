@@ -46,16 +46,7 @@ public class ObjectType {
     private ArrayList<ObjectProperty> properties = new ArrayList<ObjectProperty>();
 
     /** */
-    private String objectIdTemplate;
-
-    /** */
-    private String objectIdNamespace;
-
-    /** */
-    private String datasetIdTemplate;
-
-    /** */
-    private String datasetIdNamespace;
+    private String objectUriTemplate;
 
     /** */
     private LinkedCaseInsensitiveMap<ObjectProperty> columnToDefaultProperty = new LinkedCaseInsensitiveMap<ObjectProperty>();
@@ -71,13 +62,6 @@ public class ObjectType {
 
     /** */
     private HashMap<ObjectProperty, String[]> propertyToDefaultColumns = new HashMap<ObjectProperty, String[]>();
-
-    /**
-     * @return the propertyToDefaultColumns
-     */
-    public HashMap<ObjectProperty, String[]> getPropertyToDefaultColumns() {
-        return propertyToDefaultColumns;
-    }
 
     /**
      * Constructs object type with the given uri and label..
@@ -155,24 +139,6 @@ public class ObjectType {
     }
 
     /**
-     * Gets the object id template.
-     *
-     * @return the objectIdTemplate
-     */
-    public String getObjectIdTemplate() {
-        return objectIdTemplate;
-    }
-
-    /**
-     * Sets the object id template.
-     *
-     * @param objectIdTemplate the objectIdTemplate to set
-     */
-    public void setObjectIdTemplate(String objectIdTemplate) {
-        this.objectIdTemplate = objectIdTemplate;
-    }
-
-    /**
      * Gets the uri.
      *
      * @return the uri
@@ -188,60 +154,6 @@ public class ObjectType {
      */
     public String getLabel() {
         return label;
-    }
-
-    /**
-     * Gets the object id namespace.
-     *
-     * @return the objectIdNamespace
-     */
-    public String getObjectIdNamespace() {
-        return objectIdNamespace;
-    }
-
-    /**
-     * Sets the object id namespace.
-     *
-     * @param objectIdNamespace the new object id namespace
-     */
-    public void setObjectIdNamespace(String objectIdNamespace) {
-        this.objectIdNamespace = objectIdNamespace;
-    }
-
-    /**
-     * Gets the dataset id template.
-     *
-     * @return the datasetIdTemplate
-     */
-    public String getDatasetIdTemplate() {
-        return datasetIdTemplate;
-    }
-
-    /**
-     * Sets the dataset id template.
-     *
-     * @param datasetIdTemplate the datasetIdTemplate to set
-     */
-    public void setDatasetIdTemplate(String datasetIdTemplate) {
-        this.datasetIdTemplate = datasetIdTemplate;
-    }
-
-    /**
-     * Gets the dataset id namespace.
-     *
-     * @return the datasetIdNamespace
-     */
-    public String getDatasetIdNamespace() {
-        return datasetIdNamespace;
-    }
-
-    /**
-     * Sets the dataset id namespace.
-     *
-     * @param datasetIdNamespace the datasetIdNamespace to set
-     */
-    public void setDatasetIdNamespace(String datasetIdNamespace) {
-        this.datasetIdNamespace = datasetIdNamespace;
     }
 
     /**
@@ -277,4 +189,24 @@ public class ObjectType {
         return hiddenProperties;
     }
 
+    /**
+     * @return the propertyToDefaultColumns
+     */
+    public HashMap<ObjectProperty, String[]> getPropertyToDefaultColumns() {
+        return propertyToDefaultColumns;
+    }
+
+    /**
+     * @return the objectUriTemplate
+     */
+    public String getObjectUriTemplate() {
+        return objectUriTemplate;
+    }
+
+    /**
+     * @param objectUriTemplate the objectUriTemplate to set
+     */
+    public void setObjectUriTemplate(String objectUriTemplate) {
+        this.objectUriTemplate = objectUriTemplate;
+    }
 }

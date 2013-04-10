@@ -79,7 +79,9 @@ public interface Subjects {
     String DATACUBE_OBSERVATION = "http://purl.org/linked-data/cube#Observation";
     String DATACUBE_DATA_SET = "http://purl.org/linked-data/cube#DataSet";
 
+    String DAS_INDICATOR_GROUP = "http://semantic.digital-agenda-data.eu/def/class/IndicatorGroup";
     String DAS_INDICATOR = "http://semantic.digital-agenda-data.eu/def/class/Indicator";
+    String DAS_BREAKDOWN_GROUP = "http://semantic.digital-agenda-data.eu/def/class/BreakdownGroup";
     String DAS_BREAKDOWN = "http://semantic.digital-agenda-data.eu/def/class/Breakdown";
     String DAS_UNIT = "http://semantic.digital-agenda-data.eu/def/class/UnitMeasure";
 

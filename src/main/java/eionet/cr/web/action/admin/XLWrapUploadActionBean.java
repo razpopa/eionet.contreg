@@ -57,6 +57,9 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     /** */
     private String uploadedGraphUri;
 
+    /** */
+    private boolean clearGraph = true;
+
     /**
      *
      * @return
@@ -96,8 +99,8 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         }
 
         try {
-            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, true);
-            addSystemMessage(resourceCount + " objects successfully imported!\n Please click on the link below to explore them.");
+            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, clearGraph);
+            addSystemMessage(resourceCount + " resources successfully imported!\n Click on on the below link to explore them further.");
             getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, uploadType.getGraphUri());
             return new RedirectResolution(getClass());
 
@@ -188,5 +191,27 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public String getUploadedGraphUri() {
         return uploadedGraphUri;
+    }
+
+    /**
+     * @param clearGraph the clearGraph to set
+     */
+    public void setClearGraph(boolean clearGraph) {
+        this.clearGraph = clearGraph;
+    }
+
+    /**
+     * @return the clearGraph
+     */
+    public boolean isClearGraph() {
+        return clearGraph;
+    }
+
+    public static void main(String[] args) {
+
+        XLWrapUploadType[] values = XLWrapUploadType.values();
+        for (int i = 0; i < values.length; i++) {
+            System.out.println(values[i].getGraphUri());
+        }
     }
 }

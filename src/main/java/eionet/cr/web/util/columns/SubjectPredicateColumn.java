@@ -20,16 +20,21 @@
  */
 package eionet.cr.web.util.columns;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import net.sourceforge.stripes.action.UrlBinding;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.functors.EqualPredicate;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eionet.cr.common.Predicates;
+import eionet.cr.common.Subjects;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dto.ObjectDTO;
 import eionet.cr.dto.SubjectDTO;
 import eionet.cr.util.URIUtil;
@@ -51,6 +56,9 @@ public class SubjectPredicateColumn extends SearchResultColumn {
 
     /** */
     private List<String> languages;
+
+    /** The types of the subject whose predicate column it is. Explicitly set by the column's invoker. */
+    private String[] subjectTypes;
 
     /**
      *
@@ -101,9 +109,9 @@ public class SubjectPredicateColumn extends SearchResultColumn {
     /**
      * @see eionet.cr.web.util.columns.SearchResultColumn#format(java.lang.Object)
      *
-     * Gets the collection of objects matching to the given predicate in the given subject. Formats the given collection to
-     * comma-separated string. For literal objects, simply the value of the literal will be used. For resource objects, clickable
-     * factsheet links will be created.
+     *      Gets the collection of objects matching to the given predicate in the given subject. Formats the given collection to
+     *      comma-separated string. For literal objects, simply the value of the literal will be used. For resource objects,
+     *      clickable factsheet links will be created.
      */
     @Override
     public String format(Object object) {
@@ -117,7 +125,19 @@ public class SubjectPredicateColumn extends SearchResultColumn {
             if (predicateUri.equals(Predicates.RDFS_LABEL)) {
 
                 if (objects.isEmpty()) {
-                    result = URIUtil.extractURILabel(subjectDTO.getUri(), SubjectDTO.NO_LABEL);
+                    Collection<String> rdfTypes = subjectDTO.getObjectValues(Predicates.RDF_TYPE);
+                    if (CollectionUtils.isEmpty(rdfTypes) && subjectTypes != null) {
+                        rdfTypes = Arrays.asList(subjectTypes);
+                    }
+                    if (CollectionUtils.exists(rdfTypes, new EqualPredicate(Subjects.DATACUBE_OBSERVATION))) {
+                        // If type is DataCube observation, then special handling.
+                        result = StringUtils.substringAfter(subjectDTO.getUri(), ScoreboardSparqlDAO.OBSERVATION_URI_PREFIX);
+                        if (StringUtils.isBlank(result)) {
+                            result = subjectDTO.getUri();
+                        }
+                    } else {
+                        result = URIUtil.extractURILabel(subjectDTO.getUri(), SubjectDTO.NO_LABEL);
+                    }
                 } else {
                     result = objectValuesToCSV(objects);
                 }
@@ -168,7 +188,8 @@ public class SubjectPredicateColumn extends SearchResultColumn {
      *
      * @param uri
      * @param label
-     * @param showTitle true if to show the given object value (typically resource) in the factsheet link
+     * @param showTitle
+     *            true if to show the given object value (typically resource) in the factsheet link
      * @return formatted HTML code for factsheet link
      */
     private String buildFactsheetLink(String uri, String label, boolean showTitle) {
@@ -208,5 +229,13 @@ public class SubjectPredicateColumn extends SearchResultColumn {
         }
 
         return languages;
+    }
+
+    /**
+     *
+     * @param subjectTypes
+     */
+    public void setSubjectTypes(String... subjectTypes) {
+        this.subjectTypes = subjectTypes;
     }
 }

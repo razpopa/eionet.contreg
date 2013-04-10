@@ -3,24 +3,29 @@ package eionet.cr.web.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.servlet.http.HttpSession;
+
+import net.sourceforge.stripes.action.Before;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
-import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.controller.LifecycleStage;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import eionet.cr.common.Predicates;
-import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
-import eionet.cr.dao.HelperDAO;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dao.SearchDAO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SubjectDTO;
@@ -29,6 +34,7 @@ import eionet.cr.util.SortingRequest;
 import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.web.action.factsheet.FactsheetActionBean;
 import eionet.cr.web.util.CustomPaginatedList;
+import eionet.cr.web.util.ObservationFilter;
 
 /**
  * An action bean for browsing the available DataCube observations (i.e. resources of type
@@ -43,65 +49,63 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     private static final Logger LOGGER = Logger.getLogger(BrowseObservationsActionBean.class);
 
     /** */
-    private static final String[] LABEL_PREDICATES = {};
-
-    /** */
-    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName()
-            + ".alias.values";
-
-    /** */
-    private static final String JSP = "/pages/observations.jsp";
-
-    /** */
-    private static final String FILTER_PARAM_PREFIX = "";
-
-    /** */
-    private static final List<HashMap<String, String>> AVAIL_FILTERS = createAvailFilters();
+    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName() + ".alias.values";
 
     /** */
     private static final List<HashMap<String, String>> AVAIL_COLUMNS = createAvailColumns();
 
     /** */
+    private static final String JSP = "/pages/browseObservations.jsp";
+
+    /** */
     private CustomPaginatedList<SubjectDTO> observations;
 
     /** */
-    private HashMap<String, String> filtersFromRequest;
+    private Map<ObservationFilter, String> selections = new LinkedHashMap<ObservationFilter, String>();
+
+    /** */
+    private String applyFilter;
 
     /**
+     * @throws DAOException
      *
-     * @return
      */
     @DefaultHandler
-    public Resolution init() {
-        try {
-            loadFilterValues();
-        } catch (DAOException e) {
-            addWarningMessage("A technical error occurred when loading available search filter values: " + e.getMessage());
+    public Resolution search() throws DAOException {
+
+        ScoreboardSparqlDAO scoreboardSparqlDao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
+        ObservationFilter filter = ObservationFilter.getNextByAlias(applyFilter);
+        if (filter == null) {
+            filter = ObservationFilter.values()[0];
         }
-        return new ForwardResolution(JSP);
-    }
 
-    /**
-     *
-     * @return
-     */
-    public Resolution search() {
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + System.currentTimeMillis());
+//        System.out.println();
+//        System.out.println();
 
-        ForwardResolution resolution = new ForwardResolution(JSP);
+        while (filter != null) {
 
-        if (getContext().getRequestParameter("loadFilters") != null) {
-            try {
-                loadFilterValues();
-            } catch (DAOException e) {
-                addWarningMessage("A technical error occurred when loading available search filter values: " + e.getMessage());
+            List<Pair<String, String>> filterValues = scoreboardSparqlDao.getFilterValues(selections, filter);
+
+            boolean anySupprted = filter.isAnySupprted();
+            if (anySupprted) {
+                filterValues.add(0, new Pair<String, String>("", "any"));
             }
-        }
 
-        HashMap<String, String> filters = getFiltersFromRequest();
-        if (filters.isEmpty()) {
-            return resolution;
+            if (CollectionUtils.isNotEmpty(filterValues)) {
+
+                String selValue = selections.get(filter);
+                boolean selValueBlank = StringUtils.isBlank(selValue);
+                if ((selValueBlank && !anySupprted) || (!selValueBlank && !filterValuesContains(filterValues, selValue))) {
+                    selections.put(filter, filterValues.iterator().next().getLeft());
+                }
+            }
+
+            getContext().setSessionAttribute(getSessionAttrName(filter.getAlias()), filterValues);
+            filter = ObservationFilter.getNext(filter);
         }
-        filters.put(Predicates.RDF_TYPE, Subjects.DATACUBE_OBSERVATION);
 
         SearchResultDTO<SubjectDTO> searchResult = null;
         String sortPredicate = getColumnPredicateByAlias(sort);
@@ -109,104 +113,25 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         PagingRequest pageRequest = PagingRequest.create(page);
 
         try {
-            SearchDAO dao = DAOFactory.get().getDao(SearchDAO.class);
-            searchResult = dao.searchByFilters(filters, false, pageRequest, sortRequest, null, false);
+            SearchDAO searchDao = DAOFactory.get().getDao(SearchDAO.class);
+            LinkedHashMap<String, String> convertedSelections = convertFilterSelections(selections);
+            searchResult = searchDao.searchByFilters(convertedSelections, false, pageRequest, sortRequest, null, false);
         } catch (DAOException e) {
             LOGGER.error("Observation search error", e);
             addWarningMessage("A technical error occurred when searching by the given filters" + e.getMessage());
         }
 
         observations = new CustomPaginatedList<SubjectDTO>(this, searchResult, pageRequest.getItemsPerPage());
-        return resolution;
-    }
-
-    /**
-     *
-     */
-    @ValidationMethod(on = {"search"})
-    public void validateSearch() {
-
-        if (getFiltersFromRequest().isEmpty()) {
-            addWarningMessage("At least one filter must be supplied!");
-            getContext().setSourcePageResolution(new ForwardResolution(JSP));
-        }
+        return new ForwardResolution(JSP);
     }
 
     /**
      *
      * @return
      */
-    public Resolution reloadFilters() {
-
-        try {
-            loadFilterValues();
-        } catch (DAOException e) {
-            addWarningMessage("A technical error occurred when reloading observation filters: " + e.getMessage());
-        }
-
-        Map params = getContext().getRequest().getParameterMap();
-        HashMap paramsWrapped = params == null ? new HashMap() : new HashMap(params);
-        paramsWrapped.remove("reloadFilters");
-        return new RedirectResolution(getClass(), "search").addParameters(paramsWrapped);
-    }
-
-    /**
-     * @throws DAOException
-     *
-     */
-    private void loadFilterValues() throws DAOException {
-
-        HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
-        for (HashMap<String, String> filterConf : AVAIL_FILTERS) {
-
-            String alias = filterConf.get("alias");
-            String range = filterConf.get("range");
-            String predicate = filterConf.get("predicate");
-            List<Pair<String, String>> values = null;
-
-            try {
-                if (StringUtils.isNotBlank(range)) {
-                    values = dao.getUriLabels(range, null, null, LABEL_PREDICATES).getItems();
-                } else {
-                    values = dao.getDistinctObjectLabels(predicate, null, null, LABEL_PREDICATES).getItems();
-                }
-            } catch (DAOException e) {
-                LOGGER.error("Error when loading values fo filter: " + alias, e);
-                throw e;
-            }
-
-            if (values != null && !values.isEmpty()) {
-                String sessionAttrName = StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", alias);
-                getContext().setSessionAttribute(sessionAttrName, values);
-            }
-        }
-    }
-
-    /**
-     * @return the observations
-     */
-    public CustomPaginatedList<SubjectDTO> getObservations() {
-        return observations;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private HashMap<String, String> getFiltersFromRequest() {
-
-        if (filtersFromRequest == null) {
-            filtersFromRequest = new HashMap<String, String>();
-            for (HashMap<String, String> filterConf : AVAIL_FILTERS) {
-
-                String value = getContext().getRequestParameter(FILTER_PARAM_PREFIX + filterConf.get("alias"));
-                if (StringUtils.isNotBlank(value)) {
-                    filtersFromRequest.put(filterConf.get("predicate"), value);
-                }
-            }
-        }
-
-        return filtersFromRequest;
+    public Resolution reset() {
+        clearSession();
+        return new RedirectResolution(getClass(), "search");
     }
 
     /**
@@ -231,6 +156,89 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
 
     /**
      *
+     */
+    private void clearSession() {
+
+        HttpSession session = getContext().getRequest().getSession();
+        ObservationFilter[] filters = ObservationFilter.values();
+        for (int i = 0; i < filters.length; i++) {
+
+            ObservationFilter filter = filters[i];
+            session.removeAttribute(getSessionAttrName(filter.getAlias()));
+        }
+    }
+
+    /**
+     *
+     * @param filterAlias
+     * @return
+     */
+    private static final String getSessionAttrName(String filterAlias) {
+        return StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", filterAlias);
+    }
+
+    /**
+     *
+     */
+    @Before(stages = LifecycleStage.CustomValidation)
+    public void loadSelectionsFromRequest() {
+
+        ObservationFilter[] filters = ObservationFilter.values();
+        for (int i = 0; i < filters.length; i++) {
+
+            ObservationFilter filter = filters[i];
+            String value = getContext().getRequestParameter(filter.getAlias());
+            selections.put(filter, value);
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getFilterValuesAttrNameTemplate() {
+        return FILTER_VALUES_ATTR_NAME_TEMPLATE;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ObservationFilter[] getAvailFilters() {
+        return ObservationFilter.values();
+    }
+
+    /**
+     * @return the selections
+     */
+    public Map<ObservationFilter, String> getSelections() {
+        return selections;
+    }
+
+    /**
+     * @return the applyFilter
+     */
+    public String getApplyFilter() {
+        return applyFilter;
+    }
+
+    /**
+     * @param applyFilter
+     *            the applyFilter to set
+     */
+    public void setApplyFilter(String changedFilter) {
+        this.applyFilter = changedFilter;
+    }
+
+    /**
+     * @return the observations
+     */
+    public CustomPaginatedList<SubjectDTO> getObservations() {
+        return observations;
+    }
+
+    /**
+     *
      * @return
      */
     public Class getFactsheetActionBeanClass() {
@@ -238,10 +246,41 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * @return the availFilters
+     *
+     * @param filterValues
+     * @param filterUri
+     * @return
      */
-    public List<HashMap<String, String>> getAvailFilters() {
-        return AVAIL_FILTERS;
+    private boolean filterValuesContains(List<Pair<String, String>> filterValues, String filterUri) {
+
+        for (Pair<String, String> pair : filterValues) {
+            if (pair.getLeft().equals(filterUri)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @param selections
+     * @return
+     */
+    private LinkedHashMap<String, String> convertFilterSelections(Map<ObservationFilter, String> selections) {
+
+        if (selections == null) {
+            return null;
+        }
+
+        LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+        if (!selections.isEmpty()) {
+            for (Entry<ObservationFilter, String> entry : selections.entrySet()) {
+                result.put(entry.getKey().getPredicate(), entry.getValue());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -249,69 +288,6 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
      */
     public List<HashMap<String, String>> getAvailColumns() {
         return AVAIL_COLUMNS;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private static List<HashMap<String, String>> createAvailFilters() {
-
-        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("alias", "dataSet");
-        map.put("title", "Dataset");
-        map.put("hint", "Dataset");
-        map.put("predicate", Predicates.DATACUBE_DATA_SET);
-        // map.put("range", Subjects.DATACUBE_DATASET);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("alias", "indicator");
-        map.put("title", "Indicator");
-        map.put("hint", "Indicator");
-        map.put("predicate", Predicates.DAS_INDICATOR);
-        // map.put("range", Subjects.DAS_INDICATOR);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("alias", "breakdown");
-        map.put("title", "Breakdown");
-        map.put("hint", "Indicator");
-        map.put("predicate", Predicates.DAS_BREAKDOWN);
-        // map.put("range", Subjects.DAS_BREAKDOWN);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("alias", "refArea");
-        map.put("title", "Ref. area");
-        map.put("hint", "Reference area");
-        map.put("predicate", Predicates.DAS_REFAREA);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("alias", "timePeriod");
-        map.put("title", "Time period");
-        map.put("hint", "Time period");
-        map.put("predicate", Predicates.DAS_TIMEPERIOD);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("alias", "unit");
-        map.put("title", "Unit");
-        map.put("hint", "Unit");
-        map.put("predicate", Predicates.DAS_UNITMEASURE);
-        // map.put("range", Subjects.DAS_UNIT);
-        map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
-        list.add(map);
-
-        return Collections.unmodifiableList(list);
     }
 
     /**

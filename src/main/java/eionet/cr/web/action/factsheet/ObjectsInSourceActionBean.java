@@ -23,6 +23,7 @@ import eionet.cr.web.util.columns.SearchResultColumn;
 import eionet.cr.web.util.columns.SubjectPredicateColumn;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  *
@@ -38,6 +39,10 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     private long anonHash;
     private boolean noCriteria;
 
+    /** */
+    private boolean skipAnonymous = true;
+
+    /** */
     private List<TabElement> tabs;
 
     /**
@@ -48,10 +53,10 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     @DefaultHandler
     public Resolution init() throws DAOException {
         HelperDAO helperDAO = DAOFactory.get().getDao(HelperDAO.class);
-        SubjectDTO subject = helperDAO.getFactsheet(uri, null, null);
+        SubjectDTO subject = helperDAO.getSubject(uri);
 
         FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-        tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.OBJECTS_IN_SOURCE);
+        tabs = helper.getTabs(TabId.OBJECTS_IN_SOURCE);
         return new ForwardResolution("/pages/factsheet/objectsInSource.jsp");
     }
 
@@ -67,8 +72,8 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
                     DAOFactory
                             .get()
                             .getDao(SearchDAO.class)
-                            .searchBySource(uri, PagingRequest.create(getPageN()),
-                                    new SortingRequest(getSortP(), SortOrder.parse(getSortO())));
+                            .searchBySource(uri, skipAnonymous,
+                                    PagingRequest.create(getPageN()), new SortingRequest(getSortP(), SortOrder.parse(getSortO())));
 
             resultList = result.getRight();
             matchCount = result.getLeft();
@@ -78,7 +83,7 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
         SubjectDTO subject = helperDAO.getFactsheet(uri, null, null);
 
         FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-        tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.OBJECTS_IN_SOURCE);
+        tabs = helper.getTabs(TabId.OBJECTS_IN_SOURCE);
 
         return new ForwardResolution("/pages/factsheet/objectsInSource.jsp");
     }
@@ -151,6 +156,20 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
      */
     public void setTabs(List<TabElement> tabs) {
         this.tabs = tabs;
+    }
+
+    /**
+     * @return the skipAnonymous
+     */
+    public boolean isSkipAnonymous() {
+        return skipAnonymous;
+    }
+
+    /**
+     * @param skipAnonymous the skipAnonymous to set
+     */
+    public void setSkipAnonymous(boolean includeAnonymous) {
+        this.skipAnonymous = includeAnonymous;
     }
 
 }

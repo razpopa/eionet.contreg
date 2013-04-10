@@ -36,7 +36,7 @@
                     <tr>
                         <c:if test="${displayCheckboxes}">
                             <c:choose>
-                                <c:when test="${sessionScope.crUser.registrationsUri==object.sourceSmart}">
+                                <c:when test="${fn:contains(object.sourceSmart, 'home/') && fn:endsWith(object.sourceSmart, '/registrations')}">
                                     <th>
                                         <input type="checkbox" name="rowId" value="${crfn:spoHash(predicate.key)}_${object.id}"/>
                                         <stripes:hidden name="pred_${crfn:spoHash(predicate.key)}" value="${predicate.key}" />

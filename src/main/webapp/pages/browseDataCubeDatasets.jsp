@@ -7,11 +7,49 @@
     <stripes:layout-component name="head">
         <script type="text/javascript">
         // <![CDATA[
+            ( function($) {
+                $(document).ready(
+                    function(){
+
+                        $("#creationLink").click(function() {
+                            $('#creationDialog').dialog('option','width', 800);
+                            $('#creationDialog').dialog('open');
+                            return false;
+                        });
+
+                        $('#creationDialog').dialog({
+                            autoOpen: false,
+                            width: 800
+                        });
+
+                        $("#closeCreationDialog").click(function() {
+                            $('#creationDialog').dialog("close");
+                            return true;
+                        });
+
+                    });
+            } ) ( jQuery );
         // ]]>
         </script>
     </stripes:layout-component>
 
     <stripes:layout-component name="contents">
+
+    <%-- Drop-down operations --%>
+
+    <c:set var="registrationsAllowed" value='${crfn:userHasPermission(pageContext.session, "/registrations", "u")}'/>
+
+    <c:if test="${registrationsAllowed}">
+	    <ul id="dropdown-operations">
+	        <li><a href="#">Operations</a>
+	            <ul>
+	                <li><a href="#" id="creationLink" title="Create a new dataset">New dataset</a></li>
+	            </ul>
+	        </li>
+	    </ul>
+    </c:if>
+
+    <%-- Title and intro. --%>
 
     <h1>Browse DataCube datasets</h1>
 
@@ -20,6 +58,8 @@
         It simply lists all datasets found, and provides paging functions if there is more than <c:out value="${actionBean != null && actionBean.datasets != null ? actionBean.datasets.objectsPerPage : 20}"/> DataCube datasets in the system.<br/>
         Clicking on a listed dataset leads to the detailed view page of its metadata which is further browseable.
     </p>
+
+    <%-- The "working area". --%>
 
     <div style="margin-top:20px;width:100%">
         <display:table name="${actionBean.datasets}" id="dataset" class="sortable" sort="external" requestURI="${actionBean.urlBinding}" style="width:100%">
@@ -48,6 +88,44 @@
             </c:forEach>
 
         </display:table>
+    </div>
+
+    <%-- The "create new dataset" dialog. Hidden unless activated. --%>
+
+    <div id="creationDialog" title="Create a new dataset">
+        <stripes:form beanclass="${actionBean.class.name}" method="post">
+
+            <p>
+                The following properties are sufficient to create a new dataset. The ones mandatory, are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>.<br/>
+                More information is displayed when placing the mouse over properties' labels.<br/>
+                Once the dataset is created, you can add more properties on the dataset's detailed view page.
+            </p>
+
+            <table>
+                <tr>
+                    <td><stripes:label for="txtTitle" class="question required" title="The dataset's unique identifier used by the system to distinguish it from others. Only digits, latin letters, underscores and dashes allowed!">Identifier:</stripes:label></td>
+                    <td><stripes:text name="identifier" id="txtIdentifier" size="60"/></td>
+                </tr>
+                <tr>
+                    <td><stripes:label for="txtTitle" class="question required" title="The human-readable title of the dataset. Any free text.">Title:</stripes:label></td>
+                    <td><stripes:text name="dctermsTitle" id="txtTitle" size="80"/></td>
+                </tr>
+                <tr>
+                    <td><stripes:label for="txtDescription" class="question" title="The human-readable short description of the dataset. Any free text.">Description:</stripes:label></td>
+                    <td>
+                        <stripes:textarea id="txtDescription" name="dctermsDescription" cols="80" rows="10"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style="padding-top:10px">
+                        <stripes:submit name="createNew" value="Create"/>
+                        <input type="button" id="closeCreationDialog" value="Cancel"/>
+                    </td>
+                </tr>
+            </table>
+
+        </stripes:form>
     </div>
 
 </stripes:layout-component>

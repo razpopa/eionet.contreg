@@ -22,7 +22,11 @@
 package eionet.cr.web.util.tabs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
@@ -32,6 +36,7 @@ import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.HelperDAO;
 import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.SubjectDTO;
+import eionet.cr.web.action.BrowseCodelistsActionBean;
 
 /**
  * Helper for creating factsheet tab menu.
@@ -39,6 +44,9 @@ import eionet.cr.dto.SubjectDTO;
  * @author Juhan Voolaid
  */
 public final class FactsheetTabMenuHelper {
+
+    /** */
+    private static final Map<String, String> LABELLED_TYPES = createLabelledTypes();
 
     /** The subject data object found by the requestd URI or URI hash. */
     private final SubjectDTO subject;
@@ -62,6 +70,9 @@ public final class FactsheetTabMenuHelper {
     /** */
     private HarvestSourceDTO harvestSourceDTO;
 
+    /** The subject's RDF types. */
+    private HashSet<String> rdfTypes = new HashSet<String>();
+
     /**
      *
      * Class constructor.
@@ -82,80 +93,63 @@ public final class FactsheetTabMenuHelper {
         uriIsHarvestSource = harvestSourceDTO != null;
         uriIsGraph = DAOFactory.get().getDao(HelperDAO.class).isGraphExists(uri);
 
-        //TODO: mapDisplayable = Subjects.WGS_SPATIAL_THING.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
+        // TODO: mapDisplayable = Subjects.WGS_SPATIAL_THING.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
         mapDisplayable = subject.getObject(Predicates.WGS_LAT) != null && subject.getObject(Predicates.WGS_LONG) != null;
         if (mapDisplayable) {
             latitude = subject.getObject(Predicates.WGS_LAT).getValue();
             longitude = subject.getObject(Predicates.WGS_LONG).getValue();
         }
 
-        // TODO: Is there some point to calling subject.getObject(Predicates.RDF_TYPE) over and over
-        // to check if it is null?
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            sparqlBookmarkType = Subjects.CR_SPARQL_BOOKMARK.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
+        // Populated the map of RDF types of this subject.
+        rdfTypes.addAll(subject.getObjectValues(Predicates.RDF_TYPE));
 
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            compiledDatasetType = Subjects.CR_COMPILED_DATASET.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            tableFileType = Subjects.CR_TABLE_FILE.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            reviewType =
-                    Subjects.CR_REVIEW_FOLDER.equals(subject.getObject(Predicates.RDF_TYPE).getValue())
-                    || Subjects.CR_FEEDBACK.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            bookmarksFileType = Subjects.CR_BOOKMARKS_FILE.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            registrationsFileType = Subjects.CR_REGISTRATIONS_FILE.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            historyFileType = Subjects.CR_HISTORY_FILE.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
-        if (subject.getObject(Predicates.RDF_TYPE) != null) {
-            folderType =
-                    Subjects.CR_FOLDER.equals(subject.getObject(Predicates.RDF_TYPE).getValue())
-                    || Subjects.CR_USER_FOLDER.equals(subject.getObject(Predicates.RDF_TYPE).getValue());
-        }
-
+        // Set some type-indicating fields, based on the subject's RDF types.
+        sparqlBookmarkType = rdfTypes.contains(Subjects.CR_SPARQL_BOOKMARK);
+        compiledDatasetType = rdfTypes.contains(Subjects.CR_COMPILED_DATASET);
+        tableFileType = rdfTypes.contains(Subjects.CR_TABLE_FILE);
+        reviewType = rdfTypes.contains(Subjects.CR_REVIEW_FOLDER) || rdfTypes.contains(Subjects.CR_FEEDBACK);
+        bookmarksFileType = rdfTypes.contains(Subjects.CR_BOOKMARKS_FILE);
+        registrationsFileType = rdfTypes.contains(Subjects.CR_REGISTRATIONS_FILE);
+        historyFileType = rdfTypes.contains(Subjects.CR_HISTORY_FILE);
+        folderType = rdfTypes.contains(Subjects.CR_FOLDER) || rdfTypes.contains(Subjects.CR_USER_FOLDER);
     }
 
     /**
-     * Returns tabs.
      *
-     * @param selected
-     *            - selected tab's title
+     * @param selectedTab
      * @return
      */
-    public List<TabElement> getTabs(String selected) {
+    public List<TabElement> getTabs(TabId selectedTab) {
         List<TabElement> result = new ArrayList<TabElement>();
 
-        TabElement te1 = new TabElement(TabTitle.RESOURCE_PROPERTIES, "/factsheet.action", selected);
+        boolean isScoreboardCodelist = isScoreboardCodelist();
+        String typeLabel = getTypeLabel();
+        if (isScoreboardCodelist) {
+            typeLabel = "Codelist";
+        }
+
+        String title = typeLabel != null ? typeLabel + " properties" : null;
+        TabElement te1 = new TabElement(TabId.RESOURCE_PROPERTIES, title, "/factsheet.action", selectedTab);
         te1.addParam("uri", subject.getUri());
         result.add(te1);
 
-        TabElement te2 = new TabElement(TabTitle.RESOURCE_REFERENCES, "/references.action", selected);
+        title = typeLabel != null ? typeLabel + " references" : null;
+        TabElement te2 = new TabElement(TabId.RESOURCE_REFERENCES, title, "/references.action", selectedTab);
         te2.setEvent("search");
         te2.addParam("uri", subject.getUri());
         result.add(te2);
 
-        if (uriIsGraph || uriIsHarvestSource) {
-            TabElement te3 = new TabElement(TabTitle.OBJECTS_IN_SOURCE, "/objectsInSource.action", selected);
+        if (uriIsHarvestSource || uriIsGraph) {
+
+            title = uriIsHarvestSource ? TabId.OBJECTS_IN_SOURCE.getTitle() : "Graph contents";
+
+            TabElement te3 = new TabElement(TabId.OBJECTS_IN_SOURCE, title, "/objectsInSource.action", selectedTab);
             te3.setEvent("search");
             te3.addParam("uri", subject.getUri());
             result.add(te3);
         }
 
-        result.addAll(getTypeSpecificTabs(selected));
+        result.addAll(getTypeSpecificTabs(selectedTab));
         return result;
     }
 
@@ -169,18 +163,16 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * Returns the list of tab objects with the selected tab.
      *
-     * @param selected
-     *            - the title of the selected tab
-     * @return List<TabElement>
+     * @param selectedTab
+     * @return
      */
-    public List<TabElement> getTypeSpecificTabs(String selected) {
+    public List<TabElement> getTypeSpecificTabs(TabId selectedTab) {
 
         List<TabElement> result = new ArrayList<TabElement>();
 
         if (mapDisplayable) {
-            TabElement t = new TabElement(TabTitle.SHOW_ON_MAP, "/factsheet.action", selected);
+            TabElement t = new TabElement(TabId.SHOW_ON_MAP, "/factsheet.action", selectedTab);
             t.setEvent("showOnMap");
             t.addParam("uri", subject.getUri());
             t.addParam("latitude", latitude);
@@ -189,49 +181,49 @@ public final class FactsheetTabMenuHelper {
         }
 
         if (sparqlBookmarkType) {
-            TabElement t = new TabElement(TabTitle.BOOKMARKED_SPARQL, "/sparqlBookmark.action", selected);
+            TabElement t = new TabElement(TabId.BOOKMARKED_SPARQL, "/sparqlBookmark.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (compiledDatasetType) {
-            TabElement t = new TabElement(TabTitle.COMPILED_DATASET, "/compiledDataset.action", selected);
+            TabElement t = new TabElement(TabId.COMPILED_DATASET, "/compiledDataset.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (reviewType) {
-            TabElement t = new TabElement(TabTitle.REVIEW_FOLDER, "/reviews.action", selected);
+            TabElement t = new TabElement(TabId.REVIEW_FOLDER, "/reviews.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (folderType) {
-            TabElement t = new TabElement(TabTitle.FOLDER, "/folder.action", selected);
+            TabElement t = new TabElement(TabId.FOLDER, "/folder.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (bookmarksFileType) {
-            TabElement t = new TabElement(TabTitle.BOOKMARKS, "/bookmarks.action", selected);
+            TabElement t = new TabElement(TabId.BOOKMARKS, "/bookmarks.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (registrationsFileType) {
-            TabElement t = new TabElement(TabTitle.REGISTRATIONS, "/registrations.action", selected);
+            TabElement t = new TabElement(TabId.REGISTRATIONS, "/registrations.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (historyFileType) {
-            TabElement t = new TabElement(TabTitle.HISTORY, "/history.action", selected);
+            TabElement t = new TabElement(TabId.HISTORY, "/history.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
 
         if (tableFileType) {
-            TabElement t = new TabElement(TabTitle.TABLE_FILE_CONTENTS, "/tableFile.action", selected);
+            TabElement t = new TabElement(TabId.TABLE_FILE_CONTENTS, "/tableFile.action", selectedTab);
             t.addParam("uri", subject.getUri());
             result.add(t);
         }
@@ -254,32 +246,6 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * Tab titles.
-     */
-    public static class TabTitle {
-
-        public static final String RESOURCE_PROPERTIES = "Resource properties";
-        public static final String RESOURCE_REFERENCES = "Resource references";
-        public static final String OBJECTS_IN_SOURCE = "Objects in source";
-        public static final String SHOW_ON_MAP = "Show on map";
-        public static final String BOOKMARKED_SPARQL = "Bookmarked SPARQL";
-        public static final String COMPILED_DATASET = "Compiled dataset";
-        public static final String REVIEW_FOLDER = "Reviews";
-        public static final String FOLDER = "Contents";
-        public static final String BOOKMARKS = "Bookmarks";
-        public static final String REGISTRATIONS = "Registrations";
-        public static final String HISTORY = "History";
-        public static final String TABLE_FILE_CONTENTS = "CSV/TSV contents";
-
-        /**
-         * Hide utility class constructor.
-         */
-        private TabTitle() {
-            // Just an empty private constructor to avoid instantiating this utility class.
-        }
-    }
-
-    /**
      * @return the harvestSourceDTO
      */
     public HarvestSourceDTO getHarvestSourceDTO() {
@@ -291,5 +257,55 @@ public final class FactsheetTabMenuHelper {
      */
     public boolean isUriIsGraph() {
         return uriIsGraph;
+    }
+
+    /**
+     * @return
+     */
+    private boolean isDataCubeDataset() {
+        return rdfTypes.contains(Subjects.DATACUBE_DATA_SET);
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean isScoreboardCodelist() {
+        String uri = subject.getUri();
+        return rdfTypes.contains(Subjects.SKOS_CONCEPT_SCHEME) && uri.startsWith(BrowseCodelistsActionBean.CODELISTS_PREFIX);
+    }
+
+    /**
+     *
+     * @return
+     */
+    private String getTypeLabel() {
+
+        for (Entry<String, String> entry : LABELLED_TYPES.entrySet()) {
+            if (rdfTypes.contains(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static Map<String, String> createLabelledTypes() {
+
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        map.put(Subjects.DATACUBE_DATA_SET, "Dataset");
+        map.put(Subjects.DATACUBE_OBSERVATION, "Observation");
+        map.put(Subjects.DAS_INDICATOR_GROUP, "Indicator group");
+        map.put(Subjects.DAS_INDICATOR, "Indicator");
+        map.put(Subjects.DAS_BREAKDOWN_GROUP, "Breakdown group");
+        map.put(Subjects.DAS_BREAKDOWN, "Breakdown");
+        map.put(Subjects.DAS_UNIT, "Unit measure");
+
+        return map;
     }
 }

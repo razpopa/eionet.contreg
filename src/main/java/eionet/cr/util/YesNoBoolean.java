@@ -45,11 +45,17 @@ public enum YesNoBoolean {
      */
     public static boolean parse(String s) {
 
-        if (s.equals(Y.toString()))
-            return true;
-        else if (s.equals(N.toString()))
+        if (s == null) {
             return false;
-        else
+        }
+        else if (s.equals(Y.toString())) {
+            return true;
+        }
+        else if (s.equals(N.toString())) {
+            return false;
+        }
+        else {
             throw new IllegalArgumentException(s);
+        }
     }
 }

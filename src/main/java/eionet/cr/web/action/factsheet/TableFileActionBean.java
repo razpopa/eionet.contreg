@@ -52,6 +52,7 @@ import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.sparqlClient.helpers.QueryResult;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Factsheet page for cr:TableFile type.
@@ -124,7 +125,7 @@ public class TableFileActionBean extends AbstractActionBean {
             spqrqlQuery = subject.getObjectValue(Predicates.CR_SPARQL_QUERY);
 
             FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-            tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.TABLE_FILE_CONTENTS);
+            tabs = helper.getTabs(TabId.TABLE_FILE_CONTENTS);
         }
     }
 

@@ -24,6 +24,7 @@
 --%>
         <li><a href="${pageContext.request.contextPath}/dataCubeDatasets">Browse datasets</a></li>
         <li><a href="${pageContext.request.contextPath}/observations">Browse observations</a></li>
+        <li><a href="${pageContext.request.contextPath}/searchObservations">Search observations</a></li>
         <li><a href="${pageContext.request.contextPath}/codelists">Browse codelists</a></li>
         <li><a href="${pageContext.request.contextPath}/sparql">SPARQL endpoint</a></li>
 <%--

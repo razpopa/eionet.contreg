@@ -52,6 +52,7 @@ import eionet.cr.web.util.columns.SubjectPredicateColumn;
 import eionet.cr.web.util.columns.SubjectPredicateRefsColumn;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  *
@@ -121,7 +122,7 @@ public class ReferencesActionBean extends AbstractSearchActionBean<SubjectDTO> {
             subject = helperDAO.getFactsheet(uri, null, null);
 
             FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-            tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.RESOURCE_REFERENCES);
+            tabs = helper.getTabs(TabId.RESOURCE_REFERENCES);
         }
 
         return new ForwardResolution("/pages/factsheet/references.jsp");

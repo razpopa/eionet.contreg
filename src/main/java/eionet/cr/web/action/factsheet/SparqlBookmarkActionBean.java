@@ -39,6 +39,7 @@ import eionet.cr.dto.SubjectDTO;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Sparql bookmark tab controller.
@@ -65,7 +66,7 @@ public class SparqlBookmarkActionBean extends AbstractActionBean {
             subject = helperDAO.getFactsheet(uri, null, null);
 
             FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-            tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.BOOKMARKED_SPARQL);
+            tabs = helper.getTabs(TabId.BOOKMARKED_SPARQL);
         }
         return new ForwardResolution("/pages/factsheet/sparqlBookmark.jsp");
     }

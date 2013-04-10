@@ -45,6 +45,7 @@ public class ExportDTO {
     private int noOfTriples;
     private int rowCount;
     private String missingConcepts;
+    private String graphs;
 
     /**
      * @return the exportId
@@ -240,5 +241,19 @@ public class ExportDTO {
      */
     public void setMissingConcepts(String missingConcepts) {
         this.missingConcepts = missingConcepts;
+    }
+
+    /**
+     * @return the graphs
+     */
+    public String getGraphs() {
+        return graphs;
+    }
+
+    /**
+     * @param graphs the graphs to set
+     */
+    public void setGraphs(String graphs) {
+        this.graphs = graphs;
     }
 }

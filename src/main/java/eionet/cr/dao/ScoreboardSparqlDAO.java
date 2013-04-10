@@ -15,6 +15,15 @@ import eionet.cr.web.util.ObservationFilter;
  */
 public interface ScoreboardSparqlDAO extends DAO {
 
+    /** */
+    public static final String OBSERVATION_URI_PREFIX = "http://semantic.digital-agenda-data.eu/data/";
+
+    /** */
+    public static final String DATASET_URI_PREFIX = "http://semantic.digital-agenda-data.eu/dataset/";
+
+    /** */
+    public static final String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
+
     /**
      * Return URI-label pairs of codelists that have type {@link Subjects.SKOS_CONCEPT_SCHEME} and whose URI starts with the given
      * input string.
@@ -42,4 +51,22 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException
      */
     List<Pair<String, String>> getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter) throws DAOException;
+
+    /**
+     *
+     * @param identifier
+     * @param dctermsTitle
+     * @param dctermsDescription
+     * @return
+     * @throws DAOException
+     */
+    String createDataCubeDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException;
+
+    /**
+     *
+     * @param identifier
+     * @return
+     * @throws DAOException
+     */
+    boolean datasetExists(String identifier) throws DAOException;
 }

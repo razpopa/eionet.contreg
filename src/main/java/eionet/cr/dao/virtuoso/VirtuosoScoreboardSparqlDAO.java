@@ -1,11 +1,21 @@
 package eionet.cr.dao.virtuoso;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.XMLSchema;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
+import eionet.cr.common.Predicates;
+import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dao.readers.SkosItemsReader;
@@ -13,6 +23,8 @@ import eionet.cr.dto.SkosItemDTO;
 import eionet.cr.util.Bindings;
 import eionet.cr.util.Pair;
 import eionet.cr.util.URIUtil;
+import eionet.cr.util.Util;
+import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.PairReader;
 import eionet.cr.web.util.ObservationFilter;
 
@@ -22,6 +34,9 @@ import eionet.cr.web.util.ObservationFilter;
  * @author jaanus
  */
 public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements ScoreboardSparqlDAO {
+
+    /** */
+    private static final Logger LOGGER = Logger.getLogger(VirtuosoScoreboardSparqlDAO.class);
 
     // @formatter:off
     private static final String GET_CODELISTS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
@@ -90,6 +105,81 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     /*
      * (non-Javadoc)
      *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#createDataCubeDataset(java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public String createDataCubeDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException {
+
+        // Assume input validations have been done by the caller!
+
+        RepositoryConnection repoConn = null;
+        try {
+            repoConn = SesameUtil.getRepositoryConnection();
+
+            ValueFactory vf = repoConn.getValueFactory();
+
+            // Value URIs
+            URI identifierURI = vf.createURI(DATASET_URI_PREFIX + identifier);
+            URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
+            Literal dateModified = vf.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME);
+
+            // Predicate URIs.
+            URI typeURI = vf.createURI(Predicates.RDF_TYPE);
+            URI titleURI = vf.createURI(Predicates.DCTERMS_TITLE);
+            URI descriptionURI = vf.createURI(Predicates.DCTERMS_DESCRIPTION);
+            URI distributionURI = vf.createURI(Predicates.RADION_DISTRIBUTION);
+            URI modifiedURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
+            URI labelURI = vf.createURI(Predicates.RDFS_LABEL);
+            URI structureURI = vf.createURI(Predicates.DATACUBE_STRUCTURE);
+
+            repoConn.setAutoCommit(false);
+
+            repoConn.add(identifierURI, typeURI, vf.createURI(Subjects.DATACUBE_DATA_SET), graphURI);
+            repoConn.add(identifierURI, titleURI, vf.createLiteral(dctermsTitle), graphURI);
+            repoConn.add(identifierURI, labelURI, vf.createLiteral(identifier), graphURI);
+            repoConn.add(identifierURI, descriptionURI, vf.createLiteral(dctermsDescription), graphURI);
+            repoConn.add(identifierURI, distributionURI, vf.createURI(identifierURI + "/distribution"), graphURI);
+            repoConn.add(identifierURI, modifiedURI, dateModified, graphURI);
+            repoConn.add(identifierURI, structureURI, vf.createURI(DATASET_STRUCTURE_PREFIX + identifier), graphURI);
+
+            repoConn.commit();
+            return identifierURI.stringValue();
+
+        } catch (RepositoryException e) {
+            SesameUtil.rollback(repoConn);
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            SesameUtil.close(repoConn);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#datasetExists(java.lang.String)
+     */
+    @Override
+    public boolean datasetExists(String identifier) throws DAOException {
+
+        RepositoryConnection repoConn = null;
+        try {
+            repoConn = SesameUtil.getRepositoryConnection();
+
+            ValueFactory vf = repoConn.getValueFactory();
+            URI identifierURI = vf.createURI(DATASET_URI_PREFIX + identifier);
+            URI typeURI = vf.createURI(Predicates.RDF_TYPE);
+
+            return repoConn.hasStatement(identifierURI, typeURI, vf.createURI(Subjects.DATACUBE_DATA_SET), false);
+        } catch (RepositoryException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            SesameUtil.close(repoConn);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getFilterValues(java.util.Map, eionet.cr.web.util.ObservationFilter)
      */
     @Override
@@ -100,14 +190,6 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             throw new IllegalArgumentException("Filter for which the values are being asked, must not be null!");
         }
 
-        ObservationFilter[] filters = ObservationFilter.values();
-        // int belowIndex = forFilter == null ? -1 : forFilter.ordinal();
-        // if (belowIndex >= filters.length - 1) {
-        // throw new IllegalArgumentException("The \"below filter\" is out of bounds!");
-        // }
-
-        // ObservationFilter nextFilter = filters[belowIndex + 1];
-        // String nextFilterAlias = nextFilter.getAlias();
         String filterAlias = filter.getAlias();
         int filterIndex = filter.ordinal();
 
@@ -117,12 +199,14 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         sb.append("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n");
         sb.append("\n");
         sb.append("select\n");
-        sb.append("  ?").append(filterAlias).append(" min(str(coalesce(?prefLabel, ?").append(filterAlias).append("))) as ?label\n");
+        sb.append("  ?").append(filterAlias).append(" min(str(coalesce(?prefLabel, ?").append(filterAlias)
+                .append("))) as ?label\n");
         sb.append("where {\n");
         sb.append("  ?s a cube:Observation.\n");
 
+        ObservationFilter[] filters = ObservationFilter.values();
         if (selections != null && !selections.isEmpty()) {
-            // for (int i = 0; i <= belowIndex && i < filters.length; i++) {
+
             for (int i = 0; i < filterIndex && i < filters.length; i++) {
 
                 ObservationFilter availFilter = filters[i];
@@ -142,20 +226,24 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         // sb.append("  ?s <").append(nextFilter.getPredicate()).append("> ?").append(forFilterAlias).append(".\n");
         sb.append("  ?s <").append(filter.getPredicate()).append("> ?").append(filterAlias).append(".\n");
-        sb.append("  optional {?").append(filterAlias).append(" skos:prefLabel ?prefLabel filter(lang(?prefLabel) in ('en',''))}\n");
+        sb.append("  optional {?").append(filterAlias)
+                .append(" skos:prefLabel ?prefLabel filter(lang(?prefLabel) in ('en',''))}\n");
         sb.append("}\n");
         sb.append("group by ?").append(filterAlias).append("\n");
         sb.append("order by ?label");
 
-        System.out.println("-- --------------------------------------------------------------");
-        System.out.println("sparql");
-        System.out.println(sb + ";");
+        LOGGER.trace("\nsparql\n" + sb + ";");
 
         PairReader<String, String> reader = new PairReader<String, String>(filterAlias, "label");
         List<Pair<String, String>> resultList = executeSPARQL(sb.toString(), reader);
         return resultList;
     }
 
+    /**
+     *
+     * @param args
+     * @throws DAOException
+     */
     public static void main(String[] args) throws DAOException {
 
         // LinkedHashMap<ObservationFilter, String> selections = new LinkedHashMap<ObservationFilter, String>();

@@ -438,7 +438,9 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
             for (String string : selectedColumns) {
                 for (Entry<String, String> pair : getAvailableColumns().entrySet()) {
                     if (pair.getKey().equals(string)) {
-                        columns.add(new SubjectPredicateColumn(pair.getValue(), true, string, actionParameter));
+                        SubjectPredicateColumn column = new SubjectPredicateColumn(pair.getValue(), true, string, actionParameter);
+                        column.setSubjectTypes(type);
+                        columns.add(column);
                     }
                 }
             }

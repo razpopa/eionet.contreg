@@ -46,6 +46,14 @@
                     </tr>
                     <tr>
                         <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            <stripes:checkbox name="clearGraph" id="chkClear"/>&nbsp;<label for="chkClear">Clear all previous content of selected type</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                            &nbsp;
                         </td>
                         <td style="padding-top:10px">
@@ -59,10 +67,10 @@
                     <div class="tip-msg">
                         <strong>Tip</strong>
                         <p>
-                            The objects were imported into the following graph. Please click on this link to explore its contents:<br/>
+                            All extracted content was imported into the following graph. Please click on this link to explore it further:<br/>
                             <stripes:link beanclass="${actionBean.objectsInSourceActionBeanClass.name}">
-                                <stripes:param name="search" value=""/>
                                 <stripes:param name="uri" value="${actionBean.uploadedGraphUri}"/>
+                                <stripes:param name="search" value=""/>
                                 <c:out value="${actionBean.uploadedGraphUri}"/>
                             </stripes:link>
                         </p>

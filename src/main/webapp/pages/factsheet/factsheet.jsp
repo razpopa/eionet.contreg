@@ -125,9 +125,7 @@
                                             <li>
                                                 <stripes:link class="link-plain" beanclass="${actionBean.browseObservationsActionBeanClass.name}" title="Browse observations in this DataCube dataset">
                                                     <c:out value="Browse observations"/>
-                                                    <stripes:param name="dataSet" value="${subjectUri}"/>
-                                                    <stripes:param name="search" value=""/>
-                                                    <stripes:param name="loadFilters" value=""/>
+                                                    <stripes:param name="dataset" value="${subjectUri}"/>
                                                 </stripes:link>
                                             </li>
                                         </c:if>
@@ -234,7 +232,7 @@
                                                 <td>
                                                     <stripes:select name="propertyUri" id="propertySelect">
                                                         <c:forEach var="prop" items="${actionBean.addibleProperties}">
-                                                            <stripes:option value="${prop.uri}" label="${prop.label} (${prop.uri})"/>
+                                                            <stripes:option value="${prop.value}" label="${prop.label} (${prop.value})" title="${empty prop.title ? prop.label : prop.title}"/>
                                                         </c:forEach>
                                                     </stripes:select>
                                                 </td>

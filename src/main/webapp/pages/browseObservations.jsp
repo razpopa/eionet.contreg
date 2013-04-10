@@ -16,9 +16,9 @@
     <h1>Browse DataCube observations</h1>
 
     <p>
-        This page enables you to browse DataCube observations available in the system. You must specify at least one of the below filters.<br/>
-        Please note that loading the available values of the filters is a time-consuming operation, therefore you must press "Reload filters"<br/>
-        in order to refresh with potentially new values from the system.
+        This page enables you to browse DataCube observations available in the system. It lists the observations matching the selected filters below.<br/>
+        The provided values of every filter reflect the actual contents of the system, i.e. the values of the available observations.<br/>
+        By default, the first value of every filter is selected. Changing a filter reloads all filters below it.
     </p>
 
     <crfn:form beanclass="${actionBean.class.name}" method="get">

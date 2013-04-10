@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +50,14 @@ import org.apache.log4j.Logger;
 import org.openrdf.repository.RepositoryException;
 
 import virtuoso.jdbc3.VirtuosoException;
+import eionet.cr.common.Predicates;
+import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
+import eionet.cr.dao.HelperDAO;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dao.StagingDatabaseDAO;
+import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.StagingDatabaseDTO;
 import eionet.cr.dto.StagingDatabaseTableColumnDTO;
 import eionet.cr.staging.exp.ExportRunner;
@@ -62,6 +66,7 @@ import eionet.cr.staging.exp.ObjectType;
 import eionet.cr.staging.exp.ObjectTypes;
 import eionet.cr.staging.exp.QueryConfiguration;
 import eionet.cr.util.LinkedCaseInsensitiveMap;
+import eionet.cr.util.Pair;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
@@ -115,7 +120,15 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     private StagingDatabaseDTO dbDTO;
 
     /** */
-    private LinkedHashMap<String, String> indicators;
+    private List<Pair<String, String>> indicators;
+
+    /** */
+    private List<Pair<String, String>> datasets;
+
+    /** Fields populated from the "create new dataset" form. */
+    private String newDatasetIdentifier;
+    private String newDatasetTitle;
+    private String newDatasetDescription;
 
     /** */
     private ExportRunner testRun;
@@ -132,8 +145,6 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
 
         // Handle GET request, just forward to the JSP and that's all.
         if (getContext().getRequest().getMethod().equalsIgnoreCase("GET")) {
-
-            indicators = null;
 
             // If this event is GET-requested with a database name, nullify the query configuration.
             if (!dbName.equals(prevDbName)) {
@@ -198,10 +209,21 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
      * @throws DAOException
      *             the dAO exception
      */
-    public Resolution run() throws DAOException {
+    public Resolution run() {
 
-        StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
-        ExportRunner.start(dbDTO, exportName, getUserName(), queryConf);
+        if (queryConf == null) {
+            queryConf = new QueryConfiguration();
+        }
+        queryConf.setClearDataset(StringUtils.equals(getContext().getRequestParameter("clearDataset"), Boolean.TRUE.toString()));
+
+        try {
+            StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
+            ExportRunner.start(dbDTO, exportName, getUserName(), queryConf);
+        } catch (DAOException e) {
+            LOGGER.error("Export start failed with technical error", e);
+            addWarningMessage("Export start failed with technical error: " + e.getMessage());
+            return new ForwardResolution(STEP2_JSP);
+        }
 
         addSystemMessage("RDF export successfully started! Use operations menu to list ongoing and finished RDF exports from this database.");
         return new RedirectResolution(StagingDatabaseActionBean.class).addParameter("dbName", dbName);
@@ -264,6 +286,62 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
+     *
+     * @return
+     */
+    public Resolution createNewDataset() {
+
+        ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
+        try {
+            String datasetUri = dao.createDataCubeDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
+            addSystemMessage("A new dataset with identifier \"" + newDatasetIdentifier + "\" successfully created!");
+            if (queryConf == null) {
+                queryConf = new QueryConfiguration();
+            }
+            queryConf.setDatasetUri(datasetUri);
+        } catch (DAOException e) {
+            LOGGER.error("Dataset creation failed with technical error", e);
+            addWarningMessage("Dataset creation failed with technical error: " + e.getMessage());
+        }
+
+        return new ForwardResolution(STEP2_JSP);
+    }
+
+    /**
+     *
+     * @throws DAOException
+     */
+    @ValidationMethod(on = {"createNewDataset"})
+    public void validateCreateNewDataset() throws DAOException {
+
+        if (getUser() == null || !getUser().isAdministrator()) {
+            addGlobalValidationError("You are not authorized for this operation!");
+            getContext().setSourcePageResolution(new RedirectResolution(getClass()));
+            return;
+        }
+
+        if (StringUtils.isBlank(newDatasetIdentifier)) {
+            addGlobalValidationError("The identifier is mandatory!");
+        } else {
+            String s = newDatasetIdentifier.replaceAll("[^a-zA-Z0-9-._]+", "");
+            if (!s.equals(newDatasetIdentifier)) {
+                addGlobalValidationError("Only digits, latin letters, underscores and dashes allowed in the identifier!");
+            } else {
+                boolean datasetExists = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).datasetExists(newDatasetIdentifier);
+                if (datasetExists) {
+                    addGlobalValidationError("A dataset already exists by this identifier: " + newDatasetIdentifier);
+                }
+            }
+        }
+
+        if (StringUtils.isBlank(newDatasetTitle)) {
+            addGlobalValidationError("The title is mandatory!");
+        }
+
+        getContext().setSourcePageResolution(new ForwardResolution(STEP2_JSP));
+    }
+
+    /**
      * Validate the GET request to step 2 or the POST request submitted from step2 page (i.e. the Run event)
      */
     @ValidationMethod(on = {"step2", "run", "test"})
@@ -299,26 +377,15 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
             addGlobalValidationError("Found no column mappings!");
         }
 
-        // Ensure that indicator is given, either from picklist or column mapping
-        if (!hasIndicatorMapping && StringUtils.isBlank(queryConf.getIndicator())) {
+        // Ensure that indicator is given, either from picklist or column mapping.
+        if (!hasIndicatorMapping && StringUtils.isBlank(queryConf.getIndicatorUri())) {
             addGlobalValidationError("Indciator must be selected from picklist or provided by column mapping!");
         }
 
-        // Ensure that the dataset ID template has been provided and is valid.
-        // String datasetIdTemplate = queryConf.getDatasetIdTemplate();
-        // if (StringUtils.isBlank(datasetIdTemplate)) {
-        // addGlobalValidationError("You must specify the dataset identifier template!");
-        // } else if (!validateColumnPlaceholders(datasetIdTemplate, colMappings == null ? null : colMappings.keySet())) {
-        // addGlobalValidationError("A placeholder in dataset identifier template does not match any of the selected columns!");
-        // }
-        //
-        // // Ensure that the object ID template has been provided and is valid.
-        // String objectIdTemplate = queryConf.getObjectIdTemplate();
-        // if (StringUtils.isBlank(objectIdTemplate)) {
-        // addGlobalValidationError("You must specify the objects identifier template!");
-        // } else if (!validateColumnPlaceholders(objectIdTemplate, colMappings == null ? null : colMappings.keySet())) {
-        // addGlobalValidationError("A placeholder in objects identifier template does not match any of the selected columns!");
-        // }
+        // Ensure that the dataset where the results will be exported to, is selected.
+        if (queryConf == null || StringUtils.isBlank(queryConf.getDatasetUri())) {
+            addGlobalValidationError("The dataset must be selected!");
+        }
 
         getContext().setSourcePageResolution(new ForwardResolution(STEP2_JSP));
     }
@@ -410,6 +477,16 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     }
 
     /**
+     * Before any event is handled.
+     */
+    @Before
+    public void beforeEventHandling() {
+
+        datasets = null;
+        indicators = null;
+    }
+
+    /**
      * To be called when database name has changed.
      *
      * @throws DAOException
@@ -435,12 +512,7 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
 
         ObjectType objectType = getObjectType();
         if (objectType != null) {
-
-            queryConf.setDatasetIdTemplate(objectType.getDatasetIdTemplate());
-            queryConf.setObjectIdTemplate(objectType.getObjectIdTemplate());
-
-            queryConf.setDatasetIdNamespace(objectType.getDatasetIdNamespace());
-            queryConf.setObjectIdNamespace(objectType.getObjectIdNamespace());
+            queryConf.setObjectUriTemplate(objectType.getObjectUriTemplate());
         }
     }
 
@@ -686,11 +758,19 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
      * @return the indicators
      * @throws DAOException
      */
-    public LinkedHashMap<String, String> getIndicators() throws DAOException {
+    public List<Pair<String, String>> getIndicators() throws DAOException {
 
         if (indicators == null) {
-            indicators = DAOFactory.get().getDao(StagingDatabaseDAO.class).getIndicators();
+
+            String[] labels =
+                    {Predicates.SKOS_PREF_LABEL, Predicates.SKOS_ALT_LABEL, Predicates.RDFS_LABEL, Predicates.SKOS_NOTATION};
+            HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+            SearchResultDTO<Pair<String, String>> searchResult = dao.getUriLabels(Subjects.DAS_INDICATOR, null, null, labels);
+            if (searchResult != null) {
+                indicators = searchResult.getItems();
+            }
         }
+
         return indicators;
     }
 
@@ -707,5 +787,48 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
      */
     public int getMaxTestResults() {
         return ExportRunner.MAX_TEST_RESULTS;
+    }
+
+    /**
+     * Lazy getter for the datasets.
+     *
+     * @return the datasets
+     * @throws DAOException
+     */
+    public List<Pair<String, String>> getDatasets() throws DAOException {
+
+        if (datasets == null) {
+            String[] labels = {Predicates.DCTERMS_TITLE, Predicates.RDFS_LABEL, Predicates.FOAF_NAME};
+            HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+            SearchResultDTO<Pair<String, String>> searchResult = dao.getUriLabels(Subjects.DATACUBE_DATA_SET, null, null, labels);
+            if (searchResult != null) {
+                datasets = searchResult.getItems();
+            }
+        }
+        return datasets;
+    }
+
+    /**
+     * @param newDatasetIdentifier
+     *            the newDatasetIdentifier to set
+     */
+    public void setNewDatasetIdentifier(String newDatasetIdentifier) {
+        this.newDatasetIdentifier = newDatasetIdentifier;
+    }
+
+    /**
+     * @param newDatasetTitle
+     *            the newDatasetTitle to set
+     */
+    public void setNewDatasetTitle(String newDatasetTitle) {
+        this.newDatasetTitle = newDatasetTitle;
+    }
+
+    /**
+     * @param newDatasetDescription
+     *            the newDatasetDescription to set
+     */
+    public void setNewDatasetDescription(String newDatasetDescription) {
+        this.newDatasetDescription = newDatasetDescription;
     }
 }

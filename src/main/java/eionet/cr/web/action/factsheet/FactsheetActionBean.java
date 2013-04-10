@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -40,6 +39,8 @@ import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -53,7 +54,6 @@ import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.HelperDAO;
 import eionet.cr.dao.SpoBinaryDAO;
-import eionet.cr.dao.util.UriLabelPair;
 import eionet.cr.dao.virtuoso.PredicateObjectsReader;
 import eionet.cr.dataset.CurrentLoadedDatasets;
 import eionet.cr.dto.DatasetDTO;
@@ -74,8 +74,10 @@ import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.BrowseCodelistsActionBean;
 import eionet.cr.web.action.source.ViewSourceActionBean;
 import eionet.cr.web.util.ApplicationCache;
+import eionet.cr.web.util.HTMLSelectOption;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Factsheet.
@@ -90,7 +92,10 @@ public class FactsheetActionBean extends AbstractActionBean {
     public static final String PAGE_PARAM_PREFIX = "page";
 
     /** */
-    private static final String ADDIBLE_PROPERTIES_SESSION_ATTR = FactsheetActionBean.class.getName() + ".addibleProperties";
+    private static final String ADDBL_PROPS_SESSION_ATTR_PREFIX = "addibleProperties_";
+
+    /** */
+    private static final List<HTMLSelectOption> DATACUBE_DATASET_ADDBL_PROPS = createDataCubeDatasetAddibleProperties();
 
     /** URI by which the factsheet has been requested. */
     private String uri;
@@ -178,9 +183,9 @@ public class FactsheetActionBean extends AbstractActionBean {
                 fullSubjectDTO = helperDAO.getSubject(uri);
             }
 
-            FactsheetTabMenuHelper tabsHelper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
+            FactsheetTabMenuHelper tabsHelper = new FactsheetTabMenuHelper(uri, fullSubjectDTO, factory.getDao(HarvestSourceDAO.class));
 
-            tabs = tabsHelper.getTabs(FactsheetTabMenuHelper.TabTitle.RESOURCE_PROPERTIES);
+            tabs = tabsHelper.getTabs(TabId.RESOURCE_PROPERTIES);
             uriIsHarvestSource = tabsHelper.isUriIsHarvestSource();
             uriIsGraph = tabsHelper.isUriIsGraph();
             uriIsFolder = tabsHelper.isUriFolder();
@@ -459,47 +464,43 @@ public class FactsheetActionBean extends AbstractActionBean {
     }
 
     /**
-     * @return the addibleProperties
+     *
+     * @return
      * @throws DAOException
-     *             if query fails
      */
-    public Collection<UriLabelPair> getAddibleProperties() throws DAOException {
+    public List<HTMLSelectOption> getAddibleProperties() throws DAOException {
 
-        // get the addible properties from session
+        String sessionAttrName = ADDBL_PROPS_SESSION_ATTR_PREFIX + uri;
+        List<HTMLSelectOption> result = (List<HTMLSelectOption>) getContext().getSessionAttribute(sessionAttrName);
 
-        HttpSession session = getContext().getRequest().getSession();
-        @SuppressWarnings("unchecked")
-        ArrayList<UriLabelPair> result = (ArrayList<UriLabelPair>) session.getAttribute(ADDIBLE_PROPERTIES_SESSION_ATTR);
+        if (CollectionUtils.isEmpty(result)) {
 
-        // if not in session, create them and add to session
-        if (result == null || result.isEmpty()) {
+            // Get the subject's RDF types.
+            Collection<String> rdfTypes = fullSubjectDTO == null ? null : fullSubjectDTO.getObjectValues(Predicates.RDF_TYPE);
 
-            // get addible properties from database
-
-            HelperDAO helperDAO = factory.getDao(HelperDAO.class);
-            HashMap<String, String> props = helperDAO.getAddibleProperties(uri);
-
-            // add some hard-coded properties, HashMap assures there won't be duplicates
-            props.put(Predicates.RDFS_LABEL, "Title");
-            props.put(Predicates.CR_TAG, "Tag");
-            props.put(Predicates.RDFS_COMMENT, "Other comments"); // Don't use
-            props.put(Predicates.DC_DESCRIPTION, "Description");
-            props.put(Predicates.CR_HAS_SOURCE, "hasSource");
-            props.put(Predicates.ROD_PRODUCT_OF, "productOf");
-
-            // create the result object from the found and hard-coded properties, sort it
-
-            result = new ArrayList<UriLabelPair>();
-            if (props != null && !props.isEmpty()) {
-
-                for (String propUri : props.keySet()) {
-                    result.add(UriLabelPair.create(propUri, props.get(propUri)));
-                }
-                Collections.sort(result);
+            // Special case for DataCube datasets.
+            if (rdfTypes.contains(Subjects.DATACUBE_DATA_SET)) {
+                getContext().setSessionAttribute(sessionAttrName, DATACUBE_DATASET_ADDBL_PROPS);
+                return DATACUBE_DATASET_ADDBL_PROPS;
             }
 
-            // put into session
-            session.setAttribute(ADDIBLE_PROPERTIES_SESSION_ATTR, result);
+            // Get addible properties from the repository.
+            HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+            Map<String, HTMLSelectOption> options = dao.getAddiblePropertiesForTypes(rdfTypes);
+
+            // Add some hard-coded addible properties.
+            options.put(Predicates.RDFS_LABEL, new HTMLSelectOption(Predicates.RDFS_LABEL, "Title"));
+            options.put(Predicates.CR_TAG, new HTMLSelectOption(Predicates.CR_TAG, "Tag"));
+            options.put(Predicates.RDFS_COMMENT, new HTMLSelectOption(Predicates.RDFS_COMMENT, "Other comments"));
+            options.put(Predicates.DC_DESCRIPTION, new HTMLSelectOption(Predicates.DC_DESCRIPTION, "Description"));
+            options.put(Predicates.CR_HAS_SOURCE, new HTMLSelectOption(Predicates.CR_HAS_SOURCE, "hasSource"));
+            options.put(Predicates.ROD_PRODUCT_OF, new HTMLSelectOption(Predicates.ROD_PRODUCT_OF, "productOf"));
+
+            result = new ArrayList<HTMLSelectOption>();
+            result.addAll(options.values());
+            Collections.sort(result, new BeanComparator("label"));
+
+            getContext().setSessionAttribute(sessionAttrName, result);
         }
 
         return result;
@@ -650,9 +651,12 @@ public class FactsheetActionBean extends AbstractActionBean {
     public Resolution showOnMap() throws DAOException {
         HelperDAO helperDAO = DAOFactory.get().getDao(HelperDAO.class);
         subject = helperDAO.getFactsheet(uri, null, null);
+        if (subject != null) {
+            fullSubjectDTO = helperDAO.getSubject(uri);
+        }
 
-        FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-        tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.SHOW_ON_MAP);
+        FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, fullSubjectDTO, factory.getDao(HarvestSourceDAO.class));
+        tabs = helper.getTabs(TabId.SHOW_ON_MAP);
         return new ForwardResolution("/pages/factsheet/map.jsp");
     }
 
@@ -892,5 +896,51 @@ public class FactsheetActionBean extends AbstractActionBean {
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static List<HTMLSelectOption> createDataCubeDatasetAddibleProperties() {
+
+        ArrayList<HTMLSelectOption> result = new ArrayList<HTMLSelectOption>();
+
+        HTMLSelectOption option = new HTMLSelectOption(Predicates.DCTERMS_TITLE, "Title");
+        option.setTitle("DublinCore title. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.RDFS_LABEL, "Label");
+        option.setTitle("RDF Schema label, i.e. a human-readable name that applications "
+                + "can use for displaying in user interfaces. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.FOAF_NAME, "Name");
+        option.setTitle("FOAF name, i.e. a name for some thing as defined in FOAF vocabulary. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_DESCRIPTION, "Description");
+        option.setTitle("DublinCore description, i.e. a human-readable description of the resource. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.RADION_KEYWORD, "Keyword");
+        option.setTitle("A word or phrase used to succinctly describe an asset. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_PUBLISHER, "Publisher");
+        option.setTitle("DublinCore publisher, i.e. a person, an organization, or a service that is the resource's publisher. "
+                + "May be any free text, but it is advised to use URLs.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_LICENSE, "License");
+        option.setTitle("A legal document giving official permission to do something with the resource. " +
+        		"Usually a URL pointing to the document.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.FOAF_PAGE, "Page");
+        option.setTitle("FOAF page, i.e. a URL pointing to the web page or document about the resource.");
+        result.add(option);
+
+        return result;
     }
 }

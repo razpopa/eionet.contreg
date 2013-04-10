@@ -127,7 +127,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /** */
     private static final String FINISH_RDF_EXPORT_SQL =
-            "update STAGING_DB_RDF_EXPORT set FINISHED=?,STATUS=?,ROW_COUNT=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,MISSING_CONCEPTS=? where EXPORT_ID=?";
+            "update STAGING_DB_RDF_EXPORT set FINISHED=?,STATUS=?,ROW_COUNT=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,MISSING_CONCEPTS=?,GRAPHS=? where EXPORT_ID=?";
 
     /** */
     private static final String ADD_EXPORT_LOG_MESSAGE_SQL =
@@ -288,6 +288,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
         params.add(exportRunner.getSubjectCount());
         params.add(exportRunner.getTripleCount());
         params.add(exportRunner.missingConceptsToString());
+        params.add(StringUtils.join(exportRunner.getGraphs(), '\n'));
         params.add(exportId);
 
         Connection conn = null;

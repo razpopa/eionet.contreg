@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.openrdf.model.vocabulary.XMLSchema;
 
-// TODO: Auto-generated Javadoc
 /**
  * Type definition ...
  *
@@ -68,10 +67,8 @@ public class ObjectTypes {
 
         LinkedHashMap<String, ObjectType> result = new LinkedHashMap<String, ObjectType>();
 
-        ObjectType qbObservation = createObservationType2();
+        ObjectType qbObservation = createObservationType();
         result.put(qbObservation.getUri(), qbObservation);
-
-        addDummyTypes(result, 3);
 
         return result;
     }
@@ -81,29 +78,20 @@ public class ObjectTypes {
      *
      * @return the object type
      */
-    private static ObjectType createObservationType2() {
+    private static ObjectType createObservationType() {
 
         ObjectType qbObservation = new ObjectType("http://purl.org/linked-data/cube#Observation", "Data Cube observation");
-        qbObservation.setDatasetIdTemplate("<variable>");
-        qbObservation.setDatasetIdNamespace("http://semantic.digital-agenda-data.eu/codelist/indicator/");
-        //qbObservation.setObjectIdTemplate("<variable>,<breakdown>,<unit>,<country>,<year>");
-        qbObservation.setObjectIdTemplate("<indicator>/<breakdown>/<unit>/<refArea>/<timePeriod>");
-        qbObservation.setObjectIdNamespace("http://semantic.digital-agenda-data.eu/data/scoreboard/");
+        qbObservation.setObjectUriTemplate("http://semantic.digital-agenda-data.eu/data/<dataset>/<indicator>/<breakdown>/<unit>/<refArea>/<timePeriod>");
 
+        // Indicator.
         ObjectProperty property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/ref-area", "refArea",
-                        "Reference area (ISO-2 country code)", ObjectProperty.Range.RESOURCE);
-        property.setValueTemplate("http://eurostat.linked-statistics.org/dic/geo#<value>");
-        property.setHint("Expects a two letter country code as in ISO 3166-1 alpha-2 standard. e.g. AT, BE, DE, etc.");
-        qbObservation.addProperty(property, true, "refArea", "country", "countryCode");
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/indicator", "indicator",
+                        "Indicator (code)", ObjectProperty.Range.RESOURCE);
+        property.setValueTemplate("http://semantic.digital-agenda-data.eu/codelist/indicator/<value>");
+        property.setHint("Expects a Eurostat indicator code. e.g. p_siscall, p_cuse2, etc.");
+        qbObservation.addProperty(property, false, "indicator", "indicatorCode", "variable", "variableCode", "indic");
 
-        property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/time-period", "timePeriod",
-                        "Time period (year)", ObjectProperty.Range.RESOURCE);
-        property.setValueTemplate("http://reference.data.gov.uk/id/year/<value>");
-        property.setHint("Expects a 4-digit notation of a calendar year. e.g. 1999, 2000, 2001, etc.");
-        qbObservation.addProperty(property, true, "timePeriod", "year", "time");
-
+        // Breakdown.
         property =
                 new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/breakdown", "breakdown",
                         "Breakdown (code)", ObjectProperty.Range.RESOURCE);
@@ -111,13 +99,7 @@ public class ObjectTypes {
         property.setHint("Expects a Eurostat breakdown code. e.g. 10_bb, 10_c10, etc.");
         qbObservation.addProperty(property, false, "breakdown", "brkDown", "brkdwn", "breakdownCode", "brkDownCode", "brkdwnCode");
 
-        property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/indicator", "indicator",
-                        "Indicator (code)", ObjectProperty.Range.RESOURCE);
-        property.setValueTemplate("http://semantic.digital-agenda-data.eu/codelist/indicator/<value>");
-        property.setHint("Expects a Eurostat indicator code. e.g. p_siscall, p_cuse2, etc.");
-        qbObservation.addProperty(property, false, "indicator", "indicatorCode", "variable", "variableCode", "indic");
-
+        // Unit.
         property =
                 new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/unit-measure", "unit",
                         "Unit (code)", ObjectProperty.Range.RESOURCE);
@@ -125,6 +107,23 @@ public class ObjectTypes {
         property.setHint("Expects a Eurostat measurement unit code. e.g. pc_emp, pc_ent, pc_turn, etc.");
         qbObservation.addProperty(property, true, "unit", "unitMeasure", "unitCode");
 
+        // Reference area.
+        property =
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/ref-area", "refArea",
+                        "Reference area (ISO-2 country code)", ObjectProperty.Range.RESOURCE);
+        property.setValueTemplate("http://eurostat.linked-statistics.org/dic/geo#<value>");
+        property.setHint("Expects a two letter country code as in ISO 3166-1 alpha-2 standard. e.g. AT, BE, DE, etc.");
+        qbObservation.addProperty(property, true, "refArea", "country", "countryCode");
+
+        // Time period.
+        property =
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/time-period", "timePeriod",
+                        "Time period (year)", ObjectProperty.Range.RESOURCE);
+        property.setValueTemplate("http://reference.data.gov.uk/id/gregorian-year/<value>");
+        property.setHint("Expects a 4-digit notation of a calendar year. e.g. 1999, 2000, 2001, etc.");
+        qbObservation.addProperty(property, true, "timePeriod", "year", "time");
+
+        // Observed value.
         property =
                 new ObjectProperty("http://purl.org/linked-data/sdmx/2009/measure#obsValue", "obsValue",
                         "Observed value (a number)", ObjectProperty.Range.LITERAL);
@@ -132,6 +131,7 @@ public class ObjectTypes {
         property.setHint("Expects an Observation's measured value, as a number. e.g. 0.789, 0.018, 1000, 4.324, etc.");
         qbObservation.addProperty(property, true, "value", "observedValue", "obsValue");
 
+        // Note.
         property =
                 new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/note", "note",
                         "Note (any text)", ObjectProperty.Range.LITERAL);
@@ -139,6 +139,7 @@ public class ObjectTypes {
         property.setHint("Expects any text that servers as a comment/note to the observation.");
         qbObservation.addProperty(property, false, "note", "notes", "comment", "comments");
 
+        // Flag.
         property =
                 new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/flag", "flag",
                         "Flag (status flag)", ObjectProperty.Range.RESOURCE);
@@ -146,75 +147,8 @@ public class ObjectTypes {
         property.setHint("Expects a flag indicating the obsevration's status as in http://eurostat.linked-statistics.org/dic/flags. e.g. u, n, p. r, etc.");
         qbObservation.addProperty(property, false, "flag", "status", "statusFlag", "flagStatus", "flags");
 
-        // hidden properties
-
-        //        ObjectHiddenProperty hiddenProperty =
-        //                new ObjectHiddenProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", ObjectProperty.Range.RESOURCE);
-        //        hiddenProperty.setValue("http://purl.org/linked-data/cube#Observation");
-        //        qbObservation.addHiddenProperty(hiddenProperty);
-
-        ObjectHiddenProperty hiddenProperty =
-                new ObjectHiddenProperty("http://purl.org/linked-data/cube#dataSet", ObjectProperty.Range.RESOURCE);
-        hiddenProperty.setValue("http://semantic.digital-agenda-data.eu/dataset/scoreboard");
-        qbObservation.addHiddenProperty(hiddenProperty);
-
         return qbObservation;
     }
-
-    //    /**
-    //     * Creates the observation type.
-    //     *
-    //     * @return the object type
-    //     */
-    //    private static ObjectType createObservationType() {
-    //
-    //        ObjectType qbObservation = new ObjectType("http://purl.org/linked-data/cube#Observation", "Data Cube observation");
-    //        qbObservation.setDatasetIdTemplate("<dataSet>");
-    //        qbObservation.setDatasetIdNamespace("http://scoreboard.lod2.eu/data/");
-    //        qbObservation.setObjectIdTemplate("<dataSet>#A,<breakdown>,<unit>,<refArea>,<timePeriod>");
-    //        qbObservation.setObjectIdNamespace("http://scoreboard.lod2.eu/data/");
-    //
-    //        // sdmx-dimension:refArea
-    //        ObjectProperty property =
-    //                new ObjectProperty("http://purl.org/linked-data/sdmx/2009/dimension#refArea", "SDMX reference area",
-    //                        ObjectProperty.Range.RESOURCE);
-    //        property.setValueTemplate("http://eurostat.linked-statistics.org/dic/geo#<value>");
-    //        qbObservation.addProperty(property, null, "refArea");
-    //
-    //        // sdmx-dimension:timePeriod
-    //        property =
-    //                new ObjectProperty("http://purl.org/linked-data/sdmx/2009/dimension#timePeriod", "SDMX time period",
-    //                        ObjectProperty.Range.LITERAL);
-    //        property.setDataType(XMLSchema.GYEAR.stringValue());
-    //        qbObservation.addProperty(property, null, "timePeriod");
-    //
-    //        // sdmx-dimension:freq
-    //        property =
-    //                new ObjectProperty("http://purl.org/linked-data/sdmx/2009/dimension#freq", "SDMX frequency",
-    //                        ObjectProperty.Range.RESOURCE);
-    //        property.setValueTemplate("http://purl.org/linked-data/sdmx/2009/code#freq-<value>");
-    //        qbObservation.addProperty(property, null, "timePeriod");
-    //
-    //        // qb:dataSet
-    //        property = new ObjectProperty("http://purl.org/linked-data/cube#dataSet", "Data Cube dataset", ObjectProperty.Range.RESOURCE);
-    //        property.setValueTemplate("http://scoreboard.lod2.eu/data/<value>");
-    //        qbObservation.addProperty(property, null, "dataSet");
-    //
-    //        // scb:breakdown
-    //        property = new ObjectProperty("http://data.lod2.eu/scoreboard/properties/breakdown", "Scoreboard breakdown", ObjectProperty.Range.RESOURCE);
-    //        property.setValueTemplate("http://scoreboard.lod2.eu/breakdowns/<value>");
-    //        qbObservation.addProperty(property, null, "breakdown");
-    //
-    //        // sdmx-attribute:unitMeasure
-    //        property = new ObjectProperty("http://purl.org/linked-data/sdmx/2009/attribute#unitMeasure", "SMDX unit measure", ObjectProperty.Range.LITERAL);
-    //        qbObservation.addProperty(property, null, "unit");
-    //
-    //        // sdmx-measure:obsValue
-    //        property = new ObjectProperty("http://purl.org/linked-data/sdmx/2009/measure#obsValue", "SMDX observed value", ObjectProperty.Range.LITERAL);
-    //        property.setDataType(XMLSchema.DOUBLE.stringValue());
-    //        qbObservation.addProperty(property, null, "value");
-    //        return qbObservation;
-    //    }
 
     /**
      * Adds the dummy types.
@@ -240,9 +174,6 @@ public class ObjectTypes {
                 type.addProperty(property, true, "col" + j);
                 properties.add(property);
             }
-
-            type.setDatasetIdTemplate("<col_2>");
-            type.setObjectIdTemplate("<col2>_<col3>_<col4>");
 
             map.put(type.getUri(), type);
         }

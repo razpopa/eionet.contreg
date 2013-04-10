@@ -42,6 +42,7 @@ import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.security.CRUser;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Bookmarks tab on factsheet page.
@@ -117,7 +118,7 @@ public class BookmarksActionBean extends AbstractActionBean {
             SubjectDTO subject = helperDAO.getFactsheet(uri, null, null);
 
             FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-            tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.BOOKMARKS);
+            tabs = helper.getTabs(TabId.BOOKMARKS);
         }
     }
 

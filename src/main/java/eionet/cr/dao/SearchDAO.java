@@ -129,12 +129,13 @@ public interface SearchDAO extends DAO {
     /**
      *
      * @param sourceUrl
+     * @param skipAnonymous
      * @param pagingRequest
      * @param sortingRequest
      * @return Pair<Integer, List<SubjectDTO>>
      * @throws DAOException
      */
-    Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, PagingRequest pagingRequest, SortingRequest sortingRequest)
+    Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, boolean skipAnonymous, PagingRequest pagingRequest, SortingRequest sortingRequest)
             throws DAOException;
 
     /**

@@ -57,8 +57,7 @@ public class CRActionBeanContext extends ActionBeanContext {
     }
 
     /**
-     * Wrapper method for {@link javax.servlet.http.HttpSession#setAttribute(String, eionet.cr.dto.ObjectDTO)}.
-     * <p>
+     * Wrapper method for {@link javax.servlet.http.HttpSession#setAttribute(String, Object).
      * The wrapper allows to avoid direct usage of {@link javax.servlet.http.HttpSession}.
      *
      * @param name session attribute name.
@@ -66,6 +65,26 @@ public class CRActionBeanContext extends ActionBeanContext {
      */
     public void setSessionAttribute(String name, Object value) {
         getRequest().getSession().setAttribute(name, value);
+    }
+
+    /**
+     * Wrapper method for {@link javax.servlet.http.HttpSession#getAttribute(String).
+     * The wrapper allows to avoid direct usage of {@link javax.servlet.http.HttpSession}.
+     *
+     * @param name session attribute name.
+     */
+    public Object getSessionAttribute(String name) {
+        return getRequest().getSession().getAttribute(name);
+    }
+
+    /**
+     * Wrapper method for {@link javax.servlet.http.HttpSession#removeAttribute(String).
+     * The wrapper allows to avoid direct usage of {@link javax.servlet.http.HttpSession}.
+     *
+     * @param name session attribute name.
+     */
+    public void removeSessionAttribute(String name) {
+        getRequest().getSession().removeAttribute(name);
     }
 
     /**

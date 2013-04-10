@@ -560,8 +560,8 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * eionet.cr.util.SortingRequest)
      */
     @Override
-    public Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, PagingRequest pagingRequest,
-            SortingRequest sortingRequest) throws DAOException {
+    public Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, boolean skipAnonymous,
+            PagingRequest pagingRequest, SortingRequest sortingRequest) throws DAOException {
 
         // if source URL to search by is blank, return empty result
         if (StringUtils.isBlank(sourceUrl)) {
@@ -569,7 +569,8 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
         }
 
         // create query helper
-        VirtuosoSearchBySourceHelper helper = new VirtuosoSearchBySourceHelper(sourceUrl, pagingRequest, sortingRequest);
+        VirtuosoSearchBySourceHelper helper =
+                new VirtuosoSearchBySourceHelper(sourceUrl, skipAnonymous, pagingRequest, sortingRequest);
 
         // let the helper create the query
         String query = helper.getQuery(null);
@@ -979,75 +980,75 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
         return resultList;
     }
 
-//    /*
-//     * (non-Javadoc)
-//     *
-//     * @see eionet.cr.dao.SearchDAO#searchDataCubeObservations(eionet.cr.dto.ObservationDTO, java.lang.String,
-//     * eionet.cr.util.SortOrder)
-//     */
-//    @Override
-//    public List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order)
-//            throws DAOException {
-//
-//        if (filter == null) {
-//            throw new IllegalArgumentException("The filter object must not be null!");
-//        }
-//
-//        LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
-//
-//        Hashtable<String, String> predicateAliases = new Hashtable<String, String>();
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("select\n");
-//        sb.append("  ?s ?dataset ?indicator ?breakdown ?refArea ?timePeriod ?unit ?obsValue\n");
-//        sb.append("where {\n");
-//        sb.append("  ?s a <").append(Subjects.DCTYPE_DATASET_CLASS).append(">");
-//
-//        Bindings bindings = new Bindings();
-//        String filterStr = "?s <predicateUri> ?predicateAlias. filter (?predicateAlias = ?predicateAliasValue)";
-//
-//        for (Entry<String, String> entry : filterMap.entrySet()) {
-//
-//            String predicateUri = entry.getKey();
-//            String value = entry.getValue();
-//            String predicateAlias = predicateAliases.get(predicateUri);
-//
-//            filterStr = StringUtils.replace(filterStr, "predicateUri", predicateUri);
-//            filterStr = StringUtils.replace(filterStr, "predicateAlias", predicateAlias);
-//
-//            sb.append(".\n  ").append(filterStr);
-//            bindings.set(predicateAlias + "Value", value);
-//        }
-//
-//        String optionalStr = "optional {?s <predicateUri> ?predicateAlias}";
-//        for (Entry<String, String> entry : predicateAliases.entrySet()) {
-//
-//            String predicateUri = entry.getKey();
-//            if (!filterMap.containsKey(predicateUri)) {
-//
-//                String predicateAlias = entry.getValue();
-//                optionalStr = StringUtils.replace(optionalStr, "predicateUri", predicateUri);
-//                optionalStr = StringUtils.replace(optionalStr, "predicateAlias", predicateAlias);
-//                sb.append(".\n  ").append(filterStr);
-//            }
-//        }
-//
-//        sb.append("\n}");
-//
-//        if (sortAlias != null && predicateAliases.values().contains(sortAlias)) {
-//            sb.append("\norder by ").append(order == null ? "" : order).append("?").append(sortAlias);
-//        }
-//
-//        return null;
-//    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see eionet.cr.dao.SearchDAO#searchDataCubeObservations(eionet.cr.dto.ObservationDTO, java.lang.String,
+    // * eionet.cr.util.SortOrder)
+    // */
+    // @Override
+    // public List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order)
+    // throws DAOException {
+    //
+    // if (filter == null) {
+    // throw new IllegalArgumentException("The filter object must not be null!");
+    // }
+    //
+    // LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
+    //
+    // Hashtable<String, String> predicateAliases = new Hashtable<String, String>();
+    //
+    // StringBuilder sb = new StringBuilder();
+    // sb.append("select\n");
+    // sb.append("  ?s ?dataset ?indicator ?breakdown ?refArea ?timePeriod ?unit ?obsValue\n");
+    // sb.append("where {\n");
+    // sb.append("  ?s a <").append(Subjects.DCTYPE_DATASET_CLASS).append(">");
+    //
+    // Bindings bindings = new Bindings();
+    // String filterStr = "?s <predicateUri> ?predicateAlias. filter (?predicateAlias = ?predicateAliasValue)";
+    //
+    // for (Entry<String, String> entry : filterMap.entrySet()) {
+    //
+    // String predicateUri = entry.getKey();
+    // String value = entry.getValue();
+    // String predicateAlias = predicateAliases.get(predicateUri);
+    //
+    // filterStr = StringUtils.replace(filterStr, "predicateUri", predicateUri);
+    // filterStr = StringUtils.replace(filterStr, "predicateAlias", predicateAlias);
+    //
+    // sb.append(".\n  ").append(filterStr);
+    // bindings.set(predicateAlias + "Value", value);
+    // }
+    //
+    // String optionalStr = "optional {?s <predicateUri> ?predicateAlias}";
+    // for (Entry<String, String> entry : predicateAliases.entrySet()) {
+    //
+    // String predicateUri = entry.getKey();
+    // if (!filterMap.containsKey(predicateUri)) {
+    //
+    // String predicateAlias = entry.getValue();
+    // optionalStr = StringUtils.replace(optionalStr, "predicateUri", predicateUri);
+    // optionalStr = StringUtils.replace(optionalStr, "predicateAlias", predicateAlias);
+    // sb.append(".\n  ").append(filterStr);
+    // }
+    // }
+    //
+    // sb.append("\n}");
+    //
+    // if (sortAlias != null && predicateAliases.values().contains(sortAlias)) {
+    // sb.append("\norder by ").append(order == null ? "" : order).append("?").append(sortAlias);
+    // }
+    //
+    // return null;
+    // }
 
     public static void main(String[] args) throws DAOException {
 
         HashMap<String, String> filters = new HashMap<String, String>();
         filters.put(Predicates.RDF_TYPE, "http://purl.org/linked-data/cube#Observation");
-        //filters.put(Predicates.DAS_INDICATOR, "http://semantic.digital-agenda-data.eu/codelist/indicator/i_csk_ge_me");
+        // filters.put(Predicates.DAS_INDICATOR, "http://semantic.digital-agenda-data.eu/codelist/indicator/i_csk_ge_me");
         filters.put(Predicates.DAS_UNITMEASURE, "http://semantic.digital-agenda-data.eu/codelist/unit-measure/pc_ind");
-        //filters.put(Predicates.DAS_TIMEPERIOD, "http://reference.data.gov.uk/id/year/2006");
+        // filters.put(Predicates.DAS_TIMEPERIOD, "http://reference.data.gov.uk/id/year/2006");
 
         int pageNo = 16;
         PagingRequest pagingRequest = PagingRequest.create(pageNo);

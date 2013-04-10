@@ -63,6 +63,7 @@ import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.util.WebConstants;
 import eionet.cr.web.util.tabs.FactsheetTabMenuHelper;
 import eionet.cr.web.util.tabs.TabElement;
+import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Compiled dataset tab controller.
@@ -116,7 +117,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
             sources = factory.getDao(CompiledDatasetDAO.class).getDetailedDatasetFiles(uri);
 
             FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-            tabs = helper.getTabs(FactsheetTabMenuHelper.TabTitle.COMPILED_DATASET);
+            tabs = helper.getTabs(TabId.COMPILED_DATASET);
 
             extractFilters(subject);
         }

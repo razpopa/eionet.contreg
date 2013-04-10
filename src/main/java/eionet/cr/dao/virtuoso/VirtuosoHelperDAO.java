@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -85,6 +86,8 @@ import eionet.cr.util.sql.PairReader;
 import eionet.cr.util.sql.SQLUtil;
 import eionet.cr.util.sql.SingleObjectReader;
 import eionet.cr.web.security.CRUser;
+import eionet.cr.web.util.HTMLSelectOption;
+import eionet.cr.web.util.HTMLSelectOptionReader;
 import eionet.cr.web.util.WebConstants;
 
 // TODO: Auto-generated Javadoc
@@ -166,12 +169,12 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             if (rdfType.equals(Subjects.ROD_OBLIGATION_CLASS)) {
                 // properties for obligations
                 String[] neededPredicatesObl =
-                        {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
+                {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
                 neededPredicates = neededPredicatesObl;
             } else if (rdfType.equals(Subjects.ROD_DELIVERY_CLASS)) {
                 // properties for deliveries
                 String[] neededPredicatesDeliveries =
-                        {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
+                {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
                 neededPredicates = neededPredicatesDeliveries;
             }
 
@@ -338,8 +341,8 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
      * SPARQL for properties defined by Dublin Core.
      */
     private static final String PROPS_DUBLINCORE_QUERY = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "select distinct ?object ?label where "
-            + "{?object rdfs:label ?label . ?object rdf:type rdf:Property " + ". ?object rdfs:isDefinedBy <"
+            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "select distinct ?property ?label ?label as ?title where "
+            + "{?property rdfs:label ?label . ?property rdf:type rdf:Property " + ". ?property rdfs:isDefinedBy <"
             + Subjects.DUBLIN_CORE_SOURCE_URL + ">}";
 
     /**
@@ -386,6 +389,43 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
                 result.put(objectLabelPair.getLeft(), objectLabelPair.getRight());
             }
         }
+        return result;
+    }
+
+    /**
+     *
+     * @param typeUri
+     * @return
+     * @throws DAOException
+     */
+    @Override
+    public Map<String, HTMLSelectOption> getAddiblePropertiesForTypes(Collection<String> typeUris) throws DAOException {
+
+        // Initiate the result object.
+        HashMap<String, HTMLSelectOption> result = new HashMap<String, HTMLSelectOption>();
+
+        if (CollectionUtils.isNotEmpty(typeUris)) {
+            // First, get all DublinCore properties.
+            HTMLSelectOptionReader reader = new HTMLSelectOptionReader();
+            executeSPARQL(PROPS_DUBLINCORE_QUERY, reader);
+
+            // Second, get properties for this particular type only.
+            Bindings bindings = new Bindings();
+            String subjectTypesCSV = SPARQLQueryUtil.urisToCSV(typeUris, "subjectValue", bindings);
+            String sparql =
+                    "PREFIX rdfs: <" + Namespace.RDFS.getUri() + "> "
+                            + "select distinct ?object ?label WHERE { ?object rdfs:label ?label . ?object rdfs:domain ?o "
+                            + ". FILTER (?o IN (" + subjectTypesCSV + "))}";
+            executeSPARQL(sparql, bindings, reader);
+
+            // Finally, sort out the duplicates (i.e. an option by the same value is considered duplicate).
+            if (reader != null && reader.getResultList() != null) {
+                for (HTMLSelectOption option : reader.getResultList()) {
+                    result.put(option.getValue(), option);
+                }
+            }
+        }
+
         return result;
     }
 
@@ -1440,12 +1480,18 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
     /** */
     private static final String GET_FACTSHEET_ROWS =
-            "select ?pred min(xsd:int(isBlank(?s))) as ?anonSubj "
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"
+                    + "select ?pred min(xsd:int(isBlank(?s))) as ?anonSubj "
                     + "min(bif:either(isLiteral(?o),"
                     + "bif:concat(fn:substring(str(?o),1,LEN),'<|>',lang(?o),'<|>',str(datatype(?o)),'<|><|>0<|>',str(?g),'<|>',str(bif:length(str(?o))),'<|>',bif:md5(str(?o))),"
-                    + "bif:concat(bif:coalesce(str(?oLabel),bif:left(str(?o),LEN)),'<|>',lang(?oLabel),'<|>',str(datatype(?oLabel)),'<|>',bif:left(str(?o),LEN),'<|>',str(isBlank(?o)),'<|>',str(?g),'<|><|>')"
+                    + "bif:concat(bif:coalesce(str(coalesce(?rdfsLabel,?prefLabel,?altLabel,?notation)),bif:left(str(?o),LEN)),'<|>',lang(coalesce(?rdfsLabel,?prefLabel,?altLabel,?notation)),'<|>',str(datatype(coalesce(?rdfsLabel,?prefLabel,?altLabel,?notation))),'<|>',bif:left(str(?o),LEN),'<|>',str(isBlank(?o)),'<|>',str(?g),'<|><|>')"
                     + ")) as ?objData " + "count(distinct ?o) as ?objCount " + "where {" + "graph ?g {"
-                    + "?s ?pred ?o. filter(?s=iri(?subjectUri))}" + ". optional {?o <" + Predicates.RDFS_LABEL + "> ?oLabel}"
+                    + "?s ?pred ?o. filter(?s=iri(?subjectUri))}. "
+                    + "optional {?o rdfs:label ?rdfsLabel} "
+                    + "optional {?o skos:prefLabel ?prefLabel} "
+                    + "optional {?o skos:altLabel ?altLabel} "
+                    + "optional {?o skos:notation ?notation} "
                     + "} group by ?pred";
 
     /** */

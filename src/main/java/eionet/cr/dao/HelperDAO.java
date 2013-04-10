@@ -28,6 +28,7 @@ import eionet.cr.util.Pair;
 import eionet.cr.util.SortingRequest;
 import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.web.security.CRUser;
+import eionet.cr.web.util.HTMLSelectOption;
 
 /**
  * Helper dao to use in different searches.
@@ -529,4 +530,12 @@ public interface HelperDAO extends DAO {
      */
     SearchResultDTO<Pair<String, String>> getDistinctObjectLabels(String predicateUri, PagingRequest pageRequest,
             SortingRequest sortRequest, String... labelPredicates) throws DAOException;
+
+    /**
+     *
+     * @param typeUris
+     * @return
+     * @throws DAOException
+     */
+    Map<String, HTMLSelectOption> getAddiblePropertiesForTypes(Collection<String> typeUris) throws DAOException;
 }

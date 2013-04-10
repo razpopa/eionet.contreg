@@ -24,6 +24,9 @@ package eionet.cr.web.util.tabs;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Tab formbean in tab menu.
  *
@@ -53,10 +56,43 @@ public class TabElement {
      * @param href
      * @param selectedTitle
      */
-    public TabElement(String title, String href, String selectedTitle) {
+    public TabElement(String title, String href, String... selectedTitle) {
         this.title = title;
         this.href = href;
-        selected = selectedTitle == null ? false : title.equals(selectedTitle);
+        selected = ArrayUtils.isEmpty(selectedTitle) ? false : ArrayUtils.contains(selectedTitle, title);
+    }
+
+    /**
+     * @param tab
+     * @param href
+     * @param selectedTab
+     */
+    public TabElement(TabId tab, String href, TabId selectedTab) {
+
+        if (tab == null) {
+            throw new IllegalArgumentException("The " + TabId.class.getSimpleName() + " must not be null!");
+        }
+
+        this.title = tab.getTitle();
+        this.href = href;
+        this.selected = tab.equals(selectedTab);
+    }
+
+    /**
+     * @param tab
+     * @param title
+     * @param href
+     * @param selectedTab
+     */
+    public TabElement(TabId tab, String title, String href, TabId selectedTab) {
+
+        if (tab == null) {
+            throw new IllegalArgumentException("The " + TabId.class.getSimpleName() + " must not be null!");
+        }
+
+        this.title = StringUtils.isNotBlank(title) ? title : tab.getTitle();
+        this.href = href;
+        this.selected = tab.equals(selectedTab);
     }
 
     /**

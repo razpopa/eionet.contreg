@@ -48,8 +48,10 @@ public interface Predicates {
     String DCTERMS_SUBJECT = "http://purl.org/dc/terms/subject";
     String DCTERMS_CONTRIBUTOR = "http://purl.org/dc/terms/contributor";
     String DCTERMS_ABSTRACT = "http://purl.org/dc/terms/abstract";
+    String DCTERMS_DESCRIPTION = "http://purl.org/dc/terms/description";
     String DCTERMS_LANGUAGE = "http://purl.org/dc/terms/language";
     String DCTERMS_DATE = "http://purl.org/dc/terms/date";
+    String DCTERMS_MODIFIED = "http://purl.org/dc/terms/modified";
     String DCTERMS_SOURCE = "http://purl.org/dc/terms/source";
     String DCTERMS_PUBLISHER = "http://purl.org/dc/terms/publisher";
     String DCTERMS_LICENSE = "http://purl.org/dc/terms/license";
@@ -129,6 +131,7 @@ public interface Predicates {
     String AMP_ONTOLOGY_FORYEAR = "http://rdfdata.eionet.europa.eu/amp/ontology/forYear";
 
     String FOAF_NAME = "http://xmlns.com/foaf/0.1/name";
+    String FOAF_PAGE = "http://xmlns.com/foaf/0.1/page";
     String FOAF_MBOX_SHA1SUM = "http://xmlns.com/foaf/0.1/mbox_sha1sum";
 
     String RSSNG_ITEM = "http://cr.eionet.europa.eu/ontologies/news.rdf#item";
@@ -143,6 +146,7 @@ public interface Predicates {
 
     String SDMX_OBSVALUE = "http://purl.org/linked-data/sdmx/2009/measure#obsValue";
     String DATACUBE_DATA_SET = "http://purl.org/linked-data/cube#dataSet";
+    String DATACUBE_STRUCTURE = "http://purl.org/linked-data/cube#structure";
 
     String DAS_INDICATOR = "http://semantic.digital-agenda-data.eu/def/property/indicator";
     String DAS_BREAKDOWN = "http://semantic.digital-agenda-data.eu/def/property/breakdown";
@@ -151,4 +155,7 @@ public interface Predicates {
     String DAS_UNITMEASURE = "http://semantic.digital-agenda-data.eu/def/property/unit-measure";
     String DAS_FLAG = "http://semantic.digital-agenda-data.eu/def/property/flag";
     String DAS_NOTE = "http://semantic.digital-agenda-data.eu/def/property/note";
+
+    String RADION_KEYWORD = "http://www.w3.org/ns/radion#keyword";
+    String RADION_DISTRIBUTION = "http://www.w3.org/ns/radion#distribution";
 }
