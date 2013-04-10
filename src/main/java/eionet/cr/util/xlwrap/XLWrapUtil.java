@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openrdf.OpenRDFException;
 
 import at.jku.xlwrap.common.XLWrapException;
@@ -37,19 +38,21 @@ public class XLWrapUtil {
 
     /** */
     private static final String FILE_URL_PLACEHOLDER = "@FILE_URL@";
+    private static final String DATASET_IDENTIFIER_PLACEHOLDER = "@DATASET_IDENTIFIER@";
 
     /**
      *
      * @param uploadType
      * @param spreadsheetFile
-     * @param clearGraph
+     * @param targetDataset
+     * @param clear
      * @return
      * @throws MalformedURLException
      * @throws IOException
      * @throws XLWrapException
      * @throws OpenRDFException
      */
-    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, boolean clearGraph) throws IOException, XLWrapException, OpenRDFException {
+    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, String targetDataset, boolean clear) throws IOException, XLWrapException, OpenRDFException {
 
         File template = uploadType.getMappingTemplate();
         File target = TempFilePathGenerator.generate(XLWrapUploadType.MAPPING_FILE_EXTENSION);
@@ -57,9 +60,17 @@ public class XLWrapUtil {
         try {
             Properties properties = new Properties();
             properties.setProperty(FILE_URL_PLACEHOLDER, spreadsheetFile.toURI().toURL().toString());
+            if (StringUtils.isNotBlank(targetDataset)) {
+                String datasetIdentifier = StringUtils.substringAfterLast(targetDataset, "/");
+                if (StringUtils.isBlank(datasetIdentifier)) {
+                    datasetIdentifier = "unknown_dataset";
+                }
+                properties.setProperty(DATASET_IDENTIFIER_PLACEHOLDER, datasetIdentifier);
+            }
 
             createMappingFile(template, target, properties);
-            return importMapping(target, uploadType.getGraphUri(), clearGraph);
+            String graphUri = StringUtils.isBlank(targetDataset) ? uploadType.getGraphUri() : targetDataset;
+            return importMapping(target, graphUri, clear);
         } finally {
             FileDeletionJob.register(target);
         }

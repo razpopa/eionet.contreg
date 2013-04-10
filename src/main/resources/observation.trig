@@ -38,7 +38,7 @@
             rdf:_1 [
                 a xl:RowShift ;
                 xl:restriction "A2:H2" ;
-                xl:breakCondition "ALLEMPTY(A2:H2)" ; 
+                xl:breakCondition "ALLEMPTY(A2:H2)" ;
                 xl:steps "1" ;
             ] ;
         ]
@@ -46,8 +46,8 @@
 }
 
 :Data {
-    [ xl:uri "'http://semantic.digital-agenda-data.eu/data/scoreboard/' & URLENCODE(LCASE(C2)) & '/' & URLENCODE(LCASE(D2)) & '/' & URLENCODE(LCASE(E2)) & '/' & URLENCODE(UCASE(B2)) & '/' & URLENCODE(UCASE(A2))"^^xl:Expr ] a qb:Observation ;
-    qb:dataSet "URI('http://semantic.digital-agenda-data.eu/dataset/scoreboard')"^^xl:Expr ;
+    [ xl:uri "'http://semantic.digital-agenda-data.eu/data/@DATASET_IDENTIFIER@/' & URLENCODE(LCASE(C2)) & '/' & URLENCODE(LCASE(D2)) & '/' & URLENCODE(LCASE(E2)) & '/' & URLENCODE(UCASE(B2)) & '/' & URLENCODE(UCASE(A2))"^^xl:Expr ] a qb:Observation ;
+    qb:dataSet "URI('http://semantic.digital-agenda-data.eu/dataset/@DATASET_IDENTIFIER@')"^^xl:Expr ;
     sdmx-measure:obsValue "F2"^^xl:Expr ;
     dad-prop:indicator "URI('http://semantic.digital-agenda-data.eu/codelist/indicator/' & URLENCODE(LCASE(C2)))"^^xl:Expr ;
     dad-prop:breakdown "URI('http://semantic.digital-agenda-data.eu/codelist/breakdown/' & URLENCODE(LCASE(D2)))"^^xl:Expr ;

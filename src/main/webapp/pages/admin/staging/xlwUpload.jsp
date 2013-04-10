@@ -4,6 +4,24 @@
 
 <stripes:layout-render name="/pages/common/template.jsp" pageTitle="Upload a spreadsheet">
 
+    <stripes:layout-component name="head">
+        <script type="text/javascript">
+        // <![CDATA[
+            function typeChanged(selectObj){
+            	var value = selectObj.options[selectObj.selectedIndex].value;
+            	if (value == 'OBSERVATION') {
+            		document.getElementById("graphRow").style.display = 'none';
+            		document.getElementById("datasetRow").style.display = '';
+            	}
+            	else {
+            		document.getElementById("graphRow").style.display = '';
+                    document.getElementById("datasetRow").style.display = 'none';
+            	}
+            }
+        // ]]>
+        </script>
+    </stripes:layout-component>
+
     <stripes:layout-component name="contents">
 
         <%-- The page's heading --%>
@@ -29,7 +47,7 @@
                             <label for="selContentType" class="question required">Content type:</label>
                         </td>
                         <td>
-                            <stripes:select id="selContentType" name="uploadType" title="${actionBean.uploadType.hint}">
+                            <stripes:select id="selContentType" name="uploadType" title="${actionBean.uploadType.hint}" onchange="typeChanged(this)">
                                 <c:forEach items="${actionBean.uploadTypes}" var="uploadType">
                                     <stripes:option value="${uploadType.name}" label="${uploadType.title}" title="${uploadType.hint}"/>
                                 </c:forEach>
@@ -44,12 +62,31 @@
                            <stripes:file name="fileBean" id="fileInput" size="120"/>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="graphRow" ${actionBean.uploadType eq 'OBSERVATION' ? 'style="display:none"' : ''}>
                         <td>
                             &nbsp;
                         </td>
                         <td>
-                            <stripes:checkbox name="clearGraph" id="chkClear"/>&nbsp;<label for="chkClear">Clear all previous content of selected type</label>
+                            <stripes:checkbox name="clearGraph" id="chkClearGraph"/>&nbsp;<label for="chkClearGraph">Clear all previous content of selected type</label>
+                        </td>
+                    </tr>
+                    <tr id="datasetRow" ${actionBean.uploadType eq 'OBSERVATION' ? '' : 'style="display:none"'}>
+                        <td>
+                            <label for="selDataset" class="question required">Target dataset:</label>
+                        </td>
+                        <td>
+                            <stripes:select name="targetDataset" id="selDataset">
+                                <c:if test="${empty actionBean.datasets}">
+                                    <stripes:option value="" label=" - none found - "/>
+                                </c:if>
+                                <c:if test="${not empty actionBean.datasets}">
+                                    <stripes:option value="" label=""/>
+                                    <c:forEach items="${actionBean.datasets}" var="dataset">
+                                        <stripes:option value="${dataset.left}" label="${dataset.right}"/>
+                                    </c:forEach>
+                                </c:if>
+                            </stripes:select><br/>
+                            <stripes:checkbox name="clearDataset" id="chkClearDataset"/>&nbsp;<label for="chkClearDataset">Clear dataset before upload</label>
                         </td>
                     </tr>
                     <tr>

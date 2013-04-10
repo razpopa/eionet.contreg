@@ -13,8 +13,8 @@ public enum XLWrapUploadType {
     BREAKDOWN("Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns"),
     BREAKDOWN_GROUP("Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
     UNIT_MEASURE("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
-    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources");
-//    OBSERVATION("Observations metadata", "File containing metadata of certain Digital Agenda Scoreboard observations");
+    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"),
+    OBSERVATION("Observations", "File containing Digital Agenda Scoreboard observations");
 
     /** */
     private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@";

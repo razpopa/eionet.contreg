@@ -16,12 +16,20 @@ import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
 
 import at.jku.xlwrap.common.XLWrapException;
+import eionet.cr.common.Predicates;
+import eionet.cr.common.Subjects;
 import eionet.cr.common.TempFilePathGenerator;
+import eionet.cr.dao.DAOException;
+import eionet.cr.dao.DAOFactory;
+import eionet.cr.dao.HelperDAO;
+import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.util.FileDeletionJob;
+import eionet.cr.util.Pair;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
 import eionet.cr.web.action.AbstractActionBean;
@@ -60,6 +68,15 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     /** */
     private boolean clearGraph = true;
 
+    /** */
+    private List<Pair<String, String>> datasets;
+
+    /** */
+    private String targetDataset;
+
+    /** */
+    private boolean clearDataset;
+
     /**
      *
      * @return
@@ -81,12 +98,22 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public Resolution upload() {
 
+        boolean isObservationsUpload = false;
         if (uploadType == null) {
             addGlobalValidationError("Missing upload type!");
             return new ForwardResolution(JSP);
         } else if (fileBean == null || fileBean.getSize() == 0) {
             addGlobalValidationError("Uploaded file missing or empty!");
             return new ForwardResolution(JSP);
+        }
+        else if (XLWrapUploadType.OBSERVATION.equals(uploadType)) {
+            if (StringUtils.isBlank(targetDataset)) {
+                addGlobalValidationError("Target dataset must be selected!");
+                return new ForwardResolution(JSP);
+            }
+            else{
+                isObservationsUpload = true;
+            }
         }
 
         File spreadsheetFile = TempFilePathGenerator.generate("xls");
@@ -99,9 +126,12 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         }
 
         try {
-            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, clearGraph);
+            String dataset = isObservationsUpload ? targetDataset : null;
+            boolean clear = isObservationsUpload ? clearDataset : clearGraph;
+            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear);
             addSystemMessage(resourceCount + " resources successfully imported!\n Click on on the below link to explore them further.");
-            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, uploadType.getGraphUri());
+
+            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? targetDataset : uploadType.getGraphUri());
             return new RedirectResolution(getClass());
 
         } catch (IOException e) {
@@ -207,11 +237,50 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         return clearGraph;
     }
 
-    public static void main(String[] args) {
+    /**
+     * Lazy getter for the datasets.
+     *
+     * @return the datasets
+     * @throws DAOException
+     */
+    public List<Pair<String, String>> getDatasets() throws DAOException {
 
-        XLWrapUploadType[] values = XLWrapUploadType.values();
-        for (int i = 0; i < values.length; i++) {
-            System.out.println(values[i].getGraphUri());
+        if (datasets == null) {
+            String[] labels = {Predicates.DCTERMS_TITLE, Predicates.RDFS_LABEL, Predicates.FOAF_NAME};
+            HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+            SearchResultDTO<Pair<String, String>> searchResult = dao.getUriLabels(Subjects.DATACUBE_DATA_SET, null, null, labels);
+            if (searchResult != null) {
+                datasets = searchResult.getItems();
+            }
         }
+        return datasets;
+    }
+
+    /**
+     * @param clearDataset the clearDataset to set
+     */
+    public void setClearDataset(boolean clearDataset) {
+        this.clearDataset = clearDataset;
+    }
+
+    /**
+     * @param targetDataset the targetDataset to set
+     */
+    public void setTargetDataset(String targetDataset) {
+        this.targetDataset = targetDataset;
+    }
+
+    /**
+     * @return the targetDataset
+     */
+    public String getTargetDataset() {
+        return targetDataset;
+    }
+
+    /**
+     * @return the clearDataset
+     */
+    public boolean isClearDataset() {
+        return clearDataset;
     }
 }
