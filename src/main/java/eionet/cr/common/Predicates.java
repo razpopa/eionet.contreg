@@ -57,6 +57,8 @@ public interface Predicates {
     String DCTERMS_LICENSE = "http://purl.org/dc/terms/license";
     String DCTERMS_RIGHTS = "http://purl.org/dc/terms/rights";
     String DCTERMS_BIBLIOGRAPHIC_CITATION = "http://purl.org/dc/terms/bibliographicCitation";
+    String DCTERMS_IDENTIFIER = "http://purl.org/dc/terms/identifier";
+    String DCTERMS_FORMAT = "http://purl.org/dc/terms/format";
 
     String RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
     String RDF_VALUE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";
@@ -156,6 +158,9 @@ public interface Predicates {
     String DAS_FLAG = "http://semantic.digital-agenda-data.eu/def/property/flag";
     String DAS_NOTE = "http://semantic.digital-agenda-data.eu/def/property/note";
 
-    String RADION_KEYWORD = "http://www.w3.org/ns/radion#keyword";
-    String RADION_DISTRIBUTION = "http://www.w3.org/ns/radion#distribution";
+    String DCAT_DISTRIBUTION = "http://www.w3.org/ns/dcat#distribution";
+    String DCAT_ACCESS_URL = "http://www.w3.org/ns/dcat#accessURL";
+
+    String ECODP_KEYWORD = "http://ec.europa.eu/open-data/ontologies/ec-odp#keyword";
+    String ECODP_FORMAT = "http://ec.europa.eu/open-data/ontologies/ec-odp#format";
 }

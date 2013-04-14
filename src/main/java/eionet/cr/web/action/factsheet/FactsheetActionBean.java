@@ -923,7 +923,7 @@ public class FactsheetActionBean extends AbstractActionBean {
         option.setTitle("DublinCore description, i.e. a human-readable description of the resource. May be any free text.");
         result.add(option);
 
-        option = new HTMLSelectOption(Predicates.RADION_KEYWORD, "Keyword");
+        option = new HTMLSelectOption(Predicates.ECODP_KEYWORD, "Keyword");
         option.setTitle("A word or phrase used to succinctly describe an asset. May be any free text.");
         result.add(option);
 

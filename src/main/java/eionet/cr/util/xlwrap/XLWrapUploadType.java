@@ -17,7 +17,7 @@ public enum XLWrapUploadType {
     OBSERVATION("Observations", "File containing Digital Agenda Scoreboard observations");
 
     /** */
-    private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@";
+    private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@/";
     public static final String MAPPING_FILE_EXTENSION = "trig";
 
     /** */

@@ -87,4 +87,6 @@ public interface Subjects {
 
     String SKOS_CONCEPT = "http://www.w3.org/2004/02/skos/core#Concept";
     String SKOS_CONCEPT_SCHEME = "http://www.w3.org/2004/02/skos/core#ConceptScheme";
+
+    String DCAT_WEB_SERVICE = "http://www.w3.org/ns/dcat#WebService";
 }

@@ -24,6 +24,9 @@ public interface ScoreboardSparqlDAO extends DAO {
     /** */
     public static final String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
 
+    /** */
+    public static final String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
+
     /**
      * Return URI-label pairs of codelists that have type {@link Subjects.SKOS_CONCEPT_SCHEME} and whose URI starts with the given
      * input string.

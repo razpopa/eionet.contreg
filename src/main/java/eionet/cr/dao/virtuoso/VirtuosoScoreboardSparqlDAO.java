@@ -115,32 +115,45 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         RepositoryConnection repoConn = null;
         try {
             repoConn = SesameUtil.getRepositoryConnection();
-
+            repoConn.setAutoCommit(false);
             ValueFactory vf = repoConn.getValueFactory();
 
-            // Value URIs
+            // Predicate URIs.
+            URI identifierPredicateURI = vf.createURI(Predicates.DCTERMS_IDENTIFIER);
+            URI typePredicateURI = vf.createURI(Predicates.RDF_TYPE);
+            URI titlePredicateURI = vf.createURI(Predicates.DCTERMS_TITLE);
+            URI descriptionPredicateURI = vf.createURI(Predicates.DCTERMS_DESCRIPTION);
+            URI distributionPredicateURI = vf.createURI(Predicates.DCAT_DISTRIBUTION);
+            URI accessUrlPredicateURI = vf.createURI(Predicates.DCAT_ACCESS_URL);
+            URI modifiedPredicateURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
+            URI labelPredicateURI = vf.createURI(Predicates.RDFS_LABEL);
+            URI dcFormatPredicateURI = vf.createURI(Predicates.DCTERMS_FORMAT);
+            URI ecodpFormatPredicateURI = vf.createURI(Predicates.ECODP_FORMAT);
+            URI dsdPredicateURI = vf.createURI(Predicates.DATACUBE_STRUCTURE);
+
+            // Some value URIs
             URI identifierURI = vf.createURI(DATASET_URI_PREFIX + identifier);
             URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
+            URI distributionURI = vf.createURI(identifierURI + "/distribution");
+            URI accessURL = vf.createURI(StringUtils.replace(identifierURI.stringValue(), "/dataset/", "/data/"));
+            URI dcFormatUri = vf.createURI("http://publications.europa.eu/resource/authority/file-type/RDF_XML");
             Literal dateModified = vf.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME);
 
-            // Predicate URIs.
-            URI typeURI = vf.createURI(Predicates.RDF_TYPE);
-            URI titleURI = vf.createURI(Predicates.DCTERMS_TITLE);
-            URI descriptionURI = vf.createURI(Predicates.DCTERMS_DESCRIPTION);
-            URI distributionURI = vf.createURI(Predicates.RADION_DISTRIBUTION);
-            URI modifiedURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
-            URI labelURI = vf.createURI(Predicates.RDFS_LABEL);
-            URI structureURI = vf.createURI(Predicates.DATACUBE_STRUCTURE);
+            // Add properties for the dataset itself
+            repoConn.add(identifierURI, identifierPredicateURI, identifierURI, graphURI);
+            repoConn.add(identifierURI, typePredicateURI, vf.createURI(Subjects.DATACUBE_DATA_SET), graphURI);
+            repoConn.add(identifierURI, titlePredicateURI, vf.createLiteral(dctermsTitle), graphURI);
+            repoConn.add(identifierURI, labelPredicateURI, vf.createLiteral(identifier), graphURI);
+            repoConn.add(identifierURI, descriptionPredicateURI, vf.createLiteral(dctermsDescription), graphURI);
+            repoConn.add(identifierURI, distributionPredicateURI, distributionURI, graphURI);
+            repoConn.add(identifierURI, modifiedPredicateURI, dateModified, graphURI);
+            repoConn.add(identifierURI, dsdPredicateURI, vf.createURI(DEFAULT_DSD_URI), graphURI);
 
-            repoConn.setAutoCommit(false);
-
-            repoConn.add(identifierURI, typeURI, vf.createURI(Subjects.DATACUBE_DATA_SET), graphURI);
-            repoConn.add(identifierURI, titleURI, vf.createLiteral(dctermsTitle), graphURI);
-            repoConn.add(identifierURI, labelURI, vf.createLiteral(identifier), graphURI);
-            repoConn.add(identifierURI, descriptionURI, vf.createLiteral(dctermsDescription), graphURI);
-            repoConn.add(identifierURI, distributionURI, vf.createURI(identifierURI + "/distribution"), graphURI);
-            repoConn.add(identifierURI, modifiedURI, dateModified, graphURI);
-            repoConn.add(identifierURI, structureURI, vf.createURI(DATASET_STRUCTURE_PREFIX + identifier), graphURI);
+            // Add properties for linked resources
+            repoConn.add(distributionURI, typePredicateURI, vf.createURI(Subjects.DCAT_WEB_SERVICE), graphURI);
+            repoConn.add(distributionURI, accessUrlPredicateURI, accessURL, graphURI);
+            repoConn.add(distributionURI, dcFormatPredicateURI, dcFormatUri, graphURI);
+            repoConn.add(distributionURI, ecodpFormatPredicateURI, vf.createLiteral("rdf/xml"), graphURI);
 
             repoConn.commit();
             return identifierURI.stringValue();

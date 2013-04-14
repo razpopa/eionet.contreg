@@ -103,15 +103,15 @@
 
             <table>
                 <tr>
-                    <td><stripes:label for="txtTitle" class="question required" title="The dataset's unique identifier used by the system to distinguish it from others. Only digits, latin letters, underscores and dashes allowed!">Identifier:</stripes:label></td>
+                    <td><stripes:label for="txtTitle" class="question required" title="The dataset's unique identifier used by the system to distinguish it from others. Only digits, latin letters, underscores and dashes allowed! Will go into the dataset URI and also into the property identified by http://purl.org/dc/terms/identifier">Identifier:</stripes:label></td>
                     <td><stripes:text name="identifier" id="txtIdentifier" size="60"/></td>
                 </tr>
                 <tr>
-                    <td><stripes:label for="txtTitle" class="question required" title="The human-readable title of the dataset. Any free text.">Title:</stripes:label></td>
+                    <td><stripes:label for="txtTitle" class="question required" title="Friendly name of the dataset. Any free text allowed here. Will go into the property identified by http://purl.org/dc/terms/title">Title:</stripes:label></td>
                     <td><stripes:text name="dctermsTitle" id="txtTitle" size="80"/></td>
                 </tr>
                 <tr>
-                    <td><stripes:label for="txtDescription" class="question" title="The human-readable short description of the dataset. Any free text.">Description:</stripes:label></td>
+                    <td><stripes:label for="txtDescription" class="question" title="Humanly understandable detailed description of the dataset. Any free text allowed here. Will go into the property identified by http://purl.org/dc/terms/description">Description:</stripes:label></td>
                     <td>
                         <stripes:textarea id="txtDescription" name="dctermsDescription" cols="80" rows="10"/>
                     </td>
