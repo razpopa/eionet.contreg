@@ -133,7 +133,8 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
             // Some value URIs
             URI identifierURI = vf.createURI(DATASET_URI_PREFIX + identifier);
-            URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
+            //URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
+            URI graphURI = identifierURI;
             URI distributionURI = vf.createURI(identifierURI + "/distribution");
             URI accessURL = vf.createURI(StringUtils.replace(identifierURI.stringValue(), "/dataset/", "/data/"));
             URI dcFormatUri = vf.createURI("http://publications.europa.eu/resource/authority/file-type/RDF_XML");

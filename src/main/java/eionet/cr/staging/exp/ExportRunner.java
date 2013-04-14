@@ -362,6 +362,7 @@ public class ExportRunner extends Thread {
         datasetValueURI = vf.createURI(datasetUri);
 
         graphURI = datasetValueURI;
+        graphURI = vf.createURI(StringUtils.replace(datasetUri, "/dataset/", "/data/"));
     }
 
     /**

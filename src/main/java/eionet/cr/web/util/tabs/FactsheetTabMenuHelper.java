@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+
 import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
@@ -139,13 +141,9 @@ public final class FactsheetTabMenuHelper {
         te2.addParam("uri", subject.getUri());
         result.add(te2);
 
-        if (uriIsHarvestSource || uriIsGraph) {
+        if (displayObjectsInSourceTab()) {
 
-            title = uriIsHarvestSource ? TabId.OBJECTS_IN_SOURCE.getTitle() : "Graph contents";
-
-            TabElement te3 = new TabElement(TabId.OBJECTS_IN_SOURCE, title, "/objectsInSource.action", selectedTab);
-            te3.setEvent("search");
-            te3.addParam("uri", subject.getUri());
+            TabElement te3 = createObjectsInSourceTab(selectedTab);
             result.add(te3);
         }
 
@@ -257,6 +255,56 @@ public final class FactsheetTabMenuHelper {
      */
     public boolean isUriIsGraph() {
         return uriIsGraph;
+    }
+
+    /**
+     * @return
+     */
+    private boolean displayObjectsInSourceTab() {
+        return uriIsHarvestSource || uriIsGraph || rdfTypes.contains(Subjects.DATACUBE_DATA_SET) || isScoreboardCodelist();
+    }
+
+    /**
+     * @param selectedTab
+     * @param title
+     * @return
+     */
+    private TabElement createObjectsInSourceTab(TabId selectedTab) {
+
+        String tabTitle = null;
+        String factsheetUri = null;
+        String graphUri = subject.getUri();
+
+        if (rdfTypes.contains(Subjects.DATACUBE_DATA_SET)) {
+            tabTitle = "Dataset contents";
+            factsheetUri = graphUri;
+
+            try {
+                String newGraphUri = StringUtils.replace(graphUri, "/dataset/", "/data/");
+                if (DAOFactory.get().getDao(HelperDAO.class).isGraphExists(newGraphUri)) {
+                    graphUri = newGraphUri;
+                }
+            } catch (DAOException e) {
+                // Ignore deliberately
+            }
+        }
+        else if (isScoreboardCodelist()) {
+            tabTitle = "Codelist members";
+            factsheetUri = graphUri;
+            graphUri = graphUri + "/";
+        }
+        else {
+            tabTitle = uriIsHarvestSource ? TabId.OBJECTS_IN_SOURCE.getTitle() : "Graph contents";
+        }
+
+        TabElement tab = new TabElement(TabId.OBJECTS_IN_SOURCE, tabTitle, "/objectsInSource.action", selectedTab);
+        tab.setEvent("search");
+        tab.addParam("uri", graphUri);
+        if (StringUtils.isNotBlank(factsheetUri)) {
+            tab.addParam("factsheetUri", factsheetUri);
+        }
+
+        return tab;
     }
 
     /**

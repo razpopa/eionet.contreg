@@ -108,6 +108,9 @@
                             <stripes:link beanclass="${actionBean.objectsInSourceActionBeanClass.name}">
                                 <stripes:param name="uri" value="${actionBean.uploadedGraphUri}"/>
                                 <stripes:param name="search" value=""/>
+                                <c:if test="${fn:contains(actionBean.uploadedGraphUri, '/data/')}">
+                                    <stripes:param name="factsheetUri" value="${fn:replace(actionBean.uploadedGraphUri, '/data/','/dataset/')}"/>
+                                </c:if>
                                 <c:out value="${actionBean.uploadedGraphUri}"/>
                             </stripes:link>
                         </p>

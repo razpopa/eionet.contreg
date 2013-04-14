@@ -7,6 +7,9 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
+
+import org.apache.commons.lang.StringUtils;
+
 import eionet.cr.common.Predicates;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
@@ -45,6 +48,9 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     /** */
     private List<TabElement> tabs;
 
+    /** */
+    private String factsheetUri;
+
     /**
      *
      * @return
@@ -52,12 +58,7 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
      */
     @DefaultHandler
     public Resolution init() throws DAOException {
-        HelperDAO helperDAO = DAOFactory.get().getDao(HelperDAO.class);
-        SubjectDTO subject = helperDAO.getSubject(uri);
-
-        FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
-        tabs = helper.getTabs(TabId.OBJECTS_IN_SOURCE);
-        return new ForwardResolution("/pages/factsheet/objectsInSource.jsp");
+        return search();
     }
 
     /*
@@ -79,10 +80,13 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
             matchCount = result.getLeft();
         }
 
+        if (StringUtils.isBlank(factsheetUri)) {
+            factsheetUri = uri;
+        }
         HelperDAO helperDAO = DAOFactory.get().getDao(HelperDAO.class);
-        SubjectDTO subject = helperDAO.getFactsheet(uri, null, null);
+        SubjectDTO subject = helperDAO.getSubject(factsheetUri);
 
-        FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(uri, subject, factory.getDao(HarvestSourceDAO.class));
+        FactsheetTabMenuHelper helper = new FactsheetTabMenuHelper(factsheetUri, subject, factory.getDao(HarvestSourceDAO.class));
         tabs = helper.getTabs(TabId.OBJECTS_IN_SOURCE);
 
         return new ForwardResolution("/pages/factsheet/objectsInSource.jsp");
@@ -112,40 +116,67 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
         return list;
     }
 
+    /**
+     * @return
+     */
     public String getUri() {
         return uri;
     }
 
+    /**
+     * @param uri
+     */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    /**
+     * @return
+     */
     public long getUriHash() {
         return uriHash;
     }
 
+    /**
+     * @param uriHash
+     */
     public void setUriHash(long uriHash) {
         this.uriHash = uriHash;
     }
 
+    /**
+     * @return
+     */
     public long getAnonHash() {
         return anonHash;
     }
 
+    /**
+     * @param anonHash
+     */
     public void setAnonHash(long anonHash) {
         this.anonHash = anonHash;
     }
 
+    /**
+     * @return
+     */
     public boolean isNoCriteria() {
         return noCriteria;
     }
 
+    /**
+     * @param noCriteria
+     */
     public void setNoCriteria(boolean noCriteria) {
         this.noCriteria = noCriteria;
     }
 
     /**
      * @return the tabs
+     */
+    /**
+     * @return
      */
     public List<TabElement> getTabs() {
         return tabs;
@@ -154,12 +185,18 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     /**
      * @param tabs the tabs to set
      */
+    /**
+     * @param tabs
+     */
     public void setTabs(List<TabElement> tabs) {
         this.tabs = tabs;
     }
 
     /**
      * @return the skipAnonymous
+     */
+    /**
+     * @return
      */
     public boolean isSkipAnonymous() {
         return skipAnonymous;
@@ -168,8 +205,25 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     /**
      * @param skipAnonymous the skipAnonymous to set
      */
+    /**
+     * @param includeAnonymous
+     */
     public void setSkipAnonymous(boolean includeAnonymous) {
         this.skipAnonymous = includeAnonymous;
+    }
+
+    /**
+     * @return the factsheetUri
+     */
+    public String getFactsheetUri() {
+        return factsheetUri;
+    }
+
+    /**
+     * @param factsheetUri the factsheetUri to set
+     */
+    public void setFactsheetUri(String factsheetUri) {
+        this.factsheetUri = factsheetUri;
     }
 
 }

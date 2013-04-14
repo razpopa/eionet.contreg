@@ -127,11 +127,12 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
         try {
             String dataset = isObservationsUpload ? targetDataset : null;
+            dataset = StringUtils.replace(dataset, "/dataset/", "/data/");
             boolean clear = isObservationsUpload ? clearDataset : clearGraph;
             int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear);
             addSystemMessage(resourceCount + " resources successfully imported!\n Click on on the below link to explore them further.");
 
-            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? targetDataset : uploadType.getGraphUri());
+            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? dataset : uploadType.getGraphUri());
             return new RedirectResolution(getClass());
 
         } catch (IOException e) {
