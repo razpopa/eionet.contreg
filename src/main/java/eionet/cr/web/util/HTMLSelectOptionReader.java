@@ -3,11 +3,12 @@ package eionet.cr.web.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.openrdf.query.Binding;
+import org.apache.commons.lang.StringUtils;
 import org.openrdf.query.BindingSet;
 
 import eionet.cr.dao.readers.ResultSetMixedReader;
 import eionet.cr.dao.readers.ResultSetReaderException;
+import eionet.cr.util.URIUtil;
 
 /**
  * A query result set reader for {@link HTMLSelectOption}.
@@ -38,25 +39,21 @@ public class HTMLSelectOptionReader extends ResultSetMixedReader<HTMLSelectOptio
             return;
         }
 
-        int i = 0;
-        HTMLSelectOption option = new HTMLSelectOption();
-        for (Binding binding : bindingSet) {
-            i++;
-            String bindingValue = binding.getValue() == null ? null : binding.getValue().stringValue();
-            if (i == 1) {
-                option.setValue(bindingValue);
-            }
-            else if (i == 2) {
-                option.setLabel(bindingValue);
-            }
-            else if (i == 3) {
-                option.setTitle(bindingValue);
-            }
+        String value = getStringValue(bindingSet, "object");
+        String label = getStringValue(bindingSet, "label");
+        if (StringUtils.isBlank(label)) {
+            label = URIUtil.extractURILabel(value, value);
         }
 
-        if (bindingSet.size() <= 2) {
-            option.setTitle(option.getLabel());
+        String title = getStringValue(bindingSet, "title");
+        if (StringUtils.isBlank(title)) {
+            title = label;
         }
+
+        HTMLSelectOption option = new HTMLSelectOption();
+        option.setValue(value);
+        option.setTitle(title);
+        option.setLabel(label);
 
         resultList.add(option);
     }

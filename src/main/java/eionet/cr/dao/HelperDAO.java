@@ -533,9 +533,10 @@ public interface HelperDAO extends DAO {
 
     /**
      *
-     * @param typeUris
+     * @param resourceUri
+     * @param resourceTypes
      * @return
      * @throws DAOException
      */
-    Map<String, HTMLSelectOption> getAddiblePropertiesForTypes(Collection<String> typeUris) throws DAOException;
+    Map<String, HTMLSelectOption> getAddibleProperties(String resourceUri, Collection<String> resourceTypes) throws DAOException;
 }

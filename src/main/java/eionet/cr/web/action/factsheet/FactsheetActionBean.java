@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -97,6 +99,12 @@ public class FactsheetActionBean extends AbstractActionBean {
     /** */
     private static final List<HTMLSelectOption> DATACUBE_DATASET_ADDBL_PROPS = createDataCubeDatasetAddibleProperties();
 
+    /** */
+    private static final List<HTMLSelectOption> COMMON_ADDBL_PROPS = createCommonAddibleProperties();
+
+    /** */
+    private static final Set<String> EDITABLE_TYPES = createEditableTypes();
+
     /** URI by which the factsheet has been requested. */
     private String uri;
 
@@ -161,6 +169,9 @@ public class FactsheetActionBean extends AbstractActionBean {
 
     /** */
     private SubjectDTO fullSubjectDTO;
+
+    /** */
+    private Boolean isAllEditable = null;
 
     /**
      *
@@ -355,20 +366,25 @@ public class FactsheetActionBean extends AbstractActionBean {
      */
     public Resolution save() throws DAOException {
 
-        SubjectDTO subjectDTO = new SubjectDTO(uri, anonymous);
+        SubjectDTO subjectDTO = DAOFactory.get().getDao(HelperDAO.class).getSubject(uri);
+        Collection<String> types = subjectDTO == null ? new HashSet<String>() : subjectDTO.getObjectValues(Predicates.RDF_TYPE);
+        subjectDTO = new SubjectDTO(uri, anonymous);
+
+        String sourceUri = types.contains(Subjects.DATACUBE_DATA_SET) ? uri : getUser().getRegistrationsUri();
 
         if (propertyUri.equals(Predicates.CR_TAG)) {
             List<String> tags = Util.splitStringBySpacesExpectBetweenQuotes(propertyValue);
 
             for (String tag : tags) {
                 ObjectDTO objectDTO = new ObjectDTO(tag, true);
-                objectDTO.setSourceUri(getUser().getRegistrationsUri());
+                objectDTO.setSourceUri(sourceUri);
                 subjectDTO.addObject(propertyUri, objectDTO);
             }
         } else {
             // other properties
-            ObjectDTO objectDTO = new ObjectDTO(propertyValue, true);
-            objectDTO.setSourceUri(getUser().getRegistrationsUri());
+            boolean isLiteral = URLUtil.isURL(propertyValue) == false;
+            ObjectDTO objectDTO = new ObjectDTO(propertyValue, isLiteral);
+            objectDTO.setSourceUri(sourceUri);
             subjectDTO.addObject(propertyUri, objectDTO);
         }
 
@@ -423,6 +439,9 @@ public class FactsheetActionBean extends AbstractActionBean {
             HelperDAO helperDao = factory.getDao(HelperDAO.class);
             helperDao.deleteTriples(triples);
             helperDao.updateUserHistory(getUser(), uri);
+        }
+        else{
+            addWarningMessage("You selected no triples to delete!");
         }
 
         return new RedirectResolution(this.getClass(), "edit").addParameter("uri", uri);
@@ -486,15 +505,12 @@ public class FactsheetActionBean extends AbstractActionBean {
 
             // Get addible properties from the repository.
             HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
-            Map<String, HTMLSelectOption> options = dao.getAddiblePropertiesForTypes(rdfTypes);
+            Map<String, HTMLSelectOption> options = dao.getAddibleProperties(uri, rdfTypes);
 
             // Add some hard-coded addible properties.
-            options.put(Predicates.RDFS_LABEL, new HTMLSelectOption(Predicates.RDFS_LABEL, "Title"));
-            options.put(Predicates.CR_TAG, new HTMLSelectOption(Predicates.CR_TAG, "Tag"));
-            options.put(Predicates.RDFS_COMMENT, new HTMLSelectOption(Predicates.RDFS_COMMENT, "Other comments"));
-            options.put(Predicates.DC_DESCRIPTION, new HTMLSelectOption(Predicates.DC_DESCRIPTION, "Description"));
-            options.put(Predicates.CR_HAS_SOURCE, new HTMLSelectOption(Predicates.CR_HAS_SOURCE, "hasSource"));
-            options.put(Predicates.ROD_PRODUCT_OF, new HTMLSelectOption(Predicates.ROD_PRODUCT_OF, "productOf"));
+            for (HTMLSelectOption htmlSelectOption : COMMON_ADDBL_PROPS) {
+                options.put(htmlSelectOption.getValue(), htmlSelectOption);
+            }
 
             result = new ArrayList<HTMLSelectOption>();
             result.addAll(options.values());
@@ -899,6 +915,30 @@ public class FactsheetActionBean extends AbstractActionBean {
     }
 
     /**
+     * @return
+     */
+    public boolean isAllEditable() {
+
+        if (isAllEditable == null) {
+
+            isAllEditable = Boolean.FALSE;
+            Collection<String> types = fullSubjectDTO == null ? null : fullSubjectDTO.getObjectValues(Predicates.RDF_TYPE);
+            if (types != null && !types.isEmpty()) {
+                if (EDITABLE_TYPES != null && !EDITABLE_TYPES.isEmpty()) {
+
+                    for (String type : types) {
+                        if (EDITABLE_TYPES.contains(type)) {
+                            isAllEditable = Boolean.TRUE;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return isAllEditable.booleanValue();
+    }
+
+    /**
      *
      * @return
      */
@@ -942,5 +982,109 @@ public class FactsheetActionBean extends AbstractActionBean {
         result.add(option);
 
         return result;
+    }
+
+    /**
+     * @return
+     */
+    private static List<HTMLSelectOption> createCommonAddibleProperties() {
+
+        ArrayList<HTMLSelectOption> result = new ArrayList<HTMLSelectOption>();
+
+        HTMLSelectOption option = new HTMLSelectOption(Predicates.RDFS_LABEL, "Title");
+        option.setTitle("RDF Schema label, i.e. a human-readable name that applications "
+                + "can use for displaying in user interfaces. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.CR_TAG, "Tag");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.RDFS_COMMENT, "Comment");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_TITLE, "Title");
+        option.setTitle("DublinCore title. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_ABSTRACT, "Abstract");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_CONTRIBUTOR, "Contributor");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_CREATOR, "Creator");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_DATE, "Date");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_DESCRIPTION, "Description");
+        option.setTitle("DublinCore description, i.e. a human-readable description of the resource. May be any free text.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_FORMAT, "Format");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_IDENTIFIER, "Identifier");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_LANGUAGE, "Language");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_LICENSE, "Licenese");
+        option.setTitle("A legal document giving official permission to do something with the resource. " +
+                "Usually a URL pointing to the document.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_MODIFIED, "Modified");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_PUBLISHER, "Publisher");
+        option.setTitle("DublinCore publisher, i.e. a person, an organization, or a service that is the resource's publisher. "
+                + "May be any free text, but it is advised to use URLs.");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_RIGHTS, "Rights");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_SOURCE, "Source");
+        result.add(option);
+
+        option = new HTMLSelectOption(Predicates.DCTERMS_SUBJECT, "Subject");
+        result.add(option);
+
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private static Set<String> createEditableTypes() {
+
+        HashSet<String> set = new HashSet<String>();
+        set.add("http://purl.org/linked-data/cube#AttributeProperty");
+        set.add("http://purl.org/linked-data/cube#CodedProperty");
+        set.add("http://purl.org/linked-data/cube#ComponentSpecification");
+        set.add("http://purl.org/linked-data/cube#DataStructureDefinition");
+        set.add("http://purl.org/linked-data/cube#DimensionProperty");
+        set.add("http://purl.org/linked-data/sdmx#Concept");
+        set.add("http://purl.org/linked-data/sdmx#ConceptRole");
+        set.add("http://purl.org/linked-data/sdmx#DataStructureDefinition");
+        set.add("http://purl.org/linked-data/sdmx#IdentityRole");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/DimensionGroupProperty");
+        set.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
+        set.add("http://www.w3.org/2000/01/rdf-schema#Class");
+        set.add("http://www.w3.org/2004/02/skos/core#Concept");
+        set.add("http://www.w3.org/2004/02/skos/core#ConceptScheme");
+        set.add("http://www.w3.org/ns/dcat#WebService");
+        set.add("http://purl.org/linked-data/cube#DataSet");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/IndicatorGroup");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/Indicator");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/BreakdownGroup");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/Breakdown");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/UnitMeasure");
+        set.add("http://semantic.digital-agenda-data.eu/def/class/Source");
+        return set;
     }
 }

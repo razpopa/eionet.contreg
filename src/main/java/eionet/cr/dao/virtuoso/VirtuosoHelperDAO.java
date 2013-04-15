@@ -341,8 +341,8 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
      * SPARQL for properties defined by Dublin Core.
      */
     private static final String PROPS_DUBLINCORE_QUERY = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "select distinct ?property ?label ?label as ?title where "
-            + "{?property rdfs:label ?label . ?property rdf:type rdf:Property " + ". ?property rdfs:isDefinedBy <"
+            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + "select distinct ?object ?label ?label as ?title where "
+            + "{?object rdfs:label ?label . ?object rdf:type rdf:Property " + ". ?object rdfs:isDefinedBy <"
             + Subjects.DUBLIN_CORE_SOURCE_URL + ">}";
 
     /**
@@ -392,30 +392,45 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         return result;
     }
 
-    /**
+    /*
+     * (non-Javadoc)
      *
-     * @param typeUri
-     * @return
-     * @throws DAOException
+     * @see eionet.cr.dao.HelperDAO#getAddibleProperties(java.lang.String, java.util.Collection)
      */
     @Override
-    public Map<String, HTMLSelectOption> getAddiblePropertiesForTypes(Collection<String> typeUris) throws DAOException {
+    public Map<String, HTMLSelectOption> getAddibleProperties(String resourceUri, Collection<String> resourceTypes)
+            throws DAOException {
 
         // Initiate the result object.
         HashMap<String, HTMLSelectOption> result = new HashMap<String, HTMLSelectOption>();
 
-        if (CollectionUtils.isNotEmpty(typeUris)) {
-            // First, get all DublinCore properties.
-            HTMLSelectOptionReader reader = new HTMLSelectOptionReader();
-            executeSPARQL(PROPS_DUBLINCORE_QUERY, reader);
+        if (CollectionUtils.isNotEmpty(resourceTypes)) {
 
-            // Second, get properties for this particular type only.
+            // First, get all properties whose rdfs:domain is in the fiven types.
+
             Bindings bindings = new Bindings();
-            String subjectTypesCSV = SPARQLQueryUtil.urisToCSV(typeUris, "subjectValue", bindings);
+            String typesCSV = SPARQLQueryUtil.urisToCSV(resourceTypes, "typeValue", bindings);
             String sparql =
-                    "PREFIX rdfs: <" + Namespace.RDFS.getUri() + "> "
-                            + "select distinct ?object ?label WHERE { ?object rdfs:label ?label . ?object rdfs:domain ?o "
-                            + ". FILTER (?o IN (" + subjectTypesCSV + "))}";
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                            + "select distinct ?object ?label where { ?object rdfs:domain ?o "
+                            + "filter (?o IN (" + typesCSV + ")) optional {?object rdfs:label ?label}}";
+
+            HTMLSelectOptionReader reader = new HTMLSelectOptionReader();
+            executeSPARQL(sparql, bindings, reader);
+
+            // Second, get all properties already present for the given resource.
+            bindings = new Bindings();
+            String urisToCSV = SPARQLQueryUtil.urisToCSV(Collections.singleton(resourceUri), "uriValue", bindings);
+            // @formatter:off
+            sparql = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                    "select\n" +
+                    "  distinct ?object ?label\n" +
+                    "where {\n" +
+                    "  ?s ?object ?value\n" +
+                    "  filter (?s in (" + urisToCSV + "))\n" +
+                    "  optional {?object rdfs:label ?label}\n" +
+                    "}";
+            // @formatter:on
             executeSPARQL(sparql, bindings, reader);
 
             // Finally, sort out the duplicates (i.e. an option by the same value is considered duplicate).
