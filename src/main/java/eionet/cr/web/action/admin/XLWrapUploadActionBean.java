@@ -3,7 +3,9 @@ package eionet.cr.web.action.admin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +21,11 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFHandlerException;
 
 import at.jku.xlwrap.common.XLWrapException;
 import eionet.cr.common.Predicates;
@@ -26,14 +33,18 @@ import eionet.cr.common.Subjects;
 import eionet.cr.common.TempFilePathGenerator;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
+import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.HelperDAO;
+import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.SearchResultDTO;
+import eionet.cr.harvest.OnDemandHarvester;
 import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.Pair;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.factsheet.ObjectsInSourceActionBean;
+import eionet.cr.web.security.CRUser;
 
 /**
  * Action bean for uploading an MS Excel or OpenDocument spreadsheet file into the RDF model and triple store. Pre-configured types
@@ -111,7 +122,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
                 addGlobalValidationError("Target dataset must be selected!");
                 return new ForwardResolution(JSP);
             }
-            else{
+            else {
                 isObservationsUpload = true;
             }
         }
@@ -129,8 +140,13 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             String dataset = isObservationsUpload ? targetDataset : null;
             dataset = StringUtils.replace(dataset, "/dataset/", "/data/");
             boolean clear = isObservationsUpload ? clearDataset : clearGraph;
-            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear);
-            addSystemMessage(resourceCount + " resources successfully imported!\n Click on on the below link to explore them further.");
+            StatementListener stmtListener = new StatementListener();
+
+            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear, stmtListener);
+            startPostHarvests(stmtListener.getHarvestUris());
+
+            addSystemMessage(resourceCount
+                    + " resources successfully imported!\n Click on on the below link to explore them further.");
 
             getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? dataset : uploadType.getGraphUri());
             return new RedirectResolution(getClass());
@@ -283,5 +299,118 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public boolean isClearDataset() {
         return clearDataset;
+    }
+
+    /**
+     *
+     * @param harvestUris
+     */
+    private void startPostHarvests(Set<String> harvestUris) {
+
+        if (harvestUris == null || harvestUris.isEmpty()) {
+            return;
+        }
+
+        LOGGER.debug("Starting post-harvests...");
+        HarvestSourceDAO dao = DAOFactory.get().getDao(HarvestSourceDAO.class);
+        for (String uri : harvestUris) {
+            LOGGER.debug("Going to harvest " + uri);
+            startPostHarvest(uri, dao);
+        }
+    }
+
+    /**
+     *
+     * @param uri
+     * @param dao
+     */
+    private void startPostHarvest(String uri, HarvestSourceDAO dao) {
+
+        HarvestSourceDTO dto = new HarvestSourceDTO();
+        dto.setUrl(StringUtils.substringBefore(uri, "#"));
+        dto.setEmails("");
+        dto.setIntervalMinutes(0);
+        dto.setPrioritySource(false);
+        dto.setOwner(null);
+        try {
+            dao.addSourceIgnoreDuplicate(dto);
+            OnDemandHarvester.harvest(dto.getUrl(), CRUser.APPLICATION.getUserName());
+        } catch (Exception e) {
+            LOGGER.error("Failed to harvest " + uri, e);
+        }
+    }
+
+    /**
+     * @author jaanus
+     */
+    private static final class StatementListener implements RDFHandler {
+
+        /** */
+        private HashSet<String> harvestUris = new HashSet<String>();
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see org.openrdf.rio.RDFHandler#endRDF()
+         */
+        @Override
+        public void endRDF() throws RDFHandlerException {
+            // Auto-generated method stub
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see org.openrdf.rio.RDFHandler#handleComment(java.lang.String)
+         */
+        @Override
+        public void handleComment(String arg0) throws RDFHandlerException {
+            // Auto-generated method stub
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see org.openrdf.rio.RDFHandler#handleNamespace(java.lang.String, java.lang.String)
+         */
+        @Override
+        public void handleNamespace(String arg0, String arg1) throws RDFHandlerException {
+            // Auto-generated method stub
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see org.openrdf.rio.RDFHandler#handleStatement(org.openrdf.model.Statement)
+         */
+        @Override
+        public void handleStatement(Statement stmt) throws RDFHandlerException {
+
+            URI predicateURI = stmt.getPredicate();
+            if (Predicates.DAS_TIMEPERIOD.equals(predicateURI.stringValue())) {
+                Value object = stmt.getObject();
+                if (object instanceof URI) {
+                    harvestUris.add(object.stringValue());
+                }
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see org.openrdf.rio.RDFHandler#startRDF()
+         */
+        @Override
+        public void startRDF() throws RDFHandlerException {
+            // Auto-generated method stub
+        }
+
+        /**
+         * @return the harvestUris
+         */
+        public HashSet<String> getHarvestUris() {
+            return harvestUris;
+        }
+
     }
 }

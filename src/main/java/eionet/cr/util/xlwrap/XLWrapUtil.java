@@ -14,6 +14,7 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openrdf.OpenRDFException;
+import org.openrdf.rio.RDFHandler;
 
 import at.jku.xlwrap.common.XLWrapException;
 import at.jku.xlwrap.exec.XLWrapMaterializer;
@@ -46,13 +47,15 @@ public class XLWrapUtil {
      * @param spreadsheetFile
      * @param targetDataset
      * @param clear
+     * @param stmtListener
      * @return
      * @throws MalformedURLException
      * @throws IOException
      * @throws XLWrapException
      * @throws OpenRDFException
      */
-    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, String targetDataset, boolean clear) throws IOException, XLWrapException, OpenRDFException {
+    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, String targetDataset, boolean clear, RDFHandler stmtListener)
+            throws IOException, XLWrapException, OpenRDFException {
 
         File template = uploadType.getMappingTemplate();
         File target = TempFilePathGenerator.generate(XLWrapUploadType.MAPPING_FILE_EXTENSION);
@@ -70,7 +73,7 @@ public class XLWrapUtil {
 
             createMappingFile(template, target, properties);
             String graphUri = StringUtils.isBlank(targetDataset) ? uploadType.getGraphUri() : targetDataset;
-            return importMapping(target, graphUri, clear);
+            return importMapping(target, graphUri, clear, stmtListener);
         } finally {
             FileDeletionJob.register(target);
         }
@@ -81,15 +84,18 @@ public class XLWrapUtil {
      * @param mappingFile
      * @param graphUri
      * @param clearGraph
+     * @param stmtListener
      * @return
      * @throws IOException
      * @throws IOException
      * @throws XLWrapException
      * @throws OpenRDFException
      */
-    public static int importMapping(File mappingFile, String graphUri, boolean clearGraph) throws IOException, XLWrapException, OpenRDFException {
+    public static int importMapping(File mappingFile, String graphUri, boolean clearGraph, RDFHandler stmtListener)
+            throws IOException, XLWrapException,
+            OpenRDFException {
 
-        return importMapping(mappingFile.toURI().toURL(), graphUri, clearGraph);
+        return importMapping(mappingFile.toURI().toURL(), graphUri, clearGraph, stmtListener);
     }
 
     /**
@@ -97,19 +103,21 @@ public class XLWrapUtil {
      * @param mappingFileURL
      * @param graphUri
      * @param clearGraph
+     * @param stmtListener
      * @return
      * @throws IOException
      * @throws XLWrapException
      * @throws OpenRDFException
      */
-    public static int importMapping(URL mappingFileURL, String graphUri, boolean clearGraph) throws IOException, XLWrapException, OpenRDFException {
+    public static int importMapping(URL mappingFileURL, String graphUri, boolean clearGraph, RDFHandler stmtListener)
+            throws IOException, XLWrapException, OpenRDFException {
 
         Model model = null;
         try {
             XLWrapMapping mapping = MappingParser.parse(mappingFileURL.toString());
             XLWrapMaterializer materializer = new XLWrapMaterializer();
             model = materializer.generateModel(mapping);
-            Pair<Integer, Integer> saveResult = JenaUtil.saveModel(model, graphUri, clearGraph);
+            Pair<Integer, Integer> saveResult = JenaUtil.saveModel(model, graphUri, clearGraph, stmtListener);
             Integer resourceCount = saveResult.getRight();
             return resourceCount;
         } finally {
@@ -162,8 +170,10 @@ public class XLWrapUtil {
      */
     public static void main(String[] args) throws IOException, XLWrapException, OpenRDFException {
 
-        File mappingFile = new File("C:/dev/projects/DigitalAgendaScoreboard/apphome/harvests/eionet.cr.tempfile-1363623700877-029a7842-71bd-45ee-a984-90109c56f4a3.trig");
-        int stmtCount = XLWrapUtil.importMapping(mappingFile, "http://semantic.digital-agenda-data.eu/testGraphs/xlwrap", true);
+        File mappingFile =
+                new File(
+                        "C:/dev/projects/DigitalAgendaScoreboard/apphome/harvests/eionet.cr.tempfile-1363623700877-029a7842-71bd-45ee-a984-90109c56f4a3.trig");
+        int stmtCount = XLWrapUtil.importMapping(mappingFile, "http://semantic.digital-agenda-data.eu/testGraphs/xlwrap", true, null);
         System.out.println("Done. " + stmtCount + " triples added!");
     }
 }

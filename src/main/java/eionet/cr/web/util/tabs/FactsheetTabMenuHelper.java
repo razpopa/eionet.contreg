@@ -278,15 +278,7 @@ public final class FactsheetTabMenuHelper {
         if (rdfTypes.contains(Subjects.DATACUBE_DATA_SET)) {
             tabTitle = "Dataset contents";
             factsheetUri = graphUri;
-
-            try {
-                String newGraphUri = StringUtils.replace(graphUri, "/dataset/", "/data/");
-                if (DAOFactory.get().getDao(HelperDAO.class).isGraphExists(newGraphUri)) {
-                    graphUri = newGraphUri;
-                }
-            } catch (DAOException e) {
-                // Ignore deliberately
-            }
+            graphUri = StringUtils.replace(graphUri, "/dataset/", "/data/");
         }
         else if (isScoreboardCodelist()) {
             tabTitle = "Codelist members";

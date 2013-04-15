@@ -53,7 +53,7 @@
     dad-prop:breakdown "URI('http://semantic.digital-agenda-data.eu/codelist/breakdown/' & URLENCODE(LCASE(D2)))"^^xl:Expr ;
     dad-prop:unit-measure "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(LCASE(E2)))"^^xl:Expr ;
     dad-prop:ref-area "URI('http://eurostat.linked-statistics.org/dic/geo#' & URLENCODE(UCASE(B2)))"^^xl:Expr ;
-    dad-prop:time-period "URI('http://reference.data.gov.uk/id/year/' & URLENCODE(UCASE(A2)))"^^xl:Expr ;
+    dad-prop:time-period "URI('http://reference.data.gov.uk/id/gregorian-year/' & URLENCODE(UCASE(A2)))"^^xl:Expr ;
     dad-prop:flag "IF(EMPTY(G2), G2, URI('http://eurostat.linked-statistics.org/dic/flags#' & URLENCODE(LCASE(G2))))"^^xl:Expr ;
     dad-prop:note "H2"^^xl:Expr ;
 }

@@ -8,7 +8,9 @@ import org.openrdf.model.BNode;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.rio.RDFHandler;
 
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -41,10 +43,12 @@ public class JenaUtil {
      * @param model
      * @param graphUri
      * @param clearGraph
+     * @param stmtListener
      * @return
      * @throws OpenRDFException
      */
-    public static Pair<Integer, Integer> saveModel(Model model, String graphUri, boolean clearGraph) throws OpenRDFException {
+    public static Pair<Integer, Integer> saveModel(Model model, String graphUri, boolean clearGraph, RDFHandler stmtListener)
+            throws OpenRDFException {
 
         HashSet<String> distinctNonAnonymousResources = new HashSet<String>();
         RepositoryConnection repoConn = null;
@@ -105,7 +109,12 @@ public class JenaUtil {
                 if (clearGraph && addedStmtCounter == 0) {
                     repoConn.clear(graphURI);
                 }
+
                 repoConn.add(sesameSubject, sesamePredicate, sesameObject, graphURI);
+                if (stmtListener != null) {
+                    stmtListener.handleStatement(new ContextStatementImpl(sesameSubject, sesamePredicate, sesameObject, graphURI));
+                }
+
                 addedStmtCounter++;
                 if (!(sesameSubject instanceof BNode)) {
                     distinctNonAnonymousResources.add(sesameSubject.stringValue());
