@@ -16,8 +16,8 @@
     </context-param>
 
     <context-param>
-        <param-name>useEeaTemplate</param-name>
-        <param-value>false</param-value>
+        <param-name>templateJsp</param-name>
+        <param-value>${templateJsp}</param-value>
     </context-param>
 
     <context-param>

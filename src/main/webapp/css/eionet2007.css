@@ -382,3 +382,8 @@ div.documentContent .expandingArea.active > pre {
   background-image: none;
   background-color: white;
 }
+
+a#eulink {
+    padding-left: 40px;
+    background: url('../images/eu_logo.png') center left no-repeat;
+}
