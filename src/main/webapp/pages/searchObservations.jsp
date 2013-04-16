@@ -2,7 +2,7 @@
 
 <%@ include file="/pages/common/taglibs.jsp"%>
 
-<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Browse DataCube observations">
+<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Search DataCube observations">
 
     <stripes:layout-component name="head">
         <script type="text/javascript">

@@ -3,7 +3,7 @@
 <%@ include file="/pages/common/taglibs.jsp"%>
 
 
-<%@page import="net.sourceforge.stripes.action.ActionBean"%><stripes:layout-render name="/pages/common/template.jsp" pageTitle="Harvesting Statistics">
+<%@page import="net.sourceforge.stripes.action.ActionBean"%><stripes:layout-render name="/pages/common/template.jsp" pageTitle="Administration pages">
 
     <stripes:layout-component name="contents">
 

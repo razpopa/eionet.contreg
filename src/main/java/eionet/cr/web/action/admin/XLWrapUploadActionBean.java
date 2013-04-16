@@ -35,6 +35,7 @@ import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.HelperDAO;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.harvest.OnDemandHarvester;
@@ -87,6 +88,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /** */
     private boolean clearDataset;
+
+    /** Fields populated from the "create new dataset" form. */
+    private String newDatasetIdentifier;
+    private String newDatasetTitle;
+    private String newDatasetDescription;
 
     /**
      *
@@ -178,6 +184,58 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public Resolution cancel() {
         return new RedirectResolution(AdminWelcomeActionBean.class);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Resolution createNewDataset() {
+
+        ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
+        try {
+            String datasetUri = dao.createDataCubeDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
+            addSystemMessage("A new dataset with identifier \"" + newDatasetIdentifier + "\" successfully created!");
+            return new RedirectResolution(getClass()).addParameter("targetDataset", datasetUri)
+                    .addParameter("clearDataset", clearDataset).addParameter("uploadType", XLWrapUploadType.OBSERVATION.name());
+        } catch (DAOException e) {
+            LOGGER.error("Dataset creation failed with technical error", e);
+            addWarningMessage("Dataset creation failed with technical error: " + e.getMessage());
+            return new ForwardResolution(JSP);
+        }
+    }
+
+    /**
+     * @throws DAOException
+     */
+    @ValidationMethod(on = {"createNewDataset"})
+    public void validateCreateNewDataset() throws DAOException {
+
+        if (getUser() == null || !getUser().isAdministrator()) {
+            addGlobalValidationError("You are not authorized for this operation!");
+            getContext().setSourcePageResolution(new RedirectResolution(getClass()));
+            return;
+        }
+
+        if (StringUtils.isBlank(newDatasetIdentifier)) {
+            addGlobalValidationError("The identifier is mandatory!");
+        } else {
+            String s = newDatasetIdentifier.replaceAll("[^a-zA-Z0-9-._]+", "");
+            if (!s.equals(newDatasetIdentifier)) {
+                addGlobalValidationError("Only digits, latin letters, underscores and dashes allowed in the identifier!");
+            } else {
+                boolean datasetExists = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).datasetExists(newDatasetIdentifier);
+                if (datasetExists) {
+                    addGlobalValidationError("A dataset already exists by this identifier: " + newDatasetIdentifier);
+                }
+            }
+        }
+
+        if (StringUtils.isBlank(newDatasetTitle)) {
+            addGlobalValidationError("The title is mandatory!");
+        }
+
+        getContext().setSourcePageResolution(new ForwardResolution(JSP));
     }
 
     /**
@@ -412,5 +470,26 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             return harvestUris;
         }
 
+    }
+
+    /**
+     * @param newDatasetIdentifier the newDatasetIdentifier to set
+     */
+    public void setNewDatasetIdentifier(String newDatasetIdentifier) {
+        this.newDatasetIdentifier = newDatasetIdentifier;
+    }
+
+    /**
+     * @param newDatasetTitle the newDatasetTitle to set
+     */
+    public void setNewDatasetTitle(String newDatasetTitle) {
+        this.newDatasetTitle = newDatasetTitle;
+    }
+
+    /**
+     * @param newDatasetDescription the newDatasetDescription to set
+     */
+    public void setNewDatasetDescription(String newDatasetDescription) {
+        this.newDatasetDescription = newDatasetDescription;
     }
 }

@@ -2,7 +2,7 @@
 
 <%@ include file="/pages/common/taglibs.jsp"%>
 
-<stripes:layout-render name="/pages/common/template.jsp" pageTitle="${initParam.appDispName}">
+<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Start page">
 
     <stripes:layout-component name="contents">
 <div style="float:right; background-color:white; width: 20em; padding-left: 1em;">
@@ -53,12 +53,13 @@
         </c:choose>
     </div>
 </div>
-        <h1>What is ${initParam.appDispName}?</h1>
+    <h1>What is ${initParam.appDispName}?</h1>
     <p>
-        ${initParam.appDispName} is an object-oriented search engine where you can search for the content of data in Eionet.
-        Being object-oriented means it understands what e.g. a measuring station is and can show what measurements
-        it has made.
-        Not all of the Eionet services are included, only those that have been specified by the administrators of this site.
+        ${initParam.appDispName} is a semantic repository of the data and metadata involved in the European Commission's Digital Agenda Scoreboard.
+        It is where the Scoreboard's data administrators can upload, import and inspect the Scoreboard's data and metadata. It servers as the
+        backend of the publicly available Digital Agenda Scoreboard website (i.e. frontend). The two communicate over SPARQL protocol, designed for
+        querying semantic repositories. Content in this site is not automatically published to the wider audience in the frontend:
+        this is controlled in the latter.
     </p>
     <h2>Simple search</h2>
     <p>
@@ -102,10 +103,12 @@
             <a href="simpleSearch.action">Simple search</a><br/>
             is the same quick-find search that is also displayed above.
         </li>
+<%--
         <li>
             <a href="deliverySearch.action">Search Reportnet deliveries</a><br/>
             is meant for dataflow managers to observe specific dataflows in the dimensions of country and year.
         </li>
+--%>
         <li>
             <a href="customSearch.action">Custom search</a><br/>
             enables you to choose the criteria you want to search by and offers picklists of existing values too.
@@ -114,19 +117,13 @@
             <a href="typeSearch.action">Type search</a><br/>
             finds all objects of the same type.
         </li>
+<%--
         <li>
             <a href="recentUploads.action">Recent uploads</a><br/>
             displays the latest content that CR has discovered, classified by certain content types.
         </li>
+--%>
         </ul>
-
-        <h2>Support</h2>
-        <p>
-        If you experience any problem using ${initParam.appDispName}, please let the Eionet Helpdesk know immediately.
-        The Helpdesk can be reached by phone on +37 2 508 4992 from Monday through Friday 9:00 to 17:00 CET.
-        You can also email the helpdesk at any time: <a href="mailto:helpdesk@eionet.europa.eu">helpdesk@eionet.europa.eu</a>.
-        Do not hesitate, we are here to help.
-        </p>
 
     </stripes:layout-component>
 </stripes:layout-render>

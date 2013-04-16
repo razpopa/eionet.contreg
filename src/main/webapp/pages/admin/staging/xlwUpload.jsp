@@ -7,6 +7,30 @@
     <stripes:layout-component name="head">
         <script type="text/javascript">
         // <![CDATA[
+
+            ( function($) {
+                $(document).ready(
+                    function(){
+
+                        // Actions for the display/closing of the "create new dataset" popup
+                        $("#createNewDatasetLink").click(function() {
+                            $('#createNewDatasetDialog').dialog('option','width', 800);
+                            $('#createNewDatasetDialog').dialog('open');
+                            return false;
+                        });
+
+                        $('#createNewDatasetDialog').dialog({
+                            autoOpen: false,
+                            width: 800
+                        });
+
+                        $("#closeCreateNewDatasetDialog").click(function() {
+                            $('#createNewDatasetDialog').dialog("close");
+                            return true;
+                        });
+                    });
+            } ) ( jQuery );
+
             function typeChanged(selectObj){
             	var value = selectObj.options[selectObj.selectedIndex].value;
             	if (value == 'OBSERVATION') {
@@ -85,7 +109,7 @@
                                         <stripes:option value="${dataset.left}" label="${dataset.right}"/>
                                     </c:forEach>
                                 </c:if>
-                            </stripes:select><br/>
+                            </stripes:select>&nbsp;&nbsp;<a href="#" id="createNewDatasetLink" title="Opens a pop-up where you can start a brand new dataset.">Create new &#187;</a><br/>
                             <stripes:checkbox name="clearDataset" id="chkClearDataset"/>&nbsp;<label for="chkClearDataset">Clear dataset before upload</label>
                         </td>
                     </tr>
@@ -118,6 +142,44 @@
                 </c:if>
 
             </crfn:form>
+        </div>
+
+        <%-- The "create new dataset" popup. Displayed when user clicks on the relevant popup link. --%>
+
+        <div id="createNewDatasetDialog" title="Create a new dataset">
+            <stripes:form beanclass="${actionBean.class.name}" method="post">
+
+                <p>
+                    The following properties are sufficient to create a new dataset. The ones mandatory, are marked with <img src="http://www.eionet.europa.eu/styles/eionet2007/mandatory.gif"/>.<br/>
+                    More information is displayed when placing the mouse over properties' labels.<br/>
+                    Once the dataset is created, you can add more properties on the dataset's detailed view page.
+                </p>
+
+                <table>
+                    <tr>
+                        <td><stripes:label for="txtTitle" class="question required" title="The dataset's unique identifier used by the system to distinguish it from others. Only digits, latin letters, underscores and dashes allowed! Will go into the dataset URI and also into the property identified by http://purl.org/dc/terms/identifier">Identifier:</stripes:label></td>
+                        <td><stripes:text name="newDatasetIdentifier" id="txtIdentifier" size="60"/></td>
+                    </tr>
+                    <tr>
+                        <td><stripes:label for="txtTitle" class="question required" title="Friendly name of the dataset. Any free text allowed here. Will go into the property identified by http://purl.org/dc/terms/title">Title:</stripes:label></td>
+                        <td><stripes:text name="newDatasetTitle" id="txtTitle" size="80"/></td>
+                    </tr>
+                    <tr>
+                        <td><stripes:label for="txtDescription" class="question" title="Humanly understandable detailed description of the dataset. Any free text allowed here. Will go into the property identified by http://purl.org/dc/terms/description">Description:</stripes:label></td>
+                        <td>
+                            <stripes:textarea name="newDatasetDescription" id="txtDescription" cols="80" rows="10"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-top:10px">
+                            <stripes:submit name="createNewDataset" value="Create"/>
+                            <input type="button" id="closeCreateNewDatasetDialog" value="Cancel"/>
+                        </td>
+                    </tr>
+                </table>
+
+            </stripes:form>
         </div>
 
     </stripes:layout-component>

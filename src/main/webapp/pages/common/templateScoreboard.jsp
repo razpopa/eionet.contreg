@@ -58,10 +58,10 @@
                 </div> <!-- toolribbon -->
 
                 <div id="pagehead">
-                    <a href="/"><img src="images/eea-print-logo.gif" alt="Logo" id="logo" /></a>
+                    <a href="/"><img src="images/european_commission_print_logo.gif" alt="Logo" id="logo" /></a>
                     <div id="networktitle">Digital Agenda Scoreboard</div>
                     <div id="sitetitle">${initParam.appDispName}</div>
-                    <div id="sitetagline">This service is part of Reportnet</div>
+                    <div id="sitetagline"></div>
                 </div> <!-- pagehead -->
 
                 <div id="menuribbon">
@@ -165,9 +165,9 @@
 
                 </div>
                 <div id="pagefoot" style="max-width: none;">
-                    <p><a href="mailto:cr@eionet.europa.eu">E-mail</a> | <a href="mailto:helpdesk@eionet.europa.eu?subject=Feedback from the ${initParam.appDispName} website">Feedback</a></p>
-                    <p><a href="http://www.eea.europa.eu/"><b>European Environment Agency</b></a>
-                    <br/>Kgs. Nytorv 6, DK-1050 Copenhagen K, Denmark - Phone: +45 3336 7100</p>
+                    <p><a href="mailto:cnect-desk@ec.europa.eu">E-mail</a> | <a href="mailto:cnect-desk@ec.europa.eu?subject=Feedback from the Scoreboard ${initParam.appDispName} website">Feedback</a></p>
+                    <p><a href="http://ec.europa.eu/dgs/connect/"><b>DG Connect, European Commission's Directorate General for Communications Networks, Content and Technology</b></a>
+                    <br/>BU25 02/134, B-1049 Brussels, Belgium - Tel: +32 (0)2 29 99 399</p>
                 </div>
             </div>
         </body>

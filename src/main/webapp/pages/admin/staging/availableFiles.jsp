@@ -2,7 +2,7 @@
 
 <%@ include file="/pages/common/taglibs.jsp"%>
 
-<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Staging databases">
+<stripes:layout-render name="/pages/common/template.jsp" pageTitle="Staging databases: available files">
 
     <stripes:layout-component name="head">
         <script type="text/javascript">
