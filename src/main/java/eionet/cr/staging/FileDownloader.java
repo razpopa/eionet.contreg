@@ -60,6 +60,9 @@ public class FileDownloader extends Thread {
     /** */
     private String newFileName;
 
+    /** */
+    private boolean downloadStarted;
+
     /**
      * Constructs a new instance of this class, that will be used to download from the given URL. The downloaded file will be
      * renamed to the one given in the method's second input, unless it is null or blank. The file will be saved into
@@ -103,12 +106,16 @@ public class FileDownloader extends Thread {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
+            LOGGER.debug("Connectiong to " + url);
             connection = new URL(url).openConnection();
             String fileName = ensureUniqueFileName(getFileName(connection)) + FILE_SUFFIX;
             File file = new File(FILES_DIR, fileName);
             outputStream = new FileOutputStream(file);
+            downloadStarted = true;
+            LOGGER.debug("Download started from " + url);
             inputStream = connection.getInputStream();
             IOUtils.copy(inputStream, outputStream);
+            LOGGER.debug("Download finished from " + url);
             return file;
         } finally {
             IOUtils.closeQuietly(inputStream);
@@ -148,15 +155,15 @@ public class FileDownloader extends Thread {
             }
         }
 
-        // Attempt detection from the response's "Content-Location" header.
-        String contentLocation = connection.getHeaderField("Content-Location");
-        if (StringUtils.isNotBlank(contentLocation)) {
-            String s = new File(contentLocation).getName();
-            if (StringUtils.isNotBlank(s)) {
-                return s.trim();
-            }
-        }
-
+//        // Attempt detection from the response's "Content-Location" header.
+//        String contentLocation = connection.getHeaderField("Content-Location");
+//        if (StringUtils.isNotBlank(contentLocation)) {
+//            String s = new File(contentLocation).getName();
+//            if (StringUtils.isNotBlank(s)) {
+//                return s.trim();
+//            }
+//        }
+//
         // Attempt detection from the URL itself.
 
         String s = StringUtils.substringAfterLast(connection.getURL().toString(), "#");
@@ -224,5 +231,12 @@ public class FileDownloader extends Thread {
         }
 
         return file;
+    }
+
+    /**
+     * @return the downloadStarted
+     */
+    public boolean isDownloadStarted() {
+        return downloadStarted;
     }
 }

@@ -140,9 +140,27 @@ public class AvailableFilesActionBean extends AbstractActionBean {
      */
     public Resolution download() {
 
-        new FileDownloader(downloadUrl, newFileName).start();
+        FileDownloader downloader = new FileDownloader(downloadUrl, newFileName);
+        downloader.start();
 
-        addSystemMessage("File download started! Refresh the page to see progress.");
+        int i = 1;
+        do {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                addWarningMessage("Technical error when attempting to detect the download status!" +
+                        "Please refresh the page within the next minute to see if the download started.");
+                return new RedirectResolution(this.getClass());
+            }
+        } while (!downloader.isDownloadStarted() && i++ <= 15);
+
+        if (downloader.isDownloadStarted()) {
+            addSystemMessage("File download started! Refresh the page to see progress.");
+        }
+        else {
+            addCautionMessage("Still establishing the connection!" +
+            		"Please refresh the page within the next minute to see if the download started.");
+        }
         return new RedirectResolution(this.getClass());
     }
 
@@ -165,7 +183,8 @@ public class AvailableFilesActionBean extends AbstractActionBean {
             }
 
             if (FileDownloader.FILES_DIR.listFiles().length != noOfFilesBefore - fileNames.size()) {
-                addWarningMessage("Failed to delete some of the files!");
+                addWarningMessage("Failed to delete some of the files! This might be a temporary resource locking problem." +
+                        "Please refresh in a dozen of seconds, and if the file is still present, try its deletion again.");
             } else {
                 addSystemMessage("Files successfully deleted!");
             }
