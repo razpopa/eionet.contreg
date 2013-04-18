@@ -78,7 +78,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     private String uploadedGraphUri;
 
     /** */
-    private boolean clearGraph = true;
+    private boolean clearGraph = false;
 
     /** */
     private List<Pair<String, String>> datasets;
