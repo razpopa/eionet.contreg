@@ -261,6 +261,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
      *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#exportCodelistItems(java.lang.String, java.io.File, java.util.Map)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
             throws DAOException {
@@ -274,11 +275,14 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         int result = 0;
         if (propsToSpreadsheetCols != null && propsToSpreadsheetCols.isEmpty()) {
-            //EXPORT_CODELIST_ITEMS_SPARQL
+
             Bindings bindings = new Bindings();
             bindings.setString("typeValue", itemRdfType);
+
             CodelistExporter exporter = new CodelistExporter(spreadsheetTemplate, propsToSpreadsheetCols);
             executeSPARQL(EXPORT_CODELIST_ITEMS_SPARQL, bindings, exporter);
+            exporter.saveAndClose();
+
             result = exporter.getItemsExported();
         }
 

@@ -1,15 +1,26 @@
 package eionet.cr.dao.readers;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 
+import eionet.cr.dao.DAOException;
 import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 
 /**
@@ -24,6 +35,12 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /** */
     private static final String CODELIST_URI_PREFIX = "http://semantic.digital-agenda-data.eu/codelist/";
+
+    /** */
+    private static final String DAD_PROPERTY_NAMESPACE = "http://semantic.digital-agenda-data.eu/def/property/";
+
+    /** */
+    private static final Map<String, String> SPECIAL_BINDINGS_MAP = createSpecialBindingsMap();
 
     /** The spreadsheet template reference. */
     private File spreadsheetTemplate;
@@ -44,13 +61,20 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /** The current subject URI as the SPARQL result set is traversed. To be initialized at first need. */
     private String currentSubjectUri;
 
+    /** The workbook object that represents the given spreadsheet template file. */
+    private Workbook workbook;
+
+    /** The current worksheet in the workbook. */
+    private Sheet worksheet;
+
     /**
      * Construct new instance with the given spreadsheet template reference and the properties to spreadsheet columns mapping.
      *
      * @param spreadsheetTemplate The spreadsheet template reference.
      * @param propsToSpreadsheetCols The properties to spreadsheet columns mapping.
+     * @throws DAOException
      */
-    public CodelistExporter(File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols) {
+    public CodelistExporter(File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols) throws DAOException {
 
         if (spreadsheetTemplate == null || !spreadsheetTemplate.exists() || !spreadsheetTemplate.isFile()) {
             throw new IllegalArgumentException("The given spreadsheet template must not be null and the file must exist!");
@@ -58,6 +82,22 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
         if (propsToSpreadsheetCols == null || propsToSpreadsheetCols.isEmpty()) {
             throw new IllegalArgumentException("The given properties to spreadsheet columns mapping must not be null or empty!");
+        }
+
+        try {
+            workbook = WorkbookFactory.create(spreadsheetTemplate);
+        } catch (InvalidFormatException e) {
+            throw new DAOException("Failed to recognize workbook at " + spreadsheetTemplate, e);
+        } catch (IOException e) {
+            throw new DAOException("IOException when trying to create workbook object from " + spreadsheetTemplate, e);
+        }
+
+        worksheet = workbook.getSheetAt(0);
+        if (worksheet == null) {
+            worksheet = workbook.createSheet();
+        }
+        if (worksheet == null) {
+            throw new DAOException("Failed to get or create the workbook's first sheet: simply got null as the result");
         }
 
         this.spreadsheetTemplate = spreadsheetTemplate;
@@ -82,9 +122,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         }
 
         if (!subjectUri.equals(currentSubjectUri)) {
-            if (rowMap != null && !rowMap.isEmpty()) {
-                saveRowMap();
-            }
+            saveRowMap();
             currentSubjectUri = subjectUri;
         }
 
@@ -97,6 +135,20 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         Value value = bindingSet.getValue("o");
         if (value != null) {
             putIntoRowMap(columnIndex, value);
+        }
+
+        for (Entry<String, String> entry : SPECIAL_BINDINGS_MAP.entrySet()) {
+
+            String bindingName = entry.getKey();
+            String bindingPredicate = entry.getValue();
+
+            value = bindingSet.getValue(bindingName);
+            if (value != null) {
+                columnIndex = propsToSpreadsheetCols.get(bindingPredicate);
+                if (columnIndex != null && columnIndex.intValue() >= 0) {
+                    putIntoRowMap(columnIndex, value);
+                }
+            }
         }
     }
 
@@ -114,8 +166,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
         if (value instanceof Literal) {
             rowMap.put(columnIndex, value.stringValue());
-        }
-        else if ((value instanceof BNode) == false) {
+        } else if ((value instanceof BNode) == false) {
 
             String strValue = value.stringValue();
             if (strValue.startsWith(CODELIST_URI_PREFIX)) {
@@ -130,15 +181,45 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
      * Saves the row map to the row indicated by the number of exported items.
      */
     private void saveRowMap() {
-        // TODO implement this method
+
+        if (rowMap == null || rowMap.isEmpty()) {
+            return;
+        }
+
+        int rowIndex = itemsExported + 1;
+        Row row = worksheet.getRow(rowIndex);
+        if (row == null) {
+            row = worksheet.createRow(rowIndex);
+        }
+
+        for (Entry<Integer, String> entry : rowMap.entrySet()) {
+
+            int cellIndex = entry.getKey();
+            String cellValue = entry.getValue();
+            Cell cell = row.getCell(cellIndex);
+            if (cell == null) {
+                cell = row.createCell(cellIndex);
+            }
+            cell.setCellValue(cellValue);
+        }
     }
 
     /**
      * To be called after last codelist item has been exported. The purpose of the method is to properly save the spreadsheet
      * template file and close all resources.
+     * @throws DAOException
      */
-    private void saveAndClose() {
-        // TODO implement this method
+    public void saveAndClose() throws DAOException {
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(spreadsheetTemplate);
+            workbook.write(fos);
+        } catch (IOException e) {
+            throw new DAOException("Error when saving workbook to " + spreadsheetTemplate, e);
+        } finally {
+            IOUtils.closeQuietly(fos);
+        }
     }
 
     /*
@@ -149,10 +230,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     @Override
     public void endResultSet() {
 
-        if (rowMap != null && !rowMap.isEmpty()) {
-            saveRowMap();
-        }
-        saveAndClose();
+        saveRowMap();
     }
 
     /**
@@ -164,4 +242,15 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         return itemsExported;
     }
 
+    /**
+     *
+     * @return
+     */
+    private static final Map<String, String> createSpecialBindingsMap() {
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("memberOf", DAD_PROPERTY_NAMESPACE + "memberOf");
+        map.put("order", DAD_PROPERTY_NAMESPACE + "order");
+        return map;
+    }
 }
