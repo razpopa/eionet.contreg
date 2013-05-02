@@ -137,4 +137,21 @@ public enum XLWrapUploadType {
     public File getSpreadsheetTemplate() {
         return spreadsheetTemplate;
     }
+
+    /**
+     *
+     * @param graphUri
+     * @return
+     */
+    public static XLWrapUploadType getByGraphUri(String graphUri) {
+
+        XLWrapUploadType[] values = XLWrapUploadType.values();
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].getGraphUri().equals(graphUri)) {
+                return values[i];
+            }
+        }
+
+        return null;
+    }
 }

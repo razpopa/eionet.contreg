@@ -35,12 +35,14 @@
 
     <div style="margin-top:20px;width:100%">
         <crfn:form id="codelistsForm" beanclass="${actionBean.class.name}" method="get">
-	        <label for="codelistsSelect" class="question">Displaying items of this codelist:</label><br/>
-	        <stripes:select id="codelistsSelect" name="codelistUri" value="${actionBean.codelistUri}" onchange="this.form.submit();" title="${actionBean.codelistUri}">
-	            <c:forEach items="${actionBean.codelists}" var="codelist">
-	                <stripes:option value="${codelist.left}" label="${codelist.right}" title="${codelist.left}"/>
-	            </c:forEach>
-	        </stripes:select>&nbsp;<stripes:submit name="metadata" value="Codelist metadata" title="Go to the factsheet about the metadata of the selected codelist."/>
+            <label for="codelistsSelect" class="question">Displaying items of this codelist:</label><br/>
+            <stripes:select id="codelistsSelect" name="codelistUri" value="${actionBean.codelistUri}" onchange="this.form.submit();" title="${actionBean.codelistUri}">
+                <c:forEach items="${actionBean.codelists}" var="codelist">
+                    <stripes:option value="${codelist.left}" label="${codelist.right}" title="${codelist.left}"/>
+                </c:forEach>
+            </stripes:select>&nbsp;
+            <stripes:submit name="metadata" value="Codelist metadata" title="Go to the factsheet about the metadata of the selected codelist."/>&nbsp;
+            <stripes:submit name="export" value="Excel export" title="Download the selected codelist as an MS Excel file." onclick="alert('This feature is still under construction!');"/>
         </crfn:form>
     </div>
 
@@ -51,27 +53,27 @@
     </c:if>
 
     <c:if test="${not empty actionBean.codelistUri && not empty actionBean.codelistItems}">
-	    <div style="margin-top:20px;width:100%">
-	        <display:table name="${actionBean.codelistItems}" id="codelistItem" class="sortable" sort="list" pagesize="20" requestURI="${actionBean.urlBinding}" style="width:100%">
+        <div style="margin-top:20px;width:100%">
+            <display:table name="${actionBean.codelistItems}" id="codelistItem" class="sortable" sort="list" pagesize="20" requestURI="${actionBean.urlBinding}" style="width:100%">
 
-	            <display:setProperty name="paging.banner.item_name" value="item"/>
-	            <display:setProperty name="paging.banner.items_name" value="items"/>
-	            <display:setProperty name="paging.banner.all_items_found" value='<div class="pagebanner">{0} {1} found.</div>'/>
-	            <display:setProperty name="paging.banner.onepage" value=""/>
+                <display:setProperty name="paging.banner.item_name" value="item"/>
+                <display:setProperty name="paging.banner.items_name" value="items"/>
+                <display:setProperty name="paging.banner.all_items_found" value='<div class="pagebanner">{0} {1} found.</div>'/>
+                <display:setProperty name="paging.banner.onepage" value=""/>
 
-	            <display:column title='<span title="Notation, i.e. the code itself">Notation</span>' sortable="true" sortProperty="skosNotation" style="width:30%">
-	                <stripes:link beanclass="${actionBean.factsheetActionBeanClass.name}" title="${codelistItem.uri}">
-	                    <c:out value="${codelistItem.skosNotation}"/>
-	                    <stripes:param name="uri" value="${codelistItem.uri}"/>
-	                </stripes:link>
-	            </display:column>
+                <display:column title='<span title="Notation, i.e. the code itself">Notation</span>' sortable="true" sortProperty="skosNotation" style="width:30%">
+                    <stripes:link beanclass="${actionBean.factsheetActionBeanClass.name}" title="${codelistItem.uri}">
+                        <c:out value="${codelistItem.skosNotation}"/>
+                        <stripes:param name="uri" value="${codelistItem.uri}"/>
+                    </stripes:link>
+                </display:column>
 
-	            <display:column title='<span title="The preferred humanly understandable lanbel of the code">Label</span>' sortable="true" sortProperty="skosPrefLabel" style="width:70%">
-	                <c:out value="${codelistItem.skosPrefLabel}"/>
-	            </display:column>
+                <display:column title='<span title="The preferred humanly understandable lanbel of the code">Label</span>' sortable="true" sortProperty="skosPrefLabel" style="width:70%">
+                    <c:out value="${codelistItem.skosPrefLabel}"/>
+                </display:column>
 
-	        </display:table>
-	    </div>
+            </display:table>
+        </div>
     </c:if>
 
 </stripes:layout-component>
