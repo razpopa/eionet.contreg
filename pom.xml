@@ -198,8 +198,19 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>*.*</include>
+                    <include>*.xml</include>
+                    <include>*.trig</include>
+                    <include>*.properties</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>*.xml</exclude>
+                    <exclude>*.trig</exclude>
+                    <exclude>*.properties</exclude>
+                </excludes>
             </resource>
         </resources>
 
@@ -210,8 +221,19 @@
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>*.*</include>
+                    <include>*.xml</include>
+                    <include>*.trig</include>
+                    <include>*.properties</include>
                 </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>*.xml</exclude>
+                    <exclude>*.trig</exclude>
+                    <exclude>*.properties</exclude>
+                </excludes>
             </testResource>
         </testResources>
 

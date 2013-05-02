@@ -59,7 +59,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     		"where {\r\n" +
     		"  ?s a ?type.\r\n" +
     		"  ?s ?p ?o\r\n" +
-    		"  filter {?type = ?typeValue)\r\n" +
+    		"  filter (?type = ?typeValue)\r\n" +
     		"  optional {?s prop:membership ?membership}\r\n" +
     		"  optional {?membership prop:member-of ?memberOf}\r\n" +
     		"  optional {?membership prop:order ?order}\r\n" +
@@ -274,10 +274,10 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         }
 
         int result = 0;
-        if (propsToSpreadsheetCols != null && propsToSpreadsheetCols.isEmpty()) {
+        if (propsToSpreadsheetCols != null && !propsToSpreadsheetCols.isEmpty()) {
 
             Bindings bindings = new Bindings();
-            bindings.setString("typeValue", itemRdfType);
+            bindings.setURI("typeValue", itemRdfType);
 
             CodelistExporter exporter = new CodelistExporter(spreadsheetTemplate, propsToSpreadsheetCols);
             executeSPARQL(EXPORT_CODELIST_ITEMS_SPARQL, bindings, exporter);

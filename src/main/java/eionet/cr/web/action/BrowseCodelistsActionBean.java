@@ -113,26 +113,26 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
 
         if (StringUtils.isBlank(codelistUri)) {
             addWarningMessage("No codelist selected!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
 
         String codelistGraphUri = codelistUri.endsWith("/") ? codelistUri : codelistUri + "/";
         XLWrapUploadType uploadType = XLWrapUploadType.getByGraphUri(codelistGraphUri);
         if (uploadType == null) {
             addWarningMessage("Technical error: failed to detect codelist type from submitted inputs!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
 
         String itemRdfType = uploadType.getSubjectsTypeUri();
         if (StringUtils.isBlank(itemRdfType)) {
             addWarningMessage("Technical error: failed to detect the RDF type of this codelist's items!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
 
         File mappingTemplate = uploadType.getMappingTemplate();
         if (mappingTemplate == null || !mappingTemplate.exists() || !mappingTemplate.isFile()) {
             addWarningMessage("Technical error: failed to locate the corresponding spreadsheet mapping file!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
 
         LOGGER.debug("uploadType = " + uploadType);
@@ -144,16 +144,16 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
             propsToSpreadsheetCols = XLWrapUtil.getPropsToSpreadsheetCols(mappingTemplate);
             if (propsToSpreadsheetCols == null || propsToSpreadsheetCols.isEmpty()) {
                 addWarningMessage("Found no property-to-spreadsheet-column mappings in the mapping file!");
-                return new ForwardResolution(JSP);
+                return defaultEvent();
             }
         } catch (IOException e) {
             LOGGER.error("I/O error when trying to parse the spreadsheet mapping file!", e);
             addWarningMessage("Technical error: I/O error when trying to parse the spreadsheet mapping file!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         } catch (XLWrapException e) {
             LOGGER.error("XLWrapException when trying to parse the spreadsheet mapping file!", e);
             addWarningMessage("Technical error: parsing error when parsing the spreadsheet mapping file!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
 
         LOGGER.debug("propsToSpreadsheetCols = " + propsToSpreadsheetCols);
@@ -161,7 +161,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
         File spreadsheetTemplate = uploadType.getSpreadsheetTemplate();
         if (spreadsheetTemplate == null || !spreadsheetTemplate.exists() || !spreadsheetTemplate.isFile()) {
             addWarningMessage("Technical error: failed to locate the corresponding spreadsheet template!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
         LOGGER.debug("spreadsheetTemplate = " + spreadsheetTemplate);
 
@@ -171,7 +171,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
         } catch (IOException e) {
             LOGGER.error("Error when creating instance file from the located spreadsheet template!", e);
             addWarningMessage("Technical error when creating instance file from the located spreadsheet template!");
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
         LOGGER.debug("destFile = " + destFile);
 
@@ -179,11 +179,12 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
         try {
             int itemCount = dao.exportCodelistItems(itemRdfType, destFile, propsToSpreadsheetCols);
             LOGGER.debug("Number of exported codelist items = " + itemCount);
-            return streamToResponse(destFile);
+            File f = new File(destFile.getParent(), "___" + destFile.getName());
+            return streamToResponse(f);
         } catch (DAOException e) {
             LOGGER.error("Error when exporting " + codelistUri + " to " + destFile, e);
             addWarningMessage("Codelist export failed with technical error: " + e.getMessage());
-            return new ForwardResolution(JSP);
+            return defaultEvent();
         }
     }
 

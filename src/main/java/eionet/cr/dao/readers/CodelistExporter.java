@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +33,9 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
  */
 @SuppressWarnings("rawtypes")
 public class CodelistExporter extends SPARQLResultSetBaseReader {
+
+    /** */
+    private static final Logger LOGGER = Logger.getLogger(CodelistExporter.class);
 
     /** */
     private static final String CODELIST_URI_PREFIX = "http://semantic.digital-agenda-data.eu/codelist/";
@@ -66,6 +70,8 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /** The current worksheet in the workbook. */
     private Sheet worksheet;
+
+    private int resultSetRowCounter;
 
     /**
      * Construct new instance with the given spreadsheet template reference and the properties to spreadsheet columns mapping.
@@ -122,8 +128,12 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         }
 
         if (!subjectUri.equals(currentSubjectUri)) {
-            saveRowMap();
+            if (rowMap != null && !rowMap.isEmpty()) {
+                saveRowMap();
+                itemsExported++;
+            }
             currentSubjectUri = subjectUri;
+            rowMap = new HashMap<Integer, String>();
         }
 
         String predicateUri = getStringValue(bindingSet, "p");
@@ -160,19 +170,17 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
      */
     private void putIntoRowMap(Integer columnIndex, Value value) {
 
-        if (rowMap == null) {
-            rowMap = new HashMap<Integer, String>();
-        }
-
         if (value instanceof Literal) {
             rowMap.put(columnIndex, value.stringValue());
-        } else if ((value instanceof BNode) == false) {
+        } else if (!(value instanceof BNode)) {
 
             String strValue = value.stringValue();
             if (strValue.startsWith(CODELIST_URI_PREFIX)) {
 
                 strValue = StringUtils.substringAfterLast(strValue.replace('/', '#'), "#");
                 rowMap.put(columnIndex, strValue);
+            } else {
+                rowMap.put(columnIndex, value.stringValue());
             }
         }
     }
@@ -187,6 +195,8 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         }
 
         int rowIndex = itemsExported + 1;
+        LOGGER.trace("Saving row #" + rowIndex);
+
         Row row = worksheet.getRow(rowIndex);
         if (row == null) {
             row = worksheet.createRow(rowIndex);
@@ -207,13 +217,16 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /**
      * To be called after last codelist item has been exported. The purpose of the method is to properly save the spreadsheet
      * template file and close all resources.
+     *
      * @throws DAOException
      */
     public void saveAndClose() throws DAOException {
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(spreadsheetTemplate);
+            File f = new File(spreadsheetTemplate.getParent(), "___" + spreadsheetTemplate.getName());
+            fos = new FileOutputStream(f);
+            worksheet.showInPane((short)1, (short)0);
             workbook.write(fos);
         } catch (IOException e) {
             throw new DAOException("Error when saving workbook to " + spreadsheetTemplate, e);
@@ -230,7 +243,10 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     @Override
     public void endResultSet() {
 
-        saveRowMap();
+        if (rowMap != null && !rowMap.isEmpty()) {
+            saveRowMap();
+            itemsExported++;
+        }
     }
 
     /**
@@ -249,7 +265,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     private static final Map<String, String> createSpecialBindingsMap() {
 
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("memberOf", DAD_PROPERTY_NAMESPACE + "memberOf");
+        map.put("memberOf", DAD_PROPERTY_NAMESPACE + "member-of");
         map.put("order", DAD_PROPERTY_NAMESPACE + "order");
         return map;
     }
