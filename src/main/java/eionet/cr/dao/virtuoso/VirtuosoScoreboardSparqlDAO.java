@@ -265,15 +265,6 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     public int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
             throws DAOException {
 
-//        if (StringUtils.isBlank(codelistUri)) {
-//            throw new IllegalArgumentException("Codelist URI must not be blank!");
-//        }
-//
-//        Bindings bindings = new Bindings();
-//        bindings.setString("codelistUri", codelistUri.endsWith("/") ? codelistUri : codelistUri + "/");
-//
-//        List<SkosItemDTO> list = executeSPARQL(GET_CODELIST_ITEMS_SPARQL, bindings, new SkosItemsReader());
-
         if (StringUtils.isBlank(itemRdfType)) {
             throw new IllegalArgumentException("Items RDF type must not be blank!");
         }
