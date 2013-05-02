@@ -1,5 +1,6 @@
 package eionet.cr.dao;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,8 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @return
      * @throws DAOException
      */
-    List<Pair<String, String>> getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter) throws DAOException;
+    List<Pair<String, String>> getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter)
+            throws DAOException;
 
     /**
      *
@@ -72,4 +74,16 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException
      */
     boolean datasetExists(String identifier) throws DAOException;
+
+    /**
+     * Exports codelist items of given RDF type into the given spreadsheet template file, using the given properties-to-columns map.
+     *
+     * @param itemRdfType The RDF type of codelist items to export.
+     * @param spreadsheetTemplate Reference to the spreadsheet template file to export into.
+     * @param propsToSpreadsheetCols Maps the properties of codelist items to corresponding spreadsheet columns (e.g. 0,1,2 ...)
+     * @return The number of items exported.
+     * @throws DAOException Any sort of exception is wrapped into this one.
+     */
+    int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
+            throws DAOException;
 }

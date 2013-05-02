@@ -1,7 +1,7 @@
 package eionet.cr.dao.virtuoso;
 
+import java.io.File;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +18,7 @@ import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.ScoreboardSparqlDAO;
+import eionet.cr.dao.readers.CodelistExporter;
 import eionet.cr.dao.readers.SkosItemsReader;
 import eionet.cr.dto.SkosItemDTO;
 import eionet.cr.util.Bindings;
@@ -39,29 +40,31 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     private static final Logger LOGGER = Logger.getLogger(VirtuosoScoreboardSparqlDAO.class);
 
     // @formatter:off
-    private static final String GET_CODELISTS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-    		"select\n" +
-    		"  ?uri as ?" + PairReader.LEFTCOL + " min(?prefLabel) as ?" + PairReader.RIGHTCOL + "\n" +
-    		"where {\n" +
-    		"  ?uri a skos:ConceptScheme.\n" +
-    		"  filter (strStarts(str(?uri), ?uriStartsWith))\n" +
-    		"  optional {?uri skos:prefLabel ?prefLabel}\n" +
-    		"}\n" +
-    		"group by ?uri";
-    // @formatter:on
+    private static final String GET_CODELISTS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + "select\n"
+            + "  ?uri as ?" + PairReader.LEFTCOL + " min(?prefLabel) as ?" + PairReader.RIGHTCOL + "\n" + "where {\n"
+            + "  ?uri a skos:ConceptScheme.\n" + "  filter (strStarts(str(?uri), ?uriStartsWith))\n"
+            + "  optional {?uri skos:prefLabel ?prefLabel}\n" + "}\n" + "group by ?uri";
 
-    // @formatter:off
-    private static final String GET_CODELIST_ITEMS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-    		"select\n" +
-    		"  ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
-    		"where {\n" +
-    		"  ?uri a skos:Concept.\n" +
-    		"  filter (strStarts(str(?uri), ?codelistUri))\n" +
-    		"  optional {?uri skos:notation ?notation}\n" +
-    		"  optional {?uri skos:prefLabel ?prefLabel}\n" +
-    		"}\n" +
-    		"group by ?uri\n" +
-    		"order by ?uri";
+    private static final String GET_CODELIST_ITEMS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + "select\n"
+            + "  ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" + "where {\n"
+            + "  ?uri a skos:Concept.\n" + "  filter (strStarts(str(?uri), ?codelistUri))\n"
+            + "  optional {?uri skos:notation ?notation}\n" + "  optional {?uri skos:prefLabel ?prefLabel}\n" + "}\n"
+            + "group by ?uri\n" + "order by ?uri";
+
+    private static final String EXPORT_CODELIST_ITEMS_SPARQL = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\r\n" +
+    		"PREFIX prop: <http://semantic.digital-agenda-data.eu/def/property/>\r\n" +
+    		"select\r\n" +
+    		"  ?s ?p ?o ?memberOf ?order\r\n" +
+    		"where {\r\n" +
+    		"  ?s a ?type.\r\n" +
+    		"  ?s ?p ?o\r\n" +
+    		"  filter {?type = ?typeValue)\r\n" +
+    		"  optional {?s prop:membership ?membership}\r\n" +
+    		"  optional {?membership prop:member-of ?memberOf}\r\n" +
+    		"  optional {?membership prop:order ?order}\r\n" +
+    		"}\r\n" +
+    		"order by ?s ?p";
     // @formatter:on
 
     /*
@@ -133,7 +136,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
             // Some value URIs
             URI identifierURI = vf.createURI(DATASET_URI_PREFIX + identifier);
-            //URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
+            // URI graphURI = vf.createURI(StringUtils.substringBeforeLast(DATASET_URI_PREFIX, "/"));
             URI graphURI = identifierURI;
             URI distributionURI = vf.createURI(identifierURI + "/distribution");
             URI accessURL = vf.createURI(StringUtils.replace(identifierURI.stringValue(), "/dataset/", "/data/"));
@@ -253,34 +256,41 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         return resultList;
     }
 
-    /**
+    /*
+     * (non-Javadoc)
      *
-     * @param args
-     * @throws DAOException
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#exportCodelistItems(java.lang.String, java.io.File, java.util.Map)
      */
-    public static void main(String[] args) throws DAOException {
+    @Override
+    public int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
+            throws DAOException {
 
-        // LinkedHashMap<ObservationFilter, String> selections = new LinkedHashMap<ObservationFilter, String>();
-        // selections.put(ObservationFilter.INDICATOR, "http://semantic.digital-agenda-data.eu/codelist/indicator/e_cuse");
-        // selections.put(ObservationFilter.BREAKDOWN, "http://semantic.digital-agenda-data.eu/codelist/breakdown/10_65");
-        // selections.put(ObservationFilter.TIME_PERIOD, "http://reference.data.gov.uk/id/year/2007");
-        // selections.put(ObservationFilter.REF_AREA, "http://eurostat.linked-statistics.org/dic/geo#at");
-        // selections.put(ObservationFilter.UNIT_MEASURE, "http://semantic.digital-agenda-data.eu/codelist/unit-measure/pc_ent");
+//        if (StringUtils.isBlank(codelistUri)) {
+//            throw new IllegalArgumentException("Codelist URI must not be blank!");
+//        }
+//
+//        Bindings bindings = new Bindings();
+//        bindings.setString("codelistUri", codelistUri.endsWith("/") ? codelistUri : codelistUri + "/");
+//
+//        List<SkosItemDTO> list = executeSPARQL(GET_CODELIST_ITEMS_SPARQL, bindings, new SkosItemsReader());
 
-        LinkedHashMap<ObservationFilter, String> selections = new LinkedHashMap<ObservationFilter, String>();
-        selections.put(ObservationFilter.INDICATOR, "");
-        selections.put(ObservationFilter.BREAKDOWN, "");
-        selections.put(ObservationFilter.TIME_PERIOD, "");
-        selections.put(ObservationFilter.REF_AREA, "");
-        selections.put(ObservationFilter.UNIT_MEASURE, "");
+        if (StringUtils.isBlank(itemRdfType)) {
+            throw new IllegalArgumentException("Items RDF type must not be blank!");
+        }
+        if (spreadsheetTemplate == null || !spreadsheetTemplate.exists() || !spreadsheetTemplate.isFile()) {
+            throw new IllegalArgumentException("The given spreadsheet template must not be null and the file must exist!");
+        }
 
-        ObservationFilter forFilter = ObservationFilter.BREAKDOWN;
+        int result = 0;
+        if (propsToSpreadsheetCols != null && propsToSpreadsheetCols.isEmpty()) {
+            //EXPORT_CODELIST_ITEMS_SPARQL
+            Bindings bindings = new Bindings();
+            bindings.setString("typeValue", itemRdfType);
+            CodelistExporter exporter = new CodelistExporter(spreadsheetTemplate, propsToSpreadsheetCols);
+            executeSPARQL(EXPORT_CODELIST_ITEMS_SPARQL, bindings, exporter);
+            result = exporter.getItemsExported();
+        }
 
-        // LinkedHashMap<ObservationFilter, String> selections = new LinkedHashMap<ObservationFilter, String>();
-        // ObservationFilter below = null;
-
-        VirtuosoScoreboardSparqlDAO dao = new VirtuosoScoreboardSparqlDAO();
-        dao.getFilterValues(selections, forFilter);
-
+        return result;
     }
 }
