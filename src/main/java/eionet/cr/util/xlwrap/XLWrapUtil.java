@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -18,10 +21,14 @@ import org.openrdf.rio.RDFHandler;
 
 import at.jku.xlwrap.common.XLWrapException;
 import at.jku.xlwrap.exec.XLWrapMaterializer;
+import at.jku.xlwrap.map.MapTemplate;
 import at.jku.xlwrap.map.MappingParser;
 import at.jku.xlwrap.map.XLWrapMapping;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import eionet.cr.common.TempFilePathGenerator;
 import eionet.cr.util.FileDeletionJob;
@@ -36,6 +43,11 @@ import eionet.cr.util.jena.JenaUtil;
  * @author jaanus
  */
 public class XLWrapUtil {
+
+    /** */
+    private static final String XLWRAP_NAMESPACE = "http://purl.org/NET/xlwrap#";
+    private static final String[] SPREADSHEET_COLS = {"A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "I2", "J2", "K2", "L2",
+            "M2", "N2", "O2", "P2", "Q2", "R2", "S2", "T2", "U2", "V2", "W2", "X2", "Y2", "Z2"};
 
     /** */
     private static final String FILE_URL_PLACEHOLDER = "@FILE_URL@";
@@ -54,8 +66,8 @@ public class XLWrapUtil {
      * @throws XLWrapException
      * @throws OpenRDFException
      */
-    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, String targetDataset, boolean clear, RDFHandler stmtListener)
-            throws IOException, XLWrapException, OpenRDFException {
+    public static int importMapping(XLWrapUploadType uploadType, File spreadsheetFile, String targetDataset, boolean clear,
+            RDFHandler stmtListener) throws IOException, XLWrapException, OpenRDFException {
 
         File template = uploadType.getMappingTemplate();
         File target = TempFilePathGenerator.generate(XLWrapUploadType.MAPPING_FILE_EXTENSION);
@@ -92,8 +104,7 @@ public class XLWrapUtil {
      * @throws OpenRDFException
      */
     public static int importMapping(File mappingFile, String graphUri, boolean clearGraph, RDFHandler stmtListener)
-            throws IOException, XLWrapException,
-            OpenRDFException {
+            throws IOException, XLWrapException, OpenRDFException {
 
         return importMapping(mappingFile.toURI().toURL(), graphUri, clearGraph, stmtListener);
     }
@@ -162,18 +173,56 @@ public class XLWrapUtil {
     }
 
     /**
+     * Parses the given Trig (http://wifo5-03.informatik.uni-mannheim.de/bizer/trig/) file, gets the first template mapping (see
+     * http://xlwrap.sourceforge.net/ for more background), and from that extracts a mapping of RDF properties to spreadsheet
+     * columns. The extracted mapping is returned as a map where keys represent the RDF properties and teh values represent the
+     * 0-based indexes of corresponding spreadsheet columns.
      *
-     * @param args
-     * @throws IOException
+     * @param trigFile The Trig file to parse.
+     * @return The map as described above.
+     * @throws IOException When any sort of I/O error occurs
      * @throws XLWrapException
-     * @throws OpenRDFException
      */
-    public static void main(String[] args) throws IOException, XLWrapException, OpenRDFException {
+    public static Map<String, Integer> getPropsToSpreadsheetCols(File trigFile) throws IOException, XLWrapException {
 
-        File mappingFile =
-                new File(
-                        "C:/dev/projects/DigitalAgendaScoreboard/apphome/harvests/eionet.cr.tempfile-1363623700877-029a7842-71bd-45ee-a984-90109c56f4a3.trig");
-        int stmtCount = XLWrapUtil.importMapping(mappingFile, "http://semantic.digital-agenda-data.eu/testGraphs/xlwrap", true, null);
-        System.out.println("Done. " + stmtCount + " triples added!");
+        if (trigFile == null || !trigFile.exists() || !trigFile.isFile()) {
+            throw new IllegalArgumentException("The given Trig file must not be null and it must exits!");
+        }
+
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        String trigFileUrl = trigFile.toURI().toURL().toString();
+        XLWrapMapping mapping = MappingParser.parse(trigFileUrl);
+        Iterator<MapTemplate> mapTemplates = mapping.getMapTemplatesIterator();
+        while (mapTemplates.hasNext()) {
+            Model templateModel = mapTemplates.next().getTemplateModel();
+            if (templateModel != null && !templateModel.isEmpty()) {
+
+                StmtIterator statements = templateModel.listStatements();
+                while (statements.hasNext()) {
+
+                    Statement statement = statements.next();
+
+                    String predicateUri = statement.getPredicate().getURI();
+                    if (!predicateUri.startsWith(XLWRAP_NAMESPACE)) {
+
+                        RDFNode object = statement.getObject();
+                        String objectStr =
+                                object.isLiteral() ? "\"" + object.asLiteral().getString() + "\"" : object.asResource().getURI();
+
+                        if (StringUtils.isNotBlank(objectStr)) {
+                            for (int i = 0; i < SPREADSHEET_COLS.length; i++) {
+                                if (objectStr.contains(SPREADSHEET_COLS[i])) {
+                                    map.put(predicateUri, i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        return map;
     }
 }
