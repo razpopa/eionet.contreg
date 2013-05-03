@@ -38,8 +38,8 @@
             a rdf:Seq ;
             rdf:_1 [
                 a xl:RowShift ;
-                xl:restriction "A2:E2" ;
-                xl:breakCondition "ALLEMPTY(A2:E2)" ; 
+                xl:restriction "A2:F2" ;
+                xl:breakCondition "ALLEMPTY(A2:F2)" ;
                 xl:steps "1" ;
             ] ;
         ]
@@ -53,14 +53,15 @@
     skos:notation "A2"^^xl:Expr ;
     skos:altLabel "C2"^^xl:Expr ;
     skos:definition "D2"^^xl:Expr ;
-    rdfs:seeAlso "URI(E2)"^^xl:Expr .
-    
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/breakdown-group"] 
+    rdfs:seeAlso "URI(E2)"^^xl:Expr ;
+    dad-prop:order "F2"^^xl:Expr .
+
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/breakdown-group"]
       skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/breakdown-group/' & URLENCODE(LCASE(A2)))"^^xl:Expr .
 }
 
 :CodelistSetup {
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/breakdown-group"] 
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/breakdown-group"]
       a skos:ConceptScheme ;
       a sdmx:CodeList ;
       skos:prefLabel "Breakdown groups used by Digital Agenda Scoreboard" ;

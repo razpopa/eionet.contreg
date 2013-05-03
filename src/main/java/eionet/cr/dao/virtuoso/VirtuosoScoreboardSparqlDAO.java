@@ -263,23 +263,23 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
      */
     @SuppressWarnings("unchecked")
     @Override
-    public int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
+    public int exportCodelistItems(String itemType, File templateFile, Map<String, Integer> mappings, File targetFile)
             throws DAOException {
 
-        if (StringUtils.isBlank(itemRdfType)) {
+        if (StringUtils.isBlank(itemType)) {
             throw new IllegalArgumentException("Items RDF type must not be blank!");
         }
-        if (spreadsheetTemplate == null || !spreadsheetTemplate.exists() || !spreadsheetTemplate.isFile()) {
+        if (templateFile == null || !templateFile.exists() || !templateFile.isFile()) {
             throw new IllegalArgumentException("The given spreadsheet template must not be null and the file must exist!");
         }
 
         int result = 0;
-        if (propsToSpreadsheetCols != null && !propsToSpreadsheetCols.isEmpty()) {
+        if (mappings != null && !mappings.isEmpty()) {
 
             Bindings bindings = new Bindings();
-            bindings.setURI("typeValue", itemRdfType);
+            bindings.setURI("typeValue", itemType);
 
-            CodelistExporter exporter = new CodelistExporter(spreadsheetTemplate, propsToSpreadsheetCols);
+            CodelistExporter exporter = new CodelistExporter(templateFile, mappings, targetFile);
             executeSPARQL(EXPORT_CODELIST_ITEMS_SPARQL, bindings, exporter);
             exporter.saveAndClose();
 

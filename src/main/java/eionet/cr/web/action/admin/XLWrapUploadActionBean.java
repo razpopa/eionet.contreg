@@ -146,13 +146,13 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             String dataset = isObservationsUpload ? targetDataset : null;
             dataset = StringUtils.replace(dataset, "/dataset/", "/data/");
             boolean clear = isObservationsUpload ? clearDataset : clearGraph;
-            StatementListener stmtListener = new StatementListener();
+            StatementListener stmtListener = new StatementListener(uploadType.getSubjectsTypeUri());
 
-            int resourceCount = XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear, stmtListener);
+            XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear, stmtListener);
             startPostHarvests(stmtListener.getHarvestUris());
 
-            addSystemMessage(resourceCount
-                    + " resources successfully imported!\n Click on on the below link to explore them further.");
+            addSystemMessage(stmtListener.getSubjects().size()
+                    + " items of selected type successfully imported!\n Click on on the below link to explore them further.");
 
             getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? dataset : uploadType.getGraphUri());
             return new RedirectResolution(getClass());
@@ -399,12 +399,49 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
+     * @param newDatasetIdentifier the newDatasetIdentifier to set
+     */
+    public void setNewDatasetIdentifier(String newDatasetIdentifier) {
+        this.newDatasetIdentifier = newDatasetIdentifier;
+    }
+
+    /**
+     * @param newDatasetTitle the newDatasetTitle to set
+     */
+    public void setNewDatasetTitle(String newDatasetTitle) {
+        this.newDatasetTitle = newDatasetTitle;
+    }
+
+    /**
+     * @param newDatasetDescription the newDatasetDescription to set
+     */
+    public void setNewDatasetDescription(String newDatasetDescription) {
+        this.newDatasetDescription = newDatasetDescription;
+    }
+
+    /**
      * @author jaanus
      */
     private static final class StatementListener implements RDFHandler {
 
         /** */
         private HashSet<String> harvestUris = new HashSet<String>();
+
+        /** */
+        private String subjectsRdfType;
+
+        /** */
+        private HashSet<String> subjects = new HashSet<String>();
+
+        /**
+         * @param subjectsRdfType
+         */
+        StatementListener(String subjectsRdfType) {
+            if (subjectsRdfType == null) {
+                subjectsRdfType = "";
+            }
+            this.subjectsRdfType = subjectsRdfType;
+        }
 
         /*
          * (non-Javadoc)
@@ -451,6 +488,13 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
                     harvestUris.add(object.stringValue());
                 }
             }
+
+            if (Predicates.RDF_TYPE.equals(predicateURI.stringValue())) {
+                Value object = stmt.getObject();
+                if (object != null && subjectsRdfType.equals(object.stringValue())) {
+                    subjects.add(stmt.getSubject().stringValue());
+                }
+            }
         }
 
         /*
@@ -470,26 +514,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             return harvestUris;
         }
 
-    }
-
-    /**
-     * @param newDatasetIdentifier the newDatasetIdentifier to set
-     */
-    public void setNewDatasetIdentifier(String newDatasetIdentifier) {
-        this.newDatasetIdentifier = newDatasetIdentifier;
-    }
-
-    /**
-     * @param newDatasetTitle the newDatasetTitle to set
-     */
-    public void setNewDatasetTitle(String newDatasetTitle) {
-        this.newDatasetTitle = newDatasetTitle;
-    }
-
-    /**
-     * @param newDatasetDescription the newDatasetDescription to set
-     */
-    public void setNewDatasetDescription(String newDatasetDescription) {
-        this.newDatasetDescription = newDatasetDescription;
+        /**
+         * @return
+         */
+        public HashSet<String> getSubjects() {
+            return subjects;
+        }
     }
 }

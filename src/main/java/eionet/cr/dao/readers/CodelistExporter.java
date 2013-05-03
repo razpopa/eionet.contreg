@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -47,10 +48,13 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     private static final Map<String, String> SPECIAL_BINDINGS_MAP = createSpecialBindingsMap();
 
     /** The spreadsheet template reference. */
-    private File spreadsheetTemplate;
+    private File template;
 
     /** The properties to spreadsheet columns mapping */
-    private Map<String, Integer> propsToSpreadsheetCols;
+    private Map<String, Integer> mappings;
+
+    /** The target spreadsheet file where the exported workbook will be saved to. */
+    private File target;
 
     /** Number of codelist items exported. */
     private int itemsExported;
@@ -76,26 +80,31 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /**
      * Construct new instance with the given spreadsheet template reference and the properties to spreadsheet columns mapping.
      *
-     * @param spreadsheetTemplate The spreadsheet template reference.
-     * @param propsToSpreadsheetCols The properties to spreadsheet columns mapping.
+     * @param template The spreadsheet template reference.
+     * @param mappings The properties to spreadsheet columns mapping.
+     * @param target The target spreadsheet file where the exported workbook will be saved to.
      * @throws DAOException
      */
-    public CodelistExporter(File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols) throws DAOException {
+    public CodelistExporter(File template, Map<String, Integer> mappings, File target) throws DAOException {
 
-        if (spreadsheetTemplate == null || !spreadsheetTemplate.exists() || !spreadsheetTemplate.isFile()) {
+        if (template == null || !template.exists() || !template.isFile()) {
             throw new IllegalArgumentException("The given spreadsheet template must not be null and the file must exist!");
         }
 
-        if (propsToSpreadsheetCols == null || propsToSpreadsheetCols.isEmpty()) {
+        if (mappings == null || mappings.isEmpty()) {
             throw new IllegalArgumentException("The given properties to spreadsheet columns mapping must not be null or empty!");
         }
 
+        if (target == null || !target.getParentFile().exists()) {
+            throw new IllegalArgumentException("The given spreadsheet target file must not be null and its path must exist!");
+        }
+
         try {
-            workbook = WorkbookFactory.create(spreadsheetTemplate);
+            workbook = WorkbookFactory.create(template);
         } catch (InvalidFormatException e) {
-            throw new DAOException("Failed to recognize workbook at " + spreadsheetTemplate, e);
+            throw new DAOException("Failed to recognize workbook at " + template, e);
         } catch (IOException e) {
-            throw new DAOException("IOException when trying to create workbook object from " + spreadsheetTemplate, e);
+            throw new DAOException("IOException when trying to create workbook object from " + template, e);
         }
 
         worksheet = workbook.getSheetAt(0);
@@ -106,8 +115,9 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
             throw new DAOException("Failed to get or create the workbook's first sheet: simply got null as the result");
         }
 
-        this.spreadsheetTemplate = spreadsheetTemplate;
-        this.propsToSpreadsheetCols = propsToSpreadsheetCols;
+        this.template = template;
+        this.mappings = mappings;
+        this.target = target;
     }
 
     /*
@@ -137,7 +147,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         }
 
         String predicateUri = getStringValue(bindingSet, "p");
-        Integer columnIndex = propsToSpreadsheetCols.get(predicateUri);
+        Integer columnIndex = mappings.get(predicateUri);
         if (columnIndex == null || columnIndex.intValue() < 0) {
             return;
         }
@@ -154,7 +164,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
             value = bindingSet.getValue(bindingName);
             if (value != null) {
-                columnIndex = propsToSpreadsheetCols.get(bindingPredicate);
+                columnIndex = mappings.get(bindingPredicate);
                 if (columnIndex != null && columnIndex.intValue() >= 0) {
                     putIntoRowMap(columnIndex, value);
                 }
@@ -202,6 +212,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
             row = worksheet.createRow(rowIndex);
         }
 
+        int maxLines = 1;
         for (Entry<Integer, String> entry : rowMap.entrySet()) {
 
             int cellIndex = entry.getKey();
@@ -211,6 +222,21 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
                 cell = row.createCell(cellIndex);
             }
             cell.setCellValue(cellValue);
+            CellStyle cellStyle = cell.getCellStyle();
+            if (cellStyle == null) {
+                cellStyle = workbook.createCellStyle();
+                cell.setCellStyle(cellStyle);
+            }
+            cellStyle.setWrapText(true);
+
+            String[] split = StringUtils.split(cellValue.replace("\r\n", "\n"), "\n");
+            maxLines = Math.max(maxLines, split.length);
+        }
+
+        if (maxLines > 1) {
+            maxLines = Math.min(maxLines, 30);
+            float defaultRowHeightInPoints = worksheet.getDefaultRowHeightInPoints();
+            row.setHeightInPoints(maxLines * defaultRowHeightInPoints);
         }
     }
 
@@ -224,12 +250,11 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
         FileOutputStream fos = null;
         try {
-            File f = new File(spreadsheetTemplate.getParent(), "___" + spreadsheetTemplate.getName());
-            fos = new FileOutputStream(f);
-            worksheet.showInPane((short)1, (short)0);
+            fos = new FileOutputStream(target);
+            worksheet.showInPane((short) 1, (short) 0);
             workbook.write(fos);
         } catch (IOException e) {
-            throw new DAOException("Error when saving workbook to " + spreadsheetTemplate, e);
+            throw new DAOException("Error when saving workbook to " + target, e);
         } finally {
             IOUtils.closeQuietly(fos);
         }

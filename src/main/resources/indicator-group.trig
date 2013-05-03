@@ -38,8 +38,8 @@
             a rdf:Seq ;
             rdf:_1 [
                 a xl:RowShift ;
-                xl:restriction "A2:B2" ;
-                xl:breakCondition "ALLEMPTY(A2:B2)" ; 
+                xl:restriction "A2:C2" ;
+                xl:breakCondition "ALLEMPTY(A2:C2)" ;
                 xl:steps "1" ;
             ] ;
         ]
@@ -50,14 +50,15 @@
     [ xl:uri "'http://semantic.digital-agenda-data.eu/codelist/indicator-group/' & URLENCODE(LCASE(A2))"^^xl:Expr ] a skos:Concept ; a dad-class:IndicatorGroup ;
     skos:topConceptOf "URI('http://semantic.digital-agenda-data.eu/codelist/indicator-group')"^^xl:Expr ;
     skos:prefLabel "B2"^^xl:Expr ;
-    skos:notation "A2"^^xl:Expr .
-    
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator-group"] 
+    skos:notation "A2"^^xl:Expr ;
+    dad-prop:order "C2"^^xl:Expr .
+
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator-group"]
       skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/indicator-group/' & URLENCODE(LCASE(A2)))"^^xl:Expr .
 }
 
 :CodelistSetup {
-    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator-group"] 
+    [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/indicator-group"]
       a skos:ConceptScheme ;
       a sdmx:CodeList ;
       skos:prefLabel "Indicator groups used by Digital Agenda Scoreboard" ;

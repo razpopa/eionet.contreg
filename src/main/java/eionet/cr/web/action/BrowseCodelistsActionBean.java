@@ -177,10 +177,9 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
 
         ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
         try {
-            int itemCount = dao.exportCodelistItems(itemRdfType, destFile, propsToSpreadsheetCols);
+            int itemCount = dao.exportCodelistItems(itemRdfType, spreadsheetTemplate, propsToSpreadsheetCols, destFile);
             LOGGER.debug("Number of exported codelist items = " + itemCount);
-            File f = new File(destFile.getParent(), "___" + destFile.getName());
-            return streamToResponse(f);
+            return streamToResponse(destFile, spreadsheetTemplate.getName());
         } catch (DAOException e) {
             LOGGER.error("Error when exporting " + codelistUri + " to " + destFile, e);
             addWarningMessage("Codelist export failed with technical error: " + e.getMessage());
@@ -191,9 +190,10 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     /**
      *
      * @param file
+     * @param targetName
      * @return
      */
-    private StreamingResolution streamToResponse(final File file) {
+    private StreamingResolution streamToResponse(final File file, String targetName) {
 
         return new StreamingResolution("application/vnd.ms-excel") {
 
@@ -216,7 +216,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
                     FileDeletionJob.register(file);
                 }
             }
-        }.setFilename(file.getName());
+        }.setFilename(StringUtils.isBlank(targetName) ? file.getName() : targetName);
     }
 
     /**

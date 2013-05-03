@@ -78,12 +78,13 @@ public interface ScoreboardSparqlDAO extends DAO {
     /**
      * Exports codelist items of given RDF type into the given spreadsheet template file, using the given properties-to-columns map.
      *
-     * @param itemRdfType The RDF type of codelist items to export.
-     * @param spreadsheetTemplate Reference to the spreadsheet template file to export into.
-     * @param propsToSpreadsheetCols Maps the properties of codelist items to corresponding spreadsheet columns (e.g. 0,1,2 ...)
+     * @param itemType The RDF type of codelist items to export.
+     * @param templateFile Reference to the spreadsheet template file to export into.
+     * @param mappings Maps the properties of codelist items to corresponding spreadsheet columns (e.g. 0,1,2 ...)
+     * @param targetFile The target spreadsheet file where the exported workbook will be saved to.
      * @return The number of items exported.
      * @throws DAOException Any sort of exception is wrapped into this one.
      */
-    int exportCodelistItems(String itemRdfType, File spreadsheetTemplate, Map<String, Integer> propsToSpreadsheetCols)
+    int exportCodelistItems(String itemType, File templateFile, Map<String, Integer> mappings, File targetFile)
             throws DAOException;
 }

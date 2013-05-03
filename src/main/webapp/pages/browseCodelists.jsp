@@ -42,7 +42,7 @@
                 </c:forEach>
             </stripes:select>&nbsp;
             <stripes:submit name="metadata" value="Codelist metadata" title="Go to the factsheet about the metadata of the selected codelist."/>&nbsp;
-            <stripes:submit name="export" value="Excel export" title="Download the selected codelist as an MS Excel file." onclick="alert('This feature is still under construction!');"/>
+            <stripes:submit name="export" value="Excel export" title="Download the selected codelist as an MS Excel file."/>
         </crfn:form>
     </div>
 
