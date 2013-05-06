@@ -160,3 +160,48 @@ create table CR.cr3user.acl_rows (
     "status" integer NOT NULL default '0',
     PRIMARY KEY  ("acl_id","type","entry_type","principal","status")
 );
+
+create table "CR"."cr3user"."staging_db"
+(
+  "database_id" INTEGER IDENTITY,
+  "name" VARCHAR(150),
+  "creator" VARCHAR(80),
+  "created" DATETIME,
+  "description" LONG VARCHAR,
+  "import_status" VARCHAR(30),
+  "import_log" LONG VARCHAR,
+  "default_query" LONG VARCHAR,
+  PRIMARY KEY ("database_id")
+);
+
+create table "CR"."cr3user"."staging_db_rdf_export"
+(
+  "export_id" INTEGER IDENTITY,
+  "database_id" INTEGER,
+  "export_name" VARCHAR(150),
+  "user_name" VARCHAR(80),
+  "query_conf" LONG VARCHAR,
+  "started" DATETIME,
+  "finished" DATETIME,
+  "status" VARCHAR(30),
+  "export_log" LONG VARCHAR,
+  "row_count" INTEGER,
+  "noof_subjects" INTEGER,
+  "noof_triples" INTEGER,
+  "missing_concepts" LONG VARCHAR,
+  "graphs" LONG VARCHAR,
+  PRIMARY KEY ("export_id")
+);
+
+create table "CR"."cr3user"."endpoint_harvest_query"
+(
+  "endpoint_harvest_query_id" INTEGER IDENTITY,
+  "title" VARCHAR(255),
+  "query" LONG VARCHAR,
+  "endpoint_url" VARCHAR(1024),
+  "endpoint_url_hash" BIGINT,
+  "position_number" INTEGER,
+  "active" VARCHAR(1),
+  "last_modified" DATETIME,
+  PRIMARY KEY ("endpoint_harvest_query_id")
+);
