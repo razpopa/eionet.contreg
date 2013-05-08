@@ -1,6 +1,7 @@
 package eionet.cr.dao;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @return
      * @throws DAOException
      */
-    String createDataCubeDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException;
+    String createDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException;
 
     /**
      *
@@ -87,4 +88,16 @@ public interface ScoreboardSparqlDAO extends DAO {
      */
     int exportCodelistItems(String itemType, File templateFile, Map<String, Integer> mappings, File targetFile)
             throws DAOException;
+
+    /**
+     * Removes all triples where the subject is the given subject URI and the predicate is dcterms:modified and the graph is the
+     * given graph URI. Then adds a single triple where the subject, predicate and graph are the same, but the object is the given
+     * date value.
+     *   
+     * @param subjectUri The given subject URI.
+     * @param date The given date value. If null, then current system date will be used.
+     * @param graphUri The given graph URI.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    void updateDcTermsModified(String subjectUri, Date date, String graphUri) throws DAOException;
 }

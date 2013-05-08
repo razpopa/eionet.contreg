@@ -31,7 +31,7 @@ import eionet.cr.web.util.ObservationFilter;
 
 /**
  * A Virtuoso-specific implementation of {@link ScoreboardSparqlDAO}.
- *
+ * 
  * @author jaanus
  */
 public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements ScoreboardSparqlDAO {
@@ -69,7 +69,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getCodelists(java.lang.String)
      */
     @Override
@@ -88,7 +88,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getCodelistItems(java.lang.String)
      */
     @Override
@@ -107,11 +107,11 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#createDataCubeDataset(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public String createDataCubeDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException {
+    public String createDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException {
 
         // Assume input validations have been done by the caller!
 
@@ -172,7 +172,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#datasetExists(java.lang.String)
      */
     @Override
@@ -196,7 +196,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getFilterValues(java.util.Map, eionet.cr.web.util.ObservationFilter)
      */
     @Override
@@ -258,7 +258,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.ScoreboardSparqlDAO#exportCodelistItems(java.lang.String, java.io.File, java.util.Map)
      */
     @SuppressWarnings("unchecked")
@@ -287,5 +287,52 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         }
 
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#updateDcTermsModified(java.lang.String, java.util.Date, java.lang.String)
+     */
+    @Override
+    public void updateDcTermsModified(String subjectUri, Date date, String graphUri) throws DAOException {
+
+        if (StringUtils.isBlank(subjectUri)) {
+            throw new IllegalArgumentException("The subject URI must not be blank!");
+        }
+        if (StringUtils.isBlank(graphUri)) {
+            throw new IllegalArgumentException("The graph URI must not be blank!");
+        }
+        if (date == null) {
+            date = new Date();
+        }
+
+        RepositoryConnection repoConn = null;
+        try {
+            repoConn = SesameUtil.getRepositoryConnection();
+            repoConn.setAutoCommit(false);
+            ValueFactory vf = repoConn.getValueFactory();
+
+            // Prepare some values
+            URI subjectURI = vf.createURI(subjectUri);
+            URI predicateURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
+            URI graphURI = vf.createURI(graphUri);
+            Literal dateValue = vf.createLiteral(Util.virtuosoDateToString(date), XMLSchema.DATETIME);
+
+            // Remove all previous dcterms:modified triples of the given subject in the given graph.
+            repoConn.remove(subjectURI, predicateURI, null, graphURI);
+
+            // Add the new dcterms:modified triple.
+            repoConn.add(subjectURI, predicateURI, dateValue, graphURI);
+
+            // Commit the transaction.
+            repoConn.commit();
+
+        } catch (RepositoryException e) {
+            SesameUtil.rollback(repoConn);
+            throw new DAOException("Failed to update dcterms:modified of " + subjectUri, e);
+        } finally {
+            SesameUtil.close(repoConn);
+        }
     }
 }

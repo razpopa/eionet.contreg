@@ -293,7 +293,7 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
 
         ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
         try {
-            String datasetUri = dao.createDataCubeDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
+            String datasetUri = dao.createDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
             addSystemMessage("A new dataset with identifier \"" + newDatasetIdentifier + "\" successfully created!");
             if (queryConf == null) {
                 queryConf = new QueryConfiguration();

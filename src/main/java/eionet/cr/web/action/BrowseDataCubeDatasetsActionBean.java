@@ -88,7 +88,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     public Resolution createNew() {
 
         try {
-            DAOFactory.get().getDao(ScoreboardSparqlDAO.class).createDataCubeDataset(identifier, dctermsTitle, dctermsDescription);
+            DAOFactory.get().getDao(ScoreboardSparqlDAO.class).createDataset(identifier, dctermsTitle, dctermsDescription);
             addSystemMessage("A new dataset with identifier \"" + identifier + "\" successfully created!");
         } catch (DAOException e) {
             LOGGER.error("Dataset creation failed with technical error", e);

@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -39,9 +40,11 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
@@ -54,6 +57,7 @@ import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.StagingDatabaseDTO;
 import eionet.cr.harvest.OnDemandHarvester;
 import eionet.cr.util.LogUtil;
+import eionet.cr.util.Util;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.SQLUtil;
 import eionet.cr.web.security.CRUser;
@@ -241,26 +245,41 @@ public class ExportRunner extends Thread {
     @Override
     public void run() {
 
+        // Log start event.
         long started = System.currentTimeMillis();
         LogUtil.debug("RDF export (id=" + exportId + ") started by " + userName, exportLogger, LOGGER);
 
         boolean failed = false;
         RepositoryConnection repoConn = null;
         try {
-            if (queryConf.isClearDataset()) {
-                String graphUri = getGraphUri();
-                if (StringUtils.isNotBlank(graphUri)) {
-                    LogUtil.debug("Clearing the graph: " + graphUri, exportLogger, LOGGER);
-                    DAOFactory.get().getDao(HarvestSourceDAO.class).clearGraph(graphUri);
+            // Create repository connection, set its auto-commit to false.
+            repoConn = SesameUtil.getRepositoryConnection();
+            repoConn.setAutoCommit(false);
+            
+            // Prepare re-occurring instances of Sesame's Value and URI, for better performance.
+            ValueFactory valueFactory = repoConn.getValueFactory();
+            prepareValues(valueFactory);
+
+            // If the dataset should be cleared then do it right now.
+            if (queryConf.isClearDataset() && graphURI != null) {
+                LogUtil.debug("Clearing the graph: " + graphURI, exportLogger, LOGGER);
+                try {
+                    repoConn.clear(graphURI);
+                } catch (RepositoryException e) {
+                    throw new DAOException("Failed clearing graph: " + graphURI, e);
                 }
             }
 
-            repoConn = SesameUtil.getRepositoryConnection();
-            repoConn.setAutoCommit(false);
-
-            doRun(repoConn);
+            // Run the export query and export its results.
+            executeExport(repoConn);
+            
+            // Update the dataset's last modification date.
+            updateDatasetModificationDate(repoConn, valueFactory, datasetValueURI);
+            
+            // Commit the transaction.
             repoConn.commit();
 
+            // Log finish event.
             long millis = System.currentTimeMillis() - started;
             LogUtil.debug("RDF export (id=" + exportId + ") finished in " + (millis / 1000L) + " sec", exportLogger, LOGGER);
 
@@ -272,8 +291,10 @@ public class ExportRunner extends Thread {
             SesameUtil.close(repoConn);
         }
 
+        // Start post harvests.
         startPostHarvests();
 
+        // Update export status to finished in the DB.
         try {
             getDao().finishRDFExport(exportId, this, failed ? ExportStatus.ERROR : ExportStatus.COMPLETED);
         } catch (DAOException e) {
@@ -282,21 +303,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * Update export status.
-     * 
-     * @param status
-     *            the status
-     */
-    private void updateExportStatus(ExportStatus status) {
-        try {
-            getDao().updateExportStatus(exportId, status);
-        } catch (DAOException e) {
-            LOGGER.error("Failed to update the status of RF export with id = " + exportId, e);
-        }
-    }
-
-    /**
-     * Do run.
+     * Run the export query and export its results..
      * 
      * @param repoConn
      *            the repo conn
@@ -306,7 +313,7 @@ public class ExportRunner extends Thread {
      *             the sQL exception
      * @throws DAOException
      */
-    private void doRun(RepositoryConnection repoConn) throws RepositoryException, SQLException, DAOException {
+    private void executeExport(RepositoryConnection repoConn) throws RepositoryException, SQLException, DAOException {
 
         // Nothing to do here if query or column mappings is empty.
         if (StringUtils.isBlank(queryConf.getQuery()) || queryConf.getColumnMappings().isEmpty()) {
@@ -317,17 +324,21 @@ public class ExportRunner extends Thread {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
+            // Prepare ValueFactory to be used by each "export row" call below.
             ValueFactory valueFactory = repoConn.getValueFactory();
-            prepareValues(valueFactory);
 
+            // Execute the query whose results are to be exported.
             sqlConn = SesameUtil.getSQLConnection(dbDTO.getName());
             pstmt = sqlConn.prepareStatement(queryConf.getQuery());
             rs = pstmt.executeQuery();
 
+            // Loop over the query's result set, export each row.
             rowCount = 0;
             while (rs.next()) {
                 rowCount++;
                 exportRow(rs, rowCount, repoConn, valueFactory);
+                
+                // Log progress after every 1000 rows, but not more than 50 times.
                 if (rowCount % 1000 == 0) {
                     if (rowCount == 50000) {
                         LogUtil.debug(rowCount + " rows exported, no further row-count logged until export finished...",
@@ -370,7 +381,7 @@ public class ExportRunner extends Thread {
         datasetPredicateURI = vf.createURI(Predicates.DATACUBE_DATA_SET);
         datasetValueURI = vf.createURI(datasetUri);
 
-        graphURI = vf.createURI(getGraphUri());
+        graphURI = vf.createURI(StringUtils.replace(datasetUri, "/dataset/", "/data/"));
     }
 
     /**
@@ -563,6 +574,27 @@ public class ExportRunner extends Thread {
             valuesByPredicate.put(predicateURI, values);
         }
         values.add(value);
+    }
+    
+    /**
+     * Updates the last modified date of the given dataset, using the given repository connection and value factory.
+     * 
+     * @param repoConn
+     * @param vf
+     * @param datasetURI
+     * @throws RepositoryException 
+     */
+    private void updateDatasetModificationDate(RepositoryConnection repoConn, ValueFactory vf, URI datasetURI) throws RepositoryException {
+        
+        // Prepare some values
+        URI predicateURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
+        Literal dateValue = vf.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME);
+        
+        // Remove all previous dcterms:modified triples of the given dataset.
+        repoConn.remove(datasetURI, predicateURI, null, datasetURI);
+        
+        // Add new dcterms:modified triple for the given dataset.
+        repoConn.add(datasetURI, predicateURI, dateValue, datasetURI);
     }
 
     /**
@@ -934,13 +966,5 @@ public class ExportRunner extends Thread {
             LOGGER.error("Failed to harvest " + uri, e);
             LogUtil.warn("Failed to harvest " + uri, exportLogger, LOGGER);
         }
-    }
-
-    /**
-     * 
-     * @return
-     */
-    private String getGraphUri() {
-        return StringUtils.replace(queryConf.getDatasetUri(), "/dataset/", "/data/");
     }
 }

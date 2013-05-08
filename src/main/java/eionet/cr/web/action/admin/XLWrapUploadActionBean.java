@@ -3,6 +3,7 @@ package eionet.cr.web.action.admin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,7 @@ import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.harvest.OnDemandHarvester;
 import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.Pair;
+import eionet.cr.util.xlwrap.StatementListener;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
 import eionet.cr.web.action.AbstractActionBean;
@@ -51,9 +53,9 @@ import eionet.cr.web.security.CRUser;
  * Action bean for uploading an MS Excel or OpenDocument spreadsheet file into the RDF model and triple store. Pre-configured types
  * of files are supported, e.g. a file containing metadata of Digital Agenda Scoreboard indicators, a file containing metadata of
  * Digital Agenda Scoreboard breakdowns, etc.
- *
+ * 
  * {@link XLWrapUtil} is used for performing the parsing and storage into triple store.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/admin/xlwrapUpload.action")
@@ -95,7 +97,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     private String newDatasetDescription;
 
     /**
-     *
+     * 
      * @return
      */
     @DefaultHandler
@@ -109,7 +111,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws Exception
      */
@@ -143,18 +145,38 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         }
 
         try {
-            String dataset = isObservationsUpload ? targetDataset : null;
-            dataset = StringUtils.replace(dataset, "/dataset/", "/data/");
+            
+            // If uploading observations, prepare the target data graph URI.
+            String dataGraphUri = isObservationsUpload ? targetDataset : null;
+            dataGraphUri = StringUtils.replace(dataGraphUri, "/dataset/", "/data/");
+            
+            // Prepare the "clear" flag, depending on whether we're clearing a target dataset of observations or codelist graph.
             boolean clear = isObservationsUpload ? clearDataset : clearGraph;
             StatementListener stmtListener = new StatementListener(uploadType.getSubjectsTypeUri());
 
-            XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataset, clear, stmtListener);
+            // Execute the import.
+            XLWrapUtil.importMapping(uploadType, spreadsheetFile, dataGraphUri, clear, stmtListener);
+
+            // If this far, then lets update dataset or codelist modification date, depending on whether
+            // we're uploading observations or a codelist.
+            if (isObservationsUpload) {
+                DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(targetDataset, new Date(), targetDataset);
+            }
+            else{
+                String graphUri = uploadType.getGraphUri();
+                String codelistUri = StringUtils.substringBeforeLast(graphUri, "/");
+                DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(codelistUri, new Date(), graphUri);
+            }
+            
+            // Start harvests for URIs that should be post-harvested.
             startPostHarvests(stmtListener.getHarvestUris());
 
+            // Feedback to the user.
             addSystemMessage(stmtListener.getSubjects().size()
                     + " items of selected type successfully imported!\n Click on on the below link to explore them further.");
 
-            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? dataset : uploadType.getGraphUri());
+            // Update the uploaded graph attribute in session and redirect to defaulkt event.
+            getContext().setSessionAttribute(UPLOADED_GRAPH_ATTR, isObservationsUpload ? dataGraphUri : uploadType.getGraphUri());
             return new RedirectResolution(getClass());
 
         } catch (IOException e) {
@@ -179,7 +201,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution cancel() {
@@ -187,14 +209,14 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution createNewDataset() {
 
         ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
         try {
-            String datasetUri = dao.createDataCubeDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
+            String datasetUri = dao.createDataset(newDatasetIdentifier, newDatasetTitle, newDatasetDescription);
             addSystemMessage("A new dataset with identifier \"" + newDatasetIdentifier + "\" successfully created!");
             return new RedirectResolution(getClass()).addParameter("targetDataset", datasetUri)
                     .addParameter("clearDataset", clearDataset).addParameter("uploadType", XLWrapUploadType.OBSERVATION.name());
@@ -269,7 +291,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public List<XLWrapUploadType> getUploadTypes() {
@@ -277,7 +299,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Class getObjectsInSourceActionBeanClass() {
@@ -299,7 +321,8 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param clearGraph the clearGraph to set
+     * @param clearGraph
+     *            the clearGraph to set
      */
     public void setClearGraph(boolean clearGraph) {
         this.clearGraph = clearGraph;
@@ -314,7 +337,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /**
      * Lazy getter for the datasets.
-     *
+     * 
      * @return the datasets
      * @throws DAOException
      */
@@ -332,14 +355,16 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param clearDataset the clearDataset to set
+     * @param clearDataset
+     *            the clearDataset to set
      */
     public void setClearDataset(boolean clearDataset) {
         this.clearDataset = clearDataset;
     }
 
     /**
-     * @param targetDataset the targetDataset to set
+     * @param targetDataset
+     *            the targetDataset to set
      */
     public void setTargetDataset(String targetDataset) {
         this.targetDataset = targetDataset;
@@ -360,7 +385,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param harvestUris
      */
     private void startPostHarvests(Set<String> harvestUris) {
@@ -378,7 +403,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param uri
      * @param dao
      */
@@ -399,126 +424,26 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     * @param newDatasetIdentifier the newDatasetIdentifier to set
+     * @param newDatasetIdentifier
+     *            the newDatasetIdentifier to set
      */
     public void setNewDatasetIdentifier(String newDatasetIdentifier) {
         this.newDatasetIdentifier = newDatasetIdentifier;
     }
 
     /**
-     * @param newDatasetTitle the newDatasetTitle to set
+     * @param newDatasetTitle
+     *            the newDatasetTitle to set
      */
     public void setNewDatasetTitle(String newDatasetTitle) {
         this.newDatasetTitle = newDatasetTitle;
     }
 
     /**
-     * @param newDatasetDescription the newDatasetDescription to set
+     * @param newDatasetDescription
+     *            the newDatasetDescription to set
      */
     public void setNewDatasetDescription(String newDatasetDescription) {
         this.newDatasetDescription = newDatasetDescription;
-    }
-
-    /**
-     * @author jaanus
-     */
-    private static final class StatementListener implements RDFHandler {
-
-        /** */
-        private HashSet<String> harvestUris = new HashSet<String>();
-
-        /** */
-        private String subjectsRdfType;
-
-        /** */
-        private HashSet<String> subjects = new HashSet<String>();
-
-        /**
-         * @param subjectsRdfType
-         */
-        StatementListener(String subjectsRdfType) {
-            if (subjectsRdfType == null) {
-                subjectsRdfType = "";
-            }
-            this.subjectsRdfType = subjectsRdfType;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.openrdf.rio.RDFHandler#endRDF()
-         */
-        @Override
-        public void endRDF() throws RDFHandlerException {
-            // Auto-generated method stub
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.openrdf.rio.RDFHandler#handleComment(java.lang.String)
-         */
-        @Override
-        public void handleComment(String arg0) throws RDFHandlerException {
-            // Auto-generated method stub
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.openrdf.rio.RDFHandler#handleNamespace(java.lang.String, java.lang.String)
-         */
-        @Override
-        public void handleNamespace(String arg0, String arg1) throws RDFHandlerException {
-            // Auto-generated method stub
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.openrdf.rio.RDFHandler#handleStatement(org.openrdf.model.Statement)
-         */
-        @Override
-        public void handleStatement(Statement stmt) throws RDFHandlerException {
-
-            URI predicateURI = stmt.getPredicate();
-            if (Predicates.DAS_TIMEPERIOD.equals(predicateURI.stringValue())) {
-                Value object = stmt.getObject();
-                if (object instanceof URI) {
-                    harvestUris.add(object.stringValue());
-                }
-            }
-
-            if (Predicates.RDF_TYPE.equals(predicateURI.stringValue())) {
-                Value object = stmt.getObject();
-                if (object != null && subjectsRdfType.equals(object.stringValue())) {
-                    subjects.add(stmt.getSubject().stringValue());
-                }
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.openrdf.rio.RDFHandler#startRDF()
-         */
-        @Override
-        public void startRDF() throws RDFHandlerException {
-            // Auto-generated method stub
-        }
-
-        /**
-         * @return the harvestUris
-         */
-        public HashSet<String> getHarvestUris() {
-            return harvestUris;
-        }
-
-        /**
-         * @return
-         */
-        public HashSet<String> getSubjects() {
-            return subjects;
-        }
     }
 }
