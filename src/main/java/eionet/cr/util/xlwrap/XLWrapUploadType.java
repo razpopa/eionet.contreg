@@ -7,6 +7,7 @@ import java.net.URL;
 import org.apache.commons.lang.WordUtils;
 
 import eionet.cr.common.CRRuntimeException;
+import eionet.cr.common.Subjects;
 
 public enum XLWrapUploadType {
 
@@ -16,7 +17,7 @@ public enum XLWrapUploadType {
     BREAKDOWN_GROUP("Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
     UNIT_MEASURE("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
     SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"),
-    OBSERVATION("Observations", "File containing Digital Agenda Scoreboard observations");
+    OBSERVATION("Observations", "File containing Digital Agenda Scoreboard observations", "", Subjects.DATACUBE_OBSERVATION);
 
     /** */
     private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@/";
@@ -25,7 +26,7 @@ public enum XLWrapUploadType {
     /** */
     public static final String MAPPING_FILE_EXTENSION = "trig";
     public static final String SPREADSHEET_FILE_EXTENSION = "xls";
-
+    
     /** */
     private String title;
     private String hint;
@@ -39,12 +40,12 @@ public enum XLWrapUploadType {
     private File spreadsheetTemplate;
 
     /**
-     * Constructor.
+     * Basic constructor.
      * @param title
      * @param hint
      */
     private XLWrapUploadType(String title, String hint) {
-
+        
         // Prepare title and hint.
 
         this.title = title;
@@ -87,6 +88,22 @@ public enum XLWrapUploadType {
             throw new CRRuntimeException("Invalid spreadsheet template URI: " + spreadsheetTemplateURL, e);
         }
     }
+    
+    /**
+     * Calls basic constructor and sets the graph URI and the subjects type URI to the ones given in this constructor input.
+     * 
+     * @param title
+     * @param hint
+     * @param graphUri
+     * @param subjectsTypeUri
+     */
+    private XLWrapUploadType(String title, String hint, String graphUri, String subjectsTypeUri) {
+        
+        this(title,hint);
+        this.graphUri = graphUri;
+        this.subjectsTypeUri = subjectsTypeUri;
+    }
+    
 
     /**
      * @return the title

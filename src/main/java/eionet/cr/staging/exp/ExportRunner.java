@@ -330,7 +330,8 @@ public class ExportRunner extends Thread {
                 exportRow(rs, rowCount, repoConn, valueFactory);
                 if (rowCount % 1000 == 0) {
                     if (rowCount == 50000) {
-                        LogUtil.debug(rowCount + " rows exported, no further row-count logged until export finished...", exportLogger, LOGGER);
+                        LogUtil.debug(rowCount + " rows exported, no further row-count logged until export finished...",
+                                exportLogger, LOGGER);
                     }
                     else if (rowCount < 50000) {
                         LogUtil.debug(rowCount + " rows exported", exportLogger, LOGGER);
@@ -444,6 +445,15 @@ public class ExportRunner extends Thread {
             ObjectProperty property = entry.getValue();
             if (property.getId().equals(INDICATOR)) {
                 hasIndicatorMapping = true;
+            }
+
+            if (StringUtils.isBlank(colValue)) {
+                if (property.getId().equals(BREAKDOWN)) {
+                    colValue = DEFAULT_BREAKDOWN_CODE;
+                }
+                else if (property.getId().equals(INDICATOR)) {
+                    colValue = DEFAULT_INDICATOR_CODE;
+                }
             }
 
             if (StringUtils.isNotBlank(colValue)) {
