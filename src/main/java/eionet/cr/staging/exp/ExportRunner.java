@@ -60,7 +60,7 @@ import eionet.cr.web.security.CRUser;
 
 /**
  * A thread runs a given RDF export query with a given query configuration on a given staging database.
- *
+ * 
  * @author jaanus
  */
 public class ExportRunner extends Thread {
@@ -165,7 +165,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Private class constructor, to be used for running the export.
-     *
+     * 
      * @param dbDTO
      *            The DTO of the staging database on which the query shall be run.
      * @param exportId
@@ -203,7 +203,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Private class constructor, to be used for test-running the export.
-     *
+     * 
      * @param dbDTO
      * @param queryConf
      */
@@ -219,7 +219,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Creates the logger.
-     *
+     * 
      * @param exportId
      *            the export id
      * @return the export logger
@@ -235,7 +235,7 @@ public class ExportRunner extends Thread {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Thread#run()
      */
     @Override
@@ -247,9 +247,12 @@ public class ExportRunner extends Thread {
         boolean failed = false;
         RepositoryConnection repoConn = null;
         try {
-            if (queryConf.isClearDataset() && StringUtils.isNotBlank(queryConf.getDatasetUri())) {
-                LogUtil.debug("Clearing the dataset: " + queryConf.getDatasetUri(), exportLogger, LOGGER);
-                DAOFactory.get().getDao(HarvestSourceDAO.class).clearGraph(queryConf.getDatasetUri());
+            if (queryConf.isClearDataset()) {
+                String graphUri = getGraphUri();
+                if (StringUtils.isNotBlank(graphUri)) {
+                    LogUtil.debug("Clearing the graph: " + graphUri, exportLogger, LOGGER);
+                    DAOFactory.get().getDao(HarvestSourceDAO.class).clearGraph(graphUri);
+                }
             }
 
             repoConn = SesameUtil.getRepositoryConnection();
@@ -280,7 +283,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Update export status.
-     *
+     * 
      * @param status
      *            the status
      */
@@ -294,7 +297,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Do run.
-     *
+     * 
      * @param repoConn
      *            the repo conn
      * @throws RepositoryException
@@ -326,7 +329,12 @@ public class ExportRunner extends Thread {
                 rowCount++;
                 exportRow(rs, rowCount, repoConn, valueFactory);
                 if (rowCount % 1000 == 0) {
-                    LogUtil.debug(rowCount + " rows exported so far", exportLogger, LOGGER);
+                    if (rowCount == 50000) {
+                        LogUtil.debug(rowCount + " rows exported, no further row-count logged until export finished...", exportLogger, LOGGER);
+                    }
+                    else if (rowCount < 50000) {
+                        LogUtil.debug(rowCount + " rows exported", exportLogger, LOGGER);
+                    }
                 }
             }
         } finally {
@@ -361,13 +369,12 @@ public class ExportRunner extends Thread {
         datasetPredicateURI = vf.createURI(Predicates.DATACUBE_DATA_SET);
         datasetValueURI = vf.createURI(datasetUri);
 
-        graphURI = datasetValueURI;
-        graphURI = vf.createURI(StringUtils.replace(datasetUri, "/dataset/", "/data/"));
+        graphURI = vf.createURI(getGraphUri());
     }
 
     /**
      * Sets the predicate ur is.
-     *
+     * 
      * @param vf
      *            the new predicate ur is
      */
@@ -382,7 +389,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Export row.
-     *
+     * 
      * @param rs
      *            the rs
      * @param rowIndex
@@ -530,7 +537,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Adds the predicate value.
-     *
+     * 
      * @param valuesByPredicate
      *            the values by predicate
      * @param predicateURI
@@ -550,7 +557,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Lazy getter for the {@link #dao}.
-     *
+     * 
      * @return the DAO
      */
     private StagingDatabaseDAO getDao() {
@@ -564,7 +571,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Start.
-     *
+     * 
      * @param dbDTO
      *            the db dto
      * @param exportName
@@ -591,7 +598,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the export id.
-     *
+     * 
      * @return the exportId
      */
     public int getExportId() {
@@ -600,7 +607,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the triple count.
-     *
+     * 
      * @return the tripleCount
      */
     public int getTripleCount() {
@@ -609,7 +616,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the subject count.
-     *
+     * 
      * @return the subjectCount
      */
     public int getSubjectCount() {
@@ -618,7 +625,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the export name.
-     *
+     * 
      * @return the exportName
      */
     public String getExportName() {
@@ -627,7 +634,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Sets the hidden properties values.
-     *
+     * 
      * @param vf
      *            the new hidden properties values
      */
@@ -641,7 +648,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @param dbDTO
      * @param queryConf
      * @return
@@ -658,7 +665,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @throws SQLException
      * @throws RepositoryException
      * @throws DAOException
@@ -696,7 +703,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @param rs
      * @param rowIndex
      * @throws SQLException
@@ -797,7 +804,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public int getMaxTestResults() {
@@ -805,7 +812,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isFoundMissingConcepts() {
@@ -822,7 +829,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String missingConceptsToString() {
@@ -848,7 +855,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @param str
      * @return
      */
@@ -898,7 +905,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      * @param uri
      * @param dao
      */
@@ -917,5 +924,13 @@ public class ExportRunner extends Thread {
             LOGGER.error("Failed to harvest " + uri, e);
             LogUtil.warn("Failed to harvest " + uri, exportLogger, LOGGER);
         }
+    }
+
+    /**
+     * 
+     * @return
+     */
+    private String getGraphUri() {
+        return StringUtils.replace(queryConf.getDatasetUri(), "/dataset/", "/data/");
     }
 }
