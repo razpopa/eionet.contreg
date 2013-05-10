@@ -51,16 +51,13 @@ import org.openrdf.repository.RepositoryException;
 import eionet.cr.common.Predicates;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
-import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.StagingDatabaseDAO;
-import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.StagingDatabaseDTO;
-import eionet.cr.harvest.OnDemandHarvester;
+import eionet.cr.staging.util.TimePeriodsHarvester;
 import eionet.cr.util.LogUtil;
 import eionet.cr.util.Util;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.SQLUtil;
-import eionet.cr.web.security.CRUser;
 
 /**
  * A thread runs a given RDF export query with a given query configuration on a given staging database.
@@ -165,7 +162,8 @@ public class ExportRunner extends Thread {
     /** */
     private int rowCount;
 
-    private HashSet<String> harvestUris = new HashSet<String>();
+    /** */
+    private HashSet<String> timePeriods = new HashSet<String>();
 
     /**
      * Private class constructor, to be used for running the export.
@@ -255,7 +253,7 @@ public class ExportRunner extends Thread {
             // Create repository connection, set its auto-commit to false.
             repoConn = SesameUtil.getRepositoryConnection();
             repoConn.setAutoCommit(false);
-            
+
             // Prepare re-occurring instances of Sesame's Value and URI, for better performance.
             ValueFactory valueFactory = repoConn.getValueFactory();
             prepareValues(valueFactory);
@@ -272,10 +270,10 @@ public class ExportRunner extends Thread {
 
             // Run the export query and export its results.
             executeExport(repoConn);
-            
+
             // Update the dataset's last modification date.
             updateDatasetModificationDate(repoConn, valueFactory, datasetValueURI);
-            
+
             // Commit the transaction.
             repoConn.commit();
 
@@ -292,7 +290,7 @@ public class ExportRunner extends Thread {
         }
 
         // Start post harvests.
-        startPostHarvests();
+        harvestTimePeriods();
 
         // Update export status to finished in the DB.
         try {
@@ -337,7 +335,7 @@ public class ExportRunner extends Thread {
             while (rs.next()) {
                 rowCount++;
                 exportRow(rs, rowCount, repoConn, valueFactory);
-                
+
                 // Log progress after every 1000 rows, but not more than 50 times.
                 if (rowCount % 1000 == 0) {
                     if (rowCount == 50000) {
@@ -417,7 +415,7 @@ public class ExportRunner extends Thread {
      * @throws DAOException
      */
     private void exportRow(ResultSet rs, int rowIndex, RepositoryConnection repoConn, ValueFactory vf) throws SQLException,
-            RepositoryException, DAOException {
+    RepositoryException, DAOException {
 
         if (rowIndex == 1) {
             loadExistingConcepts();
@@ -543,7 +541,7 @@ public class ExportRunner extends Thread {
                         // Time periods should be harvested afterwards.
                         if (Predicates.DAS_TIMEPERIOD.equals(predicateURI.stringValue())) {
                             if (value instanceof URI) {
-                                harvestUris.add(value.stringValue());
+                                timePeriods.add(value.stringValue());
                             }
                         }
                     }
@@ -575,24 +573,25 @@ public class ExportRunner extends Thread {
         }
         values.add(value);
     }
-    
+
     /**
      * Updates the last modified date of the given dataset, using the given repository connection and value factory.
      * 
      * @param repoConn
      * @param vf
      * @param datasetURI
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
-    private void updateDatasetModificationDate(RepositoryConnection repoConn, ValueFactory vf, URI datasetURI) throws RepositoryException {
-        
+    private void updateDatasetModificationDate(RepositoryConnection repoConn, ValueFactory vf, URI datasetURI)
+            throws RepositoryException {
+
         // Prepare some values
         URI predicateURI = vf.createURI(Predicates.DCTERMS_MODIFIED);
         Literal dateValue = vf.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME);
-        
+
         // Remove all previous dcterms:modified triples of the given dataset.
         repoConn.remove(datasetURI, predicateURI, null, datasetURI);
-        
+
         // Add new dcterms:modified triple for the given dataset.
         repoConn.add(datasetURI, predicateURI, dateValue, datasetURI);
     }
@@ -699,7 +698,7 @@ public class ExportRunner extends Thread {
      * @throws RepositoryException
      */
     public static ExportRunner test(StagingDatabaseDTO dbDTO, QueryConfiguration queryConf) throws RepositoryException,
-            DAOException, SQLException {
+    DAOException, SQLException {
 
         ExportRunner exportRunner = new ExportRunner(dbDTO, queryConf);
         exportRunner.test();
@@ -931,40 +930,18 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     *
+     * 
      */
-    private void startPostHarvests() {
+    private void harvestTimePeriods() {
 
-        if (harvestUris.isEmpty()) {
+        if (timePeriods.isEmpty()) {
             return;
         }
 
-        HarvestSourceDAO dao = DAOFactory.get().getDao(HarvestSourceDAO.class);
-        for (String uri : harvestUris) {
-            LOGGER.debug("Going to harvest " + uri);
-            startPostHarvest(uri, dao);
-        }
-    }
-
-    /**
-     * 
-     * @param uri
-     * @param dao
-     */
-    private void startPostHarvest(String uri, HarvestSourceDAO dao) {
-
-        HarvestSourceDTO dto = new HarvestSourceDTO();
-        dto.setUrl(StringUtils.substringBefore(uri, "#"));
-        dto.setEmails("");
-        dto.setIntervalMinutes(0);
-        dto.setPrioritySource(false);
-        dto.setOwner(null);
-        try {
-            dao.addSourceIgnoreDuplicate(dto);
-            OnDemandHarvester.harvest(dto.getUrl(), CRUser.APPLICATION.getUserName());
-        } catch (Exception e) {
-            LOGGER.error("Failed to harvest " + uri, e);
-            LogUtil.warn("Failed to harvest " + uri, exportLogger, LOGGER);
-        }
-    }
+        LOGGER.debug("Going to harvest time periods ...");
+        TimePeriodsHarvester tpHarvester = new TimePeriodsHarvester(timePeriods);
+        tpHarvester.execute();
+        int harvestedCount = tpHarvester.getHarvestedCount();
+        int newCount = tpHarvester.getNoOfNewPeriods();
+        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");    }
 }

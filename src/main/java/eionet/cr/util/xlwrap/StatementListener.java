@@ -20,13 +20,13 @@ public class StatementListener implements RDFHandler {
 
     /** */
     private String subjectsRdfType;
-    
+
     /** */
-    private HashSet<String> harvestUris = new HashSet<String>();
+    private HashSet<String> timePeriodUris = new HashSet<String>();
 
     /** */
     private HashSet<String> subjects = new HashSet<String>();
-    
+
     /**
      * @param subjectsRdfType
      */
@@ -74,12 +74,12 @@ public class StatementListener implements RDFHandler {
      */
     @Override
     public void handleStatement(Statement stmt) throws RDFHandlerException {
-        
+
         URI predicateURI = stmt.getPredicate();
         if (Predicates.DAS_TIMEPERIOD.equals(predicateURI.stringValue())) {
             Value object = stmt.getObject();
             if (object instanceof URI) {
-                harvestUris.add(object.stringValue());
+                timePeriodUris.add(object.stringValue());
             }
         }
 
@@ -102,16 +102,16 @@ public class StatementListener implements RDFHandler {
     }
 
     /**
-     * @return the harvestUris
-     */
-    public HashSet<String> getHarvestUris() {
-        return harvestUris;
-    }
-
-    /**
      * @return
      */
     public HashSet<String> getSubjects() {
         return subjects;
+    }
+
+    /**
+     * @return the timePeriodUris
+     */
+    public HashSet<String> getTimePeriodUris() {
+        return timePeriodUris;
     }
 }

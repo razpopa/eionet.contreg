@@ -1,9 +1,11 @@
 package eionet.cr.dao;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import eionet.cr.common.Subjects;
 import eionet.cr.dto.SkosItemDTO;
@@ -100,4 +102,14 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
     void updateDcTermsModified(String subjectUri, Date date, String graphUri) throws DAOException;
+    
+    /**
+     * From the given subjects returns those that have the given property bound.
+     * 
+     * @param propertyUri URI of property to check.
+     * @param subjects Subjects to check.
+     * @return Those of the checked subjects that have the given property bound.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    Set<String> getSubjectsWithBoundProperty(String propertyUri, Set<String> subjects) throws DAOException;
 }

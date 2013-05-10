@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,11 +21,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
 
 import at.jku.xlwrap.common.XLWrapException;
 import eionet.cr.common.Predicates;
@@ -34,12 +28,10 @@ import eionet.cr.common.Subjects;
 import eionet.cr.common.TempFilePathGenerator;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
-import eionet.cr.dao.HarvestSourceDAO;
 import eionet.cr.dao.HelperDAO;
 import eionet.cr.dao.ScoreboardSparqlDAO;
-import eionet.cr.dto.HarvestSourceDTO;
 import eionet.cr.dto.SearchResultDTO;
-import eionet.cr.harvest.OnDemandHarvester;
+import eionet.cr.staging.util.TimePeriodsHarvester;
 import eionet.cr.util.FileDeletionJob;
 import eionet.cr.util.Pair;
 import eionet.cr.util.xlwrap.StatementListener;
@@ -47,7 +39,6 @@ import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.util.xlwrap.XLWrapUtil;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.factsheet.ObjectsInSourceActionBean;
-import eionet.cr.web.security.CRUser;
 
 /**
  * Action bean for uploading an MS Excel or OpenDocument spreadsheet file into the RDF model and triple store. Pre-configured types
@@ -145,11 +136,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         }
 
         try {
-            
+
             // If uploading observations, prepare the target data graph URI.
             String dataGraphUri = isObservationsUpload ? targetDataset : null;
             dataGraphUri = StringUtils.replace(dataGraphUri, "/dataset/", "/data/");
-            
+
             // Prepare the "clear" flag, depending on whether we're clearing a target dataset of observations or codelist graph.
             boolean clear = isObservationsUpload ? clearDataset : clearGraph;
             StatementListener stmtListener = new StatementListener(uploadType.getSubjectsTypeUri());
@@ -167,9 +158,9 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
                 String codelistUri = StringUtils.substringBeforeLast(graphUri, "/");
                 DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(codelistUri, new Date(), graphUri);
             }
-            
-            // Start harvests for URIs that should be post-harvested.
-            startPostHarvests(stmtListener.getHarvestUris());
+
+            // Harvest registered time-periods.
+            harvestTimePeriods(stmtListener.getTimePeriodUris());
 
             // Feedback to the user.
             addSystemMessage(stmtListener.getSubjects().size()
@@ -386,41 +377,20 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /**
      * 
-     * @param harvestUris
+     * @param timePeriodUris
      */
-    private void startPostHarvests(Set<String> harvestUris) {
+    private void harvestTimePeriods(Set<String> timePeriodUris) {
 
-        if (harvestUris == null || harvestUris.isEmpty()) {
+        if (timePeriodUris == null || timePeriodUris.isEmpty()) {
             return;
         }
 
-        LOGGER.debug("Starting post-harvests...");
-        HarvestSourceDAO dao = DAOFactory.get().getDao(HarvestSourceDAO.class);
-        for (String uri : harvestUris) {
-            LOGGER.debug("Going to harvest " + uri);
-            startPostHarvest(uri, dao);
-        }
-    }
-
-    /**
-     * 
-     * @param uri
-     * @param dao
-     */
-    private void startPostHarvest(String uri, HarvestSourceDAO dao) {
-
-        HarvestSourceDTO dto = new HarvestSourceDTO();
-        dto.setUrl(StringUtils.substringBefore(uri, "#"));
-        dto.setEmails("");
-        dto.setIntervalMinutes(0);
-        dto.setPrioritySource(false);
-        dto.setOwner(null);
-        try {
-            dao.addSourceIgnoreDuplicate(dto);
-            OnDemandHarvester.harvest(dto.getUrl(), CRUser.APPLICATION.getUserName());
-        } catch (Exception e) {
-            LOGGER.error("Failed to harvest " + uri, e);
-        }
+        LOGGER.debug("Going to harvest time periods ...");
+        TimePeriodsHarvester tpHarvester = new TimePeriodsHarvester(timePeriodUris);
+        tpHarvester.execute();
+        int harvestedCount = tpHarvester.getHarvestedCount();
+        int newCount = tpHarvester.getNoOfNewPeriods();
+        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");
     }
 
     /**

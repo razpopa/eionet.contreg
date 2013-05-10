@@ -72,6 +72,7 @@ public interface Predicates {
     String SKOS_NOTATION = "http://www.w3.org/2004/02/skos/core#notation";
     String SKOS_PREF_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
     String SKOS_ALT_LABEL = "http://www.w3.org/2004/02/skos/core#altLabel";
+    String SKOS_HAS_TOP_CONCEPT = "http://www.w3.org/2004/02/skos/core#hasTopConcept";
 
     String ROD_OBLIGATION_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#obligation";
     String ROD_INSTRUMENT_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#instrument";

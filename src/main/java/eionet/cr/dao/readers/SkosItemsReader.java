@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openrdf.query.BindingSet;
 
 import eionet.cr.dto.SkosItemDTO;
+import eionet.cr.util.URIUtil;
 import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 
 /**
@@ -29,8 +30,22 @@ public class SkosItemsReader extends SPARQLResultSetBaseReader<SkosItemDTO> {
         if (StringUtils.isNotBlank(uri)) {
 
             SkosItemDTO item = new SkosItemDTO(uri);
-            item.setSkosNotation(getStringValue(bindingSet, "skosNotation"));
-            item.setSkosPrefLabel(getStringValue(bindingSet, "skosPrefLabel"));
+
+            // Get and set skos:notation. If it's blank, try detecting from URI.
+            String skosNotation = getStringValue(bindingSet, "skosNotation");
+            if (StringUtils.isBlank(skosNotation)) {
+                skosNotation = URIUtil.extractURILabel(uri, uri);
+            }
+            item.setSkosNotation(skosNotation);
+
+            // Get and set skos:prefLabel. If it's blank, fall back to skos:notation.
+            String prefLabel = getStringValue(bindingSet, "skosPrefLabel");
+            if (StringUtils.isBlank(prefLabel)) {
+                prefLabel = skosNotation;
+            }
+            item.setSkosPrefLabel(prefLabel);
+
+            // Add the item to the result list.
             resultList.add(item);
         }
     }

@@ -2,8 +2,10 @@ package eionet.cr.dao.virtuoso;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,8 +27,10 @@ import eionet.cr.util.Bindings;
 import eionet.cr.util.Pair;
 import eionet.cr.util.URIUtil;
 import eionet.cr.util.Util;
+import eionet.cr.util.sesame.SPARQLQueryUtil;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.PairReader;
+import eionet.cr.util.sql.SingleObjectReader;
 import eionet.cr.web.util.ObservationFilter;
 
 /**
@@ -40,31 +44,56 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     private static final Logger LOGGER = Logger.getLogger(VirtuosoScoreboardSparqlDAO.class);
 
     // @formatter:off
-    private static final String GET_CODELISTS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + "select\n"
-            + "  ?uri as ?" + PairReader.LEFTCOL + " min(?prefLabel) as ?" + PairReader.RIGHTCOL + "\n" + "where {\n"
-            + "  ?uri a skos:ConceptScheme.\n" + "  filter (strStarts(str(?uri), ?uriStartsWith))\n"
-            + "  optional {?uri skos:prefLabel ?prefLabel}\n" + "}\n" + "group by ?uri";
+    private static final String GET_CODELISTS_SPARQL = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+            "select\n" +
+            "  ?uri as ?" + PairReader.LEFTCOL + " min(?prefLabel) as ?" + PairReader.RIGHTCOL + "\n" +
+            "where {\n" +
+            "  ?uri a skos:ConceptScheme.\n" +
+            "  filter (strStarts(str(?uri), ?uriStartsWith))\n" +
+            "  optional {?uri skos:prefLabel ?prefLabel}\n" +
+            "}\n" +
+            "group by ?uri order by ?uri";
 
-    private static final String GET_CODELIST_ITEMS_SPARQL = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" + "select\n"
-            + "  ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" + "where {\n"
-            + "  ?uri a skos:Concept.\n" + "  filter (strStarts(str(?uri), ?codelistUri))\n"
-            + "  optional {?uri skos:notation ?notation}\n" + "  optional {?uri skos:prefLabel ?prefLabel}\n" + "}\n"
-            + "group by ?uri\n" + "order by ?uri";
+    private static final String GET_CODELIST_ITEMS_SPARQL = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+            "select\n" +
+            "  ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
+            "where {\n" +
+            "  ?scheme skos:hasTopConcept ?uri\n" +
+            "  filter (?scheme = ?schemeUri)\n" +
+            "  optional {?uri skos:notation ?notation}\n" +
+            "  optional {?uri skos:prefLabel ?prefLabel}\n" +
+            "}\n" +
+            "group by ?uri\n" +
+            "order by ?uri";
 
     private static final String EXPORT_CODELIST_ITEMS_SPARQL = "" +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\r\n" +
-    		"PREFIX prop: <http://semantic.digital-agenda-data.eu/def/property/>\r\n" +
-    		"select\r\n" +
-    		"  ?s ?p ?o ?memberOf ?order\r\n" +
-    		"where {\r\n" +
-    		"  ?s a ?type.\r\n" +
-    		"  ?s ?p ?o\r\n" +
-    		"  filter (?type = ?typeValue)\r\n" +
-    		"  optional {?s prop:membership ?membership}\r\n" +
-    		"  optional {?membership prop:member-of ?memberOf}\r\n" +
-    		"  optional {?membership prop:order ?order}\r\n" +
-    		"}\r\n" +
-    		"order by ?s ?p";
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+            "PREFIX prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "select\n" +
+            "  ?s ?p ?o ?memberOf ?order\n" +
+            "where {\n" +
+            "  ?s a ?type.\n" +
+            "  ?s ?p ?o\n" +
+            "  filter (?type = ?typeValue)\n" +
+            "  optional {?s prop:membership ?membership}\n" +
+            "  optional {?membership prop:member-of ?memberOf}\n" +
+            "  optional {?membership prop:order ?order}\n" +
+            "}\n" +
+            "order by ?s ?p";
+
+    private static final String GET_SUBJECTS_WITH_PROPERTY_SPARQL = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+            "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+            "select\n" +
+            "  distinct ?s\n" +
+            "where {\n" +
+            "  ?s ?p ?propValue\n" +
+            "  filter (?s in (csvSubjects))\n" +
+            "  filter (?p = ?pVal)\n" +
+            "  filter (bound(?propValue))\n" +
+            "}";
     // @formatter:on
 
     /*
@@ -99,7 +128,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         }
 
         Bindings bindings = new Bindings();
-        bindings.setString("codelistUri", codelistUri.endsWith("/") ? codelistUri : codelistUri + "/");
+        bindings.setURI("schemeUri", codelistUri);
 
         List<SkosItemDTO> list = executeSPARQL(GET_CODELIST_ITEMS_SPARQL, bindings, new SkosItemsReader());
         return list;
@@ -217,7 +246,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         sb.append("\n");
         sb.append("select\n");
         sb.append("  ?").append(filterAlias).append(" min(str(coalesce(?prefLabel, ?").append(filterAlias)
-                .append("))) as ?label\n");
+        .append("))) as ?label\n");
         sb.append("where {\n");
         sb.append("  ?s a cube:Observation.\n");
 
@@ -236,7 +265,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
                     }
                 } else {
                     sb.append("  ?s <").append(availFilter.getPredicate()).append("> ?").append(availFilter.getAlias())
-                            .append(".\n");
+                    .append(".\n");
                 }
             }
         }
@@ -244,7 +273,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         // sb.append("  ?s <").append(nextFilter.getPredicate()).append("> ?").append(forFilterAlias).append(".\n");
         sb.append("  ?s <").append(filter.getPredicate()).append("> ?").append(filterAlias).append(".\n");
         sb.append("  optional {?").append(filterAlias)
-                .append(" skos:prefLabel ?prefLabel filter(lang(?prefLabel) in ('en',''))}\n");
+        .append(" skos:prefLabel ?prefLabel filter(lang(?prefLabel) in ('en',''))}\n");
         sb.append("}\n");
         sb.append("group by ?").append(filterAlias).append("\n");
         sb.append("order by ?label");
@@ -334,5 +363,23 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         } finally {
             SesameUtil.close(repoConn);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getSubjectsWithBoundProperty(java.lang.String, java.util.Set)
+     */
+    @Override
+    public Set<String> getSubjectsWithBoundProperty(String propertyUri, Set<String> subjects) throws DAOException {
+
+        Bindings bindings = new Bindings();
+        bindings.setURI("pVal", propertyUri);
+        String csvSubjects = SPARQLQueryUtil.urisToCSV(subjects, "sVal", bindings);
+
+        String sparql = StringUtils.replace(GET_SUBJECTS_WITH_PROPERTY_SPARQL, "csvSubjects", csvSubjects);
+        List<String> result = executeSPARQL(sparql, bindings, new SingleObjectReader<String>());
+
+        return new HashSet<String>(result);
     }
 }
