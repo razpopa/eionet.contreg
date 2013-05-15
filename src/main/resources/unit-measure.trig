@@ -47,7 +47,7 @@
 }
 
 :Codelist {
-    [ xl:uri "'http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(A2)"^^xl:Expr ] a skos:Concept ; a dad-class:UnitMeasure ;
+    [ xl:uri "'http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(LCASE(A2))"^^xl:Expr ] a skos:Concept ; a dad-class:UnitMeasure ;
     skos:topConceptOf "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure')"^^xl:Expr ;
     skos:prefLabel "B2"^^xl:Expr ;
     skos:notation "A2"^^xl:Expr ;
@@ -56,7 +56,7 @@
     rdfs:seeAlso "URI(E2)"^^xl:Expr .
 
     [ xl:uri "http://semantic.digital-agenda-data.eu/codelist/unit-measure"]
-    skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(A2))"^^xl:Expr .
+    skos:hasTopConcept "URI('http://semantic.digital-agenda-data.eu/codelist/unit-measure/' & URLENCODE(LCASE(A2)))"^^xl:Expr .
 }
 
 :CodelistSetup {

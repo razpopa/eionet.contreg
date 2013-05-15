@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -31,6 +32,7 @@ import eionet.cr.util.sesame.SPARQLQueryUtil;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.PairReader;
 import eionet.cr.util.sql.SingleObjectReader;
+import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.web.util.ObservationFilter;
 
 /**
@@ -94,6 +96,31 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  filter (?p = ?pVal)\n" +
             "  filter (bound(?propValue))\n" +
             "}";
+
+    private static final String GET_NOGROUP_MEMBERSHIPS = "" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "select ?y where {\n" +
+            "  ?x dad-prop:membership ?y .\n" +
+            "  ?y dad-prop:member-of ?groupUri.\n" +
+            "  filter (?groupUri = ?groupUriValue)\n" +
+            "}";
+
+    private static final String DELETE_INVALID_CODELIST_GROUP_MEMBERSHIPS = "" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "DELETE {\n" +
+            "  graph ?g {\n" +
+            "    ?x dad-prop:membership ?y.\n" +
+            "    ?y ?p ?o\n" +
+            "  }\n" +
+            "}\n" +
+            "where {\n" +
+            "  graph ?g {\n" +
+            "    ?x dad-prop:membership ?y .\n" +
+            "    ?y dad-prop:member-of <@group-graph-uri@>.\n" +
+            "    ?y ?p ?o\n" +
+            "  }\n" +
+            "}";
+
     // @formatter:on
 
     /*
@@ -381,5 +408,33 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         List<String> result = executeSPARQL(sparql, bindings, new SingleObjectReader<String>());
 
         return new HashSet<String>(result);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#fixGrouplessCodelistItems()
+     */
+    @Override
+    public void fixGrouplessCodelistItems() throws DAOException {
+
+        String breakdownsSPARUL =
+                DELETE_INVALID_CODELIST_GROUP_MEMBERSHIPS.replace("@group-graph-uri@",
+                        XLWrapUploadType.BREAKDOWN_GROUP.getGraphUri());
+
+        String indicatorsSPARUL =
+                DELETE_INVALID_CODELIST_GROUP_MEMBERSHIPS.replace("@group-graph-uri@",
+                        XLWrapUploadType.INDICATOR_GROUP.getGraphUri());
+
+        RepositoryConnection repoConn = null;
+        try {
+            repoConn = SesameUtil.getRepositoryConnection();
+            SesameUtil.executeSPARUL(breakdownsSPARUL, repoConn);
+            SesameUtil.executeSPARUL(indicatorsSPARUL, repoConn);
+        } catch (OpenRDFException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            SesameUtil.close(repoConn);
+        }
     }
 }

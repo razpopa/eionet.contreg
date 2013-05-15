@@ -1,7 +1,6 @@
 package eionet.cr.dao;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -95,14 +94,14 @@ public interface ScoreboardSparqlDAO extends DAO {
      * Removes all triples where the subject is the given subject URI and the predicate is dcterms:modified and the graph is the
      * given graph URI. Then adds a single triple where the subject, predicate and graph are the same, but the object is the given
      * date value.
-     *   
+     * 
      * @param subjectUri The given subject URI.
      * @param date The given date value. If null, then current system date will be used.
      * @param graphUri The given graph URI.
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
     void updateDcTermsModified(String subjectUri, Date date, String graphUri) throws DAOException;
-    
+
     /**
      * From the given subjects returns those that have the given property bound.
      * 
@@ -112,4 +111,13 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
     Set<String> getSubjectsWithBoundProperty(String propertyUri, Set<String> subjects) throws DAOException;
+
+    /**
+     * This is a post-import action for breakdowns, indicators and other codelist items that do not belong into any group and
+     * were therefore wrongly mapped into e.g. http://semantic.digital-agenda-data.eu/codelist/breakdown-group/ as the group.
+     * Correct solution should be to handle this in the Trig mapping file, but Trig does not seem to support such a construct.
+     * 
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    void fixGrouplessCodelistItems() throws DAOException;
 }

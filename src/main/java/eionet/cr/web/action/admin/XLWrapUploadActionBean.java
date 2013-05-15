@@ -159,6 +159,9 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
                 DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(codelistUri, new Date(), graphUri);
             }
 
+            // Run post-import fixes.
+            postImportFixes();
+
             // Harvest registered time-periods.
             harvestTimePeriods(stmtListener.getTimePeriodUris());
 
@@ -376,24 +379,6 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
-     * @param timePeriodUris
-     */
-    private void harvestTimePeriods(Set<String> timePeriodUris) {
-
-        if (timePeriodUris == null || timePeriodUris.isEmpty()) {
-            return;
-        }
-
-        LOGGER.debug("Going to harvest time periods ...");
-        TimePeriodsHarvester tpHarvester = new TimePeriodsHarvester(timePeriodUris);
-        tpHarvester.execute();
-        int harvestedCount = tpHarvester.getHarvestedCount();
-        int newCount = tpHarvester.getNoOfNewPeriods();
-        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");
-    }
-
-    /**
      * @param newDatasetIdentifier
      *            the newDatasetIdentifier to set
      */
@@ -415,5 +400,36 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
      */
     public void setNewDatasetDescription(String newDatasetDescription) {
         this.newDatasetDescription = newDatasetDescription;
+    }
+
+    /**
+     * 
+     * @param timePeriodUris
+     */
+    private void harvestTimePeriods(Set<String> timePeriodUris) {
+
+        if (timePeriodUris == null || timePeriodUris.isEmpty()) {
+            return;
+        }
+
+        LOGGER.debug("Going to harvest time periods ...");
+        TimePeriodsHarvester tpHarvester = new TimePeriodsHarvester(timePeriodUris);
+        tpHarvester.execute();
+        int harvestedCount = tpHarvester.getHarvestedCount();
+        int newCount = tpHarvester.getNoOfNewPeriods();
+        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");
+    }
+
+    /**
+     * Post-import fix actions.
+     * 
+     * @throws DAOException
+     */
+    private void postImportFixes() throws DAOException {
+
+        // Fix groupless breakdowns and indicators.
+        if (XLWrapUploadType.BREAKDOWN.equals(uploadType) || XLWrapUploadType.INDICATOR.equals(uploadType)) {
+            DAOFactory.get().getDao(ScoreboardSparqlDAO.class).fixGrouplessCodelistItems();
+        }
     }
 }
