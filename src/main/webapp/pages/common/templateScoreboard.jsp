@@ -137,13 +137,13 @@
                 </div>
                 
                 <div class="scb-layout-footer">
-					<div class="scb-layout-footer-wrapper">
-						<div class="scb-region scb-region-footer">
-							<div id="block-menu-menu-get-involved" class="block block-menu">
+                    <div class="scb-layout-footer-wrapper">
+                        <div class="scb-region scb-region-footer">
+                            <div id="block-menu-menu-get-involved" class="block block-menu">
                             
-								<h2>Get Involved</h2>
-								<div class="scb-content">
-									<ul class="menu clearfix">
+                                <h2>Get Involved</h2>
+                                <div class="scb-content">
+                                    <ul class="menu clearfix">
                                         <li class="first leaf">
                                         
                                             <c:choose>
@@ -156,25 +156,25 @@
                                             </c:choose>
                                             
                                         </li>
-										<li class="leaf"><a href="https://ec.europa.eu/digital-agenda/en/newsroom" title="" class="">Newsroom</a></li>
-										<li class="last leaf"><a href="https://ec.europa.eu/digital-agenda/en/blog_home" title="" class="">Blog</a></li>
-									</ul>
+                                        <li class="leaf"><a href="https://ec.europa.eu/digital-agenda/en/newsroom" title="" class="">Newsroom</a></li>
+                                        <li class="last leaf"><a href="https://ec.europa.eu/digital-agenda/en/blog_home" title="" class="">Blog</a></li>
+                                    </ul>
                                 </div>
-							</div>
+                            </div>
 
-							<div id="block-boxes-haveyoursaybox" class="block block-boxes block-boxes-simple">
-								<div class="scb-content">
-									<div id="boxes-box-haveyoursaybox" class="boxes-box">
-										<div class="boxes-box-content">
-											<p><a href="http://daa.ec.europa.eu/"><img border="0" src="${pageContext.request.contextPath}/images/dae-button.png" /></a></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<p id="scb-copyright"> © Copyright 2013 European Commission</p>
-				</div>
+                            <div id="block-boxes-haveyoursaybox" class="block block-boxes block-boxes-simple">
+                                <div class="scb-content">
+                                    <div id="boxes-box-haveyoursaybox" class="boxes-box">
+                                        <div class="boxes-box-content">
+                                            <p><a href="http://daa.ec.europa.eu/"><img border="0" src="${pageContext.request.contextPath}/images/dae-button.png" /></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="scb-copyright"> © Copyright 2013 European Commission</p>
+                </div>
                 
             </div>
         </body>

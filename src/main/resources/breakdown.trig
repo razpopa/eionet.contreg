@@ -53,7 +53,10 @@
     skos:prefLabel "B2"^^xl:Expr ;
     skos:altLabel "C2"^^xl:Expr ;
     skos:definition "G2"^^xl:Expr ;
-    dad-prop:membership [ 
+    dad-prop:membership [
+        xl:uri "URI('http://semantic.digital-agenda-data.eu/codelist/breakdown-group/' & URLENCODE(LCASE(D2)) & '/' & URLENCODE(LCASE(A2)))"^^xl:Expr ;
+        a dad-class:BreakdownToGroupMembership ;
+        rdfs:label "D2"^^xl:Expr ;
         dad-prop:member-of "URI('http://semantic.digital-agenda-data.eu/codelist/breakdown-group/' & URLENCODE(LCASE(D2)))"^^xl:Expr ;
         dad-prop:order "E2"^^xl:Expr 
     ];

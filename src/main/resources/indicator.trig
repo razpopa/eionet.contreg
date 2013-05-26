@@ -54,9 +54,12 @@
     skos:altLabel "C2"^^xl:Expr ;
     skos:definition "D2"^^xl:Expr ;
     skos:notes "E2"^^xl:Expr ;
-    dad-prop:membership [ 
+    dad-prop:membership [
+        xl:uri "URI('http://semantic.digital-agenda-data.eu/codelist/indicator-group/' & URLENCODE(LCASE(F2)) & '/' & URLENCODE(LCASE(A2)))"^^xl:Expr ;
+        a dad-class:IndicatorToGroupMembership ;
+        rdfs:label "F2"^^xl:Expr ;
         dad-prop:member-of "URI('http://semantic.digital-agenda-data.eu/codelist/indicator-group/' & URLENCODE(LCASE(F2)))"^^xl:Expr ;
-        dad-prop:order "G2"^^xl:Expr 
+        dad-prop:order "G2"^^xl:Expr
     ];
     dcterms:source "URI('http://semantic.digital-agenda-data.eu/codelist/source/' & URLENCODE(LCASE(H2)))"^^xl:Expr .
     
