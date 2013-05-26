@@ -53,9 +53,9 @@
         </c:choose>
     </div>
 </div>
-    <h1>What is ${initParam.appDispName}?</h1>
+    <h1>${initParam.appDispName}</h1>
     <p>
-        ${initParam.appDispName} is a semantic repository of the data and metadata involved in the European Commission's Digital Agenda Scoreboard.
+        This application is a semantic repository of the data and metadata involved in the European Commission's Digital Agenda Scoreboard.
         It is where the Scoreboard's data administrators can upload, import and inspect the Scoreboard's data and metadata. It servers as the
         backend of the publicly available Digital Agenda Scoreboard website (i.e. frontend). The two communicate over SPARQL protocol, designed for
         querying semantic repositories. Content in this site is not automatically published to the wider audience in the frontend:

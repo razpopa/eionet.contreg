@@ -1,0 +1,163 @@
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------- Header stuff ---------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+
+#scb-header{
+    margin-bottom:1em;
+    color: rgb(0, 0, 0);
+    display: block;
+    font-family: 'Droid Sans', Arial, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    height: 150px;
+    line-height: 18px;
+}
+
+#scb-header #topnav {
+    top:0;
+    right:100px;
+    font-size:0.9em;
+    margin-left:560px;
+}
+
+.scb-logo {
+    height: 119px;
+    border: 0px;
+    padding-left: 22px;
+    padding-top: 0px;
+}
+
+#banner-title-text {
+    position: absolute;
+    top: 65px;
+    margin: 0;
+    margin-left: 215px;
+    border: 0;
+    font-size: 18px;
+    line-height: 1.2;
+    color: rgb(0, 101, 162);
+    text-transform: uppercase;
+}
+
+#banner-title-text2 {
+    background: rgb(0, 101, 162);
+    margin: 0;
+    color: #fff;
+    margin-top: -30px;
+    padding: 10px 0px 10px 215px;
+}
+
+.scb-breadcrumbs {
+	background: #074A8B;
+	margin: 0;
+	padding-left: 22px;
+}
+
+.scb-breadcrumbs label,
+.scb-breadcrumbs li  {
+	display: inline-block;
+	font-size: 11px;
+	color: #fff;
+}
+
+.scb-breadcrumbs li {
+	list-style-type: none;
+	background: url('../images/breadcrumb.gif') transparent left center no-repeat;
+	padding: 0px 5px 0px 15px;
+}
+
+.scb-breadcrumbs li.first {
+	background-image: none;
+	padding-left: 0;
+}
+
+.scb-breadcrumbs li a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.scb-breadcrumbs li a:hover {
+	text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------- Footer stuff ---------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+
+.scb-layout-footer {
+    border-top: 4px solid #CDCDCD;
+    background: #E5E5E5;
+    float: left;
+    width: 100%;
+    clear: both;
+    padding: 0;
+    margin-top: 5px;
+    text-align: center;
+    color: #396EA2;
+}
+
+.scb-layout-footer h2 {
+    color: #333;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: normal;
+}
+
+.scb-layout-footer-wrapper {
+    float: left;
+    margin-bottom: 0;
+    padding: 0px;
+    width: 100%;
+}
+
+.scb-region-footer .block-menu {
+    float: left;
+    width: 48%;
+    text-align: left;
+    margin-right: 12px;
+    padding-left: 20px;
+}
+
+.scb-region-footer .block-menu ul {
+    margin: 0;
+    padding: 0;
+}
+
+.scb-region-footer .block-menu ul li {
+    list-style: none;
+    float: left;
+    margin-right: 12px;
+}
+
+.scb-region-footer .block-menu ul li a {
+    color: gray;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+#boxes-box-haveyoursaybox, #block-boxes-haveyoursay {
+    float: left;
+    width: 48%;
+    text-align: right;
+}
+
+#scb-copyright {
+    border-top: 4px solid #CDCDCD;
+    clear: both;
+    color: gray;
+    font-size: 11px;
+    margin: 0 20px;
+    padding: 5px;
+    text-align: left;
+}
+
+/* ---------------------------------------------------------------------------------------------------------- */
+/* ---------------------------- Div that wraps left-side-menu and workarea ---------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------- */
+
+#left-menu-and-workarea-wrapper {
+    border-left: 1px dotted rgb(143,167,113);
+    border-right: 1px dotted rgb(143,167,113);
+}

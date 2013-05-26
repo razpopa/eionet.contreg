@@ -21,6 +21,8 @@
             <link rel="stylesheet" type="text/css" href="http://www.eionet.europa.eu/styles/eionet2007/screen.css" media="screen" title="Eionet 2007 style" />
             <link rel="stylesheet" type="text/css" href="<c:url value="/css/eionet2007.css"/>" media="screen" title="Eionet 2007 style"/>
             <link rel="stylesheet" type="text/css" href="<c:url value="/css/application.css"/>" media="screen"/>
+            <link rel="stylesheet" type="text/css" href="<c:url value="/css/scoreboard.css"/>" media="screen"/>
+            
             <link rel="shortcut icon" href="<c:url value="/favicon.ico"/>" type="image/x-icon" />
 
             <link type="text/css" href="<c:url value="/css/smoothness/jquery-ui-1.8.16.custom.css" />" rel="stylesheet" />
@@ -37,138 +39,143 @@
             <stripes:layout-component name="head"/>
         </head>
         <body ${bodyAttribute}>
-            <div id="container">
-                <div id="toolribbon">
-                    <div id="lefttools">
-                        <a id="eulink" href="http://ec.europa.eu/index_en.htm">European Commission</a>
-                        <a href="http://ec.europa.eu/digital-agenda/en">Digital Agenda for Europe</a>
-                    </div>
-                    <div id="righttools">
-                        <c:choose>
-                            <c:when test="${empty crUser}">
-                                <stripes:link id="loginlink" title="Login" href="/login.action" event="login">Login</stripes:link>
-                            </c:when>
-                            <c:otherwise>
-                                <stripes:link id="logoutlink" title="Logout" href="/login.action" event="logout">Logout ${crUser.userName}</stripes:link>
-                            </c:otherwise>
-                        </c:choose>
-                        <a id="printlink" title="Print this page" href="javascript:this.print();"><span>Print</span></a>
-                        <a id="fullscreenlink" href="javascript:toggleFullScreenMode()" title="Switch to/from full screen mode"><span>Switch to/from full screen mode</span></a>
-                    </div>
-                </div> <!-- toolribbon -->
-
-                <div id="pagehead">
-                    <a href="/"><img src="images/european_commission_print_logo.gif" alt="Logo" id="logo" /></a>
-                    <div id="networktitle">Digital Agenda Scoreboard</div>
-                    <div id="sitetitle">${initParam.appDispName}</div>
-                    <div id="sitetagline"></div>
-                </div> <!-- pagehead -->
-
-                <div id="menuribbon">
+        
+            <div id="container" style="border:none;">
+            
+                <div id="scb-header">
+                    <img class="scb-logo" src="${pageContext.request.contextPath}/images/ec_logo_en.gif" alt="European Commision logo" />
+                    <p id="banner-title-text">Digital Agenda for Europe</p>
+                    <p id="banner-title-text2">A Europe 2020 Initiative</p>
+                    <ul class="scb-breadcrumbs"><li class="first"><a href="http://ec.europa.eu/index_en.htm">European Commission</a></li>
+                        <li><a href="http://ec.europa.eu/digital-agenda/en">Digital Agenda for Europe</a></li>
+                        <li><a href="http://ec.europa.eu/digital-agenda/en/scoreboard">Scoreboard</a></li>
+                        <li><a href="${pageContext.request.contextPath}/">${initParam.appDispName}</a></li>
+                        
+                        <c:if test="${not empty pageTitle}">
+                            <li><a href="#" onclick="return false;"><c:out value="${pageTitle}"/></a></li>
+                        </c:if>
+                    
+                    </ul>
                 </div>
-
-                <div class="breadcrumbtrail">
-                    <div class="breadcrumbhead">You are here:</div>
-                    <div class="breadcrumbitem eionetaccronym">
-                        <a href="http://ec.europa.eu/index_en.htm">European Commission</a>
-                    </div>
-                    <div class="breadcrumbitem eionetaccronym">
-                        <a href="http://ec.europa.eu/digital-agenda/en">Digital Agenda for Europe</a>
-                    </div>
-                    <div class="breadcrumbitem eionetaccronym">
-                        <a href="http://ec.europa.eu/digital-agenda/en/scoreboard">Scoreboard</a>
-                    </div>
-                    <c:choose>
-                        <c:when test="${empty pageTitle}">
-                            <div class="breadcrumbitemlast">${initParam.appDispName}</div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="breadcrumbitem"><a href="${pageContext.request.contextPath}/">${initParam.appDispName}</a></div>
-                             <div class="breadcrumbitemlast"><c:out value="${pageTitle}"/></div>
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="breadcrumbtail"></div>
-                </div>
-
-                <stripes:layout-component name="navigation">
-                    <jsp:include page="/pages/common/navigation.jsp"/>
-                </stripes:layout-component>
-
-                <div id="workarea" class="documentContent">
-
-                    <!--  validation errors -->
-                    <stripes:errors/>
-
-                    <!--  messages -->
-                    <stripes:layout-component name="messages">
-                        <c:if test="${not empty systemMessages}">
-                            <div class="system-msg">
-                                <stripes:messages key="systemMessages"/>
-                            </div>
-                        </c:if>
-                        <c:if test="${not empty cautionMessages}">
-                            <div class="caution-msg">
-                                <strong>Caution ...</strong>
-                                <stripes:messages key="cautionMessages"/>
-                            </div>
-                        </c:if>
-                        <c:if test="${not empty warningMessages}">
-                            <div class="warning-msg">
-                                <strong>Warning ...</strong>
-                                <stripes:messages key="warningMessages"/>
-                            </div>
-                        </c:if>
+                
+                <div id="left-menu-and-workarea-wrapper">
+                
+                    <stripes:layout-component name="navigation">
+                        <jsp:include page="/pages/common/navigation.jsp"/>
                     </stripes:layout-component>
 
-                    <!--  Home headers, content or default content -->
-                    <c:choose>
-                        <c:when test="${actionBean.homeContext}">
-                            <c:choose>
-                                <c:when test="${actionBean.userAuthorized || actionBean.showPublic}" >
-                                    <div id="tabbedmenu">
-                                        <ul>
-                                            <c:forEach items="${actionBean.tabs}" var="tab">
-                                                <c:if test="${actionBean.userAuthorized || tab.showPublic == actionBean.showpublicYes }" >
-                                                    <c:choose>
-                                                          <c:when test="${actionBean.section == tab.tabType}" >
-                                                            <li id="currenttab"><span><c:out value="${tab.title}"/></span></li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li>
-                                                                <stripes:link href="${actionBean.baseHomeUrl}${actionBean.attemptedUserName}/${tab.tabType}">
-                                                                    <c:out value="${tab.title}"/>
-                                                                </stripes:link>
-                                                            </li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:if>
-                                            </c:forEach>
+                    <div id="workarea" class="documentContent">
 
-                                        </ul>
-                                    </div>
-                                    <br style="clear:left" />
-                                    <div style="margin-top:10px">
-                                        <stripes:layout-component name="contents"/>
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                        <div class="error-msg">
-                                        ${actionBean.authenticationMessage}
+                        <!--  validation errors -->
+                        <stripes:errors/>
+
+                        <!--  messages -->
+                        <stripes:layout-component name="messages">
+                            <c:if test="${not empty systemMessages}">
+                                <div class="system-msg">
+                                    <stripes:messages key="systemMessages"/>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty cautionMessages}">
+                                <div class="caution-msg">
+                                    <strong>Caution ...</strong>
+                                    <stripes:messages key="cautionMessages"/>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty warningMessages}">
+                                <div class="warning-msg">
+                                    <strong>Warning ...</strong>
+                                    <stripes:messages key="warningMessages"/>
+                                </div>
+                            </c:if>
+                        </stripes:layout-component>
+
+                        <!--  Home headers, content or default content -->
+                        <c:choose>
+                            <c:when test="${actionBean.homeContext}">
+                                <c:choose>
+                                    <c:when test="${actionBean.userAuthorized || actionBean.showPublic}" >
+                                        <div id="tabbedmenu">
+                                            <ul>
+                                                <c:forEach items="${actionBean.tabs}" var="tab">
+                                                    <c:if test="${actionBean.userAuthorized || tab.showPublic == actionBean.showpublicYes }" >
+                                                        <c:choose>
+                                                              <c:when test="${actionBean.section == tab.tabType}" >
+                                                                <li id="currenttab"><span><c:out value="${tab.title}"/></span></li>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <li>
+                                                                    <stripes:link href="${actionBean.baseHomeUrl}${actionBean.attemptedUserName}/${tab.tabType}">
+                                                                        <c:out value="${tab.title}"/>
+                                                                    </stripes:link>
+                                                                </li>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:if>
+                                                </c:forEach>
+
+                                            </ul>
                                         </div>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:when>
-                        <c:otherwise>
-                            <stripes:layout-component name="contents"/>
-                        </c:otherwise>
-                    </c:choose>
+                                        <br style="clear:left" />
+                                        <div style="margin-top:10px">
+                                            <stripes:layout-component name="contents"/>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                            <div class="error-msg">
+                                            ${actionBean.authenticationMessage}
+                                            </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+                            <c:otherwise>
+                                <stripes:layout-component name="contents"/>
+                            </c:otherwise>
+                        </c:choose>
 
+                    </div>
                 </div>
-                <div id="pagefoot" style="max-width: none;">
-                    <p><a href="mailto:cnect-desk@ec.europa.eu">E-mail</a> | <a href="mailto:cnect-desk@ec.europa.eu?subject=Feedback from the Scoreboard ${initParam.appDispName} website">Feedback</a></p>
-                    <p><a href="http://ec.europa.eu/dgs/connect/"><b>DG Connect, European Commission's Directorate General for Communications Networks, Content and Technology</b></a>
-                    <br/>BU25 02/134, B-1049 Brussels, Belgium - Tel: +32 (0)2 29 99 399</p>
-                </div>
+                
+                <div class="scb-layout-footer">
+					<div class="scb-layout-footer-wrapper">
+						<div class="scb-region scb-region-footer">
+							<div id="block-menu-menu-get-involved" class="block block-menu">
+                            
+								<h2>Get Involved</h2>
+								<div class="scb-content">
+									<ul class="menu clearfix">
+                                        <li class="first leaf">
+                                        
+                                            <c:choose>
+                                                <c:when test="${empty crUser}">
+                                                    <stripes:link id="personaltools-login" title="Login" href="/login.action" event="login">Log in</stripes:link>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <stripes:link id="personaltools-login" title="Logout" href="/login.action" event="logout">Log out user: ${crUser.userName}</stripes:link>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            
+                                        </li>
+										<li class="leaf"><a href="https://ec.europa.eu/digital-agenda/en/newsroom" title="" class="">Newsroom</a></li>
+										<li class="last leaf"><a href="https://ec.europa.eu/digital-agenda/en/blog_home" title="" class="">Blog</a></li>
+									</ul>
+                                </div>
+							</div>
+
+							<div id="block-boxes-haveyoursaybox" class="block block-boxes block-boxes-simple">
+								<div class="scb-content">
+									<div id="boxes-box-haveyoursaybox" class="boxes-box">
+										<div class="boxes-box-content">
+											<p><a href="http://daa.ec.europa.eu/"><img border="0" src="${pageContext.request.contextPath}/images/dae-button.png" /></a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p id="scb-copyright"> © Copyright 2013 European Commission</p>
+				</div>
+                
             </div>
         </body>
     </html>
