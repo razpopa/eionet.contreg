@@ -907,4 +907,20 @@ public final class Util {
 
         return true;
     }
+
+    /**
+     * 
+     * @param coll
+     * @return
+     */
+    public static boolean isAllNull(Collection<?> coll) {
+
+        for (Object object : coll) {
+            if (object != null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

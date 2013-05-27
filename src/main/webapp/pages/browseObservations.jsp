@@ -64,6 +64,15 @@
 
             </display:table>
         </div>
+        <c:if test="${actionBean.observations == null || empty actionBean.observations.list}">
+            <div class="tip-msg">
+                <strong>Tip</strong>
+                <p>
+	                If you don't see any results then it might be that there is simply no data,<br/>
+	                or you don't have sufficient privileges. <stripes:link title="Login" href="/login.action" event="login">Please try logging in</stripes:link>.
+                </p>
+            </div>
+        </c:if>
     </c:if>
 
 <%--

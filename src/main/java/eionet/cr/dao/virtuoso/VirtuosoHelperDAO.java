@@ -169,12 +169,12 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             if (rdfType.equals(Subjects.ROD_OBLIGATION_CLASS)) {
                 // properties for obligations
                 String[] neededPredicatesObl =
-                {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
+                    {Predicates.RDFS_LABEL, Predicates.ROD_ISSUE_PROPERTY, Predicates.ROD_INSTRUMENT_PROPERTY};
                 neededPredicates = neededPredicatesObl;
             } else if (rdfType.equals(Subjects.ROD_DELIVERY_CLASS)) {
                 // properties for deliveries
                 String[] neededPredicatesDeliveries =
-                {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
+                    {Predicates.RDFS_LABEL, Predicates.ROD_OBLIGATION_PROPERTY, Predicates.ROD_LOCALITY_PROPERTY};
                 neededPredicates = neededPredicatesDeliveries;
             }
 
@@ -677,7 +677,7 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         // (but set harvest interval minutes to 0, since we don't really want it to be harvested )
         // by background harvester)
         DAOFactory.get().getDao(HarvestSourceDAO.class)
-                .addSourceIgnoreDuplicate(HarvestSourceDTO.create(user.getBookmarksUri(), true, 0, user.getUserName()));
+        .addSourceIgnoreDuplicate(HarvestSourceDTO.create(user.getBookmarksUri(), true, 0, user.getUserName()));
 
     }
 
@@ -1459,8 +1459,8 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
         StringBuilder query = new StringBuilder();
         query.append("select distinct ?s ?date where {graph ?g {?s ?p ?o}. filter (?s in (")
-                .append(SPARQLQueryUtil.urisToCSV(resourceUris, "sValue", bindings)).append(")). ?g <")
-                .append(Predicates.CR_LAST_MODIFIED).append("> ?date}");
+        .append(SPARQLQueryUtil.urisToCSV(resourceUris, "sValue", bindings)).append(")). ?g <")
+        .append(Predicates.CR_LAST_MODIFIED).append("> ?date}");
 
         HashMap<String, Date> result = new HashMap<String, Date>();
         MapReader reader = new MapReader();
@@ -1705,7 +1705,7 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
         if (ArrayUtils.isEmpty(labelPredicates)) {
             sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
-                    .append(PairReader.RIGHTCOL).append("\n");
+            .append(PairReader.RIGHTCOL).append("\n");
         } else {
             sb.append("  coalesce(");
             for (int i = 0; i < labelPredicates.length; i++) {
@@ -1715,7 +1715,7 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
                 sb.append("?label").append(i);
             }
             sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
-                    .append(PairReader.RIGHTCOL).append("\n");
+            .append(PairReader.RIGHTCOL).append("\n");
         }
 
         sb.append("where {").append("\n");
@@ -1731,7 +1731,7 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         }
         sb.append("}\n");
         sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
-                .append(")");
+        .append(")");
 
         if (pageRequest != null) {
             sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
@@ -1743,75 +1743,6 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
             String countQuery = "select count(distinct ?s) where {?s a ?rdfType filter(?rdfType = ?rdfTypeValue)}";
             bindings = new Bindings();
             bindings.setURI("rdfTypeValue", rdfType);
-            String count = executeUniqueResultSPARQL(countQuery, bindings, new SingleObjectReader<String>());
-            totalMatchCount = NumberUtils.toInt(count);
-        }
-
-        return new SearchResultDTO<Pair<String, String>>(list, totalMatchCount);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see eionet.cr.dao.HelperDAO#getDistinctObjectLabels(java.lang.String, eionet.cr.util.pagination.PagingRequest,
-     * eionet.cr.util.SortingRequest, java.lang.String[])
-     */
-    @Override
-    public SearchResultDTO<Pair<String, String>> getDistinctObjectLabels(String predicateUri, PagingRequest pageRequest,
-            SortingRequest sortRequest, String... labelPredicates) throws DAOException {
-
-        if (!URIUtil.isURI(predicateUri)) {
-            throw new IllegalArgumentException("predicateUri must not be blank and it must be a legal URI!");
-        }
-
-        if (sortRequest == null) {
-            sortRequest = SortingRequest.create(PairReader.RIGHTCOL, SortOrder.ASCENDING);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("select distinct").append("\n");
-        sb.append("  ?s as ?").append(PairReader.LEFTCOL).append("\n");
-
-        if (ArrayUtils.isEmpty(labelPredicates)) {
-            sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
-                    .append(PairReader.RIGHTCOL).append("\n");
-        } else {
-            sb.append("  coalesce(");
-            for (int i = 0; i < labelPredicates.length; i++) {
-                if (i > 0) {
-                    sb.append(", ");
-                }
-                sb.append("?label").append(i);
-            }
-            sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
-                    .append(PairReader.RIGHTCOL).append("\n");
-        }
-
-        sb.append("where {").append("\n");
-        sb.append("  ?subj ?pred ?s").append("\n");
-
-        Bindings bindings = new Bindings();
-        bindings.setURI("pred", predicateUri);
-
-        String s = "  optional {?s ?labelPred0 ?label0}\n";
-        for (int i = 0; i < labelPredicates.length; i++) {
-            sb.append(StringUtils.replace(s, "0", String.valueOf(i)));
-            bindings.setURI("labelPred" + i, labelPredicates[i]);
-        }
-        sb.append("}\n");
-        sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
-                .append(")");
-
-        if (pageRequest != null) {
-            sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
-        }
-
-        List<Pair<String, String>> list = executeSPARQL(sb.toString(), bindings, new PairReader<String, String>());
-        int totalMatchCount = list.size();
-        if (pageRequest != null) {
-            String countQuery = "select count(distinct ?s) where {?subj ?pred ?s}";
-            bindings = new Bindings();
-            bindings.setURI("pred", predicateUri);
             String count = executeUniqueResultSPARQL(countQuery, bindings, new SingleObjectReader<String>());
             totalMatchCount = NumberUtils.toInt(count);
         }

@@ -164,4 +164,6 @@ public interface Predicates {
 
     String ECODP_KEYWORD = "http://ec.europa.eu/open-data/ontologies/ec-odp#keyword";
     String ECODP_FORMAT = "http://ec.europa.eu/open-data/ontologies/ec-odp#format";
+
+    String ADMS_STATUS = "http://www.w3.org/ns/adms#status";
 }

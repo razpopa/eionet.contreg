@@ -21,6 +21,8 @@
         in order to refresh with potentially new values from the system.
     </p>
 
+    <c:set var="noFilters" value="true"/>
+    
     <crfn:form beanclass="${actionBean.class.name}" method="get">
         <table>
             <c:forEach items="${actionBean.availFilters}" var="filter" varStatus="filtersLoopStatus">
@@ -33,6 +35,9 @@
                             <stripes:option value="" label=" - select a value -"/>
                             <c:forEach items="${sessionScope[filter.sessionAttrName]}" var="uriLabelPair">
                                 <stripes:option value="${uriLabelPair.left}" label="${uriLabelPair.right}" title="${uriLabelPair.right}"/>
+                                <c:if test="${noFilters == true}">
+                                    <c:set var="noFilters" value="false"/>
+                                </c:if>
                             </c:forEach>
                         </stripes:select>
                     </td>
@@ -71,6 +76,18 @@
 
 		    </display:table>
 	    </div>
+    </c:if>
+    
+    <c:if test="${noFilters || (actionBean.context.eventName eq 'search' && (actionBean.observations == null || empty actionBean.observations.list))}">
+    
+        <div class="tip-msg">
+            <strong>Tip</strong>
+            <p>
+                If you don't see any selectable filters or search results then it might be that there is simply no data,<br/>
+                or you don't have sufficient privileges. <stripes:link title="Login" href="/login.action" event="login">Please try logging in</stripes:link>.
+            </p>
+        </div>
+        
     </c:if>
 
 </stripes:layout-component>

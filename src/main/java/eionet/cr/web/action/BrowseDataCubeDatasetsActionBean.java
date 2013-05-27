@@ -19,7 +19,6 @@ import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
-import eionet.cr.dao.HelperDAO;
 import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.util.Pair;
@@ -69,9 +68,9 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
         PagingRequest pageRequest = PagingRequest.create(page);
 
         SearchResultDTO<Pair<String, String>> searchResult = null;
-        HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+        ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
         try {
-            searchResult = dao.getUriLabels(Subjects.DATACUBE_DATA_SET, pageRequest, sortRequest, LABEL_PREDICATES);
+            searchResult = dao.getDistinctDatasets(isUserLoggedIn(), pageRequest, sortRequest, LABEL_PREDICATES);
         } catch (DAOException e) {
             LOGGER.error("DataCube datasets search error", e);
             addWarningMessage("A technical error occurred when searching for the available datasets" + e.getMessage());

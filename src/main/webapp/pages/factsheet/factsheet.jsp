@@ -66,6 +66,23 @@
                             modal: true,
                             closeOnEscape: true
                         });
+                        
+                        // Actions for the display/closing of the "Change dataset status" popup
+                        $("#changeDatasetStatusLink").click(function() {
+                            $('#changeDatasetStatusDialog').dialog('option','width', 800);
+                            $('#changeDatasetStatusDialog').dialog('open');
+                            return false;
+                        });
+
+                        $('#changeDatasetStatusDialog').dialog({
+                            autoOpen: false,
+                            width: 800
+                        });
+
+                        $("#closeChangeDatasetStatusDialog").click(function() {
+                            $('#changeDatasetStatusDialog').dialog("close");
+                            return true;
+                        });
                     });
             } ) ( jQuery );
 // ]]>
@@ -122,6 +139,9 @@
                                             </li>
                                         </c:if>
                                         <c:if test="${uriIsDataCubeDataset}">
+                                            <li>
+                                                <a href="#" id="changeDatasetStatusLink" title="Change the dataset status (i.e. Completed, Under development, etc)">Change status</a>
+                                            </li>
                                             <li>
                                                 <stripes:link class="link-plain" beanclass="${actionBean.browseObservationsActionBeanClass.name}" title="Browse observations in this DataCube dataset">
                                                     <c:out value="Browse observations"/>
@@ -352,6 +372,52 @@
                 <div>&nbsp;</div>
             </c:otherwise>
         </c:choose>
+        
+        <%-- The "Change dataset status" popup, relevant for the factsheets of DataCube datasets only. Displayed when user clicks on the relevant popup link. --%>
+
+        <div id="changeDatasetStatusDialog" title="Change dataset status">
+        
+            <c:set var="currentDatasetStatus" value="${actionBean.subject.predicates['http://www.w3.org/ns/adms#status'][0].value}"/>
+        
+            <stripes:form beanclass="${actionBean.class.name}" method="post">
+
+                <table>
+                    <tr>
+                        <td>
+                            <span class="question">Current status:</span>
+                        </td>
+                        <td>
+                            <c:out value="${empty currentDatasetStatus ? 'none' : currentDatasetStatus}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <stripes:label for="selStatus" class="question required" title="New status for the dataset">New status:</stripes:label>
+                        </td>
+                        <td>
+                            <select id="selStatus" name="datasetStatus">
+                                <option value="http://purl.org/adms/status/Completed">Completed (http://purl.org/adms/status/Completed)</option>
+                                <option value="http://purl.org/adms/status/UnderDevelopment">Under development (http://purl.org/adms/status/UnderDevelopment)</option>
+                                <option value="http://purl.org/adms/status/Deprecated">Deprecated (http://purl.org/adms/status/Deprecated)</option>
+                                <option value="http://purl.org/adms/status/Withdrawn">Withdrawn (http://purl.org/adms/status/Withdrawn)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td style="padding-top:10px">
+                            <stripes:submit name="changeDatasetStatus" value="Submit"/>
+                            <input type="button" id="closeChangeDatasetStatusDialog" value="Cancel"/>
+                        </td>
+                    </tr>
+                </table>
+                
+                <fieldset style="display:none">
+                    <stripes:hidden name="uri"/>
+                </fieldset>
+
+            </stripes:form>
+        </div>
 
     </stripes:layout-component>
 </stripes:layout-render>

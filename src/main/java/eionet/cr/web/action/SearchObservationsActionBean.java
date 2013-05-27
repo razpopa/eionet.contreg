@@ -20,7 +20,7 @@ import eionet.cr.common.Predicates;
 import eionet.cr.common.Subjects;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
-import eionet.cr.dao.HelperDAO;
+import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dao.SearchDAO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SubjectDTO;
@@ -156,20 +156,15 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
      */
     private void loadFilterValues() throws DAOException {
 
-        HelperDAO dao = DAOFactory.get().getDao(HelperDAO.class);
+        ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
         for (HashMap<String, String> filterConf : AVAIL_FILTERS) {
 
             String alias = filterConf.get("alias");
-            String range = filterConf.get("range");
             String predicate = filterConf.get("predicate");
             List<Pair<String, String>> values = null;
 
             try {
-                if (StringUtils.isNotBlank(range)) {
-                    values = dao.getUriLabels(range, null, null, LABEL_PREDICATES).getItems();
-                } else {
-                    values = dao.getDistinctObjectLabels(predicate, null, null, LABEL_PREDICATES).getItems();
-                }
+                values = dao.getObservationPredicateValues(predicate, isUserLoggedIn(), null, null, LABEL_PREDICATES).getItems();
             } catch (DAOException e) {
                 LOGGER.error("Error when loading values fo filter: " + alias, e);
                 throw e;
@@ -264,7 +259,6 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Dataset");
         map.put("hint", "Dataset");
         map.put("predicate", Predicates.DATACUBE_DATA_SET);
-        // map.put("range", Subjects.DATACUBE_DATASET);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -273,7 +267,6 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Indicator");
         map.put("hint", "Indicator");
         map.put("predicate", Predicates.DAS_INDICATOR);
-        // map.put("range", Subjects.DAS_INDICATOR);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -282,7 +275,6 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Breakdown");
         map.put("hint", "Indicator");
         map.put("predicate", Predicates.DAS_BREAKDOWN);
-        // map.put("range", Subjects.DAS_BREAKDOWN);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 
@@ -307,7 +299,6 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
         map.put("title", "Unit");
         map.put("hint", "Unit");
         map.put("predicate", Predicates.DAS_UNITMEASURE);
-        // map.put("range", Subjects.DAS_UNIT);
         map.put("sessionAttrName", StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", map.get("alias")));
         list.add(map);
 

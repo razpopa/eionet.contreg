@@ -521,18 +521,6 @@ public interface HelperDAO extends DAO {
 
     /**
      *
-     * @param predicateUri
-     * @param pageRequest
-     * @param sortRequest
-     * @param labelPredicates
-     * @return
-     * @throws DAOException
-     */
-    SearchResultDTO<Pair<String, String>> getDistinctObjectLabels(String predicateUri, PagingRequest pageRequest,
-            SortingRequest sortRequest, String... labelPredicates) throws DAOException;
-
-    /**
-     *
      * @param resourceUri
      * @param resourceTypes
      * @return

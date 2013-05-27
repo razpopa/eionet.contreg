@@ -19,6 +19,7 @@ import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.controller.LifecycleStage;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -31,6 +32,7 @@ import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SubjectDTO;
 import eionet.cr.util.Pair;
 import eionet.cr.util.SortingRequest;
+import eionet.cr.util.Util;
 import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.web.action.factsheet.FactsheetActionBean;
 import eionet.cr.web.util.CustomPaginatedList;
@@ -79,15 +81,9 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
             filter = ObservationFilter.values()[0];
         }
 
-//        System.out.println();
-//        System.out.println();
-//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + System.currentTimeMillis());
-//        System.out.println();
-//        System.out.println();
-
         while (filter != null) {
 
-            List<Pair<String, String>> filterValues = scoreboardSparqlDao.getFilterValues(selections, filter);
+            List<Pair<String, String>> filterValues = scoreboardSparqlDao.getFilterValues(selections, filter, isUserLoggedIn());
 
             boolean anySupprted = filter.isAnySupprted();
             if (anySupprted) {
@@ -107,7 +103,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
             filter = ObservationFilter.getNext(filter);
         }
 
-        SearchResultDTO<SubjectDTO> searchResult = null;
+        SearchResultDTO<SubjectDTO> searchResult = new SearchResultDTO<SubjectDTO>(new ArrayList<SubjectDTO>(), 0);
         String sortPredicate = getColumnPredicateByAlias(sort);
         SortingRequest sortRequest = StringUtils.isBlank(sortPredicate) ? null : SortingRequest.create(sortPredicate, dir);
         PagingRequest pageRequest = PagingRequest.create(page);
@@ -115,7 +111,12 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
         try {
             SearchDAO searchDao = DAOFactory.get().getDao(SearchDAO.class);
             LinkedHashMap<String, String> convertedSelections = convertFilterSelections(selections);
-            searchResult = searchDao.searchByFilters(convertedSelections, false, pageRequest, sortRequest, null, false);
+
+            if (MapUtils.isNotEmpty(convertedSelections)) {
+                if (!Util.isAllNull(convertedSelections.values())) {
+                    searchResult = searchDao.searchByFilters(convertedSelections, false, pageRequest, sortRequest, null, false);
+                }
+            }
         } catch (DAOException e) {
             LOGGER.error("Observation search error", e);
             addWarningMessage("A technical error occurred when searching by the given filters" + e.getMessage());
