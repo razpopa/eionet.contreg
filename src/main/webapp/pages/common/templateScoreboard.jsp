@@ -12,7 +12,6 @@
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta name="viewport" content="initial-scale=1.0" />
             <meta name="Publisher" content="DG Connect, European Commission's Directorate General for Communications Networks, Content and Technology" />
-            <base href="<%= BaseUrl.getBaseUrl(request) %>/"/>
 
             <title>${initParam.appDispName} - ${pageTitle}</title>
 

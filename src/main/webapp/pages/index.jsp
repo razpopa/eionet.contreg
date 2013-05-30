@@ -12,7 +12,7 @@
                 <stripes:link href="/registerUrl.action" style="font-weight:bold">Suggest a URL!</stripes:link>
             </c:when>
             <c:otherwise>
-                <stripes:link title="Login" href="/login.action" event="login" style="font-weight:bold">Login to suggest a URL!</stripes:link>
+                <stripes:link title="Login" href="${pageContext.request.contextPath}/login.action" event="login" style="font-weight:bold">Login to suggest a URL!</stripes:link>
             </c:otherwise>
         </c:choose>
         Help other researchers find the good datasets. Bookmark them on this site.
@@ -20,7 +20,7 @@
     Now you can use a
     <a href="http://en.wikipedia.org/wiki/Bookmarklet" target="new">bookmarklet</a>
     to simplify the process of adding resources to the system.
-    Follow this link to <a href="quickAddBookmark.action?installation">add the bookmarklet to your browser</a>.
+    Follow this link to <a href="${pageContext.request.contextPath}/quickAddBookmark.action?installation">add the bookmarklet to your browser</a>.
     </p>
     </div>
     <div class="action-box">
@@ -36,7 +36,7 @@
                 <ul class="menu">
                 <c:forEach items="${actionBean.recentFiles}" var="recentFile">
                         <li>
-                            <a href="factsheet.action?uri=${recentFile.left }" title="${recentFile.right }">
+                            <a href="${pageContext.request.contextPath}/factsheet.action?uri=${recentFile.left }" title="${recentFile.right }">
                             <c:choose>
                                 <c:when test="${fn:length(recentFile.right) gt 38}">
                                     ${fn:substring(recentFile.right,0,35)}...
@@ -100,7 +100,7 @@
     </p>
     <ul>
         <li>
-            <a href="simpleSearch.action">Simple search</a><br/>
+            <a href="${pageContext.request.contextPath}/simpleSearch.action">Simple search</a><br/>
             is the same quick-find search that is also displayed above.
         </li>
 <%--
@@ -110,16 +110,16 @@
         </li>
 --%>
         <li>
-            <a href="customSearch.action">Custom search</a><br/>
+            <a href="${pageContext.request.contextPath}/customSearch.action">Custom search</a><br/>
             enables you to choose the criteria you want to search by and offers picklists of existing values too.
         </li>
         <li>
-            <a href="typeSearch.action">Type search</a><br/>
+            <a href="${pageContext.request.contextPath}/typeSearch.action">Type search</a><br/>
             finds all objects of the same type.
         </li>
 <%--
         <li>
-            <a href="recentUploads.action">Recent uploads</a><br/>
+            <a href="${pageContext.request.contextPath}/recentUploads.action">Recent uploads</a><br/>
             displays the latest content that CR has discovered, classified by certain content types.
         </li>
 --%>
