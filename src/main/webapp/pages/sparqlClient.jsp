@@ -107,7 +107,6 @@
 
                         // Add query prefix #1
                         $("#prefix1").click(function() {
-                            alert("test");
                             return handlePrefixClick("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
                         });
                         // Add query prefix #2
@@ -136,21 +135,60 @@
                         });
                         // Add query prefix #8
                         $("#prefix8").click(function() {
-                            return handlePrefixClick("PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>");
+                            return handlePrefixClick("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>");
                         });
                         // Add query prefix #9
                         $("#prefix9").click(function() {
-                            return handlePrefixClick("PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>");
+                            return handlePrefixClick("PREFIX cube: <http://purl.org/linked-data/cube#>");
                         });
                         // Add query prefix #10
                         $("#prefix10").click(function() {
-                            return handlePrefixClick("PREFIX rod: <http://rod.eionet.europa.eu/schema.rdf#>");
+                            return handlePrefixClick("PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>");
                         });
                         // Add query prefix #11
                         $("#prefix11").click(function() {
-                            return handlePrefixClick("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>");
+                            return handlePrefixClick("PREFIX dad-class: <http://semantic.digital-agenda-data.eu/def/class/>");
                         });
-
+                        // Add query prefix #12
+                        $("#prefix12").click(function() {
+                            return handlePrefixClick("PREFIX dad-codelist: <http://semantic.digital-agenda-data.eu/def/codelist/>");
+                        });
+                        // Add query prefix #13
+                        $("#prefix13").click(function() {
+                            return handlePrefixClick("PREFIX rad: <http://www.w3.org/ns/radion#>");
+                        });
+                        // Add query prefix #14
+                        $("#prefix14").click(function() {
+                            return handlePrefixClick("PREFIX adms: <http://www.w3.org/ns/adms#>");
+                        });
+                        // Add query prefix #15
+                        $("#prefix15").click(function() {
+                            return handlePrefixClick("PREFIX estat-dic: <http://eurostat.linked-statistics.org/dic/>");
+                        });
+                        // Add query prefix #16
+                        $("#prefix16").click(function() {
+                            return handlePrefixClick("PREFIX sdmx: <http://purl.org/linked-data/sdmx#>");
+                        });
+                        // Add query prefix #17
+                        $("#prefix17").click(function() {
+                            return handlePrefixClick("PREFIX sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#>");
+                        });
+                        // Add query prefix #18
+                        $("#prefix18").click(function() {
+                            return handlePrefixClick("PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>");
+                        });
+                        // Add query prefix #19
+                        $("#prefix19").click(function() {
+                            return handlePrefixClick("PREFIX sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#>");
+                        });
+                        // Add query prefix #20
+                        $("#prefix20").click(function() {
+                            return handlePrefixClick("PREFIX sdmx-code: <http://purl.org/linked-data/sdmx/2009/code#>");
+                        });
+                        // Add query prefix #21
+                        $("#prefix21").click(function() {
+                            return handlePrefixClick("PREFIX sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#>");
+                        });
                     });
             } ) ( jQuery );
 
@@ -321,13 +359,18 @@
                     <div class="expandingArea">
                     <pre><span></span><br /></pre>
                     <textarea name="query" id="queryText" rows="8" cols="80" style="clear:right; display: block; width: 100%" onchange="format_select()" onkeyup="format_select()"><c:if test="${empty actionBean.query}">
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-PREFIX cr: &lt;http://cr.eionet.europa.eu/ontologies/contreg.rdf#&gt;
+# This is a sample SPARQL query that returns the first 10 DataCube observations
+# for the indicator "Households with access to the Internet at home".
 
-SELECT * WHERE {
-  ?bookmark a cr:SparqlBookmark ;
-            rdfs:label ?label
-} LIMIT 50</c:if>${crfn:escapeHtml(actionBean.query)}</textarea>
+PREFIX cube: &lt;http://purl.org/linked-data/cube#&gt;
+PREFIX dad-prop: &lt;http://semantic.digital-agenda-data.eu/def/property/&gt;
+
+SELECT DISTINCT ?observation WHERE {
+  ?observation a cube:Observation .
+  ?observation dad-prop:indicator &lt;http://semantic.digital-agenda-data.eu/codelist/indicator/h_iacc&gt;
+}
+ORDER BY ?observation
+LIMIT 10</c:if>${crfn:escapeHtml(actionBean.query)}</textarea>
                     </div>
                     <script type="text/javascript">
 // <![CDATA[
@@ -681,10 +724,20 @@ while (l--) {
                     <li><span id="prefix5" class="shadowHover">PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;</span></li>
                     <li><span id="prefix6" class="shadowHover">PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;</span></li>
                     <li><span id="prefix7" class="shadowHover">PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;</span></li>
-                    <li><span id="prefix8" class="shadowHover">PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;</span></li>
-                    <li><span id="prefix9" class="shadowHover">PREFIX cr: &lt;http://cr.eionet.europa.eu/ontologies/contreg.rdf#&gt;</span></li>
-                    <li><span id="prefix10" class="shadowHover">PREFIX rod: &lt;http://rod.eionet.europa.eu/schema.rdf#&gt;</span></li>
-                    <li><span id="prefix11" class="shadowHover">PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</span></li>
+                    <li><span id="prefix8" class="shadowHover">PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</span></li>
+                    <li><span id="prefix9" class="shadowHover">PREFIX cube: &lt;http://purl.org/linked-data/cube#&gt;</span></li>
+                    <li><span id="prefix10" class="shadowHover">PREFIX dad-prop: &lt;http://semantic.digital-agenda-data.eu/def/property/&gt;</span></li>
+                    <li><span id="prefix11" class="shadowHover">PREFIX dad-class: &lt;http://semantic.digital-agenda-data.eu/def/class/&gt;</span></li>
+                    <li><span id="prefix12" class="shadowHover">PREFIX dad-codelist: &lt;http://semantic.digital-agenda-data.eu/def/codelist/&gt;</span></li>
+                    <li><span id="prefix13" class="shadowHover">PREFIX rad: &lt;http://www.w3.org/ns/radion#&gt;</span></li>
+                    <li><span id="prefix14" class="shadowHover">PREFIX adms: &lt;http://www.w3.org/ns/adms#&gt;</span></li>
+                    <li><span id="prefix15" class="shadowHover">PREFIX estat-dic: &lt;http://eurostat.linked-statistics.org/dic/&gt;</span></li>
+                    <li><span id="prefix16" class="shadowHover">PREFIX smdx: &lt;http://purl.org/linked-data/sdmx#&gt;</span></li>
+                    <li><span id="prefix17" class="shadowHover">PREFIX smdx-attribute: &lt;http://purl.org/linked-data/sdmx/2009/attribute#&gt;</span></li>
+                    <li><span id="prefix18" class="shadowHover">PREFIX smdx-measure: &lt;http://purl.org/linked-data/sdmx/2009/measure#&gt;</span></li>
+                    <li><span id="prefix19" class="shadowHover">PREFIX smdx-dimension: &lt;http://purl.org/linked-data/sdmx/2009/dimension#&gt;</span></li>
+                    <li><span id="prefix20" class="shadowHover">PREFIX smdx-code: &lt;http://purl.org/linked-data/sdmx/2009/code#&gt;</span></li>
+                    <li><span id="prefix21" class="shadowHover">PREFIX smdx-concept: &lt;http://purl.org/linked-data/sdmx/2009/concept#&gt;</span></li>
                 </ul>
                 <button id="closePrefixesDialog">Close</button>
             </div>

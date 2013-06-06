@@ -58,8 +58,7 @@
         This application is a semantic repository of the data and metadata involved in the European Commission's Digital Agenda Scoreboard.
         It is where the Scoreboard's data administrators can upload, import and inspect the Scoreboard's data and metadata. It servers as the
         backend of the publicly available Digital Agenda Scoreboard website (i.e. frontend). The two communicate over SPARQL protocol, designed for
-        querying semantic repositories. Content in this site is not automatically published to the wider audience in the frontend:
-        this is controlled in the latter.
+        querying semantic repositories. The present user interface of this repository is also referred to as Content Registry.
     </p>
     <h2>Simple search</h2>
     <p>
