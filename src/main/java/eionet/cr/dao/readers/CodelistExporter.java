@@ -3,9 +3,14 @@ package eionet.cr.dao.readers;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -59,12 +64,17 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /** Number of codelist items exported. */
     private int itemsExported;
 
+    /** The total number of worksheet rows added by this exporter at any moment of execution. */
+    private int worksheetRowsAdded;
+
     /**
-     * Represents current codelist item row to be written into spreadsheet.
-     * Keys are spreadsheet columns (0-based index), values are strings to be written into those columns.
-     * To be initialized at first need.
+     * Represents current codelist item to be written into spreadsheet.
+     * Keys are spreadsheet columns (0-based index), values are sets of strings to be written into those columns.
+     * So the idea is that a column may have multiple values. For every such value the worksheet row will simply be duplicated
+     * by repeating the values of the other columns.
+     * This fields is to be initialized at first need.
      */
-    private HashMap<Integer, String> rowMap;
+    private HashMap<Integer, Set<String>> rowMap;
 
     /** The current subject URI as the SPARQL result set is traversed. To be initialized at first need. */
     private String currentSubjectUri;
@@ -143,7 +153,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
                 itemsExported++;
             }
             currentSubjectUri = subjectUri;
-            rowMap = new HashMap<Integer, String>();
+            rowMap = new HashMap<Integer, Set<String>>();
         }
 
         String predicateUri = getStringValue(bindingSet, "p");
@@ -181,22 +191,39 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     private void putIntoRowMap(Integer columnIndex, Value value) {
 
         if (value instanceof Literal) {
-            rowMap.put(columnIndex, value.stringValue());
+            putIntoRowMap(rowMap, columnIndex, value.stringValue());
         } else if (!(value instanceof BNode)) {
 
             String strValue = value.stringValue();
             if (strValue.startsWith(CODELIST_URI_PREFIX)) {
 
                 strValue = StringUtils.substringAfterLast(strValue.replace('/', '#'), "#");
-                rowMap.put(columnIndex, strValue);
+                putIntoRowMap(rowMap, columnIndex, strValue);
             } else {
-                rowMap.put(columnIndex, value.stringValue());
+                putIntoRowMap(rowMap, columnIndex, value.stringValue());
             }
         }
     }
 
     /**
-     * Saves the row map to the row indicated by the number of exported items.
+     * Puts the given column-index-to-string-value pair into the given row-map.{@link #rowMap}.
+     *
+     * @param map The given row-map.
+     * @param columnIndex Column index, i.e. the key of the map entry.
+     * @param value Column value, i.e. the value of the map entry.
+     */
+    private static void putIntoRowMap(HashMap<Integer, Set<String>> map, Integer columnIndex, String value) {
+
+        Set<String> set = map.get(columnIndex);
+        if (set == null) {
+            set = new HashSet<String>();
+            map.put(columnIndex, set);
+        }
+        set.add(value);
+    }
+
+    /**
+     * Saves the contents of the current row-map into the target worksheet.
      */
     private void saveRowMap() {
 
@@ -204,19 +231,54 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
             return;
         }
 
-        int rowIndex = itemsExported + 1;
-        LOGGER.trace("Saving row #" + rowIndex);
+        LOGGER.trace("Saving item #" + itemsExported);
 
+        // The row-map represents the current codelist item to be written into the target rowsheet.
+        // Each key-value pair in the row-map represents worksheet column index and corresponding values.
+        // Yes, the column can have multiple values. We handle this by repeating worksheet row for every such row.
+        // Imagine map like this: {1=["james"], 2="bond" 3=["tall", "handsome"]}
+        // In the worksheet the outcome must be 2 "distinct rows", like this (columns ordered by column index starting from 1):
+        // "james", "bond", "tall"
+        // "james", "bond", "handsome".
+
+        // Convert the map to the set of distinct rows, following above-described principle.
+        HashSet<ArrayList<String>> distinctRows = mapToDistinctRows(rowMap);
+
+        // Loop over distinct rows, save each row into worksheet.
+        for (Iterator<ArrayList<String>> iter = distinctRows.iterator(); iter.hasNext();) {
+            ArrayList<String> distinctRow = iter.next();
+            if (distinctRow != null && !distinctRow.isEmpty()) {
+                saveDistinctRow(distinctRow);
+                worksheetRowsAdded++;
+            }
+        }
+    }
+
+    /**
+     * Saves a "distinct row" into the target worksheet.
+     * See inside {@link #saveRowMap()} for more comments on what's a "distinct row".
+     * @param distinctRow The "distinct row" to save.
+     */
+    private void saveDistinctRow(ArrayList<String> distinctRow) {
+
+        if (distinctRow == null || distinctRow.isEmpty()) {
+            return;
+        }
+
+        int rowIndex = worksheetRowsAdded + 1;
         Row row = worksheet.getRow(rowIndex);
         if (row == null) {
             row = worksheet.createRow(rowIndex);
         }
 
-        int maxLines = 1;
-        for (Entry<Integer, String> entry : rowMap.entrySet()) {
+        LOGGER.trace("Populating worksheet row at position " + worksheetRowsAdded);
 
-            int cellIndex = entry.getKey();
-            String cellValue = entry.getValue();
+        int maxLines = 1;
+        for (int i = 0; i < distinctRow.size(); i++) {
+
+            int cellIndex = i;
+            String cellValue = distinctRow.get(i);
+
             Cell cell = row.getCell(cellIndex);
             if (cell == null) {
                 cell = row.createCell(cellIndex);
@@ -293,5 +355,45 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
         map.put("memberOf", DAD_PROPERTY_NAMESPACE + "member-of");
         map.put("order", DAD_PROPERTY_NAMESPACE + "order");
         return map;
+    }
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    private static HashSet<ArrayList<String>> mapToDistinctRows(HashMap<Integer, Set<String>> map) {
+
+        int maxIndex = Collections.max(map.keySet()).intValue();
+        ArrayList<String> defaultRow = new ArrayList<String>();
+        for (int i = 0; i <= maxIndex; i++) {
+            defaultRow.add(StringUtils.EMPTY);
+        }
+
+        for (Entry<Integer, Set<String>> entry : map.entrySet()) {
+            int index = entry.getKey();
+            Set<String> values = entry.getValue();
+            defaultRow.set(index, values.iterator().next());
+        }
+
+        HashSet<ArrayList<String>> distinctRows = new HashSet<ArrayList<String>>();
+        distinctRows.add(defaultRow);
+
+        Set<Entry<Integer, Set<String>>> entrySet = map.entrySet();
+        for (Entry<Integer, Set<String>> entry : entrySet) {
+
+            int index = entry.getKey();
+            Set<String> values = entry.getValue();
+            if (values.size() > 1) {
+
+                Iterator<String> iter = values.iterator();
+                for (iter.next(); iter.hasNext();) {
+                    ArrayList<String> row = (ArrayList<String>) defaultRow.clone();
+                    row.set(index, iter.next());
+                    distinctRows.add(row);
+                }
+            }
+        }
+        return distinctRows;
     }
 }
