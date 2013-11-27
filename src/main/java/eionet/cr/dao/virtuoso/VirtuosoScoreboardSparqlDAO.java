@@ -1,12 +1,16 @@
 package eionet.cr.dao.virtuoso;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -43,7 +47,7 @@ import eionet.cr.web.util.ObservationFilter;
 
 /**
  * A Virtuoso-specific implementation of {@link ScoreboardSparqlDAO}.
- * 
+ *
  * @author jaanus
  */
 public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements ScoreboardSparqlDAO {
@@ -146,11 +150,27 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  <DATASET_URI> adms:status <STATUS_URI>\n" +
             "}";
 
+    private static final String INDICATORS_FOR_ODP_ZIPPING = "" +
+            "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "PREFIX dad-class: <http://semantic.digital-agenda-data.eu/def/class/>\n" +
+            "select ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel where {\n" +
+            "  ?uri a dad-class:Indicator .\n" +
+            "  ?uri dcterms:source ?src .\n" +
+            "  ?uri dad-prop:membership ?membership .\n" +
+            "  ?membership dad-prop:member-of ?grp .\n" +
+            "  optional {?uri skos:notation ?notation}\n" +
+            "  optional {?uri skos:prefLabel ?prefLabel}\n" +
+            "  @FILTER_GROUPS@\n" +
+            "  @FILTER_SOURCES@\n" +
+            "}\n" +
+            "order by ?ind";
+
     // @formatter:on
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getCodelists(java.lang.String)
      */
     @Override
@@ -169,7 +189,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getCodelistItems(java.lang.String)
      */
     @Override
@@ -188,7 +208,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#createDataCubeDataset(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
@@ -253,7 +273,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#datasetExists(java.lang.String)
      */
     @Override
@@ -277,13 +297,12 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getFilterValues(java.util.Map, eionet.cr.web.util.ObservationFilter, boolean)
      */
     @Override
     public List<Pair<String, String>> getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter,
-            boolean isAdmin)
-                    throws DAOException {
+            boolean isAdmin) throws DAOException {
 
         if (filter == null) {
             throw new IllegalArgumentException("Filter for which the values are being asked, must not be null!");
@@ -299,7 +318,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         sb.append("\n");
         sb.append("select\n");
         sb.append("  ?").append(filterAlias).append(" min(str(coalesce(?prefLabel, ?").append(filterAlias)
-        .append("))) as ?label\n");
+                .append("))) as ?label\n");
         sb.append("where {\n");
         sb.append("  ?s a cube:Observation.\n");
 
@@ -318,7 +337,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
                     }
                 } else {
                     sb.append("  ?s <").append(availFilter.getPredicate()).append("> ?").append(availFilter.getAlias())
-                    .append(".\n");
+                            .append(".\n");
                 }
             }
         }
@@ -328,9 +347,8 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         // If not an admin-user, allow selections from "Completed" datasets only.
         if (!isAdmin) {
             if (sb.toString().contains(" ?" + ObservationFilter.DATASET.getAlias())) {
-                sb.append("  ?").append(ObservationFilter.DATASET.getAlias()).
-                append(" <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED)
-                .append(">\n");
+                sb.append("  ?").append(ObservationFilter.DATASET.getAlias()).append(" <").append(Predicates.ADMS_STATUS)
+                        .append("> <").append(Subjects.ADMS_STATUS_COMPLETED).append(">\n");
             }
         }
 
@@ -349,7 +367,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#exportCodelistItems(java.lang.String, java.io.File, java.util.Map)
      */
     @SuppressWarnings("unchecked")
@@ -382,7 +400,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#updateDcTermsModified(java.lang.String, java.util.Date, java.lang.String)
      */
     @Override
@@ -429,7 +447,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getSubjectsWithBoundProperty(java.lang.String, java.util.Set)
      */
     @Override
@@ -447,7 +465,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#fixGrouplessCodelistItems()
      */
     @Override
@@ -475,7 +493,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getObservationPredicateValues(java.lang.String, boolean,
      * eionet.cr.util.pagination.PagingRequest, eionet.cr.util.SortingRequest, java.lang.String[])
      */
@@ -497,7 +515,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         if (ArrayUtils.isEmpty(labelPredicates)) {
             sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
-            .append(PairReader.RIGHTCOL).append("\n");
+                    .append(PairReader.RIGHTCOL).append("\n");
         } else {
             sb.append("  coalesce(");
             for (int i = 0; i < labelPredicates.length; i++) {
@@ -507,7 +525,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
                 sb.append("?label").append(i);
             }
             sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
-            .append(PairReader.RIGHTCOL).append("\n");
+                    .append(PairReader.RIGHTCOL).append("\n");
         }
 
         sb.append("where {").append("\n");
@@ -517,7 +535,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         if (!isAdmin) {
             sb.append("  ?subj <").append(Predicates.DATACUBE_DATA_SET).append("> ?ds .").append("\n");
             sb.append("  ?ds <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED).append("> .")
-            .append("\n");
+                    .append("\n");
         }
 
         sb.append("  ?subj ?pred ?s").append("\n");
@@ -532,7 +550,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         }
         sb.append("}\n");
         sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
-        .append(")");
+                .append(")");
 
         if (pageRequest != null) {
             sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
@@ -550,7 +568,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             if (!isAdmin) {
                 sb.append("  ?subj <").append(Predicates.DATACUBE_DATA_SET).append("> ?ds .").append("\n");
                 sb.append("  ?ds <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED)
-                .append("> .").append("\n");
+                        .append("> .").append("\n");
             }
 
             sb.append("  ?subj ?pred ?s").append("\n");
@@ -568,7 +586,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctDatasets(boolean, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest, java.lang.String[])
      */
@@ -588,7 +606,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         if (ArrayUtils.isEmpty(labelPredicates)) {
             sb.append("  bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1) as ?")
-            .append(PairReader.RIGHTCOL).append("\n");
+                    .append(PairReader.RIGHTCOL).append("\n");
         } else {
             sb.append("  coalesce(");
             for (int i = 0; i < labelPredicates.length; i++) {
@@ -598,7 +616,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
                 sb.append("?label").append(i);
             }
             sb.append(", bif:subseq(str(?s), coalesce(bif:strrchr(bif:replace(str(?s),'/','#'),'#'),0)+1)) as ?")
-            .append(PairReader.RIGHTCOL).append("\n");
+                    .append(PairReader.RIGHTCOL).append("\n");
         }
 
         sb.append("where {").append("\n");
@@ -606,8 +624,8 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         // If not an admin-user, allow selections from "Completed" datasets only.
         if (!isAdmin) {
-            sb.append("  ?s <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED)
-            .append("> .").append("\n");
+            sb.append("  ?s <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED).append("> .")
+                    .append("\n");
         }
 
         String s = "  optional {?s ?labelPred0 ?label0}\n";
@@ -617,7 +635,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         }
         sb.append("}\n");
         sb.append("order by ").append(sortRequest.getSortOrder()).append("(?").append(sortRequest.getSortingColumnName())
-        .append(")");
+                .append(")");
 
         if (pageRequest != null) {
             sb.append(" limit ").append(pageRequest.getItemsPerPage()).append(" offset ").append(pageRequest.getOffset());
@@ -634,7 +652,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             // If not an admin-user, allow selections from "Completed" datasets only.
             if (!isAdmin) {
                 sb.append("  ?s <").append(Predicates.ADMS_STATUS).append("> <").append(Subjects.ADMS_STATUS_COMPLETED)
-                .append("> .").append("\n");
+                        .append("> .").append("\n");
             }
             sb.append("}");
 
@@ -647,7 +665,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#changeDatasetStatus(java.lang.String, java.lang.String)
      */
     @Override
@@ -686,5 +704,54 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
         } finally {
             SesameUtil.close(repoConn);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getIndicators(java.util.List, java.util.List)
+     */
+    @Override
+    public List<SkosItemDTO> getIndicators(List<String> groupNotations, List<String> sourceNotations) throws DAOException {
+
+        String sparql = new String(INDICATORS_FOR_ODP_ZIPPING);
+        if (CollectionUtils.isEmpty(groupNotations)) {
+            sparql = StringUtils.replace(sparql, "@FILTER_GROUPS@", StringUtils.EMPTY);
+        } else {
+            ArrayList<String> groupUris = new ArrayList<String>();
+            for (String groupNotation : groupNotations) {
+
+                String uri = IND_GROUP_CODELIST_URI + "/" + groupNotation;
+                try {
+                    groupUris.add(new URL(uri).toString());
+                } catch (MalformedURLException e) {
+                    throw new DAOException("Invalid URL: " + uri);
+                }
+            }
+            String urisToCSV = SPARQLQueryUtil.urisToCSV(groupUris);
+            String filterStr = "filter (?grp in (" + urisToCSV + "))";
+            sparql = StringUtils.replace(sparql, "@FILTER_GROUPS@", filterStr);
+        }
+
+        if (CollectionUtils.isEmpty(sourceNotations)) {
+            sparql = StringUtils.replace(sparql, "@FILTER_SOURCES@", StringUtils.EMPTY);
+        } else {
+            ArrayList<String> sourceUris = new ArrayList<String>();
+            for (String sourceNotation : sourceNotations) {
+
+                String uri = IND_SOURCE_CODELIST_URI + "/" + sourceNotation;
+                try {
+                    sourceUris.add(new URL(uri).toString());
+                } catch (MalformedURLException e) {
+                    throw new DAOException("Invalid URL: " + uri);
+                }
+            }
+            String urisToCSV = SPARQLQueryUtil.urisToCSV(sourceUris);
+            String filterStr = "filter (?src in (" + urisToCSV + "))";
+            sparql = StringUtils.replace(sparql, "@FILTER_SOURCES@", filterStr);
+        }
+
+        List<SkosItemDTO> resultList = executeSPARQL(sparql, new SkosItemsReader());
+        return resultList;
     }
 }

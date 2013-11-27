@@ -29,9 +29,8 @@ package eionet.cr.common;
  */
 public enum Namespace {
 
-    // TODO: When we remove the AmpFeedServlet and XmlConvFeedServlet we can get rid of DC, AMP, EPER and IMS.
-    // The rest can be turned into constants.
-
+    /** The XML namespace. */
+    XML("http://www.w3.org/XML/1998/namespace", "xml"),
     /** RDF base prefix. */
     RDF("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf"),
     /** RDF Schema base prefix. */
@@ -54,8 +53,22 @@ public enum Namespace {
     ROD_OLD("http://rod.eionet.eu.int/schema.rdf#", "rodold"), // Phased out
     /** EPER dataflow base prefix - EEA internal. */
     EPER("http://rdfdata.eionet.europa.eu/eper/dataflow", "eper"),
-    /** Datatypes */
-    XSD("http://www.w3.org/2001/XMLSchema#", "xsd");
+    /** XML Schema namespace. */
+    XSD("http://www.w3.org/2001/XMLSchema#", "xsd"),
+    /** Dublin Core Metadata Initiative Abstract Model. */
+    DCAM("http://purl.org/dc/dcam/", "dcam"),
+    /** W3C Data Catalog Vocabulary. */
+    DCAT("http://www.w3.org/ns/dcat#", "dcat"),
+    /** Dublin Core terms. */
+    DCT("http://purl.org/dc/terms/", "dct"),
+    /** European Commission's Open Data Portal. */
+    ECODP("http://open-data.europa.eu/ontologies/ec-odp#", "ecodp"),
+    /** Friend of a friend. */
+    FOAF("http://xmlns.com/foaf/0.1/", "foaf"),
+    /** Simple Knowledge Organisation System. */
+    SKOS("http://www.w3.org/2004/02/skos/core#", "skos"),
+    /** Simple Knowledge Organisation System XL. */
+    SKOS_XL("http://www.w3.org/2008/05/skos-xl#", "skos-xl");
 
     /** */
     private final String uri;

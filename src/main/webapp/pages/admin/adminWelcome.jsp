@@ -19,6 +19,7 @@
                 <li><stripes:link href="/admin/endpointQueries.action">SPARQL endpoint harvest queries</stripes:link></li>
                 <li><stripes:link href="/admin/stagingDbs.action">Staging databases</stripes:link></li>
                 <li><stripes:link href="/admin/xlwrapUpload.action">Spreadsheet upload</stripes:link></li>
+                <li><stripes:link href="/admin/odpPackaging.action">ODP datasets packaging</stripes:link></li>
             </ul>
         </c:when>
         <c:otherwise>

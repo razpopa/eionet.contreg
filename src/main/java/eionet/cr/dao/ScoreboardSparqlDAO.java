@@ -17,7 +17,7 @@ import eionet.cr.web.util.ObservationFilter;
 
 /**
  * A DAO interface for the SPARQL queries specific to the DG Connect's Digital Agenda Scoreboard project.
- * 
+ *
  * @author jaanus
  */
 public interface ScoreboardSparqlDAO extends DAO {
@@ -34,10 +34,16 @@ public interface ScoreboardSparqlDAO extends DAO {
     /** */
     public static final String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
 
+    /** URI of the indicator groups codelist. */
+    public static final String IND_GROUP_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/indicator-group";
+
+    /** URI of the indicator sources codelist. */
+    public static final String IND_SOURCE_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/source";
+
     /**
      * Return URI-label pairs of codelists that have type {@link Subjects.SKOS_CONCEPT_SCHEME} and whose URI starts with the given
      * input string.
-     * 
+     *
      * @param uriStartsWith
      *            The codelist URI must start with this string.
      * @return The URI-label pairs of codelists.
@@ -48,7 +54,7 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * Return all items in the codelist by the given URI.
-     * 
+     *
      * @param codelistUri
      *            Codelist URI.
      * @return List of items in the given codelist.
@@ -61,7 +67,7 @@ public interface ScoreboardSparqlDAO extends DAO {
      * Returns a list of observations filter values matching the given selections and starting after the given filter. Example:
      * if user changes the value of a particular filter (this is the one given in the method input), then all filters "below" it
      * must be re-populated. And the already made selections must be taken into account we well.
-     * 
+     *
      * @param selections The selections as indicated above.
      * @param filter The filter that user has just changed.
      * @param isAdmin True if the user is an administrator, otherwise false.
@@ -73,7 +79,7 @@ public interface ScoreboardSparqlDAO extends DAO {
             throws DAOException;
 
     /**
-     * 
+     *
      * @param identifier
      * @param dctermsTitle
      * @param dctermsDescription
@@ -83,7 +89,7 @@ public interface ScoreboardSparqlDAO extends DAO {
     String createDataset(String identifier, String dctermsTitle, String dctermsDescription) throws DAOException;
 
     /**
-     * 
+     *
      * @param identifier
      * @return
      * @throws DAOException
@@ -92,7 +98,7 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * Exports codelist items of given RDF type into the given spreadsheet template file, using the given properties-to-columns map.
-     * 
+     *
      * @param itemType
      *            The RDF type of codelist items to export.
      * @param templateFile
@@ -112,7 +118,7 @@ public interface ScoreboardSparqlDAO extends DAO {
      * Removes all triples where the subject is the given subject URI and the predicate is dcterms:modified and the graph is the
      * given graph URI. Then adds a single triple where the subject, predicate and graph are the same, but the object is the given
      * date value.
-     * 
+     *
      * @param subjectUri
      *            The given subject URI.
      * @param date
@@ -126,7 +132,7 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * From the given subjects returns those that have the given property bound.
-     * 
+     *
      * @param propertyUri
      *            URI of property to check.
      * @param subjects
@@ -141,7 +147,7 @@ public interface ScoreboardSparqlDAO extends DAO {
      * This is a post-import action for breakdowns, indicators and other codelist items that do not belong into any group and
      * were therefore wrongly mapped into e.g. http://semantic.digital-agenda-data.eu/codelist/breakdown-group/ as the group.
      * Correct solution should be to handle this in the Trig mapping file, but Trig does not seem to support such a construct.
-     * 
+     *
      * @throws DAOException
      *             Any sort of exception that happens is wrapped into this one.
      */
@@ -149,7 +155,7 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * Gets all the distinct values of the given predicate used in DataCube observations.
-     * 
+     *
      * @param predicateUri URI of predicate whose values are to be returned.
      * @param isAdmin Only limited-access datasets are searched in if this is false (i.e. user is not an admin).
      * @param pageRequest The paging request.
@@ -164,7 +170,7 @@ public interface ScoreboardSparqlDAO extends DAO {
     /**
      * Returns all distinct DataCube datasets found in the system. Each dataset is represented by a {@link Pair<String, String>},
      * matching uri-label respectively.
-     * 
+     *
      * @param isAdmin Only limited-access datasets are searched in if this is false (i.e. user is not an admin).
      * @param pageRequest The paging request.
      * @param sortRequest The sorting request
@@ -177,10 +183,21 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * Changes the {@link Predicates#ADMS_STATUS} of the dataset by the given URI.
-     * 
+     *
      * @param uri The URI of the dataset whose status is to be changed.
      * @param newStatus The URI identifying the new status.
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
     void changeDatasetStatus(String uri, String newStatus) throws DAOException;
+
+    /**
+     * Returns compact metadata about the indicators matching the given indicator groups and indicator sources. The metadata is
+     * returned as a list of {@link SkosItemDTO} where every member represents exactly one indicator.
+     *
+     * @param groupNotations List of SKOS notations of the indicator groups to match.
+     * @param sourceNotations List of SKOS notations of the indicator sources to match
+     * @return The list of matching indicators.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    List<SkosItemDTO> getIndicators(List<String> groupNotations, List<String> sourceNotations) throws DAOException;
 }
