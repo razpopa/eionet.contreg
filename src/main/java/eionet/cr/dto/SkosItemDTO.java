@@ -10,13 +10,19 @@ import org.apache.commons.lang.StringUtils;
  */
 public class SkosItemDTO {
 
-    /** */
+    /** The item's URI. */
     private String uri;
+
+    /** The item's skos:notation. */
     private String skosNotation;
+
+    /** The item's skos:prefLabel. */
     private String skosPrefLabel;
 
     /**
-     * @param uri
+     * Simple constructor for the given SKOS item URI.
+     *
+     * @param uri The URI.
      */
     public SkosItemDTO(String uri) {
 

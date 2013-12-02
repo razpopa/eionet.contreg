@@ -285,9 +285,9 @@ public class SubjectDTO implements Serializable {
      * @param predicate URL
      * @return the list of object values.
      */
-    public Collection<String> getObjectValues(String predicate) {
+    public List<String> getObjectValues(String predicate) {
 
-        Collection<String> objectValues = new ArrayList<String>();
+        List<String> objectValues = new ArrayList<String>();
         Collection<ObjectDTO> objects = getObjects(predicate);
         if (objects != null && !objects.isEmpty()) {
 

@@ -70,12 +70,16 @@ public enum Namespace {
     /** Simple Knowledge Organisation System XL. */
     SKOS_XL("http://www.w3.org/2008/05/skos-xl#", "skos-xl");
 
-    /** */
+    /** Namespace URI. */
     private final String uri;
+    /** Namespace prefix. */
     private final String prefix;
 
     /**
+     * Simple constructor for the given namespace uri-prefix pair.
      *
+     * @param uri The URI.
+     * @param prefix The prefix.
      */
     private Namespace(String uri, String prefix) {
         this.uri = uri;

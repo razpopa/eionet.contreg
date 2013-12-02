@@ -177,13 +177,12 @@ public interface SearchDAO extends DAO {
      */
     List<SubjectDTO> getTypes() throws DAOException;
 
-//    /**
-//     *
-//     * @param filter
-//     * @param sortAlias
-//     * @param order
-//     * @return
-//     * @throws DAOException
-//     */
-//    List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order) throws DAOException;
+    /**
+     *
+     * @param subjectUris
+     * @param predicateUris
+     * @return
+     * @throws DAOException
+     */
+    List<SubjectDTO> getSubjectsData(List<String> subjectUris, String[] predicateUris) throws DAOException;
 }

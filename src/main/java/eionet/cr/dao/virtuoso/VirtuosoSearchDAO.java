@@ -560,8 +560,8 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * eionet.cr.util.SortingRequest)
      */
     @Override
-    public Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, boolean skipAnonymous,
-            PagingRequest pagingRequest, SortingRequest sortingRequest) throws DAOException {
+    public Pair<Integer, List<SubjectDTO>> searchBySource(String sourceUrl, boolean skipAnonymous, PagingRequest pagingRequest,
+            SortingRequest sortingRequest) throws DAOException {
 
         // if source URL to search by is blank, return empty result
         if (StringUtils.isBlank(sourceUrl)) {
@@ -1074,5 +1074,17 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
                 System.out.println(subjectDTO.getUri());
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.SearchDAO#getSubjectsData(java.util.List, java.lang.String[])
+     */
+    @Override
+    public List<SubjectDTO> getSubjectsData(List<String> subjectUris, String[] predicateUris) throws DAOException {
+
+        List<SubjectDTO> resultList = getFoundSubjectsData(subjectUris, predicateUris);
+        return resultList;
     }
 }

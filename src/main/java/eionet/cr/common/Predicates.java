@@ -52,6 +52,7 @@ public interface Predicates {
     String DCTERMS_LANGUAGE = "http://purl.org/dc/terms/language";
     String DCTERMS_DATE = "http://purl.org/dc/terms/date";
     String DCTERMS_MODIFIED = "http://purl.org/dc/terms/modified";
+    String DCTERMS_ISSUED = "http://purl.org/dc/terms/issued";
     String DCTERMS_SOURCE = "http://purl.org/dc/terms/source";
     String DCTERMS_PUBLISHER = "http://purl.org/dc/terms/publisher";
     String DCTERMS_LICENSE = "http://purl.org/dc/terms/license";
@@ -73,6 +74,8 @@ public interface Predicates {
     String SKOS_PREF_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
     String SKOS_ALT_LABEL = "http://www.w3.org/2004/02/skos/core#altLabel";
     String SKOS_HAS_TOP_CONCEPT = "http://www.w3.org/2004/02/skos/core#hasTopConcept";
+    String SKOS_DEFINITION = "http://www.w3.org/2004/02/skos/core#definition";
+    String SKOS_NOTES = "http://www.w3.org/2004/02/skos/core#notes";
 
     String ROD_OBLIGATION_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#obligation";
     String ROD_INSTRUMENT_PROPERTY = "http://rod.eionet.europa.eu/schema.rdf#instrument";

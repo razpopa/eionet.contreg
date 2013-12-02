@@ -166,6 +166,15 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "}\n" +
             "order by ?ind";
 
+    private static final String GET_DISTINCT_USED_REF_AREAS = "" +
+            "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "SELECT DISTINCT ?refArea WHERE {\n" +
+            "  ?s a cube:Observation .\n" +
+            "  ?s dad-prop:ref-area ?refArea\n" +
+            "}\n" +
+            "ORDER BY ?refArea";
+
     // @formatter:on
 
     /*
@@ -753,5 +762,17 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         List<SkosItemDTO> resultList = executeSPARQL(sparql, new SkosItemsReader());
         return resultList;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctUsedRefAreas()
+     */
+    @Override
+    public List<String> getDistinctUsedRefAreas() throws DAOException {
+
+        List<String> returnList = executeSPARQL(GET_DISTINCT_USED_REF_AREAS, new SingleObjectReader<String>());
+        return returnList;
     }
 }
