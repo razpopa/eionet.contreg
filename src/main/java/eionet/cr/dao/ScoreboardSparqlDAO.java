@@ -208,4 +208,21 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
     List<String> getDistinctUsedRefAreas() throws DAOException;
+
+    /**
+     *
+     * @param datasetUri
+     * @return
+     * @throws DAOException
+     */
+    List<SkosItemDTO> getIndicatorSourcesUsedInDataset(String datasetUri) throws DAOException;
+
+    /**
+     *
+     * @param datasetUri
+     * @param sourceNotations
+     * @return
+     * @throws DAOException
+     */
+    List<SkosItemDTO> getIndicators(String datasetUri, List<String> sourceNotations) throws DAOException;
 }

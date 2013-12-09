@@ -150,7 +150,7 @@ public class ODPDatasetsPacker {
             id = URIUtil.extractURILabel(indSubject.getUri(), String.valueOf(index));
         }
 
-        ZipArchiveEntry entry = new ZipArchiveEntry(id + ".xml");
+        ZipArchiveEntry entry = new ZipArchiveEntry(id + ".rdf");
         zipOutput.putArchiveEntry(entry);
         writeEntry(zipOutput, indSubject, index);
         zipOutput.closeArchiveEntry();
@@ -266,6 +266,30 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
         writer.writeCharacters("The main information about the dataset, with its key metadata and further links to downloads.");
+        writer.writeEndElement();
+        writer.writeEndElement();
+
+        // Write ecodp:isDocumentedBy for the Scoreboard documentation page
+        writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
+        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
+        writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
+        writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
+        writer.writeAttribute(Namespace.RDF.getUri(), "about",
+                "http://open-data.europa.eu/kos/documentation-type/RelatedDocumentation");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                "http://www.w3.org/2001/XMLSchema#anyURI");
+        writer.writeCharacters("http://digital-agenda-data.eu/documentation");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "title");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("Reports and notes about the technical characteristics.");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "description");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("This page presents some reports and notes about the technical characteristics of the project"
+                + "developing the dataset's present visualisation tool and semantic repository.");
         writer.writeEndElement();
         writer.writeEndElement();
 

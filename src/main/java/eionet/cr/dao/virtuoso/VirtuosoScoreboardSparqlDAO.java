@@ -164,7 +164,8 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  @FILTER_GROUPS@\n" +
             "  @FILTER_SOURCES@\n" +
             "}\n" +
-            "order by ?ind";
+            "group by ?uri\n" +
+            "order by ?uri";
 
     private static final String GET_DISTINCT_USED_REF_AREAS = "" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
@@ -174,6 +175,47 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  ?s dad-prop:ref-area ?refArea\n" +
             "}\n" +
             "ORDER BY ?refArea";
+
+    private static final String GET_INDICATOR_SOURCES_USED_IN_DATASET = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+    		"PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+    		"PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+    		"\n" +
+    		"select\n" +
+    		"    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
+    		"where {\n" +
+    		"    ?obs a cube:Observation .\n" +
+    		"    ?obs cube:dataSet ?dst .\n" +
+    		"    ?obs dad-prop:indicator ?ind .\n" +
+    		"    ?ind dcterms:source ?uri\n" +
+    		"    optional {?uri skos:notation ?notation}\n" +
+    		"    optional {?uri skos:prefLabel ?prefLabel}\n" +
+    		"    filter (?dst = ?dstUri)\n" +
+    		"}\n" +
+    		"group by ?uri\n" +
+    		"order by ?uri";
+
+    private static final String INDICATORS_FOR_ODP_ZIPPING2 = "" +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+    		"PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+    		"PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+    		"\n" +
+    		"select\n" +
+    		"    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
+    		"where {\n" +
+    		"    ?obs a cube:Observation .\n" +
+    		"    ?obs cube:dataSet ?dst .\n" +
+    		"    ?obs dad-prop:indicator ?uri .\n" +
+    		"    @SOURCE_PATTERN@\n" +
+    		"    optional {?uri skos:notation ?notation}\n" +
+    		"    optional {?uri skos:prefLabel ?prefLabel}\n" +
+    		"    filter (?dst = ?dstUri)\n" +
+    		"    @FILTER_SOURCES@\n" +
+    		"}\n" +
+    		"group by ?uri\n" +
+    		"order by ?uri";
 
     // @formatter:on
 
@@ -774,5 +816,66 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         List<String> returnList = executeSPARQL(GET_DISTINCT_USED_REF_AREAS, new SingleObjectReader<String>());
         return returnList;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getIndicatorSourcesUsedInDataset(java.lang.String)
+     */
+    @Override
+    public List<SkosItemDTO> getIndicatorSourcesUsedInDataset(String datasetUri) throws DAOException {
+
+        if (StringUtils.isBlank(datasetUri)) {
+            throw new IllegalArgumentException("Dataset URI must not be blank!");
+        }
+
+        Bindings bindings = new Bindings();
+        bindings.setURI("dstUri", datasetUri);
+
+        List<SkosItemDTO> list = executeSPARQL(GET_INDICATOR_SOURCES_USED_IN_DATASET, bindings, new SkosItemsReader());
+        return list;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getIndicators(java.lang.String, java.util.List)
+     */
+    @Override
+    public List<SkosItemDTO> getIndicators(String datasetUri, List<String> sourceNotations) throws DAOException {
+
+        if (StringUtils.isBlank(datasetUri)) {
+            throw new IllegalArgumentException("Dataset URI must not be blank!");
+        }
+        Bindings bindings = new Bindings();
+        bindings.setURI("dstUri", datasetUri);
+
+        String sparql = new String(INDICATORS_FOR_ODP_ZIPPING2);
+
+        if (CollectionUtils.isEmpty(sourceNotations)) {
+            sparql = StringUtils.replace(sparql, "@SOURCE_PATTERN@", StringUtils.EMPTY);
+            sparql = StringUtils.replace(sparql, "@FILTER_SOURCES@", StringUtils.EMPTY);
+        } else {
+
+            sparql = StringUtils.replace(sparql, "@SOURCE_PATTERN@", "?uri dcterms:source ?src");
+
+            ArrayList<String> sourceUris = new ArrayList<String>();
+            for (String sourceNotation : sourceNotations) {
+
+                String uri = IND_SOURCE_CODELIST_URI + "/" + sourceNotation;
+                try {
+                    sourceUris.add(new URL(uri).toString());
+                } catch (MalformedURLException e) {
+                    throw new DAOException("Invalid URL: " + uri);
+                }
+            }
+            String urisToCSV = SPARQLQueryUtil.urisToCSV(sourceUris);
+            String filterStr = "filter (?src in (" + urisToCSV + "))";
+            sparql = StringUtils.replace(sparql, "@FILTER_SOURCES@", filterStr);
+        }
+
+        List<SkosItemDTO> resultList = executeSPARQL(sparql, bindings, new SkosItemsReader());
+        return resultList;
     }
 }

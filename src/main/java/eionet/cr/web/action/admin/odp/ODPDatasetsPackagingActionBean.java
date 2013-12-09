@@ -16,12 +16,16 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eionet.cr.common.Predicates;
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.ScoreboardSparqlDAO;
+import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SkosItemDTO;
+import eionet.cr.util.Pair;
 import eionet.cr.util.odp.ODPDatasetsPacker;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.admin.AdminWelcomeActionBean;
@@ -40,25 +44,38 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     private static final Logger LOGGER = Logger.getLogger(ODPDatasetsPackagingActionBean.class);
 
     /** The JSP listing the available indicator and enabling their packaging into ODP datasets. */
-    private static final String INDICATORS_JSP = "/pages/admin/odp/indicators.jsp";
+    private static final String INDICATORS_JSP = "/pages/admin/odp/indicators2.jsp";
+
+    /** */
+    private static final String[] LABEL_PREDICATES = {Predicates.DCTERMS_TITLE, Predicates.RDFS_LABEL, Predicates.DC_TITLE,
+            Predicates.FOAF_NAME};
 
     /** User-submitted values of the "indicator group" filter. */
-    List<String> filterIndGroup;
+    private List<String> filterIndGroup;
 
     /** User-submitted values of the "indicator source" filter. */
-    List<String> filterIndSource;
+    private List<String> filterIndSource;
 
     /** Available indicator groups to filter by. */
-    List<SkosItemDTO> indGroups;
+    private List<SkosItemDTO> indGroups;
 
     /** Available indicator sources to filter by. */
-    List<SkosItemDTO> indSources;
+    private List<SkosItemDTO> indSources;
 
     /** The list of indicators matching the applied filters. */
-    List<SkosItemDTO> filteredIndicators;
+    private List<SkosItemDTO> filteredIndicators;
 
     /** The list of URIs of indicators selected by the user for the submitted bulk operation. */
-    List<String> selectedIndicators;
+    private List<String> selectedIndicators;
+
+    /** */
+    private List<Pair<String, String>> datasets;
+
+    /** */
+    private String filterDataset;
+
+    /** */
+    private String prevFilterDataset;
 
     /**
      * Default event: lists indicators by the given filters.
@@ -68,6 +85,18 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
      */
     @DefaultHandler
     public Resolution listIndicators() throws DAOException {
+
+        if (StringUtils.isBlank(filterDataset)) {
+            List<Pair<String, String>> availableDatasets = getDatasets();
+            if (CollectionUtils.isNotEmpty(availableDatasets)) {
+                filterDataset = availableDatasets.iterator().next().getLeft();
+            }
+        }
+
+        if (!StringUtils.equals(filterDataset, prevFilterDataset)) {
+            filterIndSource = null;
+        }
+
         return new ForwardResolution(INDICATORS_JSP);
     }
 
@@ -216,9 +245,20 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
         // Lazy initialization.
         if (indSources == null) {
-            indSources =
-                    DAOFactory.get().getDao(ScoreboardSparqlDAO.class)
-                            .getCodelistItems(ScoreboardSparqlDAO.IND_SOURCE_CODELIST_URI);
+
+            List<Pair<String, String>> availableDatasets = getDatasets();
+            if (CollectionUtils.isNotEmpty(availableDatasets)) {
+                String datasetUri = availableDatasets.iterator().next().getLeft();
+                for (Pair<String, String> availableDataset : availableDatasets) {
+                    if (StringUtils.equals(filterDataset, availableDataset.getLeft())) {
+                        datasetUri = availableDataset.getLeft();
+                        break;
+                    }
+                }
+                indSources = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).getIndicatorSourcesUsedInDataset(datasetUri);
+            } else {
+                indSources = new ArrayList<SkosItemDTO>();
+            }
         }
         return indSources;
     }
@@ -233,7 +273,12 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     public List<SkosItemDTO> getFilteredIndicators() throws DAOException {
 
         if (filteredIndicators == null) {
-            filteredIndicators = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).getIndicators(filterIndGroup, filterIndSource);
+            if (StringUtils.isBlank(filterDataset)) {
+                filteredIndicators = new ArrayList<SkosItemDTO>();
+            } else {
+                filteredIndicators =
+                        DAOFactory.get().getDao(ScoreboardSparqlDAO.class).getIndicators(filterDataset, filterIndSource);
+            }
         }
         return filteredIndicators;
     }
@@ -268,5 +313,40 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
      */
     public void setSelectedIndicators(List<String> selectedIndicators) {
         this.selectedIndicators = selectedIndicators;
+    }
+
+    /**
+     * @return the datasets
+     * @throws DAOException
+     */
+    public List<Pair<String, String>> getDatasets() throws DAOException {
+        if (datasets == null) {
+            ScoreboardSparqlDAO dao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
+            SearchResultDTO<Pair<String, String>> searchResult =
+                    dao.getDistinctDatasets(isUserLoggedIn(), null, null, LABEL_PREDICATES);
+            datasets = searchResult == null ? new ArrayList<Pair<String, String>>() : searchResult.getItems();
+        }
+        return datasets;
+    }
+
+    /**
+     * @return the filterDataset
+     */
+    public String getFilterDataset() {
+        return filterDataset;
+    }
+
+    /**
+     * @param filterDataset the filterDataset to set
+     */
+    public void setFilterDataset(String filterDataset) {
+        this.filterDataset = filterDataset;
+    }
+
+    /**
+     * @param prevFilterDataset the prevFilterDataset to set
+     */
+    public void setPrevFilterDataset(String prevFilterDataset) {
+        this.prevFilterDataset = prevFilterDataset;
     }
 }
