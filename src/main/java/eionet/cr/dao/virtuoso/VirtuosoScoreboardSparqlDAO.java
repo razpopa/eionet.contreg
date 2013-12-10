@@ -172,7 +172,11 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
             "SELECT DISTINCT ?refArea WHERE {\n" +
             "  ?s a cube:Observation .\n" +
+            "  ?s cube:dataSet ?dst .\n" +
+            "  ?s dad-prop:indicator ?ind .\n" +
             "  ?s dad-prop:ref-area ?refArea\n" +
+            "  @FILTER_DATASET@\n" +
+            "  @FILTER_INDICATOR@\n" +
             "}\n" +
             "ORDER BY ?refArea";
 
@@ -808,13 +812,29 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
-     *
-     * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctUsedRefAreas()
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctUsedRefAreas(java.lang.String, java.lang.String)
      */
     @Override
-    public List<String> getDistinctUsedRefAreas() throws DAOException {
+    public List<String> getDistinctUsedRefAreas(String datasetUri, String indicatorUri) throws DAOException {
 
-        List<String> returnList = executeSPARQL(GET_DISTINCT_USED_REF_AREAS, new SingleObjectReader<String>());
+        String sparql = GET_DISTINCT_USED_REF_AREAS;
+        Bindings bindings = new Bindings();
+
+        if (StringUtils.isNotBlank(datasetUri)) {
+            sparql = StringUtils.replace(sparql, "@FILTER_DATASET@", "filter (?dst = ?dstUri)");
+            bindings.setURI("dstUri", datasetUri);
+        } else {
+            sparql = StringUtils.replace(sparql, "@FILTER_DATASET@", StringUtils.EMPTY);
+        }
+
+        if (StringUtils.isNotBlank(indicatorUri)) {
+            sparql = StringUtils.replace(sparql, "@FILTER_INDICATOR@", "filter (?ind = ?indUri)");
+            bindings.setURI("indUri", indicatorUri);
+        } else {
+            sparql = StringUtils.replace(sparql, "@FILTER_INDICATOR@", StringUtils.EMPTY);
+        }
+
+        List<String> returnList = executeSPARQL(sparql, bindings, new SingleObjectReader<String>());
         return returnList;
     }
 

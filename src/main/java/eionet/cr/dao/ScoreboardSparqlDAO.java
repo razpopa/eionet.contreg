@@ -202,12 +202,14 @@ public interface ScoreboardSparqlDAO extends DAO {
     List<SkosItemDTO> getIndicators(List<String> groupNotations, List<String> sourceNotations) throws DAOException;
 
     /**
-     * Returns a list of URIs of all reference areas used by the DataCube observations in the system.
+     * Returns a list of URIs of all reference areas used by the DataCube observations in the given dataset in the given indicator.
+     * @param datasetUri The given dataset URI.
+     * @param indicatorUri The given indicator URI.
      *
      * @return The list.
      * @throws DAOException Any sort of exception that happens is wrapped into this one.
      */
-    List<String> getDistinctUsedRefAreas() throws DAOException;
+    List<String> getDistinctUsedRefAreas(String datasetUri, String indicatorUri) throws DAOException;
 
     /**
      *

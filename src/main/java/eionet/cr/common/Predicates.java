@@ -60,6 +60,7 @@ public interface Predicates {
     String DCTERMS_BIBLIOGRAPHIC_CITATION = "http://purl.org/dc/terms/bibliographicCitation";
     String DCTERMS_IDENTIFIER = "http://purl.org/dc/terms/identifier";
     String DCTERMS_FORMAT = "http://purl.org/dc/terms/format";
+    String DCTERMS_ACCRUAL_PERIODICITY = "http://purl.org/dc/terms/accrualPeriodicity";
 
     String RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
     String RDF_VALUE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#value";

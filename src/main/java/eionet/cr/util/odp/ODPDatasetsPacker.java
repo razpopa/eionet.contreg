@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
@@ -27,6 +29,7 @@ import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dao.SearchDAO;
 import eionet.cr.dto.SubjectDTO;
 import eionet.cr.util.URIUtil;
+import eionet.cr.util.Util;
 
 /**
  * Generates ODP (Open Data Portal, http://open-data.europa.eu) datasets' metadata packages from the metadata of
@@ -59,23 +62,34 @@ public class ODPDatasetsPacker {
     /** A {@link SubjectDTO} representing the "main" dataset identified by {@link #MAIN_DATASET_URI}. */
     private SubjectDTO mainDstSubject;
 
-    /** List of URIs of all distinct reference areas used by observations in the triplestore. */
-    private List<String> refAreas;
-
     /** A boolean indicating if {@link #prepare()} has already been called. */
     private boolean isPrepareCalled;
+
+    /** */
+    private String datasetUri;
+
+    /** */
+    private HashMap<String, List<String>> indicatorToRefAreas = new HashMap<String, List<String>>();
+
+    /** */
+    private HashMap<String, SubjectDTO> indicatorSources = new HashMap<String, SubjectDTO>();
 
     /**
      * Main constructor for generating ODP dataset metadata package for the given indicators.
      *
+     * @param datasetUri
      * @param indicatorUris The URIs of the indicators whose metadata is to be packaged.
      */
-    public ODPDatasetsPacker(List<String> indicatorUris) {
+    public ODPDatasetsPacker(String datasetUri, List<String> indicatorUris) {
 
+        if (StringUtils.isBlank(datasetUri)) {
+            throw new IllegalArgumentException("The given dataset URIs must not be blank!");
+        }
         if (CollectionUtils.isEmpty(indicatorUris)) {
             throw new IllegalArgumentException("The given list of indicatior URIs must not be empty!");
         }
 
+        this.datasetUri = datasetUri;
         this.indicatorUris = indicatorUris;
     }
 
@@ -98,12 +112,25 @@ public class ODPDatasetsPacker {
             throw new DAOException("Could not find any metadata about the given indicators!");
         }
 
-        mainDstSubject = DAOFactory.get().getDao(HelperDAO.class).getSubject(MAIN_DATASET_URI);
+        HelperDAO helperDao = DAOFactory.get().getDao(HelperDAO.class);
+        mainDstSubject = helperDao.getSubject(datasetUri);
         if (mainDstSubject == null || mainDstSubject.getPredicateCount() == 0) {
             throw new DAOException("Could not find any metadata about the main (i.e. parent) dataset!");
         }
 
-        refAreas = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).getDistinctUsedRefAreas();
+        ScoreboardSparqlDAO ssDao = DAOFactory.get().getDao(ScoreboardSparqlDAO.class);
+        for (SubjectDTO indSubj : indicatorSubjects) {
+
+            String indUri = indSubj.getUri();
+            List<String> refAreas = ssDao.getDistinctUsedRefAreas(datasetUri, indUri);
+            indicatorToRefAreas.put(indUri, refAreas);
+
+            String indSourceUri = indSubj.getObjectValue(Predicates.DCTERMS_SOURCE);
+            if (StringUtils.isNotBlank(indSourceUri) && !indicatorSources.containsKey(indSourceUri)) {
+                SubjectDTO indSourceDTO = helperDao.getSubject(indSourceUri);
+                indicatorSources.put(indSourceUri, indSourceDTO);
+            }
+        }
     }
 
     /**
@@ -167,6 +194,89 @@ public class ODPDatasetsPacker {
      */
     private void writeEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index) throws XMLStreamException {
 
+        // Prepare indicator URI.
+        String uri = indSubject.getUri();
+
+        // Prepare indicator skos:notation.
+        String skosNotation = indSubject.getObjectValue(Predicates.SKOS_NOTATION);
+        if (StringUtils.isBlank(skosNotation)) {
+            skosNotation = URIUtil.extractURILabel(uri);
+        }
+
+        // Prepare indicator skos:prefLabel.
+        String skosPrefLabel = indSubject.getObjectValue(Predicates.SKOS_PREF_LABEL);
+        if (StringUtils.isBlank(skosPrefLabel)) {
+            skosPrefLabel = skosNotation;
+        }
+
+        // Prepare indicator skos:altLabel.
+        String skosAltLabel = indSubject.getObjectValue(Predicates.SKOS_ALT_LABEL);
+        if (StringUtils.isBlank(skosAltLabel)) {
+            skosAltLabel = skosNotation;
+        }
+
+        // Prepare indicator skos:definition.
+        String skosDefinition = indSubject.getObjectValue(Predicates.SKOS_DEFINITION);
+        if (StringUtils.isBlank(skosDefinition)) {
+            skosDefinition = skosNotation;
+        }
+
+        // Prepare indicator skos:notes.
+        String skosNotes = indSubject.getObjectValue(Predicates.SKOS_NOTES);
+
+        // Prepare indicator source description.
+        String sourceDescription = StringUtils.EMPTY;
+        String indSourceUri = indSubject.getObjectValue(Predicates.DCTERMS_SOURCE);
+        SubjectDTO sourceDTO = indicatorSources.get(indSourceUri);
+        if (sourceDTO != null) {
+
+            String sourcePrefLabel = sourceDTO.getObjectValue(Predicates.SKOS_PREF_LABEL);
+            if (StringUtils.isNotBlank(sourcePrefLabel)) {
+                sourceDescription += sourcePrefLabel;
+            }
+
+            String sourceDefinition = sourceDTO.getObjectValue(Predicates.SKOS_DEFINITION);
+            if (StringUtils.isNotBlank(sourceDefinition)) {
+                sourceDescription += "\n\n" + sourceDefinition;
+            }
+
+            String sourceNotes = sourceDTO.getObjectValue(Predicates.SKOS_NOTES);
+            if (StringUtils.isNotBlank(sourceNotes)) {
+                sourceDescription += "\n\n" + sourceNotes;
+            }
+
+            sourceDescription = sourceDescription.trim();
+            if (StringUtils.isNotBlank(sourceDescription)) {
+                sourceDescription = "The original source of this dataset is:\n\n" + sourceDescription;
+            }
+        }
+
+        // Prepare issued date from the main dataset.
+        String dctIssued = mainDstSubject.getObjectValue(Predicates.DCTERMS_ISSUED);
+
+        // Prepare modification date from the main dataset.
+        List<String> modifiedDates = mainDstSubject.getObjectValues(Predicates.DCTERMS_MODIFIED);
+        String dctModified = StringUtils.EMPTY;
+        if (CollectionUtils.isNotEmpty(modifiedDates)) {
+            Collections.sort(modifiedDates);
+            dctModified = modifiedDates.get(modifiedDates.size() - 1).trim();
+        }
+        if (StringUtils.isBlank(dctModified)) {
+            dctModified = Util.virtuosoDateToString(new Date());
+        }
+
+        // Prepare the main dataset's identifier.
+        String mainDstIdentifier = URIUtil.extractURILabel(mainDstSubject.getUri());
+
+        // Prepare the main dataset's status.
+        String datasetStatus = mainDstSubject.getObjectValue(Predicates.ADMS_STATUS);
+        if (StringUtils.isBlank(datasetStatus)) {
+            datasetStatus = "http://purl.org/adms/status/UnderDevelopment";
+        }
+
+        // Prepare the main dataset's accrual periodicity.
+        String accrualPeriodicity = mainDstSubject.getObjectValue(Predicates.DCTERMS_ACCRUAL_PERIODICITY);
+
         // Prepare STAX indenting writer based on a Java XMLStreamWriter that is based on the given zipped output.
         XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(zipOutput, ENCODING);
         IndentingXMLStreamWriter writer = new IndentingXMLStreamWriter(xmlWriter);
@@ -186,26 +296,6 @@ public class ODPDatasetsPacker {
             writer.writeNamespace(namespace.getPrefix(), namespace.getUri());
         }
 
-        // Prepare some metadata values.
-        String uri = indSubject.getUri();
-        String skosNotation = indSubject.getObjectValue(Predicates.SKOS_NOTATION);
-        String skosPrefLabel = indSubject.getObjectValue(Predicates.SKOS_PREF_LABEL);
-        String skosAltLabel = indSubject.getObjectValue(Predicates.SKOS_ALT_LABEL);
-
-        String skosDefinition = indSubject.getObjectValue(Predicates.SKOS_DEFINITION);
-        String skosNotes = indSubject.getObjectValue(Predicates.SKOS_NOTES);
-        String dctDescription = skosDefinition == null ? StringUtils.EMPTY : skosDefinition;
-        dctDescription = (dctDescription + " " + (skosNotes == null ? StringUtils.EMPTY : skosNotes)).trim();
-
-        String dctIssued = mainDstSubject.getObjectValue(Predicates.DCTERMS_ISSUED);
-
-        List<String> modifiedDates = mainDstSubject.getObjectValues(Predicates.DCTERMS_MODIFIED);
-        String dctModified = StringUtils.EMPTY;
-        if (CollectionUtils.isNotEmpty(modifiedDates)) {
-            Collections.sort(modifiedDates);
-            dctModified = modifiedDates.get(modifiedDates.size() - 1).trim();
-        }
-
         // Start the dataset tag.
         writer.writeStartElement(Namespace.DCAT.getUri(), "Dataset");
         writer.writeAttribute(Namespace.RDF.getUri(), "about", uri);
@@ -222,11 +312,36 @@ public class ODPDatasetsPacker {
         writer.writeCharacters(skosAltLabel);
         writer.writeEndElement();
 
-        // Write dct:description
+        // Write dct:description from skos:definition
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters(dctDescription);
+        writer.writeCharacters(skosDefinition);
         writer.writeEndElement();
+
+        // Write dct:description from the indicator source description
+        if (StringUtils.isNotBlank(sourceDescription)) {
+            writer.writeStartElement(Namespace.DCT.getUri(), "description");
+            writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+            writer.writeCharacters(sourceDescription.trim());
+            writer.writeEndElement();
+        }
+
+        // Write dct:description about the main dataset
+        if (mainDstSubject != null) {
+            writer.writeStartElement(Namespace.DCT.getUri(), "description");
+            writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+            writer.writeCharacters("This dataset is part of another dataset:\n\nhttp://digital-agenda-data.eu/datasets/"
+                    + mainDstIdentifier.replace('-', '_'));
+            writer.writeEndElement();
+        }
+
+        // Write dct:description from skos:notes
+        if (StringUtils.isNotBlank(skosNotes)) {
+            writer.writeStartElement(Namespace.DCT.getUri(), "description");
+            writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+            writer.writeCharacters(skosNotes);
+            writer.writeEndElement();
+        }
 
         // Write dct:identifier
         writer.writeStartElement(Namespace.DCT.getUri(), "identifier");
@@ -257,7 +372,8 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators");
+        // writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators");
+        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifier.replace('-', '_'));
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
@@ -304,7 +420,8 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators/visualizations");
+        // writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators/visualizations");
+        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifier.replace('-', '_') + "/visualizations");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
@@ -327,7 +444,8 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators/indicators");
+        // writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators/indicators");
+        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifier.replace('-', '_') + "/indicators");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
@@ -393,7 +511,8 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators");
+        // writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators");
+        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifier.replace('-', '_'));
         writer.writeEndElement();
         writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
@@ -457,6 +576,7 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
 
         // Write reference areas.
+        List<String> refAreas = indicatorToRefAreas.get(uri);
         if (CollectionUtils.isNotEmpty(refAreas)) {
             for (String refArea : refAreas) {
 
@@ -516,7 +636,7 @@ public class ODPDatasetsPacker {
         // TODO: get from the main dataset object actually
         writer.writeStartElement(Namespace.ECODP.getUri(), "datasetStatus");
         writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "about", "http://open-data.europa.eu/kos/dataset-status/Completed");
+        writer.writeAttribute(Namespace.RDF.getUri(), "about", datasetStatus);
         writer.writeEndElement();
 
         // Write dct:language
@@ -526,11 +646,12 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
 
         // Write ecodp:accrualPeriodicity
-        // TODO: Clarify should come from the main dataset object? Because here we need literal, but in dataste object it's URI.
-        writer.writeStartElement(Namespace.ECODP.getUri(), "accrualPeriodicity");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("semiannual");
-        writer.writeEndElement();
+        if (StringUtils.isNotBlank(accrualPeriodicity)) {
+            writer.writeStartElement(Namespace.ECODP.getUri(), "accrualPeriodicity");
+            writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+            writer.writeCharacters(accrualPeriodicity);
+            writer.writeEndElement();
+        }
 
         // Write dct:temporal
         // TODO: Currenlty not in main dataset object, but should it be there?

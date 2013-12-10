@@ -91,21 +91,19 @@
 
                     <fieldset id="downloadFieldset">
                         <legend>Download options</legend>
-                        <input type="radio" checked="checked" name="which" id="radio1" value="sel"/>
-                        <label for="radio1">Zip selected</label>
+                        <input type="radio" checked="checked" name="zipWhich" id="radioZipSelected" value="SELECTED"/>
+                        <label for="radioZipSelected">Zip selected</label>
                         <br/>
-                        <input type="radio" name="which" id="radio2" value="all"/>
-                        <label for="radio2">Zip all listed</label>
+                        <input type="radio" name="zipWhich" id="radioZipAll" value="ALL"/>
+                        <label for="radioZipAll">Zip all matching the filters</label>
                         <br/><br/>
                         <label for="odpActionSelect">Target action in ODP:</label>
                         <br/>
-                        <select id="odpActionSelect" name="odpAction">
-                            <option value="volvo">Add/replace with status Draft</option>
-                            <option value="volvo">Add/replace with status Published</option>
-                            <option value="volvo">Set status to Draft</option>
-                            <option value="volvo">Set status to Published</option>
-                            <option value="volvo">Remove</option>
-                        </select>
+                        <stripes:select id="odpActionSelect" name="odpAction" value="${actionBean.odpAction}">
+                            <c:forEach items="${actionBean.odpActions}" var="odpAct">
+                                <stripes:option value="${odpAct}" label="${odpAct.label}"/>
+                            </c:forEach>
+                        </stripes:select>
                         <div style="position:absolute;bottom:10px;right:10px;">
                             <input type="button" onclick="toggleSelectAll('filtersForm');return false" value="Select all" name="selectAll"><br/>
                             <input type="submit" name="download" value="Download"/>

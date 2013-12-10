@@ -26,6 +26,7 @@ import eionet.cr.dao.ScoreboardSparqlDAO;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SkosItemDTO;
 import eionet.cr.util.Pair;
+import eionet.cr.util.odp.ODPAction;
 import eionet.cr.util.odp.ODPDatasetsPacker;
 import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.action.admin.AdminWelcomeActionBean;
@@ -77,6 +78,12 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     /** */
     private String prevFilterDataset;
 
+    /** */
+    private ODPAction odpAction;
+
+    /** */
+    private String zipWhich;
+
     /**
      * Default event: lists indicators by the given filters.
      *
@@ -98,6 +105,25 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
         }
 
         return new ForwardResolution(INDICATORS_JSP);
+    }
+
+    /**
+     *
+     * @return
+     * @throws DAOException
+     */
+    public Resolution download() throws DAOException {
+
+        if (StringUtils.isBlank(filterDataset)) {
+            addCautionMessage("No dataset selected!");
+            return new ForwardResolution(INDICATORS_JSP);
+        }
+
+        if (StringUtils.equals(zipWhich, "SELECTED")) {
+            return zipSelected();
+        } else {
+            return zipAll();
+        }
     }
 
     /**
@@ -154,7 +180,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
      */
     private StreamingResolution generateAndStream(List<String> indicatorUris) throws DAOException {
 
-        final ODPDatasetsPacker packer = new ODPDatasetsPacker(indicatorUris);
+        final ODPDatasetsPacker packer = new ODPDatasetsPacker(filterDataset, indicatorUris);
         try {
             packer.prepare();
         } catch (DAOException e) {
@@ -348,5 +374,34 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
      */
     public void setPrevFilterDataset(String prevFilterDataset) {
         this.prevFilterDataset = prevFilterDataset;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ODPAction[] getOdpActions() {
+        return ODPAction.values();
+    }
+
+    /**
+     * @return the odpAction
+     */
+    public ODPAction getOdpAction() {
+        return odpAction;
+    }
+
+    /**
+     * @param odpAction the odpAction to set
+     */
+    public void setOdpAction(ODPAction odpAction) {
+        this.odpAction = odpAction;
+    }
+
+    /**
+     * @param zipWhich the zipWhich to set
+     */
+    public void setZipWhich(String zipWhich) {
+        this.zipWhich = zipWhich;
     }
 }
