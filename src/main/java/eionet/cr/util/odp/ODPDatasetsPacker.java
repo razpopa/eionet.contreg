@@ -50,8 +50,11 @@ public class ODPDatasetsPacker {
     /** Default namespace of the generated RDF/XML files that will be zipped. */
     private static final Namespace DEFAULT_NAMESPACE = Namespace.ECODP;
 
-    /** Namespaces used in the generated RDF/XML files. */
-    private static final List<Namespace> NAMESPACES = buildNamespacesList();
+    /** Namespaces used in the generated RDF/XML files about the datasets. */
+    private static final List<Namespace> DATASET_FILE_NAMESPACES = buildDatasetFileNamespaces();
+
+    /** Namespaces used in the generated manifest file. */
+    private static final List<Namespace> MANIFEST_FILE_NAMESPACES = buildManifestFileNamespaces();
 
     /** URIs of indicators for which the RDF/XML formatted metadata shall be generated. */
     private List<String> indicatorUris;
@@ -74,13 +77,17 @@ public class ODPDatasetsPacker {
     /** */
     private HashMap<String, SubjectDTO> indicatorSources = new HashMap<String, SubjectDTO>();
 
+    /** */
+    private ODPAction odpAction;
+
     /**
      * Main constructor for generating ODP dataset metadata package for the given indicators.
      *
      * @param datasetUri
      * @param indicatorUris The URIs of the indicators whose metadata is to be packaged.
+     * @param odpAction
      */
-    public ODPDatasetsPacker(String datasetUri, List<String> indicatorUris) {
+    public ODPDatasetsPacker(String datasetUri, List<String> indicatorUris, ODPAction odpAction) {
 
         if (StringUtils.isBlank(datasetUri)) {
             throw new IllegalArgumentException("The given dataset URIs must not be blank!");
@@ -88,9 +95,13 @@ public class ODPDatasetsPacker {
         if (CollectionUtils.isEmpty(indicatorUris)) {
             throw new IllegalArgumentException("The given list of indicatior URIs must not be empty!");
         }
+        if (odpAction == null) {
+            throw new IllegalArgumentException("The given ODP action must not be null!");
+        }
 
         this.datasetUri = datasetUri;
         this.indicatorUris = indicatorUris;
+        this.odpAction = odpAction;
     }
 
     /**
@@ -152,8 +163,9 @@ public class ODPDatasetsPacker {
         try {
             zipOutput = new ZipArchiveOutputStream(outputStream);
             for (SubjectDTO indicatorSubject : indicatorSubjects) {
-                createAndWriteEntry(zipOutput, indicatorSubject, i++);
+                createAndWriteDatasetEntry(zipOutput, indicatorSubject, i++);
             }
+            createAndWriteManifestEntry(zipOutput);
         } finally {
             IOUtils.closeQuietly(zipOutput);
         }
@@ -169,17 +181,17 @@ public class ODPDatasetsPacker {
      * @throws IOException If any sort of output stream writing error occurs.
      * @throws XMLStreamException Thrown by methods from the {@link XMLStreamWriter} that is used by called methods.
      */
-    private void createAndWriteEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index) throws IOException,
-            XMLStreamException {
+    private void createAndWriteDatasetEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index)
+            throws IOException, XMLStreamException {
 
         String id = indSubject.getObjectValue(Predicates.SKOS_NOTATION);
         if (StringUtils.isEmpty(id)) {
-            id = URIUtil.extractURILabel(indSubject.getUri(), String.valueOf(index));
+            id = URIUtil.extractURILabel(indSubject.getUri());
         }
 
-        ZipArchiveEntry entry = new ZipArchiveEntry(id + ".rdf");
+        ZipArchiveEntry entry = new ZipArchiveEntry("datasets/" + id + ".rdf");
         zipOutput.putArchiveEntry(entry);
-        writeEntry(zipOutput, indSubject, index);
+        writeDatasetEntry(zipOutput, indSubject, index);
         zipOutput.closeArchiveEntry();
     }
 
@@ -192,7 +204,7 @@ public class ODPDatasetsPacker {
      *
      * @throws XMLStreamException Thrown by methods from the {@link XMLStreamWriter} that is used by called methods.
      */
-    private void writeEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index) throws XMLStreamException {
+    private void writeDatasetEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index) throws XMLStreamException {
 
         // Prepare indicator URI.
         String uri = indSubject.getUri();
@@ -237,17 +249,17 @@ public class ODPDatasetsPacker {
 
             String sourceDefinition = sourceDTO.getObjectValue(Predicates.SKOS_DEFINITION);
             if (StringUtils.isNotBlank(sourceDefinition)) {
-                sourceDescription += "\n\n" + sourceDefinition;
+                sourceDescription += "\n" + sourceDefinition;
             }
 
             String sourceNotes = sourceDTO.getObjectValue(Predicates.SKOS_NOTES);
             if (StringUtils.isNotBlank(sourceNotes)) {
-                sourceDescription += "\n\n" + sourceNotes;
+                sourceDescription += "\n" + sourceNotes;
             }
 
             sourceDescription = sourceDescription.trim();
             if (StringUtils.isNotBlank(sourceDescription)) {
-                sourceDescription = "The original source of this dataset is:\n\n" + sourceDescription;
+                sourceDescription = "The original source of this dataset is:\n" + sourceDescription;
             }
         }
 
@@ -285,14 +297,14 @@ public class ODPDatasetsPacker {
         writer.writeStartDocument(ENCODING, "1.0");
 
         // Register all relevant namespaces.
-        registerNamespaces(writer);
+        registerNamespaces(DATASET_FILE_NAMESPACES, writer);
 
         // Write root element start tag + default namespace
         writer.writeStartElement(Namespace.RDF.getUri(), "RDF");
         writer.writeDefaultNamespace(DEFAULT_NAMESPACE.getUri());
 
         // Write all other namespace prefixes.
-        for (Namespace namespace : NAMESPACES) {
+        for (Namespace namespace : DATASET_FILE_NAMESPACES) {
             writer.writeNamespace(namespace.getPrefix(), namespace.getUri());
         }
 
@@ -330,7 +342,7 @@ public class ODPDatasetsPacker {
         if (mainDstSubject != null) {
             writer.writeStartElement(Namespace.DCT.getUri(), "description");
             writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-            writer.writeCharacters("This dataset is part of another dataset:\n\nhttp://digital-agenda-data.eu/datasets/"
+            writer.writeCharacters("This dataset is part of another dataset:\nhttp://digital-agenda-data.eu/datasets/"
                     + mainDstIdentifier.replace('-', '_'));
             writer.writeEndElement();
         }
@@ -654,7 +666,7 @@ public class ODPDatasetsPacker {
         }
 
         // Write dct:temporal
-        // TODO: Currenlty not in main dataset object, but should it be there?
+        // TODO: Currently not in main dataset object, but should it be there?
         writer.writeStartElement(Namespace.DCT.getUri(), "temporal");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.ECODP.getUri(), "periodStart");
@@ -676,24 +688,140 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * Registers {@link #NAMESPACES} in the given {@link XMLStreamWriter}, by calling setPrefix(...) of the latter for each.
      *
+     * @param zipOutput
+     * @throws XMLStreamException
+     * @throws IOException
+     */
+    private void createAndWriteManifestEntry(ZipArchiveOutputStream zipOutput) throws XMLStreamException, IOException {
+
+        ZipArchiveEntry entry = new ZipArchiveEntry("manifest.xml");
+        zipOutput.putArchiveEntry(entry);
+
+        // Prepare STAX indenting writer based on a Java XMLStreamWriter that is based on the given zipped output.
+        XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(zipOutput, ENCODING);
+        IndentingXMLStreamWriter writer = new IndentingXMLStreamWriter(xmlWriter);
+
+        int i = 1;
+        writeManifestHeader(writer);
+        for (SubjectDTO indicatorSubject : indicatorSubjects) {
+            writeOdpAction(writer, indicatorSubject, i++);
+        }
+        writeManifestFooter(writer);
+
+        zipOutput.closeArchiveEntry();
+    }
+
+    /**
+     *
+     * @param writer
+     * @param indicatorSubject
+     * @param index
+     * @throws XMLStreamException
+     */
+    private void writeOdpAction(IndentingXMLStreamWriter writer, SubjectDTO indicatorSubject, int index) throws XMLStreamException {
+
+        String indicatorUri = indicatorSubject.getUri();
+        String indicatorNotation = indicatorSubject.getObjectValue(Predicates.SKOS_NOTATION);
+        if (StringUtils.isBlank(indicatorNotation)) {
+            indicatorNotation = URIUtil.extractURILabel(indicatorUri);
+        }
+
+        // Start the ecodp:action tag.
+        writer.writeStartElement(Namespace.ECODP.getUri(), "action");
+
+        // Write attributes of the ecodp:action tag.
+        writer.writeAttribute(Namespace.ECODP.getUri(), "id", odpAction.getNameCamelCase() + index);
+        writer.writeAttribute(Namespace.ECODP.getUri(), "object-ckan-name", indicatorNotation);
+        writer.writeAttribute(Namespace.ECODP.getUri(), "object-type", "dataset");
+        writer.writeAttribute(Namespace.ECODP.getUri(), "object-uri", indicatorUri);
+
+        // Start the ecodp:action refinement tag.
+        if (ODPAction.ADD_DRAFT.equals(odpAction) || ODPAction.ADD_PUBLISHED.equals(odpAction)) {
+
+            writer.writeEmptyElement(Namespace.ECODP.getUri(), "add-replace");
+            writer.writeAttribute(Namespace.ECODP.getUri(), "object-status", ODPAction.ADD_DRAFT.equals(odpAction) ? "draft"
+                    : "published");
+            writer.writeAttribute(Namespace.ECODP.getUri(), "package-path", "/datasets/" + indicatorNotation + ".rdf");
+
+        } else if (ODPAction.SET_DRAFT.equals(odpAction) || ODPAction.SET_PUBLISHED.equals(odpAction)) {
+
+            writer.writeEmptyElement(Namespace.ECODP.getUri(), "change-status");
+            writer.writeAttribute(Namespace.ECODP.getUri(), "object-status", ODPAction.SET_DRAFT.equals(odpAction) ? "draft"
+                    : "published");
+
+        } else if (ODPAction.REMOVE.equals(odpAction)) {
+            writer.writeEmptyElement(Namespace.ECODP.getUri(), "remove");
+        } else {
+            throw new IllegalArgumentException("Unsupported ODP action: " + odpAction);
+        }
+
+        // Close the ecodp:action tag.
+        writer.writeEndElement();
+    }
+
+    /**
+     * @param writer
+     * @throws XMLStreamException
+     */
+    private void writeManifestHeader(XMLStreamWriter writer) throws XMLStreamException {
+
+        // Start the XML document
+        writer.writeStartDocument(ENCODING, "1.0");
+
+        // Register all relevant namespaces.
+        registerNamespaces(MANIFEST_FILE_NAMESPACES, writer);
+
+        // Write root element start tag (i.e. <ecodp:manifest>)
+        writer.writeStartElement(Namespace.ECODP.getUri(), "manifest");
+
+        // Write namespace prefixes in the root element start tag.
+        for (Namespace namespace : MANIFEST_FILE_NAMESPACES) {
+            writer.writeNamespace(namespace.getPrefix(), namespace.getUri());
+        }
+
+        String generationDateTime = Util.virtuosoDateToString(new Date());
+        writer.writeAttribute(Namespace.ECODP.getUri(), "creation-date-time", generationDateTime);
+        writer.writeAttribute(Namespace.ECODP.getUri(), "package-id", generationDateTime);
+        writer.writeAttribute(Namespace.ECODP.getUri(), "priority", "normal");
+        writer.writeAttribute(Namespace.ECODP.getUri(), "publisher",
+                "http://publications.europa.eu/resource/authority/corporate-body/CNECT");
+        writer.writeAttribute(Namespace.ECODP.getUri(), "version", "1.0");
+        writer.writeAttribute(Namespace.XSI.getUri(), "schemaLocation",
+                "http://open-data.europa.eu/ontologies/protocol-v1.0/odp-protocol.xsd");
+    }
+
+    /**
+     *
+     * @param writer
+     * @throws XMLStreamException
+     */
+    private void writeManifestFooter(XMLStreamWriter writer) throws XMLStreamException {
+
+        // Close root element tag
+        writer.writeEndElement();
+    }
+
+    /**
+     * Registers the given namespaces in the given {@link XMLStreamWriter}, by calling setPrefix(...) of the latter for each.
+     *
+     * @param xmlWriter The namespaces to register.
      * @param xmlWriter The writer to register in.
      * @throws XMLStreamException In case the write throws exception.
      */
-    private void registerNamespaces(XMLStreamWriter xmlWriter) throws XMLStreamException {
+    private void registerNamespaces(List<Namespace> namespaces, XMLStreamWriter xmlWriter) throws XMLStreamException {
 
-        for (Namespace namespace : NAMESPACES) {
+        for (Namespace namespace : namespaces) {
             xmlWriter.setPrefix(namespace.getPrefix(), namespace.getUri());
         }
     }
 
     /**
-     * Build a list of namespaces used in the generated RDF/XML files.
+     * Build a list of namespaces used in the generated RDF/XML files about the datasets.
      *
      * @return The list.
      */
-    private static List<Namespace> buildNamespacesList() {
+    private static List<Namespace> buildDatasetFileNamespaces() {
 
         ArrayList<Namespace> list = new ArrayList<Namespace>();
         list.add(Namespace.RDF);
@@ -710,4 +838,18 @@ public class ODPDatasetsPacker {
         list.add(Namespace.SKOS_XL);
         return list;
     }
+
+    /**
+     * Build a list of namespaces used in the generated manifest file.
+     *
+     * @return The list.
+     */
+    private static List<Namespace> buildManifestFileNamespaces() {
+
+        ArrayList<Namespace> list = new ArrayList<Namespace>();
+        list.add(Namespace.ECODP);
+        list.add(Namespace.XSI);
+        return list;
+    }
+
 }

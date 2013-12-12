@@ -68,7 +68,9 @@ public enum Namespace {
     /** Simple Knowledge Organisation System. */
     SKOS("http://www.w3.org/2004/02/skos/core#", "skos"),
     /** Simple Knowledge Organisation System XL. */
-    SKOS_XL("http://www.w3.org/2008/05/skos-xl#", "skos-xl");
+    SKOS_XL("http://www.w3.org/2008/05/skos-xl#", "skos-xl"),
+    /** XMLSchema-instance namespace. */
+    XSI("http://www.w3.org/2001/XMLSchema-instance", "xsi");
 
     /** Namespace URI. */
     private final String uri;

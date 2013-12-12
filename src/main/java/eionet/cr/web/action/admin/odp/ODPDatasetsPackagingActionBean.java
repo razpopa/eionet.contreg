@@ -180,7 +180,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
      */
     private StreamingResolution generateAndStream(List<String> indicatorUris) throws DAOException {
 
-        final ODPDatasetsPacker packer = new ODPDatasetsPacker(filterDataset, indicatorUris);
+        final ODPDatasetsPacker packer = new ODPDatasetsPacker(filterDataset, indicatorUris, odpAction);
         try {
             packer.prepare();
         } catch (DAOException e) {
