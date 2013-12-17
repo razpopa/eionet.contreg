@@ -123,6 +123,7 @@ public class HarvestSourcesActionBean extends AbstractSearchActionBean<HarvestSo
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     @Override
@@ -151,7 +152,9 @@ public class HarvestSourcesActionBean extends AbstractSearchActionBean<HarvestSo
             } else if (FAILED_HARVESTS.equals(type)) {
                 pair = factory.getDao(HarvestSourceDAO.class).getHarvestSourcesFailed(filterString, pagingRequest, sortingRequest);
             } else if (UNAUHTORIZED_HARVESTS.equals(type)) {
-                pair = factory.getDao(HarvestSourceDAO.class).getHarvestSourcesUnauthorized(filterString, pagingRequest, sortingRequest);
+                pair =
+                        factory.getDao(HarvestSourceDAO.class).getHarvestSourcesUnauthorized(filterString, pagingRequest,
+                                sortingRequest);
             } else if (SCHEMAS.equals(type)) {
                 // Get comma separated sources that are included into
                 // inferencing ruleset
@@ -399,6 +402,7 @@ public class HarvestSourcesActionBean extends AbstractSearchActionBean<HarvestSo
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.web.action.AbstractActionBean#excludeFromSortAndPagingUrls()
      */
     @Override

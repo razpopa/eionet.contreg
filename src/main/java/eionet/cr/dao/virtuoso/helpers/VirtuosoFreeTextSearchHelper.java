@@ -74,6 +74,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.dao.helpers.FreeTextSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -96,7 +97,8 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
         // If sorting is done by either rdfs:label or rdf:type, and a particular subject doesn't have
         // those predicates, then the last part of subject URI must be used instead.
         if (StringUtils.equals(sortPredicate, Predicates.RDFS_LABEL)) {
-            buf.append("(bif:lcase(bif:either(bif:isnull(?ord), (bif:subseq (bif:replace (?s, '/', '#'), bif:strrchr (bif:replace (?s, '/', '#'), '#')+1)), ?ord)))");
+            buf.append("(bif:lcase(bif:either(bif:isnull(?ord), "
+                    + "(bif:subseq (bif:replace (?s, '/', '#'), bif:strrchr (bif:replace (?s, '/', '#'), '#')+1)), ?ord)))");
         } else if (StringUtils.equals(sortPredicate, Predicates.RDF_TYPE)) {
             buf.append("(bif:lcase(bif:subseq (bif:replace (?ord, '/', '#'), bif:strrchr (bif:replace (?ord, '/', '#'), '#')+1)))");
         } else {
@@ -128,6 +130,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getQueryBindings()
      */
     @Override

@@ -26,7 +26,7 @@ public enum XLWrapUploadType {
     /** */
     public static final String MAPPING_FILE_EXTENSION = "trig";
     public static final String SPREADSHEET_FILE_EXTENSION = "xls";
-    
+
     /** */
     private String title;
     private String hint;
@@ -45,7 +45,7 @@ public enum XLWrapUploadType {
      * @param hint
      */
     private XLWrapUploadType(String title, String hint) {
-        
+
         // Prepare title and hint.
 
         this.title = title;
@@ -88,22 +88,22 @@ public enum XLWrapUploadType {
             throw new CRRuntimeException("Invalid spreadsheet template URI: " + spreadsheetTemplateURL, e);
         }
     }
-    
+
     /**
      * Calls basic constructor and sets the graph URI and the subjects type URI to the ones given in this constructor input.
-     * 
+     *
      * @param title
      * @param hint
      * @param graphUri
      * @param subjectsTypeUri
      */
     private XLWrapUploadType(String title, String hint, String graphUri, String subjectsTypeUri) {
-        
+
         this(title,hint);
         this.graphUri = graphUri;
         this.subjectsTypeUri = subjectsTypeUri;
     }
-    
+
 
     /**
      * @return the title

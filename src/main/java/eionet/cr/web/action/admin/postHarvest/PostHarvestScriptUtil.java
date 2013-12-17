@@ -3,9 +3,6 @@ package eionet.cr.web.action.admin.postHarvest;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import eionet.cr.dao.DAOException;
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.HarvestSourceDAO;
@@ -26,9 +23,6 @@ public final class PostHarvestScriptUtil {
      */
     private PostHarvestScriptUtil() {
     }
-
-    /** */
-    private static final Log LOGGER = LogFactory.getLog(PostHarvestScriptUtil.class);
 
     /**
      * Validates if any of the scripts exist in the target source/type.
@@ -142,10 +136,11 @@ public final class PostHarvestScriptUtil {
     private static boolean typesMatchTogether(PostHarvestScriptDTO.TargetType targetType,
             PostHarvestScriptDTO.TargetType targetTypeClipBoard) {
 
+        TargetType targetTypeSource = PostHarvestScriptDTO.TargetType.SOURCE;
         return !((targetType == null && (targetTypeClipBoard != null && !targetTypeClipBoard
-                .equals(PostHarvestScriptDTO.TargetType.SOURCE)))
+                .equals(targetTypeSource)))
                 || (targetTypeClipBoard == null && (targetType != null && !targetType
-                        .equals(PostHarvestScriptDTO.TargetType.SOURCE))) || (targetTypeClipBoard != null && targetType != null && !targetType
+                        .equals(targetTypeSource))) || (targetTypeClipBoard != null && targetType != null && !targetType
                 .equals(targetTypeClipBoard)));
     }
 }

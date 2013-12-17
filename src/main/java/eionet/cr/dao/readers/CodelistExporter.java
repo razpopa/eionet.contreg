@@ -349,7 +349,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
      *
      * @return
      */
-    private static final Map<String, String> createSpecialBindingsMap() {
+    private static Map<String, String> createSpecialBindingsMap() {
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("memberOf", DAD_PROPERTY_NAMESPACE + "member-of");

@@ -225,7 +225,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
             return new ForwardResolution(STEP2_JSP);
         }
 
-        addSystemMessage("RDF export successfully started! Use operations menu to list ongoing and finished RDF exports from this database.");
+        addSystemMessage("RDF export successfully started! "
+                + "Use operations menu to list ongoing and finished RDF exports from this database.");
         return new RedirectResolution(StagingDatabaseActionBean.class).addParameter("dbName", dbName);
     }
 

@@ -81,7 +81,8 @@ public class ObjectTypes {
     private static ObjectType createObservationType() {
 
         ObjectType qbObservation = new ObjectType("http://purl.org/linked-data/cube#Observation", "Data Cube observation");
-        qbObservation.setObjectUriTemplate("http://semantic.digital-agenda-data.eu/data/<dataset>/<indicator>/<breakdown>/<unit>/<refArea>/<timePeriod>");
+        String ss = "http://semantic.digital-agenda-data.eu/data/<dataset>/<indicator>/<breakdown>/<unit>/<refArea>/<timePeriod>";
+        qbObservation.setObjectUriTemplate(ss);
 
         // Indicator.
         ObjectProperty property =
@@ -101,8 +102,8 @@ public class ObjectTypes {
 
         // Unit.
         property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/unit-measure", "unit",
-                        "Unit (code)", ObjectProperty.Range.RESOURCE);
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/unit-measure", "unit", "Unit (code)",
+                        ObjectProperty.Range.RESOURCE);
         property.setValueTemplate("http://semantic.digital-agenda-data.eu/codelist/unit-measure/<value>");
         property.setHint("Expects a Eurostat measurement unit code. e.g. pc_emp, pc_ent, pc_turn, etc.");
         qbObservation.addProperty(property, true, "unit", "unitMeasure", "unitCode");
@@ -133,18 +134,19 @@ public class ObjectTypes {
 
         // Note.
         property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/note", "note",
-                        "Note (any text)", ObjectProperty.Range.LITERAL);
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/note", "note", "Note (any text)",
+                        ObjectProperty.Range.LITERAL);
         property.setDataType(XMLSchema.STRING.stringValue());
         property.setHint("Expects any text that servers as a comment/note to the observation.");
         qbObservation.addProperty(property, false, "note", "notes", "comment", "comments");
 
         // Flag.
         property =
-                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/flag", "flag",
-                        "Flag (status flag)", ObjectProperty.Range.RESOURCE);
+                new ObjectProperty("http://semantic.digital-agenda-data.eu/def/property/flag", "flag", "Flag (status flag)",
+                        ObjectProperty.Range.RESOURCE);
         property.setValueTemplate("http://eurostat.linked-statistics.org/dic/flags#<value>");
-        property.setHint("Expects a flag indicating the obsevration's status as in http://eurostat.linked-statistics.org/dic/flags. e.g. u, n, p. r, etc.");
+        property.setHint("Expects a flag indicating the obsevration's status as in "
+                + "http://eurostat.linked-statistics.org/dic/flags. e.g. u, n, p. r, etc.");
         qbObservation.addProperty(property, false, "flag", "status", "statusFlag", "flagStatus", "flags");
 
         return qbObservation;
@@ -170,7 +172,9 @@ public class ObjectTypes {
                 String propLabel = typeLabel + "_prop" + j;
                 propLabels.add(propLabel);
 
-                ObjectProperty property = new ObjectProperty("http://dummy.org/properties#"+ propLabel, "prop_" + j, propLabel, ObjectProperty.Range.LITERAL);
+                ObjectProperty property =
+                        new ObjectProperty("http://dummy.org/properties#" + propLabel, "prop_" + j, propLabel,
+                                ObjectProperty.Range.LITERAL);
                 type.addProperty(property, true, "col" + j);
                 properties.add(property);
             }

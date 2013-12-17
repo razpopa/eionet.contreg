@@ -61,7 +61,7 @@ import eionet.cr.util.sql.SQLUtil;
 
 /**
  * A thread runs a given RDF export query with a given query configuration on a given staging database.
- * 
+ *
  * @author jaanus
  */
 public class ExportRunner extends Thread {
@@ -167,7 +167,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Private class constructor, to be used for running the export.
-     * 
+     *
      * @param dbDTO
      *            The DTO of the staging database on which the query shall be run.
      * @param exportId
@@ -205,7 +205,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Private class constructor, to be used for test-running the export.
-     * 
+     *
      * @param dbDTO
      * @param queryConf
      */
@@ -221,7 +221,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Creates the logger.
-     * 
+     *
      * @param exportId
      *            the export id
      * @return the export logger
@@ -237,7 +237,7 @@ public class ExportRunner extends Thread {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Thread#run()
      */
     @Override
@@ -302,7 +302,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Run the export query and export its results..
-     * 
+     *
      * @param repoConn
      *            the repo conn
      * @throws RepositoryException
@@ -341,8 +341,7 @@ public class ExportRunner extends Thread {
                     if (rowCount == 50000) {
                         LogUtil.debug(rowCount + " rows exported, no further row-count logged until export finished...",
                                 exportLogger, LOGGER);
-                    }
-                    else if (rowCount < 50000) {
+                    } else if (rowCount < 50000) {
                         LogUtil.debug(rowCount + " rows exported", exportLogger, LOGGER);
                     }
                 }
@@ -384,7 +383,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Sets the predicate ur is.
-     * 
+     *
      * @param vf
      *            the new predicate ur is
      */
@@ -399,7 +398,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Export row.
-     * 
+     *
      * @param rs
      *            the rs
      * @param rowIndex
@@ -415,7 +414,7 @@ public class ExportRunner extends Thread {
      * @throws DAOException
      */
     private void exportRow(ResultSet rs, int rowIndex, RepositoryConnection repoConn, ValueFactory vf) throws SQLException,
-    RepositoryException, DAOException {
+            RepositoryException, DAOException {
 
         if (rowIndex == 1) {
             loadExistingConcepts();
@@ -459,8 +458,7 @@ public class ExportRunner extends Thread {
             if (StringUtils.isBlank(colValue)) {
                 if (property.getId().equals(BREAKDOWN)) {
                     colValue = DEFAULT_BREAKDOWN_CODE;
-                }
-                else if (property.getId().equals(INDICATOR)) {
+                } else if (property.getId().equals(INDICATOR)) {
                     colValue = DEFAULT_INDICATOR_CODE;
                 }
             }
@@ -556,7 +554,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Adds the predicate value.
-     * 
+     *
      * @param valuesByPredicate
      *            the values by predicate
      * @param predicateURI
@@ -576,7 +574,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Updates the last modified date of the given dataset, using the given repository connection and value factory.
-     * 
+     *
      * @param repoConn
      * @param vf
      * @param datasetURI
@@ -598,7 +596,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Lazy getter for the {@link #dao}.
-     * 
+     *
      * @return the DAO
      */
     private StagingDatabaseDAO getDao() {
@@ -612,7 +610,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Start.
-     * 
+     *
      * @param dbDTO
      *            the db dto
      * @param exportName
@@ -639,7 +637,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the export id.
-     * 
+     *
      * @return the exportId
      */
     public int getExportId() {
@@ -648,7 +646,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the triple count.
-     * 
+     *
      * @return the tripleCount
      */
     public int getTripleCount() {
@@ -657,7 +655,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the subject count.
-     * 
+     *
      * @return the subjectCount
      */
     public int getSubjectCount() {
@@ -666,7 +664,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Gets the export name.
-     * 
+     *
      * @return the exportName
      */
     public String getExportName() {
@@ -675,7 +673,7 @@ public class ExportRunner extends Thread {
 
     /**
      * Sets the hidden properties values.
-     * 
+     *
      * @param vf
      *            the new hidden properties values
      */
@@ -689,7 +687,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @param dbDTO
      * @param queryConf
      * @return
@@ -698,7 +696,7 @@ public class ExportRunner extends Thread {
      * @throws RepositoryException
      */
     public static ExportRunner test(StagingDatabaseDTO dbDTO, QueryConfiguration queryConf) throws RepositoryException,
-    DAOException, SQLException {
+            DAOException, SQLException {
 
         ExportRunner exportRunner = new ExportRunner(dbDTO, queryConf);
         exportRunner.test();
@@ -706,7 +704,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @throws SQLException
      * @throws RepositoryException
      * @throws DAOException
@@ -744,7 +742,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @param rs
      * @param rowIndex
      * @throws SQLException
@@ -845,7 +843,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getMaxTestResults() {
@@ -853,7 +851,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isFoundMissingConcepts() {
@@ -870,7 +868,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String missingConceptsToString() {
@@ -896,7 +894,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      * @param str
      * @return
      */
@@ -930,7 +928,7 @@ public class ExportRunner extends Thread {
     }
 
     /**
-     * 
+     *
      */
     private void harvestTimePeriods() {
 
@@ -943,5 +941,6 @@ public class ExportRunner extends Thread {
         tpHarvester.execute();
         int harvestedCount = tpHarvester.getHarvestedCount();
         int newCount = tpHarvester.getNoOfNewPeriods();
-        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");    }
+        LOGGER.debug(harvestedCount + " time periods harvested, " + newCount + " of them were new");
+    }
 }

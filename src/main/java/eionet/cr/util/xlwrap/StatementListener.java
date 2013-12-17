@@ -12,8 +12,9 @@ import eionet.cr.common.Predicates;
 import eionet.cr.web.action.admin.XLWrapUploadActionBean;
 
 /**
- * An implementation of {@link RDFHandler} that will be used to listen to statements imported by the {@link XLWrapUploadActionBean#upload()}.
- * 
+ * An implementation of {@link RDFHandler} that will be used to listen to statements
+ * imported by the {@link XLWrapUploadActionBean#upload()}.
+ *
  * @author jaanus
  */
 public class StatementListener implements RDFHandler {

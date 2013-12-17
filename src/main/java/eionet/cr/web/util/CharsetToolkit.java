@@ -86,10 +86,11 @@ public class CharsetToolkit {
      *            <code>Charset</code> is encountered.
      */
     public void setDefaultCharset(Charset defaultCharset) {
-        if (defaultCharset != null)
+        if (defaultCharset != null) {
             this.defaultCharset = defaultCharset;
-        else
+        } else {
             this.defaultCharset = getDefaultSystemCharset();
+        }
     }
 
     /**
@@ -155,12 +156,15 @@ public class CharsetToolkit {
     public Charset guessEncoding() {
         // if the file has a Byte Order Marker, we can assume the file is in UTF-xx
         // otherwise, the file would not be human readable
-        if (hasUTF8Bom(buffer))
+        if (hasUTF8Bom(buffer)) {
             return Charset.forName("UTF-8");
-        if (hasUTF16LEBom(buffer))
+        }
+        if (hasUTF16LEBom(buffer)) {
             return Charset.forName("UTF-16LE");
-        if (hasUTF16BEBom(buffer))
+        }
+        if (hasUTF16BEBom(buffer)) {
             return Charset.forName("UTF-16BE");
+        }
 
         // if a byte has its most significant bit set, the file is in UTF-8 or in the default encoding
         // otherwise, the file is in US-ASCII
@@ -189,66 +193,76 @@ public class CharsetToolkit {
                 if (isTwoBytesSequence(b0)) {
                     // there must be one continuation byte of the form 10xxxxxx,
                     // otherwise the following characteris is not a valid UTF-8 construct
-                    if (!isContinuationChar(b1))
+                    if (!isContinuationChar(b1)) {
                         validU8Char = false;
-                    else
+                    } else {
                         i++;
+                    }
                 }
                 // a three-bytes sequence was encoutered
                 else if (isThreeBytesSequence(b0)) {
                     // there must be two continuation bytes of the form 10xxxxxx,
                     // otherwise the following characteris is not a valid UTF-8 construct
-                    if (!(isContinuationChar(b1) && isContinuationChar(b2)))
+                    if (!(isContinuationChar(b1) && isContinuationChar(b2))) {
                         validU8Char = false;
-                    else
+                    } else {
                         i += 2;
+                    }
                 }
                 // a four-bytes sequence was encoutered
                 else if (isFourBytesSequence(b0)) {
                     // there must be three continuation bytes of the form 10xxxxxx,
                     // otherwise the following characteris is not a valid UTF-8 construct
-                    if (!(isContinuationChar(b1) && isContinuationChar(b2) && isContinuationChar(b3)))
+                    if (!(isContinuationChar(b1) && isContinuationChar(b2) && isContinuationChar(b3))) {
                         validU8Char = false;
-                    else
+                    } else {
                         i += 3;
+                    }
                 }
                 // a five-bytes sequence was encoutered
                 else if (isFiveBytesSequence(b0)) {
                     // there must be four continuation bytes of the form 10xxxxxx,
                     // otherwise the following characteris is not a valid UTF-8 construct
-                    if (!(isContinuationChar(b1) && isContinuationChar(b2) && isContinuationChar(b3) && isContinuationChar(b4)))
+                    if (!(isContinuationChar(b1) && isContinuationChar(b2) && isContinuationChar(b3) && isContinuationChar(b4))) {
                         validU8Char = false;
-                    else
+                    } else {
                         i += 4;
+                    }
                 }
                 // a six-bytes sequence was encoutered
                 else if (isSixBytesSequence(b0)) {
                     // there must be five continuation bytes of the form 10xxxxxx,
                     // otherwise the following characteris is not a valid UTF-8 construct
-                    if (!(isContinuationChar(b1) && isContinuationChar(b2) && isContinuationChar(b3) && isContinuationChar(b4) && isContinuationChar(b5)))
+                    if (!(isContinuationChar(b1) && isContinuationChar(b2)
+ && isContinuationChar(b3) && isContinuationChar(b4) && isContinuationChar(b5))) {
                         validU8Char = false;
-                    else
+                    } else {
                         i += 5;
-                } else
+                    }
+                } else {
                     validU8Char = false;
+                }
             }
-            if (!validU8Char)
+            if (!validU8Char) {
                 break;
+            }
             i++;
         }
         // if no byte with an high order bit set, the encoding is US-ASCII
         // (it might have been UTF-7, but this encoding is usually internally used only by mail systems)
         if (!highOrderBit) {
             // returns the default charset rather than US-ASCII if the enforce8Bit flag is set.
-            if (this.enforce8Bit)
+            if (this.enforce8Bit) {
                 return this.defaultCharset;
-            else
+            } else {
                 return Charset.forName("US-ASCII");
+            }
         }
         // if no invalid UTF-8 were encountered, we can assume the encoding is UTF-8,
         // otherwise the file would not be human readable
-        if (validU8Char)
+        if (validU8Char) {
             return Charset.forName("UTF-8");
+        }
         // finally, if it's not UTF-8 nor US-ASCII, let's assume the encoding is the default encoding
         return this.defaultCharset;
     }

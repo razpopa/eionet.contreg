@@ -66,18 +66,18 @@ public class JobScheduler implements ServletContextListener {
      */
     static {
         INTERVAL_JOBS =
-            new Pair[] {
-                new Pair(GeneralConfig.DELIVERY_SEARCH_PICKLIST_CACHE_UPDATE_INTERVAL, new JobDetail(
-                        DeliverySearchPicklistCacheUpdater.class.getSimpleName(), JobScheduler.class.getName(),
-                        DeliverySearchPicklistCacheUpdater.class)),
+                new Pair[] {
+                        new Pair(GeneralConfig.DELIVERY_SEARCH_PICKLIST_CACHE_UPDATE_INTERVAL, new JobDetail(
+                                DeliverySearchPicklistCacheUpdater.class.getSimpleName(), JobScheduler.class.getName(),
+                                DeliverySearchPicklistCacheUpdater.class)),
                         new Pair(GeneralConfig.RECENT_DISCOVERED_FILES_CACHE_UPDATE_INTERVAL, new JobDetail(
                                 RecentResourcesCacheUpdater.class.getSimpleName(), JobScheduler.class.getName(),
                                 RecentResourcesCacheUpdater.class)),
-                                new Pair(GeneralConfig.TAG_CLOUD_CACHE_UPDATE_INTERVAL, new JobDetail(
-                                        TagCloudCacheUpdater.class.getSimpleName(), JobScheduler.class.getName(),
-                                        TagCloudCacheUpdater.class)),
-                                        new Pair(GeneralConfig.TYPE_CACHE_UPDATE_INTERVAL, new JobDetail(TypeCacheUpdater.class.getSimpleName(),
-                                                JobScheduler.class.getName(), TypeCacheUpdater.class))};
+                        new Pair(GeneralConfig.TAG_CLOUD_CACHE_UPDATE_INTERVAL, new JobDetail(
+                                TagCloudCacheUpdater.class.getSimpleName(), JobScheduler.class.getName(),
+                                TagCloudCacheUpdater.class)),
+                        new Pair(GeneralConfig.TYPE_CACHE_UPDATE_INTERVAL, new JobDetail(TypeCacheUpdater.class.getSimpleName(),
+                                JobScheduler.class.getName(), TypeCacheUpdater.class))};
 
     }
 
@@ -101,13 +101,14 @@ public class JobScheduler implements ServletContextListener {
      * @throws ParseException
      */
     public static synchronized void scheduleCronJob(String cronExpression, JobDetail jobDetails) throws SchedulerException,
-    ParseException {
+            ParseException {
 
         CronTrigger trigger = new CronTrigger(jobDetails.getName(), jobDetails.getGroup());
         trigger.setCronExpression(cronExpression);
 
-        if (quartzScheduler == null)
+        if (quartzScheduler == null) {
             init();
+        }
 
         quartzScheduler.scheduleJob(jobDetails, trigger);
     }
@@ -120,14 +121,15 @@ public class JobScheduler implements ServletContextListener {
      * @throws ParseException
      */
     public static synchronized void scheduleIntervalJob(long repeatInterval, JobDetail jobDetails) throws SchedulerException,
-    ParseException {
+            ParseException {
 
         SimpleTrigger trigger = new SimpleTrigger(jobDetails.getName(), jobDetails.getGroup());
         trigger.setRepeatInterval(repeatInterval);
         trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
 
-        if (quartzScheduler == null)
+        if (quartzScheduler == null) {
             init();
+        }
 
         quartzScheduler.scheduleJob(jobDetails, trigger);
     }
@@ -139,11 +141,13 @@ public class JobScheduler implements ServletContextListener {
      */
     public static synchronized void registerJobListener(JobListener jobListener) throws SchedulerException {
 
-        if (jobListener == null)
+        if (jobListener == null) {
             return;
+        }
 
-        if (quartzScheduler == null)
+        if (quartzScheduler == null) {
             init();
+        }
 
         quartzScheduler.addJobListener(jobListener);
     }
@@ -153,6 +157,7 @@ public class JobScheduler implements ServletContextListener {
      *
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
+    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
         if (quartzScheduler != null) {
@@ -167,6 +172,7 @@ public class JobScheduler implements ServletContextListener {
     /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent) {@inheritDoc}
      */
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
 
         // schedule interval jobs

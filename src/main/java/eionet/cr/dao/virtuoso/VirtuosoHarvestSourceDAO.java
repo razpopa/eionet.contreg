@@ -94,8 +94,8 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     private static final String GET_REMOTE_ENDPOINTS_SQL = "SELECT * FROM HARVEST_SOURCE WHERE IS_SPARQL_ENDPOINT='Y'"
             + " AND URL NOT IN (SELECT URL FROM REMOVE_SOURCE_QUEUE)";
     /** */
-    private static final String SEARCH_REMOTE_ENDPOINTS_SQL =
-            "SELECT<pagingParams> * FROM HARVEST_SOURCE WHERE IS_SPARQL_ENDPOINT='Y' AND URL LIKE (?) AND URL NOT IN (SELECT URL FROM REMOVE_SOURCE_QUEUE)";
+    private static final String SEARCH_REMOTE_ENDPOINTS_SQL = "SELECT<pagingParams> * FROM HARVEST_SOURCE "
+            + "WHERE IS_SPARQL_ENDPOINT='Y' AND URL LIKE (?) AND URL NOT IN (SELECT URL FROM REMOVE_SOURCE_QUEUE)";
 
     /** */
     private static final String GET_PRIORITY_SOURCES_SQL = "SELECT<pagingParams> * FROM HARVEST_SOURCE "
@@ -215,8 +215,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     public Pair<Integer, List<HarvestSourceDTO>> getRemoteEndpoints(String searchString, PagingRequest pagingRequest,
             SortingRequest sortingRequest) throws DAOException {
 
-        return getSources(
-                StringUtils.isBlank(searchString) ? GET_REMOTE_ENDPOINTS_SQL : SEARCH_REMOTE_ENDPOINTS_SQL,
+        return getSources(StringUtils.isBlank(searchString) ? GET_REMOTE_ENDPOINTS_SQL : SEARCH_REMOTE_ENDPOINTS_SQL,
                 searchString, pagingRequest, sortingRequest);
     }
 
@@ -338,9 +337,9 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
      * Insert a record into the the table of harvest sources in VirtuosoSQL syntax. INSERT SOFT means that if such source already
      * exists then don't insert (like MySQL INSERT IGNORE)
      */
-    private static final String ADD_SOURCE_SQL =
-            "insert soft HARVEST_SOURCE (URL,URL_HASH,EMAILS,TIME_CREATED,INTERVAL_MINUTES,PRIORITY_SOURCE,SOURCE_OWNER,MEDIA_TYPE,IS_SPARQL_ENDPOINT) "
-                    + "VALUES (?,?,?,NOW(),?,?,?,?,?)";
+    private static final String ADD_SOURCE_SQL = "insert soft HARVEST_SOURCE ("
+            + "URL,URL_HASH,EMAILS,TIME_CREATED,INTERVAL_MINUTES,PRIORITY_SOURCE,SOURCE_OWNER,MEDIA_TYPE,IS_SPARQL_ENDPOINT) "
+            + "VALUES (?,?,?,NOW(),?,?,?,?,?)";
 
     /*
      * (non-Javadoc)
@@ -772,9 +771,10 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     }
 
     /** */
-    private static final String UPDATE_SOURCE_HARVEST_FINISHED_SQL =
-            "update HARVEST_SOURCE set EMAILS=?, STATEMENTS=?, COUNT_UNAVAIL=?, LAST_HARVEST=?, INTERVAL_MINUTES=?,"
-                    + " LAST_HARVEST_FAILED=?, PRIORITY_SOURCE=?, SOURCE_OWNER=?, PERMANENT_ERROR=?, LAST_HARVEST_ID=? where URL_HASH=?";
+    private static final String UPDATE_SOURCE_HARVEST_FINISHED_SQL = "update HARVEST_SOURCE "
+            + "set EMAILS=?, STATEMENTS=?, COUNT_UNAVAIL=?, LAST_HARVEST=?, INTERVAL_MINUTES=?, "
+            + "LAST_HARVEST_FAILED=?, PRIORITY_SOURCE=?, SOURCE_OWNER=?, PERMANENT_ERROR=?, LAST_HARVEST_ID=? "
+            + "where URL_HASH=?";
 
     /*
      * (non-Javadoc)

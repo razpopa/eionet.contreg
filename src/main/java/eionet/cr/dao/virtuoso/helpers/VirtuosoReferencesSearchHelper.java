@@ -70,9 +70,8 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
         if (Predicates.RDFS_LABEL.equals(sortPredicate)) {
 
             sparql +=
-                    "(bif:either( bif:isnull(?oorderby) , "
-                            + "(bif:lcase(bif:subseq (bif:replace (?s, '/', '#'), bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , "
-                            + "bif:lcase(?oorderby)))";
+                    "(bif:either( bif:isnull(?oorderby) , " + "(bif:lcase(bif:subseq (bif:replace (?s, '/', '#'), "
+                            + "bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , " + "bif:lcase(?oorderby)))";
             // kind of hack - ReferringPredicatesColumn class name is neither a predicate or URI.
             // It is not used in sparql so we can love with it for a while
         } else if (ReferringPredicatesColumn.class.getSimpleName().equals(sortPredicate)) {
@@ -129,10 +128,10 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
         String subjectUrisCSV = SPARQLQueryUtil.urisToCSV(subjectUris, "subjectUriValue", subjectDataBindings);
         String sourceUriBinding = (isValidIRI ? "?sourceUri" : "IRI(?sourceUri)");
         String sparql =
-                "select ?g ?s ?p bif:either(isLiteral(?o), bif:substring(str(?o), 1, " + WebConstants.MAX_OBJECT_LENGTH + "), ?o) as ?o "
-                        + "where {graph ?g {?s ?p ?o. filter (?s IN (" + subjectUrisCSV + ")) " + ". filter(?p = <"
-                        + Predicates.RDF_TYPE + "> || <" + Predicates.RDFS_LABEL + "> || (isURI(?o) && ?o=" + sourceUriBinding
-                        + "))}} ORDER BY ?s";
+                "select ?g ?s ?p bif:either(isLiteral(?o), bif:substring(str(?o), 1, " + WebConstants.MAX_OBJECT_LENGTH
+                        + "), ?o) as ?o " + "where {graph ?g {?s ?p ?o. filter (?s IN (" + subjectUrisCSV + ")) "
+                        + ". filter(?p = <" + Predicates.RDF_TYPE + "> || <" + Predicates.RDFS_LABEL + "> || (isURI(?o) && ?o="
+                        + sourceUriBinding + "))}} ORDER BY ?s";
 
         return sparql;
     }

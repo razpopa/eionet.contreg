@@ -23,22 +23,22 @@ import eionet.cr.web.util.ObservationFilter;
 public interface ScoreboardSparqlDAO extends DAO {
 
     /** */
-    public static final String OBSERVATION_URI_PREFIX = "http://semantic.digital-agenda-data.eu/data/";
+    static final String OBSERVATION_URI_PREFIX = "http://semantic.digital-agenda-data.eu/data/";
 
     /** */
-    public static final String DATASET_URI_PREFIX = "http://semantic.digital-agenda-data.eu/dataset/";
+    static final String DATASET_URI_PREFIX = "http://semantic.digital-agenda-data.eu/dataset/";
 
     /** */
-    public static final String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
+    static final String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
 
     /** */
-    public static final String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
+    static final String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
 
     /** URI of the indicator groups codelist. */
-    public static final String IND_GROUP_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/indicator-group";
+    static final String IND_GROUP_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/indicator-group";
 
     /** URI of the indicator sources codelist. */
-    public static final String IND_SOURCE_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/source";
+    static final String IND_SOURCE_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/source";
 
     /**
      * Return URI-label pairs of codelists that have type {@link Subjects.SKOS_CONCEPT_SCHEME} and whose URI starts with the given

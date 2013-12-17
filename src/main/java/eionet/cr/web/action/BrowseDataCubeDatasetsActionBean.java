@@ -40,7 +40,8 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     private static final Logger LOGGER = Logger.getLogger(BrowseDataCubeDatasetsActionBean.class);
 
     /** */
-    private static final String[] LABEL_PREDICATES = {Predicates.DCTERMS_TITLE, Predicates.RDFS_LABEL, Predicates.DC_TITLE, Predicates.FOAF_NAME};
+    private static final String[] LABEL_PREDICATES = {Predicates.DCTERMS_TITLE, Predicates.RDFS_LABEL, Predicates.DC_TITLE,
+            Predicates.FOAF_NAME};
 
     /** */
     private static final List<HashMap<String, String>> AVAIL_COLUMNS = createAvailColumns();
@@ -112,13 +113,11 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
 
         if (StringUtils.isBlank(identifier)) {
             addGlobalValidationError("The identifier is mandatory!");
-        }
-        else {
+        } else {
             String s = identifier.replaceAll("[^a-zA-Z0-9-._]+", "");
             if (!s.equals(identifier)) {
                 addGlobalValidationError("Only digits, latin letters, underscores and dashes allowed in the identifier!");
-            }
-            else{
+            } else {
                 boolean datasetExists = DAOFactory.get().getDao(ScoreboardSparqlDAO.class).datasetExists(identifier);
                 if (datasetExists) {
                     addGlobalValidationError("A dataset already exists by this identifier: " + identifier);

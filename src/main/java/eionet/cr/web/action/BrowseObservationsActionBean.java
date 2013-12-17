@@ -51,7 +51,8 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     private static final Logger LOGGER = Logger.getLogger(BrowseObservationsActionBean.class);
 
     /** */
-    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName() + ".alias.values";
+    private static final String FILTER_VALUES_ATTR_NAME_TEMPLATE = BrowseObservationsActionBean.class.getSimpleName()
+            + ".alias.values";
 
     /** */
     private static final List<HashMap<String, String>> AVAIL_COLUMNS = createAvailColumns();
@@ -174,7 +175,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
      * @param filterAlias
      * @return
      */
-    private static final String getSessionAttrName(String filterAlias) {
+    private static String getSessionAttrName(String filterAlias) {
         return StringUtils.replace(FILTER_VALUES_ATTR_NAME_TEMPLATE, "alias", filterAlias);
     }
 

@@ -33,9 +33,12 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.httpclient.util.DateParseException;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -173,6 +176,7 @@ public class URLUtil {
 
     /**
      * Calls {@link #isNotExisting(String, boolean)} with the boolean set to false. See documentation of that method.
+     *
      * @param urlStr As described above.
      * @return As described above.
      */
@@ -445,5 +449,34 @@ public class URLUtil {
         }
 
         return decodeEncode(path, "/;");
+    }
+
+    /**
+     *
+     * @param urlString
+     * @return
+     */
+    public static Date getLastModified(String urlString) {
+
+        Date resultDate = null;
+        URLConnection conn = null;
+        try {
+            URL url = new URL(urlString);
+            conn = url.openConnection();
+            String lastModifiedString = conn.getHeaderField("Last-Modified");
+            if (StringUtils.isNotBlank(lastModifiedString)) {
+                resultDate = DateUtil.parseDate(lastModifiedString);
+            }
+        } catch (MalformedURLException e) {
+            resultDate = null;
+        } catch (IOException e) {
+            resultDate = null;
+        } catch (DateParseException e) {
+            resultDate = null;
+        } finally {
+            URLUtil.disconnect(conn);
+        }
+
+        return resultDate;
     }
 }

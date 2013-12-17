@@ -126,8 +126,9 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
             "insert into STAGING_DB_RDF_EXPORT (DATABASE_ID,EXPORT_NAME,USER_NAME,QUERY_CONF,STARTED,STATUS) values (?,?,?,?,?,?)";
 
     /** */
-    private static final String FINISH_RDF_EXPORT_SQL =
-            "update STAGING_DB_RDF_EXPORT set FINISHED=?,STATUS=?,ROW_COUNT=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,MISSING_CONCEPTS=?,GRAPHS=? where EXPORT_ID=?";
+    private static final String FINISH_RDF_EXPORT_SQL = "update STAGING_DB_RDF_EXPORT "
+            + "set FINISHED=?,STATUS=?,ROW_COUNT=?,NOOF_SUBJECTS=?,NOOF_TRIPLES=?,MISSING_CONCEPTS=?,GRAPHS=? "
+            + "where EXPORT_ID=?";
 
     /** */
     private static final String ADD_EXPORT_LOG_MESSAGE_SQL =
