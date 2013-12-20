@@ -3,7 +3,11 @@ package eionet.cr.dao.virtuoso;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +23,7 @@ import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -41,6 +46,7 @@ import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.util.sesame.SPARQLQueryUtil;
 import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.sql.PairReader;
+import eionet.cr.util.sql.SQLUtil;
 import eionet.cr.util.sql.SingleObjectReader;
 import eionet.cr.util.xlwrap.XLWrapUploadType;
 import eionet.cr.web.util.ObservationFilter;
@@ -220,6 +226,30 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
     		"}\n" +
     		"group by ?uri\n" +
     		"order by ?uri";
+
+    private static final String GET_DISTINCT_DATASET_URIS = "" +
+            "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+    		"select distinct ?datasetUri where {\n" +
+    		"   ?datasetUri a cube:DataSet\n" +
+    		"}\n" +
+    		"order by ?datasetUri";
+
+    private static final String DELETE_OBSERVATIONS_OF_INDICATOR_AND_TIME = "" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+    		"DELETE FROM GRAPH <@DATASET_GRAPH_URI@> {\n" +
+    		"    ?obs ?p ?o\n" +
+    		"}\n" +
+    		"WHERE {\n" +
+    		"  GRAPH <@DATASET_GRAPH_URI@> {\n" +
+    		"    ?obs ?p ?o .\n" +
+    		"    ?obs a cube:Observation .\n" +
+    		"    ?obs dad-prop:indicator ?ind .\n" +
+    		"    ?obs dad-prop:time-period ?timePeriod .\n" +
+    		"    @INDICATOR_FILTER@\n" +
+    		"    @TIME_PERIOD_FILTER@\n" +
+    		"  }\n" +
+    		"}";
 
     // @formatter:on
 
@@ -812,6 +842,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctUsedRefAreas(java.lang.String, java.lang.String)
      */
     @Override
@@ -897,5 +928,67 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         List<SkosItemDTO> resultList = executeSPARQL(sparql, bindings, new SkosItemsReader());
         return resultList;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getDistinctDatasetUris()
+     */
+    @Override
+    public List<String> getDistinctDatasetUris() throws DAOException {
+
+        List<String> resultList = executeSPARQL(GET_DISTINCT_DATASET_URIS, new SingleObjectReader<String>());
+        return resultList;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#deleteObservations(java.lang.String, java.util.Collection, java.util.Collection)
+     */
+    @Override
+    public Pair<Integer, String> deleteObservations(String datasetUri, Collection<String> indicatorUris,
+            Collection<String> timePeriodUris) throws DAOException {
+
+        if (StringUtils.isBlank(datasetUri)) {
+            throw new IllegalArgumentException("Dataset URI must not be blank!");
+        }
+
+        if (CollectionUtils.isEmpty(indicatorUris)) {
+            throw new IllegalArgumentException("The collection of indicator URIs must not be null or empty!");
+        }
+
+        String datasetGraphUri = StringUtils.replace(datasetUri, "/dataset/", "/data/");
+        String sparql =
+                DELETE_OBSERVATIONS_OF_INDICATOR_AND_TIME.replace("@DATASET_GRAPH_URI@",
+                        new URIImpl(datasetGraphUri).stringValue());
+
+        String indicatorsCSV = SPARQLQueryUtil.urisToCSV(indicatorUris);
+        String indicatorFilterStr = "filter (?ind in (" + indicatorsCSV + "))";
+        sparql = sparql.replace("@INDICATOR_FILTER@", indicatorFilterStr);
+
+        if (CollectionUtils.isNotEmpty(timePeriodUris)) {
+            String timePeriodsCSV = SPARQLQueryUtil.urisToCSV(timePeriodUris);
+            String timePeriodFilterStr = "filter (?timePeriod in (" + timePeriodsCSV + "))";
+            sparql = sparql.replace("@TIME_PERIOD_FILTER@", timePeriodFilterStr);
+        } else {
+            sparql = sparql.replace("@TIME_PERIOD_FILTER@", StringUtils.EMPTY);
+        }
+
+        Statement stmt = null;
+        Connection sqlConn = null;
+        try {
+            sqlConn = SesameUtil.getSQLConnection();
+            stmt = sqlConn.createStatement();
+            String sql = "SPARQL\n" + sparql;
+            int updateCount = stmt.executeUpdate(sql);
+            return new Pair<Integer, String>(Integer.valueOf(updateCount), sql);
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } finally {
+            SQLUtil.close(stmt);
+            SQLUtil.close(sqlConn);
+        }
     }
 }

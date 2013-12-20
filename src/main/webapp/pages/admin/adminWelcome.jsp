@@ -20,6 +20,7 @@
                 <li><stripes:link href="/admin/stagingDbs.action">Staging databases</stripes:link></li>
                 <li><stripes:link href="/admin/xlwrapUpload.action">Spreadsheet upload</stripes:link></li>
                 <li><stripes:link href="/admin/odpPackaging.action">ODP datasets packaging</stripes:link></li>
+                <li><stripes:link href="/admin/obsDelete.action">Delete observations of specified indicators</stripes:link></li>
             </ul>
         </c:when>
         <c:otherwise>

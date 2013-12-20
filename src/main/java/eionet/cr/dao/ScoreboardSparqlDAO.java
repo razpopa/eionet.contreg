@@ -1,6 +1,7 @@
 package eionet.cr.dao;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +76,8 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException
      */
     List<Pair<String, String>>
-    getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter, boolean isAdmin)
-            throws DAOException;
+            getFilterValues(Map<ObservationFilter, String> selections, ObservationFilter filter, boolean isAdmin)
+                    throws DAOException;
 
     /**
      *
@@ -203,6 +204,7 @@ public interface ScoreboardSparqlDAO extends DAO {
 
     /**
      * Returns a list of URIs of all reference areas used by the DataCube observations in the given dataset in the given indicator.
+     *
      * @param datasetUri The given dataset URI.
      * @param indicatorUri The given indicator URI.
      *
@@ -227,4 +229,27 @@ public interface ScoreboardSparqlDAO extends DAO {
      * @throws DAOException
      */
     List<SkosItemDTO> getIndicators(String datasetUri, List<String> sourceNotations) throws DAOException;
+
+    /**
+     * Returns a list of URIs of distinct datasets present in the triplestore.
+     *
+     * @return The list.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    List<String> getDistinctDatasetUris() throws DAOException;
+
+    /**
+     * Deletes all observations from the given dataset, matching the given indicators and time periods.
+     * The logical operator between the list of indicators and the list of time periods is AND.
+     * Dataset URI and indicator URIs are mandatory, time periods are not.
+     *
+     * @param datasetUri The given dataset URI.
+     * @param indicatorUris The given indicator URIs.
+     * @param timePeriodUris The given time period URIs.
+     * @return Pair where left-side is the number of triples deleted, and right-side is the executed SPARQL delete statement.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    Pair<Integer, String>
+            deleteObservations(String datasetUri, Collection<String> indicatorUris, Collection<String> timePeriodUris)
+                    throws DAOException;
 }
