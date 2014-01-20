@@ -26,6 +26,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import eionet.cr.dao.DAOFactory;
+import eionet.cr.dao.UrgentHarvestQueueDAO;
 import eionet.cr.test.helpers.CRDatabaseTestCase;
 
 /**
@@ -54,6 +56,8 @@ public class UrgentHarvestTest extends CRDatabaseTestCase {
     public void testUrgentHarvestUnicodeUrls() throws Exception {
 
         String url = "http://www.google.com/öö";
+
+        DAOFactory.get().getDao(UrgentHarvestQueueDAO.class).removeUrl(url);
         UrgentHarvestQueue.addPullHarvest(url, "enriko");
 
         assertTrue(UrgentHarvestQueue.isInQueue(url));
