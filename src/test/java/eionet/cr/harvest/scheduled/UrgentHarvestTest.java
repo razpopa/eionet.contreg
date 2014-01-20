@@ -25,23 +25,27 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import eionet.cr.dao.DAOException;
-import eionet.cr.harvest.HarvestException;
-
 /**
  * Test urgent harvests.
  *
  * @author Enriko Käsper
  */
 public class UrgentHarvestTest extends TestCase {
+
+    /**
+     * Test that a simple urgent is initiated without errors and that it is successfully polled/removed from the queue.
+     *
+     * @throws Exception When any sort of error happens.
+     */
     @Test
-    public void testUrgentHarvestUnicodeUrls() throws HarvestException, DAOException {
+    public void testUrgentHarvestUnicodeUrls() throws Exception {
+
         String url = "http://www.google.com/öö";
         UrgentHarvestQueue.addPullHarvest(url, "enriko");
 
         assertTrue(UrgentHarvestQueue.isInQueue(url));
         UrgentHarvestQueue.poll();
+        Thread.sleep(1000);
         assertFalse(UrgentHarvestQueue.isInQueue(url));
     }
-
 }
