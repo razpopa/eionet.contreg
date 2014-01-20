@@ -21,16 +21,29 @@
 
 package eionet.cr.harvest.scheduled;
 
-import junit.framework.TestCase;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
+
+import eionet.cr.test.helpers.CRDatabaseTestCase;
 
 /**
  * Test urgent harvests.
  *
  * @author Enriko Käsper
  */
-public class UrgentHarvestTest extends TestCase {
+public class UrgentHarvestTest extends CRDatabaseTestCase {
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.test.helpers.CRDatabaseTestCase#getXMLDataSetFiles()
+     */
+    @Override
+    protected List<String> getXMLDataSetFiles() {
+        return Arrays.asList("emptydb.xml");
+    }
 
     /**
      * Test that a simple urgent is initiated without errors and that it is successfully polled/removed from the queue.
