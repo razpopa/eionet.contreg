@@ -10,11 +10,11 @@
     </appender>
 
     <logger name="eionet.cr">
-        <level value="trace" />
+        <level value="debug" />
     </logger>
 
     <root>
-        <priority value="error" />
+        <priority value="info" />
         <appender-ref ref="stdout" />
     </root>
 
