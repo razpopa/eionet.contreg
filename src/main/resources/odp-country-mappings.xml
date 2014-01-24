@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>A mapping of Scoreboard reference areas into the countries authority list of European Commission's Open Data Portal</comment>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#AL">http://publications.europa.eu/resource/authority/country/ALB</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#AT">http://publications.europa.eu/resource/authority/country/AUT</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#BA">http://publications.europa.eu/resource/authority/country/BIH</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#BE">http://publications.europa.eu/resource/authority/country/BEL</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#BG">http://publications.europa.eu/resource/authority/country/BGR</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#CH">http://publications.europa.eu/resource/authority/country/CHE</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#CY">http://publications.europa.eu/resource/authority/country/CYP</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#CY+%28TCC%29">http://publications.europa.eu/resource/authority/country/CYP</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#CZ">http://publications.europa.eu/resource/authority/country/CZE</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#DE">http://publications.europa.eu/resource/authority/country/DEU</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#DK">http://publications.europa.eu/resource/authority/country/DNK</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#EE">http://publications.europa.eu/resource/authority/country/EST</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#EL">http://publications.europa.eu/resource/authority/country/GRC</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#ES">http://publications.europa.eu/resource/authority/country/ESP</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#FI">http://publications.europa.eu/resource/authority/country/FIN</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#FR">http://publications.europa.eu/resource/authority/country/FRA</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#HR">http://publications.europa.eu/resource/authority/country/HRV</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#HU">http://publications.europa.eu/resource/authority/country/HUN</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#IE">http://publications.europa.eu/resource/authority/country/IRL</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#IL">http://publications.europa.eu/resource/authority/country/ISR</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#IS">http://publications.europa.eu/resource/authority/country/ISL</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#IT">http://publications.europa.eu/resource/authority/country/ITA</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#LT">http://publications.europa.eu/resource/authority/country/LTU</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#LU">http://publications.europa.eu/resource/authority/country/LUX</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#LV">http://publications.europa.eu/resource/authority/country/LVA</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#ME">http://publications.europa.eu/resource/authority/country/MNE</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#MK">http://publications.europa.eu/resource/authority/country/MKD</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#MT">http://publications.europa.eu/resource/authority/country/MLT</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#NL">http://publications.europa.eu/resource/authority/country/NLD</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#NO">http://publications.europa.eu/resource/authority/country/NOR</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#PL">http://publications.europa.eu/resource/authority/country/POL</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#PT">http://publications.europa.eu/resource/authority/country/PRT</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#RO">http://publications.europa.eu/resource/authority/country/ROU</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#RS">http://publications.europa.eu/resource/authority/country/SRB</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#SE">http://publications.europa.eu/resource/authority/country/SWE</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#SI">http://publications.europa.eu/resource/authority/country/SVN</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#SK">http://publications.europa.eu/resource/authority/country/SVK</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#TR">http://publications.europa.eu/resource/authority/country/TUR</entry>
+    <entry key="http://eurostat.linked-statistics.org/dic/geo#UK">http://publications.europa.eu/resource/authority/country/GBR</entry>
+</properties>

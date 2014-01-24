@@ -22,6 +22,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import eionet.cr.common.Namespace;
 import eionet.cr.common.Predicates;
@@ -44,6 +45,9 @@ import eionet.cr.util.Util;
  */
 public class ODPDatasetsPacker {
 
+    /** Static logger for this class. */
+    private static final Logger LOGGER = Logger.getLogger(ODPDatasetsPacker.class);
+
     /** Date-time formatter compliant with XML Schema date/time representation in UTC timezone. */
     public static final DateFormat XML_SCHEMA_DATETIME_FORMAT = buildXmlSchemaDateFormat();
 
@@ -62,6 +66,9 @@ public class ODPDatasetsPacker {
 
     /** Namespaces used in the generated manifest file. */
     private static final List<Namespace> MANIFEST_FILE_NAMESPACES = buildManifestFileNamespaces();
+
+    /** Prefix for the package ID that goes into the manifest file header. */
+    private static final String PACKAGE_ID_PREFIX = "Digital_Agenda_Scoreboard_";
 
     /** URIs of indicators for which the RDF/XML formatted metadata shall be generated. */
     private List<String> indicatorUris;
@@ -634,10 +641,15 @@ public class ODPDatasetsPacker {
         if (CollectionUtils.isNotEmpty(refAreas)) {
             for (String refArea : refAreas) {
 
-                writer.writeStartElement(Namespace.DCT.getUri(), "spatial");
-                writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-                writer.writeAttribute(Namespace.RDF.getUri(), "about", refArea);
-                writer.writeEndElement();
+                String odpCountry = ODPCountryMappings.getMappingFor(refArea);
+                if (StringUtils.isNotBlank(odpCountry)) {
+                    writer.writeStartElement(Namespace.DCT.getUri(), "spatial");
+                    writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
+                    writer.writeAttribute(Namespace.RDF.getUri(), "about", odpCountry);
+                    writer.writeEndElement();
+                } else {
+                    LOGGER.info("Found no ODP mapping for " + refArea);
+                }
             }
         }
 
@@ -818,9 +830,12 @@ public class ODPDatasetsPacker {
             writer.writeNamespace(namespace.getPrefix(), namespace.getUri());
         }
 
+        // It's ok to instantiate SimpleDateFormat every time here, since this method gets called once per package generation.
+        String packageId = PACKAGE_ID_PREFIX + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
         String generationDateTime = Util.virtuosoDateToString(new Date());
         writer.writeAttribute(Namespace.ECODP.getUri(), "creation-date-time", generationDateTime);
-        writer.writeAttribute(Namespace.ECODP.getUri(), "package-id", generationDateTime);
+        writer.writeAttribute(Namespace.ECODP.getUri(), "package-id", packageId);
         writer.writeAttribute(Namespace.ECODP.getUri(), "priority", "normal");
         writer.writeAttribute(Namespace.ECODP.getUri(), "publisher",
                 "http://publications.europa.eu/resource/authority/corporate-body/CNECT");
