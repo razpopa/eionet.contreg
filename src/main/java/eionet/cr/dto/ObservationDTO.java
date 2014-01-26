@@ -9,7 +9,7 @@ import eionet.cr.common.Predicates;
 
 /**
  * A DTO for representing a DataCube observation.
- *
+ * 
  * @author jaanus
  */
 public class ObservationDTO {
@@ -180,7 +180,7 @@ public class ObservationDTO {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Map<String, String> createFilterMap() {
@@ -210,7 +210,7 @@ public class ObservationDTO {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private static Map<String, String> createPredicateAliases() {

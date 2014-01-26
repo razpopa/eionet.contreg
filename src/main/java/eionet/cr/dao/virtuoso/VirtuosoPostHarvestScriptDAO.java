@@ -53,7 +53,7 @@ import eionet.cr.util.sql.SingleObjectReader;
 import eionet.cr.web.action.admin.postHarvest.PostHarvestScriptParser;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class VirtuosoPostHarvestScriptDAO extends VirtuosoBaseDAO implements PostHarvestScriptDAO {
@@ -452,7 +452,7 @@ public class VirtuosoPostHarvestScriptDAO extends VirtuosoBaseDAO implements Pos
      */
     @Override
     public List<Map<String, ObjectDTO>>
-    test(String constructQuery, TargetType targetType, String targetUrl, String harvestedSource) throws DAOException {
+            test(String constructQuery, TargetType targetType, String targetUrl, String harvestedSource) throws DAOException {
 
         if (StringUtils.isBlank(constructQuery)) {
             return new ArrayList<Map<String, ObjectDTO>>();
@@ -528,7 +528,7 @@ public class VirtuosoPostHarvestScriptDAO extends VirtuosoBaseDAO implements Pos
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.PostHarvestScriptDAO#search(java.lang.String)
      */
     @Override

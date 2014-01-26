@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import eionet.cr.common.Predicates;
-import eionet.cr.common.Subjects;
 import eionet.cr.dto.SearchResultDTO;
 import eionet.cr.dto.SkosItemDTO;
 import eionet.cr.util.Pair;
@@ -24,25 +22,25 @@ import eionet.cr.web.util.ObservationFilter;
 public interface ScoreboardSparqlDAO extends DAO {
 
     /** */
-    static final String OBSERVATION_URI_PREFIX = "http://semantic.digital-agenda-data.eu/data/";
+    String OBSERVATION_URI_PREFIX = "http://semantic.digital-agenda-data.eu/data/";
 
     /** */
-    static final String DATASET_URI_PREFIX = "http://semantic.digital-agenda-data.eu/dataset/";
+    String DATASET_URI_PREFIX = "http://semantic.digital-agenda-data.eu/dataset/";
 
     /** */
-    static final String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
+    String DATASET_STRUCTURE_PREFIX = "http://semantic.digital-agenda-data.eu/def/dsd/";
 
     /** */
-    static final String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
+    String DEFAULT_DSD_URI = "http://semantic.digital-agenda-data.eu/def/dsd/scoreboard";
 
     /** URI of the indicator groups codelist. */
-    static final String IND_GROUP_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/indicator-group";
+    String IND_GROUP_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/indicator-group";
 
     /** URI of the indicator sources codelist. */
-    static final String IND_SOURCE_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/source";
+    String IND_SOURCE_CODELIST_URI = "http://semantic.digital-agenda-data.eu/codelist/source";
 
     /**
-     * Return URI-label pairs of codelists that have type {@link Subjects.SKOS_CONCEPT_SCHEME} and whose URI starts with the given
+     * Return URI-label pairs of codelists that have type skos:conceptScheme and whose URI starts with the given
      * input string.
      *
      * @param uriStartsWith
@@ -183,7 +181,7 @@ public interface ScoreboardSparqlDAO extends DAO {
             SortingRequest sortRequest, String... labelPredicates) throws DAOException;
 
     /**
-     * Changes the {@link Predicates#ADMS_STATUS} of the dataset by the given URI.
+     * Changes the "http://www.w3.org/ns/adms#status" of the dataset by the given URI.
      *
      * @param uri The URI of the dataset whose status is to be changed.
      * @param newStatus The URI identifying the new status.

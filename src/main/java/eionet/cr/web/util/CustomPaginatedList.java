@@ -29,7 +29,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /**
      * Constructs from the given {@link SearchResultDTO}
-     *
+     * 
      * @param searchResult
      * @param pageSize
      */
@@ -51,7 +51,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getFullListSize()
      */
     @Override
@@ -61,7 +61,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getList()
      */
     @Override
@@ -71,7 +71,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getObjectsPerPage()
      */
     @Override
@@ -81,7 +81,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getPageNumber()
      */
     @Override
@@ -91,7 +91,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getSearchId()
      */
     @Override
@@ -101,7 +101,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getSortCriterion()
      */
     @Override
@@ -111,7 +111,7 @@ public class CustomPaginatedList<T> implements PaginatedList {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.displaytag.pagination.PaginatedList#getSortDirection()
      */
     @Override

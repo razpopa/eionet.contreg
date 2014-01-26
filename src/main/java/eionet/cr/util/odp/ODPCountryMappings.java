@@ -23,6 +23,13 @@ public class ODPCountryMappings {
     private static final Properties MAPPINGS = createMappings();
 
     /**
+     * Disable utility class constructor.
+     */
+    private ODPCountryMappings() {
+        // Empty constructor.
+    }
+
+    /**
      * Returns ODP country mapping for the given Scoreboard reference area.
      *
      * @param referenceArea The given reference area.

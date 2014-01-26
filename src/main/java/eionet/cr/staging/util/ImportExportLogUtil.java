@@ -29,7 +29,7 @@ import org.apache.log4j.Level;
  *
  * @author jaanus
  */
-public class ImportExportLogUtil {
+public final class ImportExportLogUtil {
 
     /**
      * Hide utility class constructor.
@@ -40,6 +40,7 @@ public class ImportExportLogUtil {
 
     /**
      * Formats the given import log for display in the browser.
+     *
      * @param log The log.
      * @return The log formatted.
      */

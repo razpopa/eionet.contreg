@@ -54,6 +54,13 @@ public class XLWrapUtil {
     private static final String DATASET_IDENTIFIER_PLACEHOLDER = "@DATASET_IDENTIFIER@";
 
     /**
+     * Disable utility class constructor.
+     */
+    private XLWrapUtil() {
+        // Empty constructor.
+    }
+
+    /**
      *
      * @param uploadType
      * @param spreadsheetFile

@@ -30,7 +30,7 @@ import eionet.cr.staging.exp.ObjectProperty.Range;
 // TODO: Auto-generated Javadoc
 /**
  * Metadata bean for an RDF property that is hidden and fixed, i.e. it will always be added to every exported object.
- *
+ * 
  * @author jaanus
  */
 public class ObjectHiddenProperty {
@@ -55,7 +55,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Class constructor.
-     *
+     * 
      * @param predicate the predicate
      * @param range the range
      */
@@ -67,7 +67,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the data type.
-     *
+     * 
      * @return the dataType
      */
     public String getDataType() {
@@ -76,7 +76,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Sets the data type.
-     *
+     * 
      * @param dataType the dataType to set
      */
     public void setDataType(String dataType) {
@@ -85,7 +85,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the predicate.
-     *
+     * 
      * @return the predicate
      */
     public String getPredicate() {
@@ -94,7 +94,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the range.
-     *
+     * 
      * @return the range
      */
     public Range getRange() {
@@ -103,7 +103,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the value.
-     *
+     * 
      * @return the value
      */
     public String getValue() {
@@ -112,7 +112,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Sets the value.
-     *
+     * 
      * @param value the value to set
      */
     public void setValue(String value) {
@@ -121,7 +121,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Returns true if the property's value is a resource.
-     *
+     * 
      * @return As said above.
      */
     public boolean isResourceRange() {
@@ -130,7 +130,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Returns true if the property's value is a literal.
-     *
+     * 
      * @return As said above.
      */
     public boolean isLiteralRange() {
@@ -139,7 +139,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Sets {@link URI} and {@link Value} for this property's {@link #predicate} and {@link #value}, using the given.
-     *
+     * 
      * @param vf The value factory. {@link ValueFactory}.
      */
     protected void setValues(ValueFactory vf) {
@@ -158,7 +158,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the predicate uri.
-     *
+     * 
      * @return the predicateURI
      */
     public URI getPredicateURI() {
@@ -167,7 +167,7 @@ public class ObjectHiddenProperty {
 
     /**
      * Gets the value value.
-     *
+     * 
      * @return the valueValue
      */
     public Value getValueValue() {

@@ -22,7 +22,7 @@ import eionet.cr.util.sql.SQLUtil;
 // TODO: Auto-generated Javadoc
 /**
  * The Class VirtuosoHandler.
- *
+ * 
  * @author jaanus
  */
 public class VirtuosoHandler implements MSAccessImportHandlerIF {
@@ -59,7 +59,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /**
      * Instantiates a new virtuoso handler.
-     *
+     * 
      * @param dbName the db name
      * @param importLogger the import logger
      */
@@ -75,7 +75,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see das.conv.msaccess.ConversionHandlerIF#newTable(com.healthmarketscience .jackcess.Table)
      */
     @Override
@@ -92,7 +92,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see das.conv.msaccess.ConversionHandlerIF#processRow(com.healthmarketscience .jackcess.Table, java.util.Map)
      */
     @Override
@@ -135,7 +135,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see das.conv.msaccess.ConversionHandlerIF#endOfFile()
      */
     @Override
@@ -152,7 +152,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see das.conv.msaccess.ConversionHandlerIF#close()
      */
     @Override
@@ -162,7 +162,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /**
      * Lazy getter for the underlying SQL connection.
-     *
+     * 
      * @return The connection.
      * @throws SQLException When SQL error happens.
      */
@@ -175,7 +175,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
 
     /**
      * Lazy getter for the underlying SQL connection's user.
-     *
+     * 
      * @return The connection's user.
      * @throws SQLException When SQL error happens.
      */

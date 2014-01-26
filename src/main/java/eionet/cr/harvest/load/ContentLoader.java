@@ -30,7 +30,7 @@ import org.openrdf.repository.RepositoryConnection;
 
 /**
  * The callback method(s) of this interface allow to load a given content into a given repository connection.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public interface ContentLoader {
@@ -38,13 +38,13 @@ public interface ContentLoader {
     /**
      * Callback method that loads content from the given input stream in the given repository connection. SQL connection is also
      * given, in case the loader needs it.
-     *
+     * 
      * @param inputStream The input stream to load.
      * @param repoConn The repository connection where the content is loaded into.
      * @param sqlConn SQL connection in case the loader needs to use it.
      * @param baseUri Base URI which the relative URIs in the content will be resolved against.
      * @param contextUri URI of the graph where the triples will be loaded into.
-     *
+     * 
      * @return Number of triples loaded.
      * @throws IOException if I/O error
      * @throws OpenRDFException if an error occurs in RDF parser
@@ -55,6 +55,7 @@ public interface ContentLoader {
 
     /**
      * Sets timeout to the loader. If the timeout is exceeded the loading stops.
+     * 
      * @param timeout Timeout in milliseconds
      */
     void setTimeout(long timeout);

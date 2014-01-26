@@ -35,11 +35,10 @@ import eionet.cr.util.pagination.PagingRequest;
 
 /**
  * User home folder methods in Virtuoso.
- *
+ * 
  * @author Enriko Käsper
  */
 public class VirtuosoUserHomeDAO extends VirtuosoBaseDAO implements UserHomeDAO {
-
 
     @Override
     public Pair<Integer, List<UserFolderDTO>> getFolderContents(String parentFolder, Map<String, String> filters,
@@ -54,14 +53,14 @@ public class VirtuosoUserHomeDAO extends VirtuosoBaseDAO implements UserHomeDAO 
         logger.trace("Search folder contents, executing subject finder query: " + query);
 
         // execute the query, with the IN parameters
-        //List<String> subjectUris = executeSPARQL(query, helper.getQueryBindings(), new SingleObjectReader<String>());
+        // List<String> subjectUris = executeSPARQL(query, helper.getQueryBindings(), new SingleObjectReader<String>());
         UserHomesReader reader = new UserHomesReader();
 
         List<UserFolderDTO> userFolders = executeSPARQL(query, helper.getQueryBindings(), reader);
         logger.debug("Search folder contents, find subjects query time " + Util.durationSince(startTime));
 
         int totalRowCount = 0;
-        //List<SubjectDTO> resultList = new ArrayList<SubjectDTO>();
+        // List<SubjectDTO> resultList = new ArrayList<SubjectDTO>();
 
         // if paging required, get the total number of found subjects too
         if (pagingRequest != null) {

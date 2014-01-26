@@ -64,6 +64,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.openrdf.query.resultio.TupleQueryResultWriter#getTupleQueryResultFormat()
      */
     @Override
@@ -82,6 +83,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.openrdf.query.TupleQueryResultHandler#startQueryResult(java.util.List)
      */
     @Override
@@ -109,6 +111,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.openrdf.query.TupleQueryResultHandler#endQueryResult()
      */
     @Override
@@ -125,6 +128,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.openrdf.query.TupleQueryResultHandler#handleSolution(org.openrdf.query.BindingSet)
      */
     @Override
@@ -151,6 +155,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /**
      * Utility method for writing the given {@link Value}.
+     * 
      * @param value The given {@link Value}.
      * @throws IOException
      */
@@ -166,6 +171,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /**
      * Utility method for writing the given {@link URI}.
+     * 
      * @param value The given {@link URI}.
      * @throws IOException
      */
@@ -175,6 +181,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /**
      * Utility method for writing the given {@link BNode}.
+     * 
      * @param bNode The given {@link BNode}.
      * @throws IOException
      */
@@ -184,6 +191,7 @@ public class CRXmlWriter implements TupleQueryResultWriter {
 
     /**
      * Utility method for writing the given {@link Literal}.
+     * 
      * @param bNode The given {@link Literal}.
      * @throws IOException
      */

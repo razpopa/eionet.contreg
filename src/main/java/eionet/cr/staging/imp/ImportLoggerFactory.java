@@ -29,7 +29,7 @@ import org.apache.log4j.spi.LoggerFactory;
  *
  * @author jaanus
  */
-public class ImportLoggerFactory implements LoggerFactory {
+public final class ImportLoggerFactory implements LoggerFactory {
 
     /** */
     public static final ImportLoggerFactory INSTANCE = new ImportLoggerFactory();

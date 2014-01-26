@@ -1,7 +1,7 @@
 package eionet.cr.common;
 
 /**
- *
+ * 
  * @author jaanus
  */
 public class ConfigurationException extends CRRuntimeException {

@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public final class PostHarvestScriptParser {
@@ -48,7 +48,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @param harvestedSource
      * @param associatedType
@@ -72,7 +72,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @param graphUri
      * @return
@@ -119,7 +119,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @param harvestedSource
      * @param associatedType
@@ -153,7 +153,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @return
      * @throws ScriptParseException
@@ -229,7 +229,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @return
      * @throws ScriptParseException
@@ -299,7 +299,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param script
      * @return
      * @throws ScriptParseException
@@ -368,7 +368,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @param token
      * @return
@@ -390,7 +390,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @param token
      * @return
@@ -419,7 +419,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @param token
      * @return
@@ -458,11 +458,11 @@ public final class PostHarvestScriptParser {
      * string, the string itself is returned. If token1 is present in the string, but token2 is not, then the substring after token1
      * is returned. Similarly, if token2 is present in the string, but token1 is not, then the substring before token1 is returned.
      * If neither tokens are present in the string, the string is returned as it is.
-     *
+     * 
      * If the given string is blank (i.e. null or empty after trimmed), the given string is returned as it is. If token1 is not
      * blank, but token2 is, the method returns substring after token1. If token2 is not blank, but token1 is, the method returns
      * substring before token1. If both tokens are blank, the string is returned as it is.
-     *
+     * 
      * @param str The given string.
      * @param token1 token1
      * @param token2 token2
@@ -485,7 +485,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @param tokenToReplace
      * @param replacement
@@ -519,7 +519,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param tokens
      * @return
      */
@@ -535,7 +535,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @param start
      * @param end
@@ -551,7 +551,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @return
      */
@@ -567,7 +567,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @return
      */
@@ -583,7 +583,7 @@ public final class PostHarvestScriptParser {
     }
 
     /**
-     *
+     * 
      * @param str
      * @return
      */

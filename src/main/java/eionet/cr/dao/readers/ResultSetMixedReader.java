@@ -12,9 +12,9 @@ import eionet.cr.util.sesame.SPARQLResultSetReader;
 import eionet.cr.util.sql.SQLResultSetReader;
 
 /**
- *
+ * 
  * @author jaanus
- *
+ * 
  */
 public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, SPARQLResultSetReader<T> {
 
@@ -32,7 +32,7 @@ public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, 
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#startResultSet(java.sql.ResultSetMetaData)
      */
     @Override
@@ -41,7 +41,7 @@ public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, 
     }
 
     /**
-     *
+     * 
      * @param bindingNames
      */
     public void startResultSet(List<String> bindingNames) {
@@ -50,7 +50,7 @@ public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, 
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.readers.ResultSetReader#endResultSet()
      */
     @Override
@@ -61,7 +61,7 @@ public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, 
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.readers.ResultSetReader#getResultList()
      */
     @Override
@@ -85,8 +85,7 @@ public abstract class ResultSetMixedReader<T> implements SQLResultSetReader<T>, 
 
         if (bindingSet == null || StringUtils.isBlank(bindingName)) {
             return null;
-        }
-        else {
+        } else {
             Value value = bindingSet.getValue(bindingName);
             return value == null ? null : value.stringValue();
         }

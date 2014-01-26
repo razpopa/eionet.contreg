@@ -44,9 +44,9 @@ import eionet.cr.web.action.factsheet.ObjectsInSourceActionBean;
  * Action bean for uploading an MS Excel or OpenDocument spreadsheet file into the RDF model and triple store. Pre-configured types
  * of files are supported, e.g. a file containing metadata of Digital Agenda Scoreboard indicators, a file containing metadata of
  * Digital Agenda Scoreboard breakdowns, etc.
- *
+ * 
  * {@link XLWrapUtil} is used for performing the parsing and storage into triple store.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/admin/xlwrapUpload.action")
@@ -88,7 +88,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     private String newDatasetDescription;
 
     /**
-     *
+     * 
      * @return
      */
     @DefaultHandler
@@ -102,7 +102,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws Exception
      */
@@ -115,13 +115,11 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
         } else if (fileBean == null || fileBean.getSize() == 0) {
             addGlobalValidationError("Uploaded file missing or empty!");
             return new ForwardResolution(JSP);
-        }
-        else if (XLWrapUploadType.OBSERVATION.equals(uploadType)) {
+        } else if (XLWrapUploadType.OBSERVATION.equals(uploadType)) {
             if (StringUtils.isBlank(targetDataset)) {
                 addGlobalValidationError("Target dataset must be selected!");
                 return new ForwardResolution(JSP);
-            }
-            else {
+            } else {
                 isObservationsUpload = true;
             }
         }
@@ -152,8 +150,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
             // we're uploading observations or a codelist.
             if (isObservationsUpload) {
                 DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(targetDataset, new Date(), targetDataset);
-            }
-            else{
+            } else {
                 String graphUri = uploadType.getGraphUri();
                 String codelistUri = StringUtils.substringBeforeLast(graphUri, "/");
                 DAOFactory.get().getDao(ScoreboardSparqlDAO.class).updateDcTermsModified(codelistUri, new Date(), graphUri);
@@ -195,7 +192,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution cancel() {
@@ -203,7 +200,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution createNewDataset() {
@@ -285,7 +282,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public List<XLWrapUploadType> getUploadTypes() {
@@ -293,7 +290,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Class getObjectsInSourceActionBeanClass() {
@@ -331,7 +328,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /**
      * Lazy getter for the datasets.
-     *
+     * 
      * @return the datasets
      * @throws DAOException
      */
@@ -403,7 +400,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param timePeriodUris
      */
     private void harvestTimePeriods(Set<String> timePeriodUris) {
@@ -422,7 +419,7 @@ public class XLWrapUploadActionBean extends AbstractActionBean {
 
     /**
      * Post-import fix actions.
-     *
+     * 
      * @throws DAOException
      */
     private void postImportFixes() throws DAOException {

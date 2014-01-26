@@ -60,6 +60,13 @@ public class CompressUtil {
     }
 
     /**
+     * Disable utility class constructor.
+     */
+    private CompressUtil() {
+        // Empty constructor.
+    }
+
+    /**
      *
      * @param file
      * @param toFile

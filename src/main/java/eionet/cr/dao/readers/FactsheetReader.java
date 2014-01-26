@@ -35,7 +35,7 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 import eionet.cr.web.util.WebConstants;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class FactsheetReader extends SPARQLResultSetBaseReader<FactsheetDTO> {
@@ -65,6 +65,7 @@ public class FactsheetReader extends SPARQLResultSetBaseReader<FactsheetDTO> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -84,7 +85,7 @@ public class FactsheetReader extends SPARQLResultSetBaseReader<FactsheetDTO> {
     }
 
     /**
-     *
+     * 
      * @param objectData
      * @return
      */

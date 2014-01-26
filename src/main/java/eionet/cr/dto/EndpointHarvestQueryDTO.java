@@ -27,7 +27,7 @@ import eionet.cr.util.Hashes;
 
 /**
  * A DTO for a remote SPARQL endpoint harvest query.
- *
+ * 
  * @author jaanus
  */
 public class EndpointHarvestQueryDTO {
@@ -53,66 +53,77 @@ public class EndpointHarvestQueryDTO {
     public int getId() {
         return id;
     }
+
     /**
      * @param id the id to set
      */
     public void setId(int id) {
         this.id = id;
     }
+
     /**
      * @return the title
      */
     public String getTitle() {
         return title;
     }
+
     /**
      * @param title the title to set
      */
     public void setTitle(String title) {
         this.title = title;
     }
+
     /**
      * @return the query
      */
     public String getQuery() {
         return query;
     }
+
     /**
      * @param query the query to set
      */
     public void setQuery(String query) {
         this.query = query;
     }
+
     /**
      * @return the endpointUrl
      */
     public String getEndpointUrl() {
         return endpointUrl;
     }
+
     /**
      * @param endpointUrl the endpointUrl to set
      */
     public void setEndpointUrl(String endpointUrl) {
         this.endpointUrl = endpointUrl;
     }
+
     /**
      * @return the position
      */
     public int getPosition() {
         return position;
     }
+
     /**
      * @param position the position to set
      */
     public void setPosition(int position) {
         this.position = position;
     }
+
     /**
      * @return the active
      */
     public boolean isActive() {
         return active;
     }
+
     /**
      * @param active the active to set
      */
@@ -122,18 +133,20 @@ public class EndpointHarvestQueryDTO {
 
     /**
      * Gets the endpoint url hash.
-     *
+     * 
      * @return the endpoint url hash
      */
     public long getEndpointUrlHash() {
         return endpointUrl == null ? 0 : Hashes.spoHash(endpointUrl);
     }
+
     /**
      * @return the lastModified
      */
     public Date getLastModified() {
         return lastModified;
     }
+
     /**
      * @param lastModified the lastModified to set
      */

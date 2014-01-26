@@ -35,7 +35,7 @@ import eionet.cr.web.action.factsheet.FactsheetActionBean;
 /**
  * Action bean for generating ODP (Open Data Portal, http://open-data.europa.eu) datasets' metadata packages from the metadata of
  * a selected set of indicators.
- *
+ * 
  * @author Jaanus
  */
 @UrlBinding("/admin/odpPackaging.action")
@@ -86,7 +86,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Default event: lists indicators by the given filters.
-     *
+     * 
      * @return Resolution to go to.
      * @throws DAOException In case data access error occurs.
      */
@@ -108,7 +108,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -128,7 +128,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Event handler for zipping the metadata of the user-selected indicators.
-     *
+     * 
      * @return Resolution to go to.
      * @throws DAOException In case data access error occurs.
      */
@@ -146,7 +146,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Event handler for zipping the metadata of *all* indicators matching the given filters.
-     *
+     * 
      * @return Resolution to go to.
      * @throws DAOException In case data access error occurs.
      */
@@ -173,7 +173,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     /**
      * Utility method for generating metadata for the given indicators and streaming it into the {@link StreamingResolution}
      * returned by this method.
-     *
+     * 
      * @param indicatorUris The URIs of the indicators.
      * @return StreamingResolution where the output is written into.
      * @throws DAOException In case data access problem occurs.
@@ -209,7 +209,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Getter for the {@link #filterIndGroup}.
-     *
+     * 
      * @return the filterIndGroup
      */
     public List<String> getFilterIndGroup() {
@@ -218,7 +218,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Setter for the {@link #filterIndGroup}.
-     *
+     * 
      * @param filterIndGroup the filterIndGroup to set
      */
     public void setFilterIndGroup(List<String> filterIndGroup) {
@@ -227,7 +227,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Getter for the {@link #filterIndSource}.
-     *
+     * 
      * @return the filterIndSource
      */
     public List<String> getFilterIndSource() {
@@ -236,7 +236,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Setter for the {@link #filterIndSource}.
-     *
+     * 
      * @param filterIndSource the filterIndSource to set
      */
     public void setFilterIndSource(List<String> filterIndSource) {
@@ -245,9 +245,9 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Returns all possible indicator groups to choose from.
-     *
+     * 
      * @return Indicator groups, each represented with a {@link SkosItemDTO}.
-     *
+     * 
      * @throws DAOException If data access error occurs.
      */
     public List<SkosItemDTO> getIndGroups() throws DAOException {
@@ -263,7 +263,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Returns all possible indicator sources to choose from.
-     *
+     * 
      * @return Indicator sources, each represented with a {@link SkosItemDTO}.
      * @throws DAOException If data access error occurs.
      */
@@ -292,7 +292,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     /**
      * Returns the list of indicators matching the applied filters. If no filters applied, returns all known indicators.
      * This is a lazy-initialization getter for the filteredIndicators.
-     *
+     * 
      * @return the filteredIndicators
      * @throws DAOException If data access error occurs.
      */
@@ -311,7 +311,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Returns the class representing {@link FactsheetActionBean}. Handy for use in JSP.
-     *
+     * 
      * @return The class.
      */
     public Class<FactsheetActionBean> getFactsheetActionBeanClass() {
@@ -334,7 +334,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
 
     /**
      * Setter for the selectedIndicators.
-     *
+     * 
      * @param selectedIndicators the selectedIndicators to set
      */
     public void setSelectedIndicators(List<String> selectedIndicators) {
@@ -377,7 +377,7 @@ public class ODPDatasetsPackagingActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public ODPAction[] getOdpActions() {

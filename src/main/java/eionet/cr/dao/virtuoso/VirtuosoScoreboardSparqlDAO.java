@@ -188,68 +188,68 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
     private static final String GET_INDICATOR_SOURCES_USED_IN_DATASET = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
-    		"PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
-    		"PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
-    		"\n" +
-    		"select\n" +
-    		"    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
-    		"where {\n" +
-    		"    ?obs a cube:Observation .\n" +
-    		"    ?obs cube:dataSet ?dst .\n" +
-    		"    ?obs dad-prop:indicator ?ind .\n" +
-    		"    ?ind dcterms:source ?uri\n" +
-    		"    optional {?uri skos:notation ?notation}\n" +
-    		"    optional {?uri skos:prefLabel ?prefLabel}\n" +
-    		"    filter (?dst = ?dstUri)\n" +
-    		"}\n" +
-    		"group by ?uri\n" +
-    		"order by ?uri";
+            "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+            "\n" +
+            "select\n" +
+            "    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
+            "where {\n" +
+            "    ?obs a cube:Observation .\n" +
+            "    ?obs cube:dataSet ?dst .\n" +
+            "    ?obs dad-prop:indicator ?ind .\n" +
+            "    ?ind dcterms:source ?uri\n" +
+            "    optional {?uri skos:notation ?notation}\n" +
+            "    optional {?uri skos:prefLabel ?prefLabel}\n" +
+            "    filter (?dst = ?dstUri)\n" +
+            "}\n" +
+            "group by ?uri\n" +
+            "order by ?uri";
 
     private static final String INDICATORS_FOR_ODP_ZIPPING2 = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
-    		"PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
-    		"PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
-    		"\n" +
-    		"select\n" +
-    		"    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
-    		"where {\n" +
-    		"    ?obs a cube:Observation .\n" +
-    		"    ?obs cube:dataSet ?dst .\n" +
-    		"    ?obs dad-prop:indicator ?uri .\n" +
-    		"    @SOURCE_PATTERN@\n" +
-    		"    optional {?uri skos:notation ?notation}\n" +
-    		"    optional {?uri skos:prefLabel ?prefLabel}\n" +
-    		"    filter (?dst = ?dstUri)\n" +
-    		"    @FILTER_SOURCES@\n" +
-    		"}\n" +
-    		"group by ?uri\n" +
-    		"order by ?uri";
+            "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+            "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
+            "\n" +
+            "select\n" +
+            "    ?uri min(?notation) as ?skosNotation min(?prefLabel) as ?skosPrefLabel\n" +
+            "where {\n" +
+            "    ?obs a cube:Observation .\n" +
+            "    ?obs cube:dataSet ?dst .\n" +
+            "    ?obs dad-prop:indicator ?uri .\n" +
+            "    @SOURCE_PATTERN@\n" +
+            "    optional {?uri skos:notation ?notation}\n" +
+            "    optional {?uri skos:prefLabel ?prefLabel}\n" +
+            "    filter (?dst = ?dstUri)\n" +
+            "    @FILTER_SOURCES@\n" +
+            "}\n" +
+            "group by ?uri\n" +
+            "order by ?uri";
 
     private static final String GET_DISTINCT_DATASET_URIS = "" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
-    		"select distinct ?datasetUri where {\n" +
-    		"   ?datasetUri a cube:DataSet\n" +
-    		"}\n" +
-    		"order by ?datasetUri";
+            "select distinct ?datasetUri where {\n" +
+            "   ?datasetUri a cube:DataSet\n" +
+            "}\n" +
+            "order by ?datasetUri";
 
     private static final String DELETE_OBSERVATIONS_OF_INDICATOR_AND_TIME = "" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
-    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
-    		"DELETE FROM GRAPH <@DATASET_GRAPH_URI@> {\n" +
-    		"    ?obs ?p ?o\n" +
-    		"}\n" +
-    		"WHERE {\n" +
-    		"  GRAPH <@DATASET_GRAPH_URI@> {\n" +
-    		"    ?obs ?p ?o .\n" +
-    		"    ?obs a cube:Observation .\n" +
-    		"    ?obs dad-prop:indicator ?ind .\n" +
-    		"    ?obs dad-prop:time-period ?timePeriod .\n" +
-    		"    @INDICATOR_FILTER@\n" +
-    		"    @TIME_PERIOD_FILTER@\n" +
-    		"  }\n" +
-    		"}";
+            "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+            "DELETE FROM GRAPH <@DATASET_GRAPH_URI@> {\n" +
+            "    ?obs ?p ?o\n" +
+            "}\n" +
+            "WHERE {\n" +
+            "  GRAPH <@DATASET_GRAPH_URI@> {\n" +
+            "    ?obs ?p ?o .\n" +
+            "    ?obs a cube:Observation .\n" +
+            "    ?obs dad-prop:indicator ?ind .\n" +
+            "    ?obs dad-prop:time-period ?timePeriod .\n" +
+            "    @INDICATOR_FILTER@\n" +
+            "    @TIME_PERIOD_FILTER@\n" +
+            "  }\n" +
+            "}";
 
     // @formatter:on
 

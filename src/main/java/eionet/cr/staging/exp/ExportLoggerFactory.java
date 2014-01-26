@@ -29,7 +29,7 @@ import org.apache.log4j.spi.LoggerFactory;
  *
  * @author jaanus
  */
-public class ExportLoggerFactory implements LoggerFactory {
+public final class ExportLoggerFactory implements LoggerFactory {
 
     /** */
     public static final ExportLoggerFactory INSTANCE = new ExportLoggerFactory();
@@ -50,5 +50,4 @@ public class ExportLoggerFactory implements LoggerFactory {
     public Logger makeNewLoggerInstance(String name) {
         return new ExportLogger(name);
     }
-
 }

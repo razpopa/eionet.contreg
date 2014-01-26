@@ -33,7 +33,7 @@ import eionet.cr.web.util.CustomPaginatedList;
 /**
  * An action bean for browsing the available DataCube observations (i.e. resources of type
  * http://purl.org/linked-data/cube#Observation).
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/searchObservations")
@@ -68,7 +68,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     private HashMap<String, String> filtersFromRequest;
 
     /**
-     *
+     * 
      * @return
      */
     @DefaultHandler
@@ -82,7 +82,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution search() {
@@ -133,7 +133,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution reloadFilters() {
@@ -152,7 +152,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
 
     /**
      * @throws DAOException
-     *
+     * 
      */
     private void loadFilterValues() throws DAOException {
 
@@ -185,7 +185,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private HashMap<String, String> getFiltersFromRequest() {
@@ -205,7 +205,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @param alias
      * @return
      */
@@ -225,7 +225,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Class getFactsheetActionBeanClass() {
@@ -247,7 +247,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private static List<HashMap<String, String>> createAvailFilters() {
@@ -306,7 +306,7 @@ public class SearchObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private static List<HashMap<String, String>> createAvailColumns() {

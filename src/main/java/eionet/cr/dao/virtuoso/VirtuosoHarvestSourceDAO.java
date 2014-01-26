@@ -58,7 +58,7 @@ import eionet.cr.util.sql.SingleObjectReader;
 
 /**
  * Methods operating with harvest sources. Implementation for Virtuoso.
- *
+ * 
  * @author kaido
  */
 
@@ -113,7 +113,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSources(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -127,7 +127,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSourcesFailed(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -192,7 +192,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSourcesUnavailable(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -207,7 +207,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getRemoteEndpoints(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -221,7 +221,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getPrioritySources(java.lang.String, eionet.cr.util.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -235,7 +235,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getInferenceSources(java.lang.String, eionet.cr.util.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -261,7 +261,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     }
 
     /**
-     *
+     * 
      * @param sql
      * @param searchString
      * @param pagingRequest
@@ -315,7 +315,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getUrgencySourcesCount()
      */
     @Override
@@ -343,7 +343,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#addSource(HarvestSourceDTO source)
      */
     @Override
@@ -419,7 +419,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#addSourceIgnoreDuplicate(HarvestSourceDTO source)
      */
     @Override
@@ -443,7 +443,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     private static final String DELETE_POST_HARVES_SCRIPTS = "DELETE FROM post_harvest_script WHERE target_source_url = ?";
 
     /**
-     *
+     * 
      * @param sourceUrls
      * @param conn
      * @throws SQLException
@@ -508,7 +508,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
     }
 
     /**
-     *
+     * 
      * @param sourceUrls
      * @param conn
      * @throws RepositoryException
@@ -533,7 +533,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#editSource(eionet.cr.dto.HarvestSourceDTO)
      */
     @Override
@@ -566,7 +566,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSourceById(java.lang.Integer)
      */
     @Override
@@ -583,7 +583,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSourceByUrl(java.lang.String)
      */
     @Override
@@ -610,7 +610,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getNextScheduledSources(int)
      */
     @Override
@@ -628,7 +628,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getScheduledForDeletion()
      */
     @Override
@@ -643,7 +643,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#increaseUnavailableCount(java.lang.String)
      */
     @Override
@@ -663,7 +663,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HelperDAO#getLatestHarvestedURLs()
      */
     @Override
@@ -712,7 +712,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getMostUrgentHarvestSources(int)
      */
     @Override
@@ -778,7 +778,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#updateSourceHarvestFinished(eionet.cr.dto.HarvestSourceDTO)
      */
     @Override
@@ -816,7 +816,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#removeHarvestSources(java.util.Collection)
      */
     @Override
@@ -863,7 +863,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.virtuoso.VirtuosoBaseDAO#clearGraph(java.lang.String)
      */
     @Override
@@ -885,7 +885,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getSourcesInInferenceRules()
      */
     @Override
@@ -929,7 +929,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#isSourceInInferenceRule()
      */
     @Override
@@ -963,7 +963,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#addSourceIntoInferenceRule()
      */
     @Override
@@ -995,7 +995,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#removeSourceFromInferenceRule()
      */
     @Override
@@ -1027,7 +1027,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#loadIntoRepository(java.io.File, org.openrdf.rio.RDFFormat, java.lang.String, boolean)
      */
     @Override
@@ -1046,7 +1046,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#loadIntoRepository(java.io.InputStream, org.openrdf.rio.RDFFormat, java.lang.String,
      * boolean)
      */
@@ -1098,7 +1098,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#addSourceMetadata(SubjectDTO)
      */
     @Override
@@ -1178,7 +1178,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#getHarvestSourceMetadata(java.lang.String, java.lang.String)
      */
     @Override
@@ -1195,7 +1195,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#insertUpdateSourceMetadata(java.lang.String, java.lang.String, eionet.cr.dto.ObjectDTO[])
      */
     @Override
@@ -1213,7 +1213,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#insertUpdateSourceMetadata(org.openrdf.repository.RepositoryConnection, java.lang.String,
      * java.lang.String, eionet.cr.dto.ObjectDTO[])
      */
@@ -1239,7 +1239,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#deleteSubjectTriplesInSource(java.lang.String, java.lang.String)
      */
     @Override
@@ -1267,7 +1267,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#filter(java.lang.String, int, int)
      */
     @Override
@@ -1301,7 +1301,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#deriveNewHarvestSources(java.lang.String)
      */
     @Override
@@ -1428,7 +1428,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.HarvestSourceDAO#loadContent(java.io.InputStream, eionet.cr.harvest.load.ContentLoader, java.lang.String)
      */
     @Override
@@ -1505,7 +1505,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
                 // Throw the reason why content loading failed.
                 String msg = "Failed content loading ";
-                if (cleanupSuccess == false) {
+                if (!cleanupSuccess) {
                     msg = msg + "(and the subsequent cleanup) ";
                 }
                 throw new DAOException(msg + "of " + graphUri, e);
@@ -1530,7 +1530,7 @@ public class VirtuosoHarvestSourceDAO extends VirtuosoBaseDAO implements Harvest
 
     /**
      * Replace graph URI with new one.
-     *
+     * 
      * @param sqlConn Connection.
      * @param oldGraph Existing graph URI.
      * @param newGraph The new URI of the graph.

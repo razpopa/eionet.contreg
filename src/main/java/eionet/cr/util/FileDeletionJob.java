@@ -45,7 +45,7 @@ import eionet.cr.config.GeneralConfig;
 
 /**
  * Background job that silently deletes CR's temporary files in the background. Files must be registered to this job to get deleted.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class FileDeletionJob implements ServletContextListener, StatefulJob {
@@ -65,7 +65,7 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     @Override
@@ -93,7 +93,7 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     @Override
@@ -104,7 +104,8 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
         for (File file : QUEUED_FILES) {
             if (file != null && file.exists()) {
                 try {
-                    if (file.delete() == true) {
+                    boolean deleted = file.delete();
+                    if (deleted) {
                         toBeRemvedFromQueue.add(file);
                         LOGGER.debug("File successfully deleted: " + file);
                     } else {
@@ -115,8 +116,7 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
                 } catch (RuntimeException e) {
                     LOGGER.error("Unexpected RuntimeException when trying to delete " + file, e);
                 }
-            }
-            else{
+            } else {
                 toBeRemvedFromQueue.add(file);
             }
         }
@@ -125,17 +125,17 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
     }
 
     /**
-     *
+     * 
      * @param file
      * @param marker
      */
     public static synchronized void register(File file) {
 
         if (file != null && file.exists()) {
-            if (file.delete() == false){
+            boolean deleted = file.delete();
+            if (!deleted) {
                 QUEUED_FILES.add(file);
-            }
-            else{
+            } else {
                 LOGGER.debug("File successfully deleted: " + file);
             }
         }
@@ -143,7 +143,7 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     @Override
@@ -171,16 +171,16 @@ public class FileDeletionJob implements ServletContextListener, StatefulJob {
     }
 
     /**
-     *
+     * 
      * Implementation of {@link java.io.FilenameFilter} that checks if a given file is a temporary file created by this application.
-     *
+     * 
      * @author Jaanus Heinlaid
      */
     static class TempFileFilter implements FileFilter {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see java.io.FileFilter#accept(java.io.File)
          */
         @Override

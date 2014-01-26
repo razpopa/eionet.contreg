@@ -28,9 +28,9 @@ import eionet.cr.dto.HarvestDTO;
 import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public class HarvestWithMessageTypesReader extends SQLResultSetBaseReader<HarvestDTO> {
 
@@ -41,7 +41,7 @@ public class HarvestWithMessageTypesReader extends SQLResultSetBaseReader<Harves
     private int maxDistinctHarvests;
 
     /**
-     *
+     * 
      * @param maxDistinctHarvests
      */
     public HarvestWithMessageTypesReader(int maxDistinctHarvests) {
@@ -50,14 +50,14 @@ public class HarvestWithMessageTypesReader extends SQLResultSetBaseReader<Harves
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.ResultSetBaseReader#readRow(java.sql.ResultSet)
      */
     @Override
     public void readRow(ResultSet rs) throws SQLException, ResultSetReaderException {
 
         Integer harvestId = rs.getInt("HARVEST_ID");
-        if (currHarvest == null || currHarvest.getHarvestId().equals(harvestId) == false) { // if first row or new harvest
+        if (currHarvest == null || !currHarvest.getHarvestId().equals(harvestId)) { // if first row or new harvest
 
             // create new harvest object and add it to the list, but only if the list has not reached it's max allowed size yet
             if (resultList.size() >= maxDistinctHarvests) {
@@ -80,7 +80,7 @@ public class HarvestWithMessageTypesReader extends SQLResultSetBaseReader<Harves
             currHarvest.setEncodingSchemes(new Integer(rs.getInt("ENC_SCHEMES")));
             currHarvest.setTotalStatements(new Integer(rs.getInt("TOT_STATEMENTS")));
             currHarvest.setLitObjStatements(new Integer(rs.getInt("LIT_STATEMENTS")));
-            currHarvest.setResponseCode(new  Integer(rs.getInt("HTTP_CODE")));
+            currHarvest.setResponseCode(new Integer(rs.getInt("HTTP_CODE")));
         }
 
         HarvestBaseDTO.addMessageType(currHarvest, rs.getString("MESSAGE_TYPE"));

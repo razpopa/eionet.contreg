@@ -32,9 +32,9 @@ import eionet.cr.config.GeneralConfig;
 
 /**
  * Sends emails to system administrators.
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public final class EMailSender {
 
@@ -47,7 +47,7 @@ public final class EMailSender {
 
     /**
      * Sends the email to system administrators in To: field.
-     *
+     * 
      * @param subject Subject of email
      * @param body Message
      * @throws MessagingException if sending fails
@@ -58,15 +58,14 @@ public final class EMailSender {
 
     /**
      * Sends the email - if there is a mail host in the configuration file.
-     *
+     * 
      * @param to Email recipients
      * @param subject Subject of email
      * @param body Message
      * @param ccSysAdmin whether to CC system administrators
      * @throws MessagingException if sending fails
      */
-    public static void send(String[] to, String subject, String body, boolean ccSysAdmin)
-    throws MessagingException {
+    public static void send(String[] to, String subject, String body, boolean ccSysAdmin) throws MessagingException {
 
         // if no mail.host specified in the properties, go no further
         String mailHost = GeneralConfig.getProperty("mail.host");
@@ -105,7 +104,7 @@ public final class EMailSender {
 
     /**
      * Returns syadmins email addresses.
-     *
+     * 
      * @return String[] list of sysadmin email addresses
      */
     private static String[] getSysAdmins() {

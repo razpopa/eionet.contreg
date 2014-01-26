@@ -57,7 +57,7 @@ import eionet.cr.web.security.CRUser;
 
 /**
  * CSV upload action bean.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 @UrlBinding("/uploadCSV.action")
@@ -147,7 +147,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -218,7 +218,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution save() {
@@ -272,7 +272,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
 
     /**
      * Form action, that adds aditional input for data linking scripts.
-     *
+     * 
      * @return
      */
     public Resolution addScript() {
@@ -285,7 +285,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
 
     /**
      * Form action, that removes the last input for data linking scripts.
-     *
+     * 
      * @return
      */
     public Resolution removeScript() {
@@ -308,7 +308,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @throws DAOException
      */
     @ValidationMethod(on = {UPLOAD_EVENT, SAVE_EVENT})
@@ -380,7 +380,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
 
     /**
      * True, if there is more than one script bean available.
-     *
+     * 
      * @return
      */
     public boolean isRemoveScriptsAvailable() {
@@ -388,7 +388,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @throws DAOException
      */
     private void loadWizardInputsFromPreviousUpload() throws DAOException {
@@ -440,7 +440,7 @@ public class UploadCSVActionBean extends AbstractActionBean {
 
     /**
      * Singleton getter for column labels.
-     *
+     * 
      * @return
      */
     public List<String> getColumnLabels() {

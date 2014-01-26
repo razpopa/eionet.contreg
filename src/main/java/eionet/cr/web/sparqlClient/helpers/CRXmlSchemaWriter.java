@@ -24,7 +24,7 @@ import eionet.cr.util.export.XmlUtil;
 
 /**
  * A {@link TupleQueryResultWriter} that writes tuple query results in the XML with Schema (Microsoft Office format).
- *
+ * 
  * @author Juhan Voolaid
  */
 public class CRXmlSchemaWriter implements TupleQueryResultWriter {
@@ -46,8 +46,9 @@ public class CRXmlSchemaWriter implements TupleQueryResultWriter {
     private XMLStreamWriter writer = null;
 
     /**
-     *
+     * 
      * Class constructor.
+     * 
      * @param out
      * @throws XMLStreamException
      */

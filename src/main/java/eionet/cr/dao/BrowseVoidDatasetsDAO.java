@@ -27,7 +27,7 @@ import eionet.cr.dao.util.VoidDatasetsResultRow;
 
 /**
  * An interface for the DAO that provides functions for the faceted browsing of VoID datasets.
- *
+ * 
  * @author jaanus
  */
 public interface BrowseVoidDatasetsDAO extends DAO {
@@ -35,7 +35,7 @@ public interface BrowseVoidDatasetsDAO extends DAO {
     /**
      * Returns a list of VoID datasets matching the given creators (http://purl.org/dc/terms/creator) and subjects
      * (http://purl.org/dc/terms/subject).
-     *
+     * 
      * @param creators
      * @param subjects
      * @return
@@ -47,7 +47,7 @@ public interface BrowseVoidDatasetsDAO extends DAO {
      * Finds all distinct creators (http://purl.org/dc/terms/creator) of VoID datasets whose subjects
      * (http://purl.org/dc/terms/subject) are in the range of given subjects list. If the latter is null or empty, all distinct
      * creators of all VoID datasets are returned.
-     *
+     * 
      * @param subjects
      * @return
      * @throws DAOException
@@ -58,7 +58,7 @@ public interface BrowseVoidDatasetsDAO extends DAO {
      * Finds all distinct subjects (http://purl.org/dc/terms/subject) of VoID datasets whose creators
      * (http://purl.org/dc/terms/creator) are in the range of given creators list. If the latter is null or empty, all distinct
      * subjects of all VoID datasets are returned.
-     *
+     * 
      * @param creators
      * @return
      * @throws DAOException

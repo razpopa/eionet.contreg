@@ -44,7 +44,7 @@ import eionet.cr.web.util.WebConstants;
 
 /**
  * Implementation of {@link SubjectDataReader} that reads specific predicates given through the constructor(s).
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
  */
 public class SpecificSubjectDataReader extends SubjectDataReader {
@@ -61,7 +61,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
     /**
      * Calls {@link SubjectDataReader#SubjectDataReader(List)} first, then sets the given predicates to be queried for.. Class
      * constructor.
-     *
+     * 
      * @param subjectUris
      * @param selectedPredicates
      */
@@ -73,7 +73,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
 
     /**
      * Convenience method for setting the selected predicates and ensuring they're not null nor empty.
-     *
+     * 
      * @param selectedPredicates The URIs of predicates to set.
      */
     private void setSelectedPredicates(String[] selectedPredicates) {
@@ -86,7 +86,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override
@@ -96,7 +96,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -177,7 +177,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.readers.SubjectDataReader#getQuery(java.util.Collection, eionet.cr.util.Bindings)
      */
     @Override
@@ -210,7 +210,7 @@ public class SpecificSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.readers.ResultSetMixedReader#endResultSet()
      */
     @Override

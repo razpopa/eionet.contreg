@@ -3,9 +3,9 @@ package eionet.cr.util.export;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 
 /**
- *
+ * 
  * Utility class helping in the generation of the Excel files.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public final class XlsUtil {
@@ -18,7 +18,7 @@ public final class XlsUtil {
     }
 
     /**
-     *
+     * 
      * @param cell
      * @param stringValue
      */

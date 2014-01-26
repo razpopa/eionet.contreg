@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Singleton class indicating if you are currently in JUnit runtime.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public final class IsJUnitRuntime {
@@ -44,14 +44,14 @@ public final class IsJUnitRuntime {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private static boolean isJUnitRuntime() {
 
         String stackTrace = Util.getStackTrace(new Throwable());
         boolean result = Boolean.valueOf(stackTrace.indexOf("at junit.framework.TestCase.run") > 0);
-        if (result == true) {
+        if (result) {
             LOGGER.info("Detected that the code is running in JUnit runtime");
         }
         return result;

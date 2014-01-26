@@ -23,7 +23,7 @@ package eionet.cr.web.action;
 
 /**
  * Web form bean that holds information about column and script.
- *
+ * 
  * @author Juhan Voolaid
  */
 public class DataLinkingScript {

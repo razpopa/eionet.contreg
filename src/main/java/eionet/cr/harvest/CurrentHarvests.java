@@ -23,9 +23,9 @@ package eionet.cr.harvest;
 import java.util.HashMap;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public final class CurrentHarvests {
 
@@ -62,7 +62,7 @@ public final class CurrentHarvests {
     }
 
     /**
-     *
+     * 
      * @param url
      * @param user
      */
@@ -74,7 +74,7 @@ public final class CurrentHarvests {
     }
 
     /**
-     *
+     * 
      * @param url
      */
     public static synchronized void removeOnDemandHarvest(String url) {
@@ -84,7 +84,7 @@ public final class CurrentHarvests {
     }
 
     /**
-     *
+     * 
      * @param url
      * @return
      */

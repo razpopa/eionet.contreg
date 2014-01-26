@@ -46,6 +46,7 @@ public class HarvestSourcesColumn extends SearchResultColumn {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.web.util.columns.SearchResultColumn#format(java.lang.Object)
      */
     @Override

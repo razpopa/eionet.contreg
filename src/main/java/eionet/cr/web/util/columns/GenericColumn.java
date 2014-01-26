@@ -27,13 +27,14 @@ import eionet.cr.web.action.HarvestSourcesActionBean;
 
 /**
  * Basic implementation of {@link SearchResultColumn}.
- *
+ * 
  * @author Aleksandr Ivanov <a href="mailto:aleksandr.ivanov@tietoenator.com">contact</a>
  */
 public class GenericColumn extends SearchResultColumn {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.web.util.columns.SearchResultColumn#format(java.lang.Object)
      */
     @Override
@@ -49,6 +50,7 @@ public class GenericColumn extends SearchResultColumn {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.web.util.columns.SearchResultColumn#getSortParamValue()
      */
     @Override

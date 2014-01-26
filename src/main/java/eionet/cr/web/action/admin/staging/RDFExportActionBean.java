@@ -48,7 +48,7 @@ import eionet.cr.web.action.factsheet.ObjectsInSourceActionBean;
 
 /**
  * Action bean meant for operations with a particular RDF export run.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/admin/rdfExport.action")
@@ -71,7 +71,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Default event handler.
-     *
+     * 
      * @return resolution
      * @throws DAOException If database access error happens when getting the export DTOs from database.
      */
@@ -88,7 +88,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Validate default handler.
-     *
+     * 
      * @return the resolution
      */
     @ValidationMethod
@@ -115,7 +115,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Retrieves the given export's log and writes it into the returned {@link StreamingResolution} of content type "text/html".
-     *
+     * 
      * @return The {@link StreamingResolution} as described.
      * @throws DAOException If database access error happens.
      */
@@ -136,7 +136,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Gets the export id.
-     *
+     * 
      * @return the exportId
      */
     public int getExportId() {
@@ -145,7 +145,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Sets the export id.
-     *
+     * 
      * @param exportId the exportId to set
      */
     public void setExportId(int exportId) {
@@ -155,7 +155,7 @@ public class RDFExportActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link ObjectsInSourceActionBean}, used in JSPs. This way the JSPs get automatically fixed, when
      * refactoring the class name.
-     *
+     * 
      * @return The class.
      */
     public Class getObjectsInSourceActionBeanClass() {
@@ -165,7 +165,7 @@ public class RDFExportActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link StagingDatabaseActionBean}, used in JSPs. This way the JSPs get automatically fixed, when
      * refactoring the class name.
-     *
+     * 
      * @return The class.
      */
     public Class getDatabaseActionBeanClass() {
@@ -174,7 +174,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Gets the export's DTO.
-     *
+     * 
      * @return the export's DTO
      */
     public ExportDTO getExportDTO() {
@@ -183,7 +183,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * Gets the query configuration dump.
-     *
+     * 
      * @return the query configuration dump
      */
     public String getQueryConfigurationDump() {
@@ -238,7 +238,7 @@ public class RDFExportActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Class getFactsheetActionBeanClass() {
@@ -247,7 +247,7 @@ public class RDFExportActionBean extends AbstractActionBean {
 
     /**
      * A lazy getter for {@link #missingConcepts}.
-     *
+     * 
      * @return
      */
     public LinkedHashMap<String, List<String>> getMissingConcepts() {

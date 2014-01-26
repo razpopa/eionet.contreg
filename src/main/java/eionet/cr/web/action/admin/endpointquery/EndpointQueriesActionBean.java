@@ -40,7 +40,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
 /**
  * Action bean for operations with a SPARQL endpoint's harvest queries.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/admin/endpointQueries.action")
@@ -62,7 +62,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
     private List<Integer> selectedIds;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -77,6 +77,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Handler for the "delete" event.
+     * 
      * @return
      * @throws DAOException
      */
@@ -92,6 +93,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Handler for the "activateDeactivate" event.
+     * 
      * @return
      * @throws DAOException
      */
@@ -107,6 +109,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Handler for the "moveUp" event.
+     * 
      * @return
      * @throws DAOException
      */
@@ -119,6 +122,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Handler for the "moveDown" event.
+     * 
      * @return
      * @throws DAOException
      */
@@ -159,7 +163,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Gets the endpoint query action bean class.
-     *
+     * 
      * @return the endpoint query action bean class
      */
     public Class getEndpointQueryActionBeanClass() {
@@ -168,7 +172,7 @@ public class EndpointQueriesActionBean extends AbstractActionBean {
 
     /**
      * Gets the harvest source action bean class.
-     *
+     * 
      * @return the harvest source action bean class
      */
     public Class getHarvestSourceActionBeanClass() {

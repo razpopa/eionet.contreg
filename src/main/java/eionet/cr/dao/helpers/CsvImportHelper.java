@@ -65,7 +65,7 @@ import eionet.cr.web.util.CharsetToolkit;
 
 /**
  * Helper methods for importing CSV file.
- *
+ * 
  * @author Juhan Voolaid
  */
 public class CsvImportHelper {
@@ -117,7 +117,7 @@ public class CsvImportHelper {
 
     /**
      * Class constructor.
-     *
+     * 
      * @param uniqueColumns
      * @param fileUri
      * @param fileLabel
@@ -128,8 +128,8 @@ public class CsvImportHelper {
      * @param attribution
      * @param source
      */
-    public CsvImportHelper(List<String> uniqueColumns, String fileUri, String fileLabel, FileType fileType,
-            String objectsType, String publisher, String license, String attribution, String source) {
+    public CsvImportHelper(List<String> uniqueColumns, String fileUri, String fileLabel, FileType fileType, String objectsType,
+            String publisher, String license, String attribution, String source) {
 
         if (uniqueColumns == null) {
             uniqueColumns = new ArrayList<String>();
@@ -167,7 +167,7 @@ public class CsvImportHelper {
 
     /**
      * Closes scv reader connection.
-     *
+     * 
      * @param csvReader
      */
     public static void close(CSVReader csvReader) {
@@ -182,7 +182,7 @@ public class CsvImportHelper {
 
     /**
      * Iserts file metadata.
-     *
+     * 
      * @param fileSize
      * @param userName
      * @throws Exception
@@ -203,7 +203,7 @@ public class CsvImportHelper {
 
     /**
      * Adds reference of the file to the given parent folder.
-     *
+     * 
      * @param folderUri
      * @param userName
      * @throws DAOException
@@ -253,7 +253,7 @@ public class CsvImportHelper {
 
     /**
      * Extracts data from csv file.
-     *
+     * 
      * @param csvReader
      * @throws IOException
      * @throws DAOException
@@ -308,7 +308,7 @@ public class CsvImportHelper {
 
     /**
      * Stores the additional meta data from wizard inputs.
-     *
+     * 
      * @throws DAOException
      * @throws RepositoryException
      * @throws IOException
@@ -357,7 +357,7 @@ public class CsvImportHelper {
 
     /**
      * Saves the selected data linking script information and stores it as source specific post harvest script.
-     *
+     * 
      * @throws DAOException
      */
     public void saveDataLinkingScripts(List<DataLinkingScript> dataLinkingScripts) throws DAOException {
@@ -383,7 +383,7 @@ public class CsvImportHelper {
 
     /**
      * Runs all the source specific scripts that are stored for the file uri.
-     *
+     * 
      * @return warning messages
      * @throws Exception
      */
@@ -417,7 +417,7 @@ public class CsvImportHelper {
 
     /**
      * Runs the script.
-     *
+     * 
      * @param scriptDto
      * @param conn
      * @return warning message
@@ -457,7 +457,7 @@ public class CsvImportHelper {
 
     /**
      * Checks if script with given uri and name already exists in database. If so, the id of the script is returned.
-     *
+     * 
      * @param scripts
      * @param uri
      * @param name
@@ -474,7 +474,7 @@ public class CsvImportHelper {
 
     /**
      * Extracts columns (with language and type) from csv file.
-     *
+     * 
      * @param csvReader
      * @return
      * @throws IOException
@@ -498,7 +498,7 @@ public class CsvImportHelper {
 
     /**
      * Extracts column labels (without language and type) from columns.
-     *
+     * 
      * @param rawColumns
      * @return
      */
@@ -516,7 +516,7 @@ public class CsvImportHelper {
 
     /**
      * Extracts object from csv row.
-     *
+     * 
      * @param line
      * @param objectsTypeUri
      * @return
@@ -572,7 +572,7 @@ public class CsvImportHelper {
 
     /**
      * Retrurns unique object id.
-     *
+     * 
      * @param line
      * @return
      */
@@ -601,7 +601,7 @@ public class CsvImportHelper {
 
     /**
      * Returns rdf object value with additional type and language definitions.
-     *
+     * 
      * @param column
      * @param value
      * @param type
@@ -665,7 +665,7 @@ public class CsvImportHelper {
 
     /**
      * Returns deliminiter based of the file type.
-     *
+     * 
      * @return
      */
     private char getDelimiter() {

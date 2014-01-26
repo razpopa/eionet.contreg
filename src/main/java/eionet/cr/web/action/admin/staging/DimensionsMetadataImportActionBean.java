@@ -37,7 +37,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
 /**
  * A utility bean for importing the metadata of Scoreboard dimensions from a given staging database.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/admin/dimImport.action")
@@ -56,7 +56,7 @@ public class DimensionsMetadataImportActionBean extends AbstractActionBean {
     private Dimension dimension;
 
     /**
-     *
+     * 
      * @return
      */
     @DefaultHandler
@@ -76,7 +76,6 @@ public class DimensionsMetadataImportActionBean extends AbstractActionBean {
      *
      */
     private void execute() {
-
 
     }
 
@@ -102,7 +101,6 @@ public class DimensionsMetadataImportActionBean extends AbstractActionBean {
 
         getContext().setSourcePageResolution(new ForwardResolution(JSP));
     }
-
 
     /**
      * Validates the the user is authorised for any operations on this action bean. If user not authorised, redirects to the
@@ -147,13 +145,12 @@ public class DimensionsMetadataImportActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Dimension[] getDimensions() {
         return Dimension.values();
     }
-
 
     /**
      * @return the query
@@ -161,7 +158,6 @@ public class DimensionsMetadataImportActionBean extends AbstractActionBean {
     public String getQuery() {
         return query;
     }
-
 
     /**
      * @param query the query to set

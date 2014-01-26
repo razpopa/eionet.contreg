@@ -53,7 +53,7 @@ import eionet.cr.util.xml.ConversionsParser;
 import eionet.cr.util.xml.XmlAnalysis;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class FileToRdfProcessor {
@@ -73,7 +73,7 @@ public class FileToRdfProcessor {
     private RDFFormat rdfFormat;
 
     /**
-     *
+     * 
      * @param file
      * @param contextUrl
      */
@@ -88,7 +88,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     *
+     * 
      * @param messageObject
      * @return
      */
@@ -97,7 +97,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     *
+     * 
      * @return file if type was known and detected otherwise null
      * @throws IOException
      *             if error at I/O level
@@ -141,8 +141,7 @@ public class FileToRdfProcessor {
                         rdfFormat = RDFFormat.RDFXML;
                     }
                 }
-            }
-            else{
+            } else {
                 // The file wasn't XML, so see if it is any of the supported RDF formats.
                 FileRdfFormatDetector rdfFormatDetector = new FileRdfFormatDetector();
                 rdfFormat = rdfFormatDetector.detect(unzippedFile, contextUrl);
@@ -170,8 +169,8 @@ public class FileToRdfProcessor {
             // then delete the latter, as it won't be used outside of this method any more
             // (this includes the case where the result is null)
 
-            //if file = unzippedFile (in case it could not be unzipped) it is deleted in the calling method
-            //will be excluded here to prevent local non-RDF (binary) files to be deleted
+            // if file = unzippedFile (in case it could not be unzipped) it is deleted in the calling method
+            // will be excluded here to prevent local non-RDF (binary) files to be deleted
             if (resultFile != unzippedFile && file != unzippedFile) {
                 FileDeletionJob.register(unzippedFile);
             }
@@ -179,7 +178,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     *
+     * 
      * @param file
      * @return
      */
@@ -190,7 +189,7 @@ public class FileToRdfProcessor {
         FileInputStream fis = null;
 
         try {
-            //closing GZIPInputStream does not seem to close the given InputStream
+            // closing GZIPInputStream does not seem to close the given InputStream
             fis = new FileInputStream(file);
             inputStream = new GZIPInputStream(fis);
             File unzippedFile = new File(file.getAbsolutePath() + ".unzipped");
@@ -208,7 +207,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     *
+     * 
      * @param file
      * @return
      * @throws IOException
@@ -242,7 +241,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     *
+     * 
      * @param conversionSchema
      * @return
      * @throws SAXException
@@ -299,7 +298,7 @@ public class FileToRdfProcessor {
 
     /**
      * Returns the {@link RDFFormat} of the analysed and/or converted file.
-     *
+     * 
      * @return RDF
      */
     public RDFFormat getRdfFormat() {

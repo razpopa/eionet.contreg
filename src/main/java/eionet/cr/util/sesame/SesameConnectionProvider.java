@@ -21,9 +21,9 @@ import eionet.cr.common.CRRuntimeException;
 import eionet.cr.config.GeneralConfig;
 
 /**
- *
+ * 
  * @author jaanus
- *
+ * 
  */
 public final class SesameConnectionProvider {
 
@@ -86,7 +86,7 @@ public final class SesameConnectionProvider {
     }
 
     /**
-     *
+     * 
      * @param url
      * @param usr
      * @param pwd
@@ -131,7 +131,7 @@ public final class SesameConnectionProvider {
     }
 
     /**
-     *
+     * 
      * @param dataSourceName
      * @return
      */
@@ -148,7 +148,7 @@ public final class SesameConnectionProvider {
 
     /**
      * Returns read-write connection to the repository.
-     *
+     * 
      * @return RepositoryConnection
      * @throws RepositoryException
      */
@@ -174,7 +174,7 @@ public final class SesameConnectionProvider {
 
     /**
      * Returns read-only connection to the repository.
-     *
+     * 
      * @return RepositoryConnection connection
      * @throws RepositoryException
      */
@@ -202,7 +202,7 @@ public final class SesameConnectionProvider {
      * Returns a {@link java.sql.Connection} to the underlying repository. Uses a {@link javax.sql.DataSource} with name
      * {@link #READWRITE_DATASOURCE_NAME} if such can be found. Otherwise creates a direct connection using the "classical" way
      * through {@link java.sql.DriverManager}.
-     *
+     * 
      * @return Connection
      * @throws SQLException
      */
@@ -271,7 +271,6 @@ public final class SesameConnectionProvider {
             throw new CRRuntimeException("Failed to get connection, driver class not found: " + drv, e);
         }
     }
-
 
     /**
      * @return the readWriteDataSourceMissingLogged

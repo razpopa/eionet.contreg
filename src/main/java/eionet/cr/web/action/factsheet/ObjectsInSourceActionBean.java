@@ -29,9 +29,9 @@ import eionet.cr.web.util.tabs.TabElement;
 import eionet.cr.web.util.tabs.TabId;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaak.kapten@tieto.com">Jaak Kapten</a>
- *
+ * 
  */
 @UrlBinding("/objectsInSource.action")
 public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectDTO> {
@@ -52,7 +52,7 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
     private String factsheetUri;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -63,7 +63,7 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     public Resolution search() throws DAOException {
@@ -73,8 +73,8 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
                     DAOFactory
                             .get()
                             .getDao(SearchDAO.class)
-                            .searchBySource(uri, skipAnonymous,
-                                    PagingRequest.create(getPageN()), new SortingRequest(getSortP(), SortOrder.parse(getSortO())));
+                            .searchBySource(uri, skipAnonymous, PagingRequest.create(getPageN()),
+                                    new SortingRequest(getSortP(), SortOrder.parse(getSortO())));
 
             resultList = result.getRight();
             matchCount = result.getLeft();
@@ -94,7 +94,7 @@ public class ObjectsInSourceActionBean extends AbstractSearchActionBean<SubjectD
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
     public List<SearchResultColumn> getColumns() {

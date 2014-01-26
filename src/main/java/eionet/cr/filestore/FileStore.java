@@ -22,9 +22,9 @@ import eionet.cr.util.FolderUtil;
 import eionet.cr.web.security.CRUser;
 
 /**
- *
+ * 
  * @author jaanus
- *
+ * 
  */
 public final class FileStore {
 
@@ -40,7 +40,7 @@ public final class FileStore {
     private final File userDir;
 
     /**
-     *
+     * 
      * @param userName
      */
     private FileStore(String userName) {
@@ -53,7 +53,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param userName
      * @return FileStore
      */
@@ -62,7 +62,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param filePath
      *            file folder path with file name
      * @param overwrite
@@ -85,7 +85,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param filePath
      * @param overwrite
      * @param fileBean
@@ -100,7 +100,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param fileName
      * @param overwrite
      * @param reader
@@ -123,7 +123,7 @@ public final class FileStore {
 
     /**
      * Returns file object of the uploaded file in the file system.
-     *
+     * 
      * @param filePath
      *            file folder path with file name
      * @param overwrite
@@ -157,7 +157,7 @@ public final class FileStore {
         File path = new File(dir, fileName);
         if (path.exists() && path.isFile()) {
 
-            if (overwrite == false) {
+            if (!overwrite) {
                 throw new FileAlreadyExistsException("File already exists: " + path);
             } else {
                 path.delete();
@@ -168,7 +168,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param filePath
      */
     public void delete(String filePath) {
@@ -181,7 +181,7 @@ public final class FileStore {
 
     /**
      * True, if folder is deleted.
-     *
+     * 
      * @param folderPath
      * @return
      */
@@ -191,7 +191,7 @@ public final class FileStore {
 
     /**
      * True, if folder is deleted.
-     *
+     * 
      * @param folderPath
      * @param cleanFolderFirst
      *            - removes all files from folder before deleting it
@@ -215,7 +215,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param renamings
      */
     public void rename(Map<String, String> renamings) {
@@ -242,11 +242,11 @@ public final class FileStore {
 
     /**
      * Gets file by the relative path given. Relative means relative to the user's file-store directory.
-     *
+     * 
      * If no such file found, return null. Otherwise returns {@link File} reference to the found file.
-     *
+     * 
      * If the given relative path is blank, return null.
-     *
+     * 
      * @param relativePath
      * @return File
      */
@@ -265,7 +265,7 @@ public final class FileStore {
     }
 
     /**
-     *
+     * 
      * @param uriString
      * @return File
      */
@@ -305,7 +305,7 @@ public final class FileStore {
 
     /**
      * Checks if the resource is in local filestore.
-     *
+     * 
      * @param uriString
      *            given URI
      * @return true if a filestore uri. Does not check if file really exists
@@ -316,7 +316,7 @@ public final class FileStore {
 
     /**
      * Checks if the resource is in local filestore and is folder.
-     *
+     * 
      * @param uriString
      *            given URI
      * @return true if a filestore folder uri. Checks if file really exists

@@ -95,7 +95,7 @@ import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.xml.ConversionsParser;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class PullHarvest extends BaseHarvest {
@@ -130,7 +130,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param contextSourceDTO
      * @throws DAOException
      */
@@ -138,11 +138,9 @@ public class PullHarvest extends BaseHarvest {
         super(contextSourceDTO);
     }
 
-
-
     /**
      * Harvests file already uploaded to a CR folder and residing in the filestore.
-     *
+     * 
      * @throws HarvestException
      *             if harvest fails
      */
@@ -218,7 +216,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @throws HarvestException
      */
     private void doEndpointHarvest() throws HarvestException {
@@ -307,7 +305,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private EndpointHttpClient prepareEndpointHttpClient() {
@@ -336,7 +334,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Harvests external source.
-     *
+     * 
      * @throws HarvestException
      *             if harvest fails
      */
@@ -396,7 +394,7 @@ public class PullHarvest extends BaseHarvest {
 
                     // treat this as a redirection only if the context URL and the redirected-to-URL
                     // are not essentially the same
-                    if (URLUtil.equalUrls(getContextUrl(), redirectedToUrl) == false) {
+                    if (!URLUtil.equalUrls(getContextUrl(), redirectedToUrl)) {
 
                         finishRedirectedHarvest(redirectedToUrl, httpResponseCode);
 
@@ -407,7 +405,7 @@ public class PullHarvest extends BaseHarvest {
                     }
 
                     connectUrl = redirectedToUrl;
-                    //Close redirected URL connection
+                    // Close redirected URL connection
                     URLUtil.disconnect(urlConn);
                 }
             } while (isRedirect(httpResponseCode));
@@ -453,7 +451,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.harvest.BaseHarvest#doHarvest()
      */
     @Override
@@ -472,7 +470,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param urlConn
      * @param noOfTriples
      */
@@ -493,7 +491,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param urlConn
      * @param noOfTriples
      */
@@ -538,7 +536,7 @@ public class PullHarvest extends BaseHarvest {
         if (isPermanentError(responseCode)) {
 
             setCleanAllPreviousSourceMetadata(true);
-            if (!getContextSourceDTO().isPrioritySource()){
+            if (!getContextSourceDTO().isPrioritySource()) {
                 try {
                     getHarvestSourceDAO().clearGraph(getContextUrl());
                     noOfStatements = 0;
@@ -582,7 +580,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Marks redirected sources with error markers.
-     *
+     * 
      * @param lastHarvest
      *            last harvest time
      * @param responseCode
@@ -598,7 +596,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Stores error in HarvestSource DTO.
-     *
+     * 
      * @param harvestSourceDTO
      *            / source DTO object
      */
@@ -619,7 +617,7 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Returns the {@link Date} to which the source's last harvest time should be set in case of temporary harvest error. It should
      * be set to "now - harvest_interval + max(harvest_interval*0,1, 120 min)". The "now" is given as method input.
-     *
+     * 
      * @param now As indicated above.
      * @return The calculated last harvest date as indicated above.
      */
@@ -642,7 +640,7 @@ public class PullHarvest extends BaseHarvest {
 
         // Just make it 100% sure that the calculated time will not be after now, though the business logic should exclude it.
         Date resultingTime = cal.getTime();
-        if (resultingTime.after(now)){
+        if (resultingTime.after(now)) {
             resultingTime = now;
         }
 
@@ -650,7 +648,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param urlConn
      * @param responseCode
      * @param exception
@@ -714,11 +712,11 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Download and process content. If response content type is one of RDF, then proceed straight to loading. Otherwise process the
      * file to see if it's zipped, it's an XML with RDF conversion, or actually an RDF file.
-     *
+     * 
      * @param urlConn
      *            - connection to the remote source.
      * @return number of triples harvested.
-     *
+     * 
      * @throws IOException
      * @throws DAOException
      * @throws SAXException
@@ -728,7 +726,7 @@ public class PullHarvest extends BaseHarvest {
      *             if RDF parsing fails while analyzing file with unknown format
      */
     private int downloadAndProcessContent(HttpURLConnection urlConn) throws IOException, DAOException, SAXException,
-    RDFHandlerException, RDFParseException {
+            RDFHandlerException, RDFParseException {
 
         File downloadedFile = null;
         try {
@@ -770,7 +768,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param redirectedToUrl
      * @param responseCode
      *            HTTP Code from the redirected URL
@@ -826,7 +824,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param sourceDTO
      * @param redirectionSeen
      * @param redirectedToUrl
@@ -855,11 +853,10 @@ public class PullHarvest extends BaseHarvest {
         return subjectDTO;
     }
 
-
     /**
      * Download file from remote source to a temporary file locally. Side effect: adds the file size to the metadata to save in the
      * harvester context.
-     *
+     * 
      * @param urlConn
      *            - connection to the remote source.
      * @return object representing the temporary file.
@@ -895,7 +892,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param connectUrl
      * @return
      * @throws IOException
@@ -904,7 +901,7 @@ public class PullHarvest extends BaseHarvest {
      * @throws ParserConfigurationException
      */
     private HttpURLConnection openUrlConnection(String connectUrl) throws IOException, DAOException, SAXException,
-    ParserConfigurationException {
+            ParserConfigurationException {
 
         String sanitizedUrl = StringUtils.substringBefore(connectUrl, "#");
         sanitizedUrl = StringUtils.replace(sanitizedUrl, " ", "%20");
@@ -936,7 +933,7 @@ public class PullHarvest extends BaseHarvest {
                 // Check if post-harvest scripts are updated
                 boolean scriptsModified =
                         DAOFactory.get().getDao(PostHarvestScriptDAO.class)
-                        .isScriptsModified(lastHarvestDate, getContextSourceDTO().getUrl());
+                                .isScriptsModified(lastHarvestDate, getContextSourceDTO().getUrl());
 
                 // "If-Modified-Since" should only be set if there is no modified conversion or post-harvest scripts for this URL.
                 // Because if there is a conversion stylesheet or post-harvest scripts, and any of them has been modified since last
@@ -953,7 +950,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param connection
      * @return
      * @throws MalformedURLException
@@ -965,7 +962,7 @@ public class PullHarvest extends BaseHarvest {
             try {
                 // If location does not seem to be an absolute URI, consider it relative to the
                 // URL of this URL connection.
-                if (new URI(location).isAbsolute() == false) {
+                if (!(new URI(location).isAbsolute())) {
                     location = new URL(connection.getURL(), location).toString();
                 }
             } catch (URISyntaxException e) {
@@ -980,7 +977,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param harvestSourceUrl
      * @return
      * @throws DAOException
@@ -989,7 +986,7 @@ public class PullHarvest extends BaseHarvest {
      * @throws IOException
      */
     private String getConversionStylesheetUrl(String harvestSourceUrl) throws DAOException, IOException, SAXException,
-    ParserConfigurationException {
+            ParserConfigurationException {
 
         String result = null;
 
@@ -1009,7 +1006,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Returns RDF format from url connection.
-     *
+     * 
      * @param contentType
      * @return
      */
@@ -1039,9 +1036,8 @@ public class PullHarvest extends BaseHarvest {
         return RDFMediaTypes.toRdfFormat(contentType);
     }
 
-
     /**
-     *
+     * 
      * @param urlConn
      * @return
      */
@@ -1056,7 +1052,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param urlConn
      * @return
      */
@@ -1078,7 +1074,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     *
+     * 
      * @param urlConn
      * @throws ContentTooLongException
      */
@@ -1095,7 +1091,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.harvest.BaseHarvest#getHarvestType()
      */
     @Override
@@ -1113,7 +1109,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.harvest.BaseHarvest#isSendNotifications()
      */
     @Override
@@ -1126,19 +1122,19 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.harvest.BaseHarvest#isBeingHarvested(java.lang.String)
      */
     @Override
     public boolean isBeingHarvested(String url) {
 
-        boolean result = super.isBeingHarvested(url);
-        return result == true ? result : redirectedUrls.contains(url);
+        boolean isBeingHarvested = super.isBeingHarvested(url);
+        return isBeingHarvested ? isBeingHarvested : redirectedUrls.contains(url);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.harvest.BaseHarvest#afterFinish()
      */
     @Override

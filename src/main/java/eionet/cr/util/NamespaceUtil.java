@@ -14,7 +14,7 @@ public final class NamespaceUtil {
     }
 
     /**
-     *
+     * 
      * @param url
      * @return
      */
@@ -32,7 +32,7 @@ public final class NamespaceUtil {
     }
 
     /**
-     *
+     * 
      * @param url
      * @return
      */
@@ -49,7 +49,7 @@ public final class NamespaceUtil {
     }
 
     /**
-     *
+     * 
      * @param url
      * @param prefix
      */
@@ -58,7 +58,7 @@ public final class NamespaceUtil {
     }
 
     /**
-     *
+     * 
      * @param namespace
      * @return
      */

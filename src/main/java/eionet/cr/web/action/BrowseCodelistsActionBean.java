@@ -36,7 +36,7 @@ import eionet.cr.web.action.factsheet.FactsheetActionBean;
 
 /**
  * An action bean for browsing codelists starting with a particular URI prefix.
- *
+ * 
  * @author jaanus
  */
 @UrlBinding("/codelists")
@@ -61,7 +61,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     private String codelistUri;
 
     /**
-     *
+     * 
      * @return
      */
     @DefaultHandler
@@ -93,7 +93,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution metadata() {
@@ -106,7 +106,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Resolution export() {
@@ -188,7 +188,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param file
      * @param targetName
      * @return
@@ -199,6 +199,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
 
             /*
              * (non-Javadoc)
+             * 
              * @see net.sourceforge.stripes.action.StreamingResolution#stream(javax.servlet.http.HttpServletResponse)
              */
             @Override
@@ -249,7 +250,7 @@ public class BrowseCodelistsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Class getFactsheetActionBeanClass() {

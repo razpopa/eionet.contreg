@@ -22,7 +22,19 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import eionet.cr.util.Pair;
 import eionet.cr.util.sesame.SesameUtil;
 
+/**
+ * Utility class for operations with Jena API.
+ *
+ * @author Jaanus
+ */
 public class JenaUtil {
+
+    /**
+     * Disable utility class constructor.
+     */
+    private JenaUtil() {
+        // Empty constructor.
+    }
 
     /**
      *
@@ -82,7 +94,7 @@ public class JenaUtil {
                 Value sesameObject = null;
 
                 if (jenaObject.isLiteral()) {
-                    ;
+
                     Literal jenaLiteral = jenaObject.asLiteral();
                     String language = jenaLiteral.getLanguage();
                     if (StringUtils.isNotBlank(language)) {

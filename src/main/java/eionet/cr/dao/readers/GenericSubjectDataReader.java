@@ -44,9 +44,9 @@ import eionet.cr.web.util.WebConstants;
 
 /**
  * Implementation of {@link SubjectDataReader} that reads <b>all</b> predicates of the queried subjects.
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public class GenericSubjectDataReader extends SubjectDataReader {
 
@@ -61,7 +61,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
 
     /**
      * Constructs by calling {@link SubjectDataReader#SubjectDataReader(List)}.
-     *
+     * 
      * @param subjectUris See above comment.
      */
     public GenericSubjectDataReader(List<String> subjectUris) {
@@ -70,7 +70,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override
@@ -108,7 +108,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -177,7 +177,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.readers.SubjectDataReader#getQuery(eionet.cr.util.Bindings)
      */
     @Override
@@ -189,7 +189,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
         // to prevent VirtuosoException: SR319: Max row length * exceeded exception
         String query =
                 "select ?s ?p bif:either(isLiteral(?obj), bif:substring(str(?obj), 1, " + WebConstants.MAX_OBJECT_LENGTH
-                + "), ?obj) as ?o where {?s ?p ?obj. filter (?s IN (" + commaSeparatedSubjects + ")) ";
+                        + "), ?obj) as ?o where {?s ?p ?obj. filter (?s IN (" + commaSeparatedSubjects + ")) ";
 
         query += "} ORDER BY ?s ?p";
         return query;
@@ -197,7 +197,7 @@ public class GenericSubjectDataReader extends SubjectDataReader {
 
     /**
      * Utility method called upon getting to a new subject in the result list (ordered by subject and predicate).
-     *
+     * 
      * @param subjectHash
      * @param subjectDTO
      */

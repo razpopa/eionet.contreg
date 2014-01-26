@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  *
  * @author jaanus
  */
-public class LogUtil {
+public final class LogUtil {
 
     /**
      * Hide constructor of utility class.

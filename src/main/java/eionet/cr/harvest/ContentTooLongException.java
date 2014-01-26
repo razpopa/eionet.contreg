@@ -22,7 +22,7 @@
 package eionet.cr.harvest;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class ContentTooLongException extends HarvestException {
@@ -35,7 +35,7 @@ public class ContentTooLongException extends HarvestException {
     }
 
     /**
-     *
+     * 
      * @param message
      */
     public ContentTooLongException(String message) {

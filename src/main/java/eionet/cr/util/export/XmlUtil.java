@@ -4,9 +4,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- *
+ * 
  * Utility class helping in the generation of the Excel files.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public final class XmlUtil {
@@ -23,7 +23,7 @@ public final class XmlUtil {
 
     /**
      * write xml element start tag, data and end tag into XmlStreamWriter
-     *
+     * 
      * @param writer
      * @param element
      * @param value
@@ -38,7 +38,7 @@ public final class XmlUtil {
     /**
      * Escape invalid characters that are not allowed in XML element names if the name is not still valid, then replace it with
      * INVALID_ELEMENT_NAME
-     *
+     * 
      */
     public static String getEscapedElementName(String elementName) {
 

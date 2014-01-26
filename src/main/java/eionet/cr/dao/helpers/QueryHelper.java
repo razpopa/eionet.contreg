@@ -91,7 +91,7 @@ public final class QueryHelper {
         query = StringUtils.replace(query, "}", "\n}");
         query = StringUtils.replace(query, " .", ".\n");
 
-        String lines[] = query.split("\n");
+        String[] lines = query.split("\n");
         StringBuilder result = new StringBuilder();
         int spaces = 0;
         for (String line : lines) {

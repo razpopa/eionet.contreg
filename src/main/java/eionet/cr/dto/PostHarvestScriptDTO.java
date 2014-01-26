@@ -24,7 +24,7 @@ package eionet.cr.dto;
 import java.util.Date;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class PostHarvestScriptDTO {
@@ -175,6 +175,5 @@ public class PostHarvestScriptDTO {
     public String toString() {
         return title;
     }
-
 
 }

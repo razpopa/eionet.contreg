@@ -49,8 +49,8 @@ import org.openrdf.rio.turtle.TurtleParserFactory;
 
 /**
  * Detects the {@link RDFFormat} of a given file.
- *
- *
+ * 
+ * 
  * @author jaanus
  */
 public class FileRdfFormatDetector {
@@ -60,7 +60,7 @@ public class FileRdfFormatDetector {
 
     /** RDF format parser factories used in this class. */
     private static final RDFParserFactory[] PARSER_FACTORIES = {new RDFXMLParserFactory(), new TurtleParserFactory(),
-        new N3ParserFactory()};
+            new N3ParserFactory()};
 
     /** Parsing exceptions for each parsed format. Using linked hash-map, so the iterator will be in parsing formats order. */
     private Map<RDFFormat, Exception> parsingExceptions = new LinkedHashMap<RDFFormat, Exception>();
@@ -68,10 +68,10 @@ public class FileRdfFormatDetector {
     /**
      * Detects the {@link RDFFormat} of the given file, in the content of the given base URI. If null returned, no RDF format was
      * detected.
-     *
+     * 
      * For each RDF format that the file was parsed for, the received parsing exceptions shall be available from
      * {@link #getParsingExceptions()}.
-     *
+     * 
      * @param inputStream
      * @param baseUri
      * @return
@@ -89,7 +89,7 @@ public class FileRdfFormatDetector {
                 RDFParserFactory parserFactory = PARSER_FACTORIES[i];
 
                 boolean success = parse(inputStream, baseUri, parserFactory);
-                if (success == true) {
+                if (success) {
                     result = parserFactory.getRDFFormat();
                     break;
                 }
@@ -103,7 +103,7 @@ public class FileRdfFormatDetector {
 
     /**
      * Returns true if the given input stream is a valid notation of the RDF format whose parser-factory has been supplied.
-     *
+     * 
      * @param inputStream
      *            - the input stream in question
      * @param baseUri
@@ -148,7 +148,7 @@ public class FileRdfFormatDetector {
 
     /**
      * Returns a map of parsing exception that were encountered for each RDF format.
-     *
+     * 
      * @return
      */
     public Map<RDFFormat, Exception> getParsingExceptions() {
@@ -159,7 +159,7 @@ public class FileRdfFormatDetector {
      * An extension of {@link RDFHandlerBase} whose only purpose is to help detect whether the parsed content is valid RDF notation.
      * If by 100th statement there have been no {@link RDFParseException} thrown, it throws a dummy {@link RDFHandlerException} to
      * abort any further processing. Callers must interpret this exception as "parsed content is valid RDF notation".
-     *
+     * 
      * @author jaanus
      */
     class Handler extends RDFHandlerBase {
@@ -169,6 +169,7 @@ public class FileRdfFormatDetector {
 
         /*
          * (non-Javadoc)
+         * 
          * @see org.openrdf.rio.helpers.RDFHandlerBase#handleStatement(org.openrdf.model.Statement)
          */
         @Override

@@ -32,7 +32,7 @@ import eionet.cr.dto.UploadDTO;
 
 /**
  * Sitemap xml writer.
- *
+ * 
  * @author Juhan Voolaid
  */
 public class SitemapXmlWriter {
@@ -56,8 +56,9 @@ public class SitemapXmlWriter {
     private XMLStreamWriter writer = null;
 
     /**
-     *
+     * 
      * Class constructor.
+     * 
      * @param out
      * @throws XMLStreamException
      */
@@ -67,7 +68,7 @@ public class SitemapXmlWriter {
 
     /**
      * Writes sitemap xml into stream based of the uploads data.
-     *
+     * 
      * @param uploads
      * @throws XMLStreamException
      */

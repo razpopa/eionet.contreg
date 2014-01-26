@@ -24,7 +24,7 @@ import eionet.cr.util.sesame.SesameUtil;
 
 /**
  * @author Risto Alt
- *
+ * 
  */
 public class InferencingTest {
 
@@ -48,12 +48,12 @@ public class InferencingTest {
     public void testInverseOf() throws Exception {
         RepositoryConnection con = null;
 
-        //run this test only if inversion is turned on
-        if (GeneralConfig.isUseInferencing()){
+        // run this test only if inversion is turned on
+        if (GeneralConfig.isUseInferencing()) {
             String query =
-                SPARQLQueryUtil.getCrInferenceDefinitionStr() + " PREFIX test: <http://test.com/test/test-schema.rdf#>"
-                + " SELECT ?s" + " FROM <http://test.com/test/persons.rdf>" + " WHERE" + "{"
-                + "?s test:hasParent <http://test.com/test/person/1>" + "}";
+                    SPARQLQueryUtil.getCrInferenceDefinitionStr() + " PREFIX test: <http://test.com/test/test-schema.rdf#>"
+                            + " SELECT ?s" + " FROM <http://test.com/test/persons.rdf>" + " WHERE" + "{"
+                            + "?s test:hasParent <http://test.com/test/person/1>" + "}";
             try {
                 con = SesameConnectionProvider.getRepositoryConnection();
                 TupleQuery resultsTable = con.prepareTupleQuery(QueryLanguage.SPARQL, query);

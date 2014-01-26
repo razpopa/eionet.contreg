@@ -35,7 +35,7 @@ import eionet.cr.dto.ScriptTemplateDTO;
 
 /**
  * Script template DAO implementation.
- *
+ * 
  * @author Juhan Voolaid
  */
 public class ScriptTemplateDaoImpl implements ScriptTemplateDAO {

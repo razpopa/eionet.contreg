@@ -42,7 +42,7 @@ import eionet.cr.web.action.BrowseCodelistsActionBean;
 
 /**
  * Helper for creating factsheet tab menu.
- *
+ * 
  * @author Juhan Voolaid
  */
 public final class FactsheetTabMenuHelper {
@@ -76,9 +76,9 @@ public final class FactsheetTabMenuHelper {
     private HashSet<String> rdfTypes = new HashSet<String>();
 
     /**
-     *
+     * 
      * Class constructor.
-     *
+     * 
      * @param uri
      * @param subject
      * @param harvesterSourceDao
@@ -117,7 +117,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     *
+     * 
      * @param selectedTab
      * @return
      */
@@ -153,7 +153,7 @@ public final class FactsheetTabMenuHelper {
 
     /**
      * Returns the list of tab objects without a selected tab.
-     *
+     * 
      * @return
      */
     public List<TabElement> getTypeSpecificTabs() {
@@ -161,7 +161,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     *
+     * 
      * @param selectedTab
      * @return
      */
@@ -279,13 +279,11 @@ public final class FactsheetTabMenuHelper {
             tabTitle = "Dataset contents";
             factsheetUri = graphUri;
             graphUri = StringUtils.replace(graphUri, "/dataset/", "/data/");
-        }
-        else if (isScoreboardCodelist()) {
+        } else if (isScoreboardCodelist()) {
             tabTitle = "Codelist members";
             factsheetUri = graphUri;
             graphUri = graphUri + "/";
-        }
-        else {
+        } else {
             tabTitle = uriIsHarvestSource ? TabId.OBJECTS_IN_SOURCE.getTitle() : "Graph contents";
         }
 
@@ -307,7 +305,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private boolean isScoreboardCodelist() {
@@ -316,7 +314,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private String getTypeLabel() {
@@ -331,7 +329,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private static Map<String, String> createLabelledTypes() {

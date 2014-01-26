@@ -55,9 +55,9 @@ import eionet.cr.web.util.tabs.TabElement;
 import eionet.cr.web.util.tabs.TabId;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 @UrlBinding("/references.action")
 public class ReferencesActionBean extends AbstractSearchActionBean<SubjectDTO> {
@@ -82,7 +82,7 @@ public class ReferencesActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     public Resolution search() throws DAOException {
@@ -130,7 +130,7 @@ public class ReferencesActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
     public List<SearchResultColumn> getColumns() throws DAOException {
@@ -209,7 +209,7 @@ public class ReferencesActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isUriResolvable() {

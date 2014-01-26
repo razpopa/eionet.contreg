@@ -31,7 +31,7 @@ import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
  * SQL result set reader for objects of type {@link ExportDTO}.
- *
+ * 
  * @author jaanus
  */
 public class ExportDTOReader extends SQLResultSetBaseReader<ExportDTO> {
@@ -41,7 +41,7 @@ public class ExportDTOReader extends SQLResultSetBaseReader<ExportDTO> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

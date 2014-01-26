@@ -28,7 +28,7 @@ import org.openrdf.model.ValueFactory;
 // TODO: Auto-generated Javadoc
 /**
  * An RDF property's metadata bean. Will be mapped to selected SQL columns at SQL-result-set-to-RDF export-
- *
+ * 
  * @author jaanus
  */
 public class ObjectProperty {
@@ -59,7 +59,7 @@ public class ObjectProperty {
 
     /**
      * Class constructor.
-     *
+     * 
      * @param predicate The property's underlying predicate.
      * @param id The property's alpha-numeric ID for internal use.
      * @param label The property's label as it should be displayed to the users of staging databases functionality.
@@ -79,7 +79,7 @@ public class ObjectProperty {
 
     /**
      * Gets the predicate.
-     *
+     * 
      * @return the predicate
      */
     public String getPredicate() {
@@ -88,7 +88,7 @@ public class ObjectProperty {
 
     /**
      * Gets the range.
-     *
+     * 
      * @return the range
      */
     public Range getRange() {
@@ -97,7 +97,7 @@ public class ObjectProperty {
 
     /**
      * Gets the value template.
-     *
+     * 
      * @return the valueTemplate
      */
     public String getValueTemplate() {
@@ -106,7 +106,7 @@ public class ObjectProperty {
 
     /**
      * Sets the value template.
-     *
+     * 
      * @param valueTemplate the valueTemplate to set
      */
     public void setValueTemplate(String valueTemplate) {
@@ -115,7 +115,7 @@ public class ObjectProperty {
 
     /**
      * Gets the data type.
-     *
+     * 
      * @return the dataType
      */
     public String getDataType() {
@@ -124,7 +124,7 @@ public class ObjectProperty {
 
     /**
      * Sets the data type.
-     *
+     * 
      * @param dataType the dataType to set
      */
     public void setDataType(String dataType) {
@@ -133,7 +133,7 @@ public class ObjectProperty {
 
     /**
      * Returns true if the property's values are resources.
-     *
+     * 
      * @return As said above.
      */
     public boolean isResourceRange() {
@@ -142,7 +142,7 @@ public class ObjectProperty {
 
     /**
      * Returns true if the property's values are literals.
-     *
+     * 
      * @return As said above.
      */
     public boolean isLiteralRange() {
@@ -151,7 +151,7 @@ public class ObjectProperty {
 
     /**
      * Gets the label.
-     *
+     * 
      * @return the label
      */
     public String getLabel() {
@@ -160,7 +160,7 @@ public class ObjectProperty {
 
     /**
      * Getter for {@link #predicateURI}.
-     *
+     * 
      * @return {@link #predicateURI}
      */
     protected URI getPredicateURI() {
@@ -169,7 +169,7 @@ public class ObjectProperty {
 
     /**
      * Sets {@link #predicateURI} for the {@link #predicate}, using the given {@link ValueFactory}.
-     *
+     * 
      * @param vf the new predicate uri
      */
     protected void setPredicateURI(ValueFactory vf) {
@@ -178,7 +178,7 @@ public class ObjectProperty {
 
     /**
      * Gets the hint.
-     *
+     * 
      * @return the hint
      */
     public String getHint() {
@@ -187,7 +187,7 @@ public class ObjectProperty {
 
     /**
      * Sets the hint.
-     *
+     * 
      * @param hint the hint to set
      */
     public void setHint(String hint) {
@@ -196,7 +196,7 @@ public class ObjectProperty {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -206,7 +206,7 @@ public class ObjectProperty {
 
     /**
      * Enumeration for indicating the value range of a given RDF property.
-     *
+     * 
      * @author jaanus
      */
     public static enum Range {
@@ -219,7 +219,7 @@ public class ObjectProperty {
 
         /**
          * Constructor, allowing a friendly name.
-         *
+         * 
          * @param friendlyName The friendly name.
          */
         private Range(String friendlyName) {
@@ -228,7 +228,7 @@ public class ObjectProperty {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see java.lang.Enum#toString()
          */
         @Override

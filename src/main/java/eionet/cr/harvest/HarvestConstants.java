@@ -28,9 +28,8 @@ package eionet.cr.harvest;
 public interface HarvestConstants {
 
     /** */
-    static final String STATUS_STARTED = "started";
-    static final String STATUS_FINISHED = "finished";
-    static final String TYPE_PULL = "pull";
-    static final String TYPE_PUSH = "push";
-
+    String STATUS_STARTED = "started";
+    String STATUS_FINISHED = "finished";
+    String TYPE_PULL = "pull";
+    String TYPE_PUSH = "push";
 }

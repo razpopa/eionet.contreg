@@ -6,19 +6,16 @@ import org.apache.commons.lang.WordUtils;
 import eionet.cr.common.Predicates;
 
 /**
- *
+ * 
  * Type definition ...
- *
+ * 
  * @author jaanus
  */
 public enum ObservationFilter {
 
-    DATASET(Predicates.DATACUBE_DATA_SET, "Dataset"),
-    INDICATOR(Predicates.DAS_INDICATOR, "Indicator", false),
-    TIME_PERIOD(Predicates.DAS_TIMEPERIOD, "Time period", false),
-    BREAKDOWN(Predicates.DAS_BREAKDOWN, "Breakdown", false),
-    UNIT_MEASURE(Predicates.DAS_UNITMEASURE, "Unit", false),
-    REF_AREA(Predicates.DAS_REFAREA, "Ref. area", true);
+    DATASET(Predicates.DATACUBE_DATA_SET, "Dataset"), INDICATOR(Predicates.DAS_INDICATOR, "Indicator", false), TIME_PERIOD(
+            Predicates.DAS_TIMEPERIOD, "Time period", false), BREAKDOWN(Predicates.DAS_BREAKDOWN, "Breakdown", false),
+    UNIT_MEASURE(Predicates.DAS_UNITMEASURE, "Unit", false), REF_AREA(Predicates.DAS_REFAREA, "Ref. area", true);
 
     /** */
     private static final char[] WORD_SEPARATORS = {'_'};
@@ -36,8 +33,9 @@ public enum ObservationFilter {
     private boolean isAnySupprted;
 
     /**
-     *
+     * 
      * Class constructor.
+     * 
      * @param predicate
      * @param title
      */
@@ -47,7 +45,7 @@ public enum ObservationFilter {
 
     /**
      * Constructor.
-     *
+     * 
      * @param predicate
      * @param title
      */
@@ -59,7 +57,7 @@ public enum ObservationFilter {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getAlias() {
@@ -77,7 +75,7 @@ public enum ObservationFilter {
     }
 
     /**
-     *
+     * 
      * @param alias
      * @return
      */
@@ -95,7 +93,7 @@ public enum ObservationFilter {
     }
 
     /**
-     *
+     * 
      * @param alias
      * @return
      */
@@ -116,7 +114,7 @@ public enum ObservationFilter {
     }
 
     /**
-     *
+     * 
      * @param alias
      * @return
      */

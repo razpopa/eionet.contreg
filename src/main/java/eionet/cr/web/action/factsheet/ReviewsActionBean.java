@@ -41,10 +41,10 @@ import eionet.cr.web.util.tabs.TabElement;
 import eionet.cr.web.util.tabs.TabId;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaak.kapten@tieto.com">Jaak Kapten</a>
  * @author Risto Alt
- *
+ * 
  */
 
 @UrlBinding("/reviews.action")
@@ -68,7 +68,7 @@ public class ReviewsActionBean extends AbstractActionBean {
     private FileBean attachment;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -103,8 +103,8 @@ public class ReviewsActionBean extends AbstractActionBean {
 
                 // Check if review is obsolete
                 obsolete =
-                    DAOFactory.get().getDao(ReviewsDAO.class)
-                    .isReviewObsolete(review.getReviewSubjectUri(), review.getObjectUrl());
+                        DAOFactory.get().getDao(ReviewsDAO.class)
+                                .isReviewObsolete(review.getReviewSubjectUri(), review.getObjectUrl());
 
                 // Load review content from file.
                 try {
@@ -296,7 +296,7 @@ public class ReviewsActionBean extends AbstractActionBean {
                     // since the review URI was used above as triple source, add it to HARVEST_SOURCE too
                     // (but set interval minutes to 0, to avoid it being background-harvested)
                     DAOFactory.get().getDao(HarvestSourceDAO.class)
-                    .addSourceIgnoreDuplicate(HarvestSourceDTO.create(reviewUri, true, 0, getUser().getUserName()));
+                            .addSourceIgnoreDuplicate(HarvestSourceDTO.create(reviewUri, true, 0, getUser().getUserName()));
 
                     // finally, attempt to harvest the uploaded file's contents
                     harvestUploadedFile(attachmentUri, file, null, getUser().getUserName(), attachment.getContentType());
@@ -318,7 +318,7 @@ public class ReviewsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param sourceUrl
      * @param uploadedFile
      * @param dcTitle
@@ -402,7 +402,7 @@ public class ReviewsActionBean extends AbstractActionBean {
 
     /**
      * Extracts username from review uri
-     *
+     * 
      * @return username
      */
     public String getAttemptedUserName() {
@@ -422,7 +422,7 @@ public class ReviewsActionBean extends AbstractActionBean {
     public String getReviewContentHTML() {
         if (review.getReviewContent() != null) {
             return review.getReviewContent().replace("&", "&amp;").replace("<", "&lt;").replace("\r\n", "<br/>")
-            .replace("\n", "<br/>");
+                    .replace("\n", "<br/>");
         } else {
             return "";
         }
@@ -553,7 +553,7 @@ public class ReviewsActionBean extends AbstractActionBean {
 
     /**
      * True, if the review with given uri belongs to the currently logged in user.
-     *
+     * 
      * @return
      */
     public boolean isUsersReview() {

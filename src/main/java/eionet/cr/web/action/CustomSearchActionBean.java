@@ -60,9 +60,9 @@ import eionet.cr.web.util.columns.SubjectLastModifiedColumn;
 import eionet.cr.web.util.columns.SubjectPredicateColumn;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 @UrlBinding("/customSearch.action")
 public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
@@ -94,7 +94,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     private String queryString;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -132,19 +132,20 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
+    @Override
     public Resolution search() throws DAOException {
 
         populateSelectedFilters();
         long startTime = System.currentTimeMillis();
         SearchResultDTO<SubjectDTO> result =
-            DAOFactory
-            .get()
-            .getDao(SearchDAO.class)
-            .searchByFilters(buildSearchCriteria(), true, PagingRequest.create(getPageN()),
-                    new SortingRequest(getSortP(), SortOrder.parse(getSortO())), null, true);
+                DAOFactory
+                        .get()
+                        .getDao(SearchDAO.class)
+                        .searchByFilters(buildSearchCriteria(), true, PagingRequest.create(getPageN()),
+                                new SortingRequest(getSortP(), SortOrder.parse(getSortO())), null, true);
 
         logger.debug("It took " + (System.currentTimeMillis() - startTime) + " ms to execute custom search");
 
@@ -167,34 +168,37 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getResultList()
      */
+    @Override
     public Collection<SubjectDTO> getResultList() {
         return (Collection<SubjectDTO>) getContext().getRequest().getSession().getAttribute(RESULT_LIST_SESSION_ATTR_NAME);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getPagination()
      */
+    @Override
     public Pagination getPagination() {
         return (Pagination) getContext().getRequest().getSession().getAttribute(PAGINATION_SESSION_ATTR_NAME);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getMatchCount()
      */
+    @Override
     public int getMatchCount() {
         Integer i = (Integer) getContext().getRequest().getSession().getAttribute(MATCH_COUNT_SESSION_ATTR_NAME);
         return i == null ? super.getMatchCount() : i.intValue();
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -211,7 +215,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -240,14 +244,14 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
             picklist = ApplicationCache.getInstruments();
         } else if (Predicates.CR_SCHEMA.equals(uri)) {
             picklist =
-                factory.getDao(HelperDAO.class).getPicklistForPredicate(getAvailableFilters().get(picklistFltr).getUri(),
-                        false);
+                    factory.getDao(HelperDAO.class).getPicklistForPredicate(getAvailableFilters().get(picklistFltr).getUri(),
+                            false);
         }
 
         if (picklist == null) {
             picklist =
-                factory.getDao(HelperDAO.class).getPicklistForPredicate(getAvailableFilters().get(picklistFltr).getUri(),
-                        true);
+                    factory.getDao(HelperDAO.class)
+                            .getPicklistForPredicate(getAvailableFilters().get(picklistFltr).getUri(), true);
         }
 
         return picklist;
@@ -268,7 +272,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      */
     public Map<String, String> getSelectedFilters() {
@@ -277,7 +281,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @param create
      * @return
      */
@@ -285,7 +289,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
         HttpSession session = getContext().getRequest().getSession();
         Map<String, String> selectedFilters = (Map<String, String>) session.getAttribute(SELECTED_FILTERS_SESSION_ATTR_NAME);
-        if (selectedFilters == null && create == true) {
+        if (selectedFilters == null && create) {
             selectedFilters = new LinkedHashMap<String, String>();
             session.setAttribute(SELECTED_FILTERS_SESSION_ATTR_NAME, selectedFilters);
         }
@@ -440,8 +444,9 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
             list.add(filter);
 
             availableFilters = new LinkedHashMap<String, CustomSearchFilter>();
-            for (int i = 0; i < list.size(); i++)
+            for (int i = 0; i < list.size(); i++) {
                 availableFilters.put(String.valueOf(i + 1), list.get(i));
+            }
         }
 
         return availableFilters;
@@ -496,7 +501,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isShowPicklist() {
@@ -504,7 +509,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isRemoveFilter() {
@@ -512,7 +517,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isAddFilter() {
@@ -524,7 +529,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     *
+     * 
      * @return
      */
     private Map<String, String> buildSearchCriteria() {
@@ -537,8 +542,9 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
             String value = selected.get(key);
             if (value != null && value.trim().length() > 0) {
                 CustomSearchFilter filter = getAvailableFilters().get(key);
-                if (filter != null)
+                if (filter != null) {
                     result.put(filter.getUri(), value.trim());
+                }
             }
         }
 
@@ -547,9 +553,10 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
+    @Override
     public List<SearchResultColumn> getColumns() {
 
         ArrayList<SearchResultColumn> list = new ArrayList<SearchResultColumn>();

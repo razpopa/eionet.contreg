@@ -16,9 +16,9 @@ import eionet.cr.util.URIUtil;
 
 /**
  * Reads delivery files from Resultset.
- *
+ * 
  * @author altnyris
- *
+ * 
  */
 public class DeliveryFilesReader extends ResultSetMixedReader<DeliveryFilesDTO> {
 
@@ -26,7 +26,7 @@ public class DeliveryFilesReader extends ResultSetMixedReader<DeliveryFilesDTO> 
 
     /**
      * converts Bindingset row to DeliveryFilesDTO.
-     *
+     * 
      * @param bindingSet BindingSet
      * @throws ResultSetReaderException if error in reading
      */
@@ -54,14 +54,14 @@ public class DeliveryFilesReader extends ResultSetMixedReader<DeliveryFilesDTO> 
                     }
                     String triplesCnt =
                             bindingSet.getValue("triplesCnt") != null ? bindingSet.getValue("triplesCnt").stringValue() : null;
-                            if (!StringUtils.isBlank(triplesCnt)) {
-                                file.setTriplesCnt(new Integer(triplesCnt).intValue());
-                            }
-                            List<FileDTO> files = del.getFiles();
-                            if (!files.contains(file)) {
-                                files.add(file);
-                                del.setFiles(files);
-                            }
+                    if (!StringUtils.isBlank(triplesCnt)) {
+                        file.setTriplesCnt(new Integer(triplesCnt).intValue());
+                    }
+                    List<FileDTO> files = del.getFiles();
+                    if (!files.contains(file)) {
+                        files.add(file);
+                        del.setFiles(files);
+                    }
                 }
                 deliveries.put(deliveryUri, del);
             }
@@ -75,6 +75,7 @@ public class DeliveryFilesReader extends ResultSetMixedReader<DeliveryFilesDTO> 
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

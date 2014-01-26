@@ -34,7 +34,7 @@ import eionet.cr.util.Util;
 /**
  * An extension of {@link Logger} that logs messages of a staging database RDF export process into the relevant table in the
  * database.
- *
+ * 
  * @author jaanus
  */
 public class ExportLogger extends Logger {
@@ -50,7 +50,7 @@ public class ExportLogger extends Logger {
 
     /**
      * Just call the parent constructor.
-     *
+     * 
      * @param name the logger's name
      */
     public ExportLogger(String name) {
@@ -59,7 +59,7 @@ public class ExportLogger extends Logger {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.apache.log4j.Category#forcedLog(java.lang.String, org.apache.log4j.Priority, java.lang.Object, java.lang.Throwable)
      */
     @Override
@@ -84,7 +84,7 @@ public class ExportLogger extends Logger {
 
     /**
      * To string.
-     *
+     * 
      * @param level the level
      * @return the string
      */
@@ -103,7 +103,7 @@ public class ExportLogger extends Logger {
 
     /**
      * Lazy getter for the {@link #dao}.
-     *
+     * 
      * @return the DAO
      */
     private StagingDatabaseDAO getDao() {
@@ -115,7 +115,7 @@ public class ExportLogger extends Logger {
 
     /**
      * Sets the export id.
-     *
+     * 
      * @param exportId the exportId to set
      */
     public void setExportId(int exportId) {

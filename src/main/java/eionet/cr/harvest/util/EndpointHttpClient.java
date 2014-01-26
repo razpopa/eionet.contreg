@@ -26,7 +26,6 @@ import java.io.IOException;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.params.HttpClientParams;
@@ -58,7 +57,7 @@ public class EndpointHttpClient extends HttpClient {
      * @see org.apache.commons.httpclient.HttpClient#executeMethod(org.apache.commons.httpclient.HttpMethod)
      */
     @Override
-    public int executeMethod(HttpMethod method) throws IOException, HttpException {
+    public int executeMethod(HttpMethod method) throws IOException {
         int ret = super.executeMethod(method);
         lastExecutedMethod = method;
         return ret;
@@ -71,7 +70,7 @@ public class EndpointHttpClient extends HttpClient {
      * org.apache.commons.httpclient.HttpMethod)
      */
     @Override
-    public int executeMethod(HostConfiguration hostConfiguration, HttpMethod method) throws IOException, HttpException {
+    public int executeMethod(HostConfiguration hostConfiguration, HttpMethod method) throws IOException {
         int ret = super.executeMethod(hostConfiguration, method);
         lastExecutedMethod = method;
         return ret;
@@ -84,7 +83,7 @@ public class EndpointHttpClient extends HttpClient {
      * org.apache.commons.httpclient.HttpMethod, org.apache.commons.httpclient.HttpState)
      */
     @Override
-    public int executeMethod(HostConfiguration hostconfig, HttpMethod method, HttpState state) throws IOException, HttpException {
+    public int executeMethod(HostConfiguration hostconfig, HttpMethod method, HttpState state) throws IOException {
         int ret = super.executeMethod(hostconfig, method, state);
         lastExecutedMethod = method;
         return ret;

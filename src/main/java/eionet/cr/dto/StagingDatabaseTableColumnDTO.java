@@ -25,6 +25,7 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
  * A DTO describing briefly a column in a table in a staging database.
+ * 
  * @author jaanus
  */
 public class StagingDatabaseTableColumnDTO {
@@ -40,7 +41,7 @@ public class StagingDatabaseTableColumnDTO {
 
     /**
      * Construct a DTO for the given column in the given table, with the given data type of the column.
-     *
+     * 
      * @param table the table
      * @param column the column
      * @param dataType the data type
@@ -75,6 +76,7 @@ public class StagingDatabaseTableColumnDTO {
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

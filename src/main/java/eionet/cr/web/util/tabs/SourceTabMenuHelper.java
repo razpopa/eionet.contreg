@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author Juhan Voolaid
  */
-public final class SourceTabMenuHelper {
+public class SourceTabMenuHelper {
 
     /** Source uri. */
     private String uri;
@@ -77,7 +77,7 @@ public final class SourceTabMenuHelper {
     /**
      * Tab titles.
      */
-    public static class TabTitle {
+    public static final class TabTitle {
 
         public static final String VIEW = "View";
         public static final String EDIT = "Edit";

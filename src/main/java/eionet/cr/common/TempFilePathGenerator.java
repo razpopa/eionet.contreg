@@ -57,7 +57,7 @@ public final class TempFilePathGenerator {
      */
     static {
         TEMP_FILE_DIRECTORIES =
-            Collections.singleton(new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION)));
+                Collections.singleton(new File(GeneralConfig.getRequiredProperty(GeneralConfig.HARVESTER_FILES_LOCATION)));
     }
 
     /** */
@@ -68,7 +68,7 @@ public final class TempFilePathGenerator {
     }
 
     /**
-     *
+     * 
      * @param extension
      * @return
      */

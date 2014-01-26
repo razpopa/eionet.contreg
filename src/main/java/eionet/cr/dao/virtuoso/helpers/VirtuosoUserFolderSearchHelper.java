@@ -32,9 +32,9 @@ import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 /**
- *
+ * 
  * @author Enriko Käsper
- *
+ * 
  */
 public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
 
@@ -43,29 +43,22 @@ public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
      */
     private static final String USER_HOMES_SPARQL =
 
-        SPARQLQueryUtil.getSparqlQueryHeader(true)
-        .append("SELECT ?parent ?subject bif:either( bif:isnull(?lbl) , ?subject, ?lbl) as ?label ?fileCount ?folderCount ")
-        .append("WHERE {")
-        .append("?subject a <").append(Subjects.CR_USER_FOLDER).append("> .")
-        .append("?parent ?hasPredicate ?subject . ")
-        .append(" FILTER (?hasPredicate IN (<").append(Predicates.CR_HAS_FILE).append(">, <").append(Predicates.CR_HAS_FOLDER).append(">)) .")
-        .append("  FILTER(?parent= ?parentFolder)")
+    SPARQLQueryUtil.getSparqlQueryHeader(true)
+            .append("SELECT ?parent ?subject bif:either( bif:isnull(?lbl) , ?subject, ?lbl) as ?label ?fileCount ?folderCount ")
+            .append("WHERE {").append("?subject a <").append(Subjects.CR_USER_FOLDER).append("> .")
+            .append("?parent ?hasPredicate ?subject . ").append(" FILTER (?hasPredicate IN (<").append(Predicates.CR_HAS_FILE)
+            .append(">, <").append(Predicates.CR_HAS_FOLDER).append(">)) .").append("  FILTER(?parent= ?parentFolder)")
 
-        .append("  { SELECT ?subject (count(?file) AS ?fileCount)")
-        .append("  WHERE { ?subject <").append(Predicates.CR_HAS_FILE).append("> ?file")
-        .append("    } GROUP BY ?subject}")
+            .append("  { SELECT ?subject (count(?file) AS ?fileCount)").append("  WHERE { ?subject <")
+            .append(Predicates.CR_HAS_FILE).append("> ?file").append("    } GROUP BY ?subject}")
 
-        .append("  { SELECT ?subject (count(?folder) AS ?folderCount)")
-        .append("  WHERE { ?subject <").append(Predicates.CR_HAS_FOLDER).append("> ?folder ")
-        .append("    } GROUP BY ?subject}")
+            .append("  { SELECT ?subject (count(?folder) AS ?folderCount)").append("  WHERE { ?subject <")
+            .append(Predicates.CR_HAS_FOLDER).append("> ?folder ").append("    } GROUP BY ?subject}")
 
-        .append("OPTIONAL {  {")
-        .append("SELECT ?subject ?lbl ")
-        .append("WHERE { ?subject rdfs:label ?lbl }  }  }")
-        .append("} GROUP BY ?subject ").toString();
+            .append("OPTIONAL {  {").append("SELECT ?subject ?lbl ").append("WHERE { ?subject rdfs:label ?lbl }  }  }")
+            .append("} GROUP BY ?subject ").toString();
 
-
-    //private String parentFolderUri;
+    // private String parentFolderUri;
     private Bindings bindings;
 
     public VirtuosoUserFolderSearchHelper(String parentFolderUri, PagingRequest pagingRequest, SortingRequest sortingRequest) {
@@ -74,7 +67,7 @@ public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
         if (parentFolderUri == null || !URLUtil.isURL(parentFolderUri)) {
             throw new CRRuntimeException("Parent folder has to be defined!");
         }
-        //this.parentFolderUri = parentFolderUri;
+        // this.parentFolderUri = parentFolderUri;
         bindings = new Bindings();
         bindings.setURI("parentFolder", parentFolderUri);
 
@@ -88,7 +81,8 @@ public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
         if (sortOrder != null) {
             strBuilder.append(sortOrder);
         }
-        strBuilder.append("(bif:either( bif:isnull(?label) , (bif:lcase(bif:subseq (bif:replace (?subject, '/', '#'), bif:strrchr (bif:replace (?subject, '/', '#'), '#')+1))) , bif:lcase(?label)))");
+        strBuilder
+                .append("(bif:either( bif:isnull(?label) , (bif:lcase(bif:subseq (bif:replace (?subject, '/', '#'), bif:strrchr (bif:replace (?subject, '/', '#'), '#')+1))) , bif:lcase(?label)))");
 
         return strBuilder.toString();
     }
@@ -106,7 +100,6 @@ public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
 
         return strBuilder.toString();
     }
-
 
     @Override
     public Bindings getQueryBindings() {

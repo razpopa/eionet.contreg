@@ -23,7 +23,7 @@ package eionet.cr.dao.util;
 
 /**
  * Objects of this class represent rows in the "browse VoID datasets" result set, i.e. datasets matching the search criteria.
- *
+ * 
  * @author jaanus
  */
 public class VoidDatasetsResultRow {
@@ -40,12 +40,14 @@ public class VoidDatasetsResultRow {
     public String getUri() {
         return uri;
     }
+
     /**
      * @param uri the uri to set
      */
     public void setUri(String uri) {
         this.uri = uri;
     }
+
     /**
      * @return the label
      */
@@ -59,24 +61,28 @@ public class VoidDatasetsResultRow {
     public void setLabel(String label) {
         this.label = label;
     }
+
     /**
      * @return the creator
      */
     public String getCreator() {
         return creator;
     }
+
     /**
      * @param creator the creator to set
      */
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
     /**
      * @return the subjects
      */
     public String getSubjects() {
         return subjects;
     }
+
     /**
      * @param subjects the subjects to set
      */
@@ -84,7 +90,9 @@ public class VoidDatasetsResultRow {
         this.subjects = subjects;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

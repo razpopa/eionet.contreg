@@ -24,7 +24,7 @@ import eionet.cr.web.security.CRUser;
 /**
  * Utility class that harvests all given Scoreboard time-periods recorded during an import from a staging DB or from an XLS file.
  * And applies the necessary business logic that goes with it.
- *
+ * 
  * @author jaanus
  */
 public class TimePeriodsHarvester {
@@ -49,7 +49,7 @@ public class TimePeriodsHarvester {
 
     /**
      * Constructor a harvester for the given time-periods.
-     *
+     * 
      * @param timePeriodUris
      *            Given time-periods, can be null or empty in which case no harvest will be executed.
      */
@@ -111,8 +111,7 @@ public class TimePeriodsHarvester {
             } catch (DAOException e) {
                 LOGGER.warn("Failed to update dcterms:modified of " + codelistUri, e);
             }
-        }
-        else{
+        } else {
             LOGGER.debug("The BEFORE and AFTER sets of time periods were equal!");
         }
 
@@ -152,7 +151,7 @@ public class TimePeriodsHarvester {
     }
 
     /**
-     *
+     * 
      * @param timePeriodUri
      * @param dao
      */

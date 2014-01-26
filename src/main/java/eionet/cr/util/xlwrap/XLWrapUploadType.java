@@ -11,13 +11,13 @@ import eionet.cr.common.Subjects;
 
 public enum XLWrapUploadType {
 
-    INDICATOR("Indicators metadata", "File containing metadata of the Digital Agenda Scoreboard indicators"),
-    INDICATOR_GROUP("Indicator groups metadata", "File containing metadata of the Digital Agenda Scoreboard indicator groups"),
-    BREAKDOWN("Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns"),
-    BREAKDOWN_GROUP("Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
-    UNIT_MEASURE("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"),
-    SOURCE("Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"),
-    OBSERVATION("Observations", "File containing Digital Agenda Scoreboard observations", "", Subjects.DATACUBE_OBSERVATION);
+    INDICATOR("Indicators metadata", "File containing metadata of the Digital Agenda Scoreboard indicators"), INDICATOR_GROUP(
+            "Indicator groups metadata", "File containing metadata of the Digital Agenda Scoreboard indicator groups"), BREAKDOWN(
+            "Breakdowns metadata", "File containing metadata of the Digital Agenda Scoreboard breakdowns"), BREAKDOWN_GROUP(
+            "Breakdown groups metadata", "File containing metadata of the Digital Agenda Scoreboard breakdown groups"),
+    UNIT_MEASURE("Units metadata", "File containing metadata of the Digital Agenda Scoreboard units"), SOURCE(
+            "Data sources metadata", "File containing metadata of the Digital Agenda Scoreboard data sources"), OBSERVATION(
+            "Observations", "File containing Digital Agenda Scoreboard observations", "", Subjects.DATACUBE_OBSERVATION);
 
     /** */
     private static final String GRAPH_TEMPLATE = "http://semantic.digital-agenda-data.eu/codelist/@type@/";
@@ -41,6 +41,7 @@ public enum XLWrapUploadType {
 
     /**
      * Basic constructor.
+     * 
      * @param title
      * @param hint
      */
@@ -91,7 +92,7 @@ public enum XLWrapUploadType {
 
     /**
      * Calls basic constructor and sets the graph URI and the subjects type URI to the ones given in this constructor input.
-     *
+     * 
      * @param title
      * @param hint
      * @param graphUri
@@ -99,11 +100,10 @@ public enum XLWrapUploadType {
      */
     private XLWrapUploadType(String title, String hint, String graphUri, String subjectsTypeUri) {
 
-        this(title,hint);
+        this(title, hint);
         this.graphUri = graphUri;
         this.subjectsTypeUri = subjectsTypeUri;
     }
-
 
     /**
      * @return the title
@@ -127,7 +127,7 @@ public enum XLWrapUploadType {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getName() {
@@ -156,7 +156,7 @@ public enum XLWrapUploadType {
     }
 
     /**
-     *
+     * 
      * @param graphUri
      * @return
      */

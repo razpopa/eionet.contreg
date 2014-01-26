@@ -46,11 +46,18 @@ import org.openrdf.query.TupleQueryResult;
 import eionet.cr.common.CRException;
 
 /**
- * Type definition ...
+ * Utility methods for comparing result sets of Sesame query results.
  *
  * @author jaanus
  */
 public class ResultCompareUtil {
+
+    /**
+     * Disable utility class constructor.
+     */
+    private ResultCompareUtil() {
+        // Empty constructor.
+    }
 
     /**
      *
@@ -122,7 +129,7 @@ public class ResultCompareUtil {
                 // Enter recursion
                 result = matchBindingSets(queryResult1, queryResult2, newBNodeMapping, idx + 1);
 
-                if (result == true) {
+                if (result) {
                     // models match, look no further
                     break;
                 }
@@ -321,8 +328,7 @@ public class ResultCompareUtil {
 
         if (!hasNext1 && hasNext2) {
             throw new CRException("At row#" + i + " result2 has next, but result1 does not!");
-        }
-        else if (hasNext1 && !hasNext2) {
+        } else if (hasNext1 && !hasNext2) {
             throw new CRException("At row#" + i + " result1 has next, but result2 does not!");
         }
 

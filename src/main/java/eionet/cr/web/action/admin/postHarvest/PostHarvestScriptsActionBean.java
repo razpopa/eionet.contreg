@@ -42,7 +42,7 @@ import eionet.cr.web.action.AbstractActionBean;
 import eionet.cr.web.security.CRUser;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 @UrlBinding("/admin/postHarvestScripts")
@@ -74,7 +74,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     private List<Integer> selectedIds;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -96,7 +96,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -111,7 +111,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -126,7 +126,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -138,7 +138,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Handler for the "search" event.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -165,7 +165,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -176,7 +176,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @throws DAOException
      */
     @ValidationMethod(on = {"delete", "activateDeactivate", "moveUp", "moveDown", "cut", "copy"})
@@ -196,7 +196,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Validates if paste is legal. Checks if the names are unique and admin has permissions
-     *
+     * 
      * @throws DAOException if DB operation fails
      */
     @ValidationMethod(on = {"paste"})
@@ -280,7 +280,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getPageToRender() {
@@ -289,7 +289,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param url
      * @return
      */
@@ -308,7 +308,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Action for Cutting the scripts.
-     *
+     * 
      * @return Original page
      * @throws DAOException if action fails.
      */
@@ -320,7 +320,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Action for Copying the scripts.
-     *
+     * 
      * @return Original page
      * @throws DAOException if action fails.
      */
@@ -332,7 +332,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Action for pasting the scripts.
-     *
+     * 
      * @return Original page
      * @throws DAOException if action fails.
      */
@@ -346,7 +346,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Scripts selected to clipboard.
-     *
+     * 
      * @return Lsit of Script data objects
      */
 
@@ -356,7 +356,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * Reinitializes the selected scripts buffer.
-     *
+     * 
      * @throws DAOException if DB operation fails
      */
     private void reInitClipBoard() throws DAOException {
@@ -369,7 +369,7 @@ public class PostHarvestScriptsActionBean extends AbstractActionBean {
 
     /**
      * True if something is selected for paste and the type is correct.
-     *
+     * 
      * @return boolean
      */
     public boolean isPastePossible() {

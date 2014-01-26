@@ -28,15 +28,14 @@ import net.sourceforge.stripes.localization.DefaultLocalePicker;
 
 /**
  * Custom locale picker that overrides {@link DefaultLocalePicker}.
- *
+ * 
  * @author gerasvad
- *
+ * 
  */
 public class LocalePicker extends DefaultLocalePicker {
 
     /**
-     * {@inheritDoc}
-     * If parent method returns null then the method returns UTF-8 as default character encoding.
+     * {@inheritDoc} If parent method returns null then the method returns UTF-8 as default character encoding.
      */
     @Override
     public String pickCharacterEncoding(HttpServletRequest request, Locale locale) {

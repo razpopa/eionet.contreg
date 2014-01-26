@@ -67,7 +67,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Compiled dataset tab controller.
- *
+ * 
  * @author Juhan Voolaid
  */
 @UrlBinding("/compiledDataset.action")
@@ -99,7 +99,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
     /**
      * Action event for displaying dataset sources.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -127,7 +127,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
     /**
      * Populates the filters property from the dataset data.
-     *
+     * 
      * @param dataset
      */
     private void extractFilters(SubjectDTO dataset) {
@@ -161,7 +161,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
     /**
      * Gets the value and label from the data.
-     *
+     * 
      * @param data
      * @return Array, where element 0 is value and 1 is label.
      */
@@ -174,7 +174,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
     /**
      * Action event for reloading dataset.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -210,10 +210,10 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
             // Update source last modified date
             DAOFactory
-            .get()
-            .getDao(HarvestSourceDAO.class)
-            .insertUpdateSourceMetadata(uri, Predicates.CR_LAST_MODIFIED,
-                    ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
+                    .get()
+                    .getDao(HarvestSourceDAO.class)
+                    .insertUpdateSourceMetadata(uri, Predicates.CR_LAST_MODIFIED,
+                            ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
 
             success = true;
         } catch (Exception e) {
@@ -247,7 +247,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
         } else {
             if (StringUtils.isBlank(uri)) {
                 addGlobalValidationError("Dataset URI missing!");
-            } else if (getIsUserDataset() == false) {
+            } else if (!getIsUserDataset()) {
                 addGlobalValidationError("You are not the owner of this dataset!");
             }
         }
@@ -259,7 +259,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
     /**
      * Removes files from compiled dataset.
-     *
+     * 
      * @return
      * @throws DAOException
      * @throws IOException
@@ -286,10 +286,10 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
 
         // Update source last modified date
         DAOFactory
-        .get()
-        .getDao(HarvestSourceDAO.class)
-        .insertUpdateSourceMetadata(uri, Predicates.CR_LAST_MODIFIED,
-                ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
+                .get()
+                .getDao(HarvestSourceDAO.class)
+                .insertUpdateSourceMetadata(uri, Predicates.CR_LAST_MODIFIED,
+                        ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
 
         // Update HARVESTED STATEMENTS
         DAOFactory.get().getDao(HarvestSourceDAO.class).updateHarvestedStatementsTriple(uri);
@@ -305,7 +305,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
     /**
      * Returns true if there is an authenticated user, and the dataset URI is not blank and it starts with the authenticated user's
      * home-URI.
-     *
+     * 
      * @return See method description.
      */
     public boolean getIsUserDataset() {
@@ -318,7 +318,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return boolean
      */
     public boolean isCurrentlyReloaded() {
@@ -327,7 +327,7 @@ public class CompiledDatasetActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public boolean isSourcesEmpty() {

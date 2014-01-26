@@ -25,16 +25,17 @@ import org.openrdf.rio.RDFHandlerException;
 
 /**
  * Exception class for exceptions that are caused by several timeouts during harvesting.
- *
+ * 
  * @author kaido
  */
 public class TimeoutException extends RDFHandlerException {
 
-   /**
-    * Creates exception with message.
-    * @param message error message
-    */
-   public TimeoutException(String message) {
-       super(message);
-   }
+    /**
+     * Creates exception with message.
+     * 
+     * @param message error message
+     */
+    public TimeoutException(String message) {
+        super(message);
+    }
 }

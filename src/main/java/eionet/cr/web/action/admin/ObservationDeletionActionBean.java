@@ -24,7 +24,7 @@ import eionet.cr.web.action.AbstractActionBean;
 
 /**
  * An action that enables administrators to perform various delete operations on specified DataCube observations.
- *
+ * 
  * @author Jaanus
  */
 @UrlBinding("/admin/obsDelete.action")
@@ -56,7 +56,7 @@ public class ObservationDeletionActionBean extends AbstractActionBean {
 
     /**
      * Default request handler.
-     *
+     * 
      * @return Resolution to go to.
      */
     @DefaultHandler
@@ -108,7 +108,7 @@ public class ObservationDeletionActionBean extends AbstractActionBean {
      * Parses the given string as a whitespace-separated list of URLs, and returns them as a list of strings.
      * Also performs URL validity checking by the constructor of {@link java.net.URL}. If any of them invalid, throws
      * {@link MalformedURLException}.
-     *
+     * 
      * @param str The string to parse.
      * @return The list of URLs.
      * @throws MalformedURLException if invalid URL is encountered.
@@ -128,7 +128,7 @@ public class ObservationDeletionActionBean extends AbstractActionBean {
 
     /**
      * Lazy getter for the availableDatasetUris.
-     *
+     * 
      * @return The availableDatasetUris.
      * @throws DAOException When data access error.
      */

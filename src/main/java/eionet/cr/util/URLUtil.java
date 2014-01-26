@@ -68,6 +68,13 @@ public class URLUtil {
     private static final List<String> SESSSION_IDENTIFIERS = Arrays.asList("JSESSIONID", "PHPSESSID", "ASPSESSIONID");
 
     /**
+     * Disable utility class constructor.
+     */
+    private URLUtil() {
+        // Empty constructor.
+    }
+
+    /**
      *
      * @param s
      * @return boolean

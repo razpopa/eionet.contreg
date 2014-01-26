@@ -12,9 +12,9 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 
 /**
  * Reads resultset containing objects and labels from variables "label" and "object" in the BindingSet.
- *
+ * 
  * @author kaido
- *
+ * 
  */
 public class ObjectLabelReader extends SPARQLResultSetBaseReader<ObjectLabelPair> {
 
@@ -26,6 +26,7 @@ public class ObjectLabelReader extends SPARQLResultSetBaseReader<ObjectLabelPair
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override

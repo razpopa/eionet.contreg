@@ -38,7 +38,9 @@ import eionet.cr.util.Pair;
 public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
     /** */
-    public enum SortColumn {LEFT, RIGHT};
+    public enum SortColumn {
+        LEFT, RIGHT
+    };
 
     /**
      * Field name for left column in query.
@@ -57,7 +59,7 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
     private String rightColumn = RIGHTCOL;
 
     /**
-     *
+     * 
      * Class constructor.
      */
     public PairReader() {
@@ -65,8 +67,9 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
     }
 
     /**
-     *
+     * 
      * Class constructor.
+     * 
      * @param leftColumn
      * @param rightColumn
      */
@@ -78,6 +81,7 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.dao.readers.ResultSetMixedReader#getResultList()
      */
     @Override
@@ -87,6 +91,7 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override
@@ -101,7 +106,7 @@ public class PairReader<L, R> extends ResultSetMixedReader<Pair<L, R>> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override

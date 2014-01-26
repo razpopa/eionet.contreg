@@ -76,7 +76,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Folder tab on factsheet page.
- *
+ * 
  * @author Juhan Voolaid
  */
 @UrlBinding("/folder.action")
@@ -127,7 +127,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Action event for displaying folder contents.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -153,7 +153,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Displays the renaming form.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -197,7 +197,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Handles the renaming event.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -278,7 +278,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Handles deletion event.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -350,7 +350,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Create new folder.
-     *
+     * 
      * @return Resolution
      * @throws DAOException if DAO method execution fails
      */
@@ -408,7 +408,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Displays the upload form.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -582,10 +582,10 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
             // since user's home URI was used above as triple source, add it to HARVEST_SOURCE too
             // (but set interval minutes to 0, to avoid it being background-harvested)
             DAOFactory
-            .get()
-            .getDao(HarvestSourceDAO.class)
-            .addSourceIgnoreDuplicate(
-                    HarvestSourceDTO.create(FolderUtil.folderContext(uri), false, 0, getUserNameOrAnonymous()));
+                    .get()
+                    .getDao(HarvestSourceDAO.class)
+                    .addSourceIgnoreDuplicate(
+                            HarvestSourceDTO.create(FolderUtil.folderContext(uri), false, 0, getUserNameOrAnonymous()));
 
         } catch (DAOException e) {
             saveAndHarvestException = e;
@@ -606,12 +606,12 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
         }
 
         // attempt to harvest the uploaded file
-        harvestUploadedFile(getUploadedFileSubjectUri(), file, null, getUserNameOrAnonymous(),uploadedFile.getContentType());
+        harvestUploadedFile(getUploadedFileSubjectUri(), file, null, getUserNameOrAnonymous(), uploadedFile.getContentType());
     }
 
     /**
      * Stores file data into filesystem and database.
-     *
+     * 
      * @throws DAOException
      * @throws IOException
      */
@@ -636,8 +636,9 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
             } else {
                 filePath = uploadedFile.getFileName();
             }
-            file = FileStore.getInstance(FolderUtil.getUserDir(uri, getUserNameOrAnonymous())).add(filePath, replaceExisting,
-                    contentStream);
+            file =
+                    FileStore.getInstance(FolderUtil.getUserDir(uri, getUserNameOrAnonymous())).add(filePath, replaceExisting,
+                            contentStream);
         } finally {
             IOUtils.closeQuietly(contentStream);
         }
@@ -646,7 +647,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Harvests file.
-     *
+     * 
      * @param sourceUrl
      * @param uploadedFile
      * @param dcTitle
@@ -697,7 +698,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Initializes tabs.
-     *
+     * 
      * @throws DAOException
      */
     private void initTabs() throws DAOException {
@@ -714,7 +715,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Returns null, if all the folders from the items are empty. Folder name, if it is not.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -735,7 +736,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Returns null, if all the selected items are not reserved. Returns file or folder name, if it is reserved.
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -751,7 +752,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Returns true, if none of the items are marked selected.
-     *
+     * 
      * @return
      */
     private boolean itemsNotSelected() {
@@ -768,7 +769,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * True, if currently logged in user is viewing his home folder or one of sub folders.
-     *
+     * 
      * @return
      */
     public boolean isUsersFolder() {
@@ -783,7 +784,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Renames corresponding ACLs of the renamed folders.
-     *
+     * 
      * @param renamings renamings hash keys: old urls, values: new urls
      */
     private void renameAcls(HashMap<String, String> renamings) {
@@ -803,7 +804,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Deletes coresponding ACLs of the deleted items.
-     *
+     * 
      * @param uris array of URIs that are deleted
      */
     private void deleteAcls(List<String> uris) {
@@ -831,7 +832,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
     /**
      * Returns current username or "anonymous" if not authenticated. Can be used if username needs to be stored and anonymous user
      * has been given permissions
-     *
+     * 
      * @return username or anonymous
      */
     private String getUserNameOrAnonymous() {
@@ -844,7 +845,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * True, if the folder uri is user's home folder.
-     *
+     * 
      * @return
      */
     public boolean isHomeFolder() {
@@ -853,7 +854,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * True, if the folder uri is project root folder.
-     *
+     * 
      * @return
      */
     public boolean isProjectFolder() {
@@ -862,7 +863,7 @@ public class FolderActionBean extends AbstractActionBean implements Runnable {
 
     /**
      * Returns parent folder uri. If it is home folder uri, current uri is returned.
-     *
+     * 
      * @return
      */
     public String getParentUri() {

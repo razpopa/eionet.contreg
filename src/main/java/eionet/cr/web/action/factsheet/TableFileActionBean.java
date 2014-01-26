@@ -56,7 +56,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Factsheet page for cr:TableFile type.
- *
+ * 
  * @author Juhan Voolaid
  */
 @UrlBinding("/tableFile.action")
@@ -75,7 +75,7 @@ public class TableFileActionBean extends AbstractActionBean {
 
     /**
      * View action.
-     *
+     * 
      * @return
      * @throws DAOException
      * @throws RepositoryException
@@ -109,7 +109,7 @@ public class TableFileActionBean extends AbstractActionBean {
 
     /**
      * Initializes tabs.
-     *
+     * 
      * @throws DAOException
      */
     private void initTabs() throws DAOException {

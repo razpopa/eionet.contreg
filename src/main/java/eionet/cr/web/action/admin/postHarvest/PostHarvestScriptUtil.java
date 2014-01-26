@@ -14,7 +14,7 @@ import eionet.cr.web.action.admin.postHarvest.PostHarvestScriptsActionBean.Actio
 
 /**
  * Common utility methods for handling Post Harvest Scripts.
- *
+ * 
  * @author Kaido Laine
  */
 public final class PostHarvestScriptUtil {
@@ -26,7 +26,7 @@ public final class PostHarvestScriptUtil {
 
     /**
      * Validates if any of the scripts exist in the target source/type.
-     *
+     * 
      * @param scriptsInClipBoard
      *            scripts in clipboard
      * @param targetTypeClipBoard
@@ -76,7 +76,7 @@ public final class PostHarvestScriptUtil {
 
     /**
      * Pastes scripts to given targetUrl or null if all sources scripts.
-     *
+     * 
      * @param scriptsInClipBoard
      *            selected script(s)
      * @param actionType
@@ -106,7 +106,7 @@ public final class PostHarvestScriptUtil {
 
     /**
      * Checks if selected scripts an be pasted on the active page (determines the type).
-     *
+     * 
      * @param scriptsInClipBoard
      *            Scripts buffered
      * @param targetTypeClipBoard
@@ -126,7 +126,7 @@ public final class PostHarvestScriptUtil {
 
     /**
      * Determines if script types are correct - if any or both are null's one or both are Source scripts.
-     *
+     * 
      * @param targetType
      *            target type in page
      * @param targetTypeClipBoard
@@ -137,10 +137,8 @@ public final class PostHarvestScriptUtil {
             PostHarvestScriptDTO.TargetType targetTypeClipBoard) {
 
         TargetType targetTypeSource = PostHarvestScriptDTO.TargetType.SOURCE;
-        return !((targetType == null && (targetTypeClipBoard != null && !targetTypeClipBoard
-                .equals(targetTypeSource)))
-                || (targetTypeClipBoard == null && (targetType != null && !targetType
-                        .equals(targetTypeSource))) || (targetTypeClipBoard != null && targetType != null && !targetType
-                .equals(targetTypeClipBoard)));
+        return !((targetType == null && (targetTypeClipBoard != null && !targetTypeClipBoard.equals(targetTypeSource)))
+                || (targetTypeClipBoard == null && (targetType != null && !targetType.equals(targetTypeSource))) || (targetTypeClipBoard != null
+                && targetType != null && !targetType.equals(targetTypeClipBoard)));
     }
 }

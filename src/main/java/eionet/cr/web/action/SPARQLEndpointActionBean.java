@@ -101,12 +101,12 @@ public class SPARQLEndpointActionBean extends AbstractActionBean {
     /**
      * Option value in the folder dropdown for Shared bookmarks.
      */
-    private final static String SHARED_BOOKMARKS_FOLDER = "_shared_bookmarks";
+    private static final String SHARED_BOOKMARKS_FOLDER = "_shared_bookmarks";
 
     /**
      * Option value in the folder dropdown for my bookmarks.
      */
-    private final static String MY_BOOKMARKS_FOLDER = "_my_bookmarks";
+    private static final String MY_BOOKMARKS_FOLDER = "_my_bookmarks";
 
     /** The request parameter name for the default graph URI. */
     private static final String DEFAULT_GRAPH_URI = "default-graph-uri";
@@ -656,7 +656,7 @@ public class SPARQLEndpointActionBean extends AbstractActionBean {
 
                     // Evaluate CONSTRUCT query.
 
-                    if (outputFormat.equals(FORMAT_HTML) == false) {
+                    if (!outputFormat.equals(FORMAT_HTML)) {
 
                         response.setContentType("application/rdf+xml");
                         RDFXMLWriter writer = new RDFXMLWriter(outputStream);
@@ -743,7 +743,7 @@ public class SPARQLEndpointActionBean extends AbstractActionBean {
 
             nrOfTriples =
                     DAOFactory.get().getDao(HelperDAO.class)
-                    .addTriples(query, dataset, defaultGraphUris, namedGraphUris, maxRowsCount);
+                            .addTriples(query, dataset, defaultGraphUris, namedGraphUris, maxRowsCount);
 
             if (nrOfTriples > 0) {
                 // prepare and insert cr:hasFile predicate
@@ -755,21 +755,21 @@ public class SPARQLEndpointActionBean extends AbstractActionBean {
 
                 // Create source
                 DAOFactory.get().getDao(HarvestSourceDAO.class)
-                .addSourceIgnoreDuplicate(HarvestSourceDTO.create(dataset, false, 0, getUserName()));
+                        .addSourceIgnoreDuplicate(HarvestSourceDTO.create(dataset, false, 0, getUserName()));
 
                 // Insert last modified predicate
                 DAOFactory
-                .get()
-                .getDao(HarvestSourceDAO.class)
-                .insertUpdateSourceMetadata(dataset, Predicates.CR_LAST_MODIFIED,
-                        ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
+                        .get()
+                        .getDao(HarvestSourceDAO.class)
+                        .insertUpdateSourceMetadata(dataset, Predicates.CR_LAST_MODIFIED,
+                                ObjectDTO.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME));
 
                 // Insert harvested statements predicate
                 DAOFactory
-                .get()
-                .getDao(HarvestSourceDAO.class)
-                .insertUpdateSourceMetadata(dataset, Predicates.CR_HARVESTED_STATEMENTS,
-                        ObjectDTO.createLiteral(String.valueOf(nrOfTriples), XMLSchema.INTEGER));
+                        .get()
+                        .getDao(HarvestSourceDAO.class)
+                        .insertUpdateSourceMetadata(dataset, Predicates.CR_HARVESTED_STATEMENTS,
+                                ObjectDTO.createLiteral(String.valueOf(nrOfTriples), XMLSchema.INTEGER));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1188,7 +1188,7 @@ public class SPARQLEndpointActionBean extends AbstractActionBean {
 
             // A ClassCastException means bad query too, because that's what is thrown when the query dos not start with
             // "SELECT", "CONSTRUCT" or "ASK".
-            if (isBadQuery == false) {
+            if (!isBadQuery) {
                 isBadQuery = exception instanceof ClassCastException;
             }
 

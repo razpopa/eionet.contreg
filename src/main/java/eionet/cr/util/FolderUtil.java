@@ -32,9 +32,9 @@ import eionet.cr.dao.FolderDAO;
 import eionet.cr.web.security.CRUser;
 
 /**
- *
+ * 
  * @author altnyris
- *
+ * 
  */
 public final class FolderUtil {
 
@@ -47,7 +47,7 @@ public final class FolderUtil {
 
     /**
      * Extract ACL path for special folders: projects and home. Until DDC not done, main project/home folder ACL is used
-     *
+     * 
      * @param uri uri of the folder
      * @param specialFolderName - special folder prefix in the name
      * @return String acl path of th given folder
@@ -70,7 +70,7 @@ public final class FolderUtil {
     }
 
     /**
-     *
+     * 
      * @return String
      */
     public static String getProjectsFolder() {
@@ -81,7 +81,7 @@ public final class FolderUtil {
 
     /**
      * Detects if the given URI starts with a CR user home.
-     *
+     * 
      * @param uri The given URI.
      * @return See description above..
      */
@@ -104,7 +104,7 @@ public final class FolderUtil {
     /**
      * Returns true if {@link URIUtil#startsWithUserHome(String)} true and it is a reserved URI. For resreved URIs, see
      * {@link CRUser#getReservedFolderAndFileUris(String)}. Otherwise returns false.
-     *
+     * 
      * @param uri The given URI.
      * @return See method description.
      */
@@ -117,7 +117,7 @@ public final class FolderUtil {
     /**
      * Extracts user name from the given URI. A user name is returned only if the given URI returns true for
      * {@link URIUtil#startsWithUserHome(String)}. Otherwise null is returned.
-     *
+     * 
      * @param uri The given URI.
      * @return See method description.
      */
@@ -128,14 +128,14 @@ public final class FolderUtil {
         }
 
         String str =
-            StringUtils.substringAfter(uri, GeneralConfig.getRequiredProperty(GeneralConfig.APPLICATION_HOME_URL) + "/home/");
+                StringUtils.substringAfter(uri, GeneralConfig.getRequiredProperty(GeneralConfig.APPLICATION_HOME_URL) + "/home/");
         return StringUtils.substringBefore(str, "/");
     }
 
     /**
      * Returns the path after the user home folder. For example if uri is
      * "http://127.0.0.1:8080/cr/home/heinlja/newFolder/newFile.txt" the result is "newFolder/newFile.txt".
-     *
+     * 
      * @param uri
      * @return
      */
@@ -151,15 +151,15 @@ public final class FolderUtil {
         String userName = extractUserName(uri);
 
         String result =
-            StringUtils.substringAfter(uri, GeneralConfig.getRequiredProperty(GeneralConfig.APPLICATION_HOME_URL) + "/home/"
-                    + userName + "/");
+                StringUtils.substringAfter(uri, GeneralConfig.getRequiredProperty(GeneralConfig.APPLICATION_HOME_URL) + "/home/"
+                        + userName + "/");
         return result;
     }
 
     /**
      * Returns the path after the special folder. For example if uri is "http://127.0.0.1:8080/cr/project/newFolder/newFile.txt" the
      * result is "newFolder/newFile.txt".
-     *
+     * 
      * @param uri
      * @param mainFolder special main folder name
      * @return String
@@ -176,6 +176,7 @@ public final class FolderUtil {
 
     /**
      * Extracts path in the uri.
+     * 
      * @param uri Full uri
      * @return Path after the special folder path (project, user etc)
      */
@@ -197,7 +198,7 @@ public final class FolderUtil {
 
     /**
      * Return all folders where user can store data.
-     *
+     * 
      * @param user current user
      * @return List of folder names
      * @throws DAOException if query does not succees
@@ -211,7 +212,7 @@ public final class FolderUtil {
             // Get project folders where user can insert content
             if (CRUser.hasPermission(user.getUserName(), "/project", "i")) {
                 List<String> projectFolders =
-                    DAOFactory.get().getDao(FolderDAO.class).getSubFolders(FolderUtil.getProjectsFolder());
+                        DAOFactory.get().getDao(FolderDAO.class).getSubFolders(FolderUtil.getProjectsFolder());
                 if (projectFolders != null && projectFolders.size() > 0) {
                     for (String furi : projectFolders) {
                         String aclPath = FolderUtil.extractPathInSpecialFolder(furi, "project");
@@ -227,6 +228,7 @@ public final class FolderUtil {
 
     /**
      * Returns list of project folders where the user can insert items.
+     * 
      * @param user current session user
      * @param permission - permission to check
      * @return list of folder names
@@ -238,7 +240,7 @@ public final class FolderUtil {
             // Get project folders where user can insert content
             if (CRUser.hasPermission(user.getUserName(), "/project", permission)) {
                 List<String> projectFolders =
-                    DAOFactory.get().getDao(FolderDAO.class).getSubFolders(FolderUtil.getProjectsFolder());
+                        DAOFactory.get().getDao(FolderDAO.class).getSubFolders(FolderUtil.getProjectsFolder());
                 if (projectFolders != null && projectFolders.size() > 0) {
                     folders = new ArrayList<String>();
                     for (String furi : projectFolders) {
@@ -256,7 +258,7 @@ public final class FolderUtil {
 
     /**
      * Returns the path after the app home URL. For example if uri is "http://127.0.0.1:8080/cr/abc" the result is "abc".
-     *
+     * 
      * @param uri
      * @return String
      */
@@ -278,7 +280,7 @@ public final class FolderUtil {
 
     /**
      * True, if the folder uri is user's home folder.
-     *
+     * 
      * @return
      */
     public static boolean isHomeFolder(String uri) {
@@ -292,7 +294,7 @@ public final class FolderUtil {
 
     /**
      * True, if the folder uri is a project folder.
-     *
+     * 
      * @return boolean
      */
     public static boolean isProjectFolder(String uri) {
@@ -305,7 +307,7 @@ public final class FolderUtil {
 
     /**
      * True, if the folder uri is project root folder.
-     *
+     * 
      * @return boolean
      */
     public static boolean isProjectRootFolder(String uri) {
@@ -318,6 +320,7 @@ public final class FolderUtil {
 
     /**
      * Returns full url of the project.
+     * 
      * @param projectName project name
      * @return full url
      */
@@ -329,7 +332,7 @@ public final class FolderUtil {
     /**
      * Returns FileStore userDir where the files will be stored. Current userdir is returned as other users files can be managed as
      * well
-     *
+     * 
      * @param uri
      * @param userName
      * @return String
@@ -346,7 +349,7 @@ public final class FolderUtil {
 
     /**
      * Calculates folder context (graph) of the triples of file/folder object.
-     *
+     * 
      * @param uri URI of the file
      * @return folder context
      */

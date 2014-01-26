@@ -27,9 +27,9 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import eionet.cr.web.util.WebConstants;
 
 /**
- *
+ * 
  * @author heinljab
- *
+ * 
  */
 public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
 
@@ -219,7 +219,9 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
         this.dateString = dateString;
     }
 
-    /** HTTP Response Code output.
+    /**
+     * HTTP Response Code output.
+     * 
      * @return HTTP Response Code String representation
      */
     public String getResponseCodeString() {
@@ -233,6 +235,5 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }
-
 
 }

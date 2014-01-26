@@ -13,9 +13,9 @@ import eionet.cr.harvest.scheduled.UrgentHarvestQueue;
 import eionet.cr.web.security.CRUser;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public final class RegisterUrl {
 
@@ -28,7 +28,7 @@ public final class RegisterUrl {
 
     /**
      * Register a URL.
-     *
+     * 
      * @param url - URL to register
      * @param user - Authentication object
      * @param saveToBookmarks - a flag to say whether to also create a bookmark in user's bookmarks
@@ -37,7 +37,7 @@ public final class RegisterUrl {
      * @throws HarvestException
      */
     public static void register(String url, CRUser user, boolean saveToBookmarks, String label) throws DAOException,
-    HarvestException {
+            HarvestException {
         // register URL
         DAOFactory.get().getDao(HelperDAO.class).registerUserUrl(user, url, saveToBookmarks, label);
 
@@ -46,8 +46,8 @@ public final class RegisterUrl {
 
         String urlWithoutFragment = StringUtils.substringBefore(url, "#");
         Integer intervalMinutes =
-            Integer.valueOf(GeneralConfig.getProperty(GeneralConfig.HARVESTER_REFERRALS_INTERVAL,
-                    String.valueOf(HarvestSourceDTO.DEFAULT_REFERRALS_INTERVAL)));
+                Integer.valueOf(GeneralConfig.getProperty(GeneralConfig.HARVESTER_REFERRALS_INTERVAL,
+                        String.valueOf(HarvestSourceDTO.DEFAULT_REFERRALS_INTERVAL)));
 
         HarvestSourceDTO source = new HarvestSourceDTO();
         source.setUrl(urlWithoutFragment);

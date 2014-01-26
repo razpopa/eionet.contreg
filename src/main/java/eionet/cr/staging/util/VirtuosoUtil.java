@@ -34,9 +34,9 @@ import com.healthmarketscience.jackcess.Table;
 
 // TODO: Auto-generated Javadoc
 /**
- *
+ * 
  * @author jaanus
- *
+ * 
  */
 public final class VirtuosoUtil {
 
@@ -68,7 +68,7 @@ public final class VirtuosoUtil {
 
     /**
      * Creates the table statement.
-     *
+     * 
      * @param table the table
      * @param dbName the db name
      * @param dbUser the db user
@@ -123,7 +123,7 @@ public final class VirtuosoUtil {
 
     /**
      * Parameterized insert statement.
-     *
+     * 
      * @param tableName the table name
      * @param columnNames the column names
      * @param dbName the db name
@@ -147,12 +147,12 @@ public final class VirtuosoUtil {
         }
 
         return "INSERT INTO \"" + fullyQualifiedSanitizedTableName(tableName, dbName, dbUser) + "\" (" + columnsStr + ") values ("
-        + valuesStr + ")";
+                + valuesStr + ")";
     }
 
     /**
      * Sanitize column name.
-     *
+     * 
      * @param name the name
      * @return the string
      */
@@ -163,7 +163,7 @@ public final class VirtuosoUtil {
 
     /**
      * Fully qualified sanitized table name.
-     *
+     * 
      * @param tableName the table name
      * @param dbName the db name
      * @param dbUser the db user
@@ -179,7 +179,7 @@ public final class VirtuosoUtil {
 
     /**
      * Jackcess to virtuoso data type.
-     *
+     * 
      * @param column the column
      * @return the string
      */

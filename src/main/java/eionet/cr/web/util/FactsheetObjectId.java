@@ -25,9 +25,9 @@ import org.apache.commons.lang.StringUtils;
 import eionet.cr.dto.ObjectDTO;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public final class FactsheetObjectId {
 
@@ -42,7 +42,7 @@ public final class FactsheetObjectId {
     }
 
     /**
-     *
+     * 
      * @param object
      * @return
      */
@@ -53,11 +53,11 @@ public final class FactsheetObjectId {
         }
 
         return new StringBuilder().append(object.getHash()).append(SEPARATOR).append(object.getSourceHash()).append(SEPARATOR)
-        .append(object.getDerivSourceHash()).append(SEPARATOR).append(object.getSourceObjectHash()).toString();
+                .append(object.getDerivSourceHash()).append(SEPARATOR).append(object.getSourceObjectHash()).toString();
     }
 
     /**
-     *
+     * 
      * @param s
      * @return
      */

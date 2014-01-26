@@ -4,9 +4,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 /**
- *
+ * 
  * Type definition ...
- *
+ * 
  * @author Jaanus
  */
 public enum ODPAction {
@@ -31,9 +31,9 @@ public enum ODPAction {
     private String nameCamelCase;
 
     /**
-     *
+     * 
      * Class constructor.
-     *
+     * 
      * @param label
      */
     ODPAction(String label) {
@@ -49,7 +49,7 @@ public enum ODPAction {
 
     /**
      * Returns the enum's name in camel case, with lower-case first letter.
-     *
+     * 
      * @return The result.
      */
     public String getNameCamelCase() {

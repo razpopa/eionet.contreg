@@ -34,9 +34,9 @@ import eionet.cr.dto.SubjectDTO;
 import eionet.cr.web.security.CRUser;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public final class OnDemandHarvester extends Thread {
 
@@ -66,7 +66,7 @@ public final class OnDemandHarvester extends Thread {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Thread#run()
      */
     public void run() {
@@ -88,7 +88,7 @@ public final class OnDemandHarvester extends Thread {
             // since user registrations URI was used as triple source, add it to HARVEST_SOURCE too
             // (but set interval minutes to 0, to avoid it being background-harvested)
             DAOFactory.get().getDao(HarvestSourceDAO.class)
-            .addSourceIgnoreDuplicate(HarvestSourceDTO.create(CRUser.registrationsUri(userName), true, 0, userName));
+                    .addSourceIgnoreDuplicate(HarvestSourceDTO.create(CRUser.registrationsUri(userName), true, 0, userName));
 
         } catch (HarvestException e) {
             harvestException = e;
@@ -111,7 +111,7 @@ public final class OnDemandHarvester extends Thread {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private boolean wasException() {
@@ -119,7 +119,7 @@ public final class OnDemandHarvester extends Thread {
     }
 
     /**
-     *
+     * 
      * @param sourceUrl
      * @param userName
      * @return Resolution

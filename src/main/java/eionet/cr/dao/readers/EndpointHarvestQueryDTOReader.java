@@ -30,14 +30,14 @@ import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
  * An SQL result set reader for objects of type {@link EndpointHarvestQueryDTO}.
- *
+ * 
  * @author jaanus
  */
 public class EndpointHarvestQueryDTOReader extends SQLResultSetBaseReader<EndpointHarvestQueryDTO> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

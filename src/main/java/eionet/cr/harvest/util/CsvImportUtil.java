@@ -20,7 +20,7 @@ import eionet.cr.web.action.UploadCSVActionBean.FileType;
 
 /**
  * Util class for CSV/TSV files import.
- *
+ * 
  * @author kaido
  */
 public final class CsvImportUtil {
@@ -37,7 +37,7 @@ public final class CsvImportUtil {
 
     /**
      * Checks if the given source is a table file.
-     *
+     * 
      * @param subject Subject to be checked
      * @return true if table file (CSV/TSV)
      */
@@ -50,7 +50,7 @@ public final class CsvImportUtil {
 
     /**
      * Harvests CSV/TSV file.
-     *
+     * 
      * @param subject Subject data object of file location.
      * @param uri file (Source/Graph) uri
      * @param userName user who executed the harvest

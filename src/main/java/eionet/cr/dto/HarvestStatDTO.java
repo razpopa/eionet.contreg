@@ -26,7 +26,7 @@ import java.util.Date;
 
 /**
  * Data of harvest statistics.
- *
+ * 
  * @author Juhan Voolaid
  */
 public class HarvestStatDTO extends HarvestDTO {
@@ -74,10 +74,9 @@ public class HarvestStatDTO extends HarvestDTO {
         Integer duration = getDuration();
         Integer statements = getTotalStatements();
 
-        if (duration == null || duration.intValue() <= 0 || statements == null || statements.intValue() <= 0){
+        if (duration == null || duration.intValue() <= 0 || statements == null || statements.intValue() <= 0) {
             return null;
-        }
-        else{
+        } else {
             double ratio = duration.doubleValue() / statements.doubleValue();
             return Double.valueOf(Math.round(ratio * 100) / 100.0d);
         }

@@ -31,9 +31,9 @@ import java.util.Set;
  * Case-insensitive means that methods like containsKey(Object key), get(Object key), remove(Object key), put(key, value) and
  * putAll(Map<? extends String, ? extends V> map) operate case-insensitively. Methods like keySet() and entrySet() return keys in
  * their original case.
- *
+ * 
  * remove(Object key) removes all mappings where the keys match to the given key case-insensitively!
- *
+ * 
  * @author jaanus
  */
 public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
@@ -54,7 +54,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#clear()
      */
     @Override
@@ -65,7 +65,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#containsKey(java.lang.Object)
      */
     @Override
@@ -75,7 +75,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#containsValue(java.lang.Object)
      */
     @Override
@@ -85,7 +85,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#entrySet()
      */
     @Override
@@ -95,7 +95,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#get(java.lang.Object)
      */
     @Override
@@ -105,7 +105,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#isEmpty()
      */
     @Override
@@ -115,7 +115,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#keySet()
      */
     @Override
@@ -125,7 +125,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -149,7 +149,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#putAll(java.util.Map)
      */
     @Override
@@ -166,7 +166,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#remove(java.lang.Object)
      */
     @Override
@@ -180,6 +180,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /**
      * Removes from original map all mappings where key matches the given input key regardless of case.
+     * 
      * @param key
      */
     private void removeFromOriginalKeysMap(Object key) {
@@ -200,7 +201,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#size()
      */
     @Override
@@ -210,7 +211,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.util.Map#values()
      */
     @Override
@@ -220,7 +221,7 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -229,51 +230,10 @@ public class LinkedCaseInsensitiveMap<V> implements java.util.Map<String, V> {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private LinkedHashMap<String, V> getLowerKeysMap() {
         return lowerCaseKeysMap;
-    }
-
-    /**
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        LinkedCaseInsensitiveMap<Long> map = new LinkedCaseInsensitiveMap<Long>();
-        map.put("jAAnus", 1L);
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        map.put("jaAnuS", 2L);
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        map.put(null, 1L);
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        map.put("enriko", 3L);
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        map.put("risto", 4L);
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        System.out.println("map.get(\"JAANUS\") = " + map.get("JAANUS"));
-        map.remove("Jaanus");
-
-        System.out.println("map = " + map);
-        System.out.println("getLowerKeysMap() = " + map.getLowerKeysMap().toString());
-
-        System.out.println();
     }
 }

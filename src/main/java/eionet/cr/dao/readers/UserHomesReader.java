@@ -10,7 +10,7 @@ import eionet.cr.dto.UserFolderDTO;
 
 /**
  * Reader for user homes.
- *
+ * 
  * @author kaido
  */
 public class UserHomesReader extends ResultSetMixedReader<UserFolderDTO> {
@@ -40,6 +40,5 @@ public class UserHomesReader extends ResultSetMixedReader<UserFolderDTO> {
     public void readRow(ResultSet rs) throws SQLException, ResultSetReaderException {
         throw new ResultSetReaderException("Not implemented");
     }
-
 
 }

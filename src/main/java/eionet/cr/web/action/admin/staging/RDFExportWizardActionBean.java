@@ -217,8 +217,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
         queryConf.setClearDataset(StringUtils.equals(getContext().getRequestParameter("clearDataset"), Boolean.TRUE.toString()));
 
         try {
-            StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
-            ExportRunner.start(dbDTO, exportName, getUserName(), queryConf);
+            StagingDatabaseDTO dto = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
+            ExportRunner.start(dto, exportName, getUserName(), queryConf);
         } catch (DAOException e) {
             LOGGER.error("Export start failed with technical error", e);
             addWarningMessage("Export start failed with technical error: " + e.getMessage());
@@ -237,8 +237,8 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
     public Resolution test() {
 
         try {
-            StagingDatabaseDTO dbDTO = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
-            testRun = ExportRunner.test(dbDTO, queryConf);
+            StagingDatabaseDTO dto = DAOFactory.get().getDao(StagingDatabaseDAO.class).getDatabaseByName(dbName);
+            testRun = ExportRunner.test(dto, queryConf);
             int rowCount = testRun.getRowCount();
             if (rowCount > 0) {
                 addSystemMessage("Test run successful, see results below!");
@@ -586,7 +586,7 @@ public class RDFExportWizardActionBean extends AbstractActionBean {
                     }
                 }
 
-                if (hasMatch == false) {
+                if (!hasMatch) {
                     return false;
                 }
             }

@@ -2,7 +2,7 @@ package eionet.cr.staging.imp;
 
 /**
  * The Class ImportException.
- *
+ * 
  * @author jaanus
  */
 public class ImportException extends Exception {
@@ -19,7 +19,7 @@ public class ImportException extends Exception {
 
     /**
      * Instantiates a new import exception.
-     *
+     * 
      * @param message the message
      */
     public ImportException(String message) {
@@ -28,7 +28,7 @@ public class ImportException extends Exception {
 
     /**
      * Instantiates a new import exception.
-     *
+     * 
      * @param throwable the throwable
      */
     public ImportException(Throwable throwable) {
@@ -37,7 +37,7 @@ public class ImportException extends Exception {
 
     /**
      * Instantiates a new import exception.
-     *
+     * 
      * @param message the message
      * @param throwable the throwable
      */

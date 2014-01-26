@@ -19,9 +19,9 @@ import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 // TODO: Auto-generated Javadoc
 /**
- *
+ * 
  * @author Enriko Käsper
- *
+ * 
  */
 public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
@@ -52,9 +52,9 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
     protected boolean useInferencing = true;
 
     /**
-     *
+     * 
      * Class constructor.
-     *
+     * 
      * @param filters
      * @param literalRangeFilters
      * @param pagingRequest
@@ -78,7 +78,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
                     break;
                 }
             }
-            if (atLeastOneValidEntry == false) {
+            if (!atLeastOneValidEntry) {
                 throw new CRRuntimeException("The map of filters must contain at least one enrty"
                         + " where key and value are not blank!");
             }
@@ -91,6 +91,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getUnorderedQuery(java.util.List)
      */
     @Override
@@ -104,6 +105,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -121,7 +123,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
         // those predicates, then the last part of subject URI must be used instead.
         if (Predicates.RDFS_LABEL.equals(sortPredicate)) {
             strBuilder.append("(bif:either( bif:isnull(?sortObject) , (bif:lcase(bif:subseq (bif:replace (?s, '/', '#'), ")
-            .append("bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , bif:lcase(?sortObject)))");
+                    .append("bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , bif:lcase(?sortObject)))");
         } else if (Predicates.RDF_TYPE.equals(sortPredicate)) {
             // Replace all / with # and then get the string after last #
             strBuilder.append("(bif:lcase(bif:subseq (bif:replace (?sortObject, '/', '#'), bif:strrchr (bif:replace ").append(
@@ -129,8 +131,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
             // sort by date
         } else if ("uri".equals(sortPredicate)) {
             strBuilder.append("(?s)");
-        }
-        else{
+        } else {
             strBuilder.append("(bif:lcase(?sortObject))");
         }
 
@@ -139,6 +140,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
+     * 
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getCountQuery(java.util.List)
      */
     @Override
@@ -152,7 +154,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /**
      * Builds the query 's "where contents", i.e. the part that goes in between the curly brackets in "where {}".
-     *
+     * 
      * @return Query parameter string for SPARQL
      */
     public String getWhereContents() {
@@ -213,7 +215,9 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getQueryBindings()
      */
     @Override
@@ -224,7 +228,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
     /**
      * Returns StringBuilder based on useInference settings. Definition of the rule is at the beginning of the query if the helper
      * must use inferencing
-     *
+     * 
      * @return StringBuilder to be used for the query.
      */
     private StringBuilder initQueryStringBuilder() {

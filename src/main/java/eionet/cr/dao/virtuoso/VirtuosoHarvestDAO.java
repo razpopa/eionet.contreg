@@ -38,9 +38,9 @@ import eionet.cr.util.Util;
 import eionet.cr.util.sql.SQLUtil;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public class VirtuosoHarvestDAO extends VirtuosoBaseDAO implements HarvestDAO {
 
@@ -70,8 +70,7 @@ public class VirtuosoHarvestDAO extends VirtuosoBaseDAO implements HarvestDAO {
                 "select distinct top " + HarvestMessageType.values().length * maxDistinctHarvests + " H.HARVEST_ID as HARVEST_ID,"
                         + " H.HARVEST_SOURCE_ID as SOURCE_ID, H.TYPE as HARVEST_TYPE, H.USERNAME as HARVEST_USER,"
                         + " H.STATUS as STATUS, H.STARTED as STARTED, H.FINISHED as FINISHED,"
-                        + " H.ENC_SCHEMES as ENC_SCHEMES, H.TOT_STATEMENTS as TOT_STATEMENTS,"
-                        + " H.HTTP_CODE as HTTP_CODE,"
+                        + " H.ENC_SCHEMES as ENC_SCHEMES, H.TOT_STATEMENTS as TOT_STATEMENTS," + " H.HTTP_CODE as HTTP_CODE,"
                         + " H.LIT_STATEMENTS as LIT_STATEMENTS, M.TYPE as MESSAGE_TYPE"
                         + " from HARVEST AS H left join HARVEST_MESSAGE AS M on H.HARVEST_ID=M.HARVEST_ID"
                         + " where H.HARVEST_SOURCE_ID=? order by H.STARTED desc";
@@ -224,6 +223,5 @@ public class VirtuosoHarvestDAO extends VirtuosoBaseDAO implements HarvestDAO {
         List<HarvestDTO> list = executeSQL(GET_LAST_REAL_HARVEST_BY_SOURCE_ID_SQL, values, new HarvestDTOReader());
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
-
 
 }

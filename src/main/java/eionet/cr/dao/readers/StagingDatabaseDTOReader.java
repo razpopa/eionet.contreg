@@ -34,7 +34,7 @@ import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
  * SQL result set reader for objects of type {@link StagingDatabaseDTO}.
- *
+ * 
  * @author jaanus
  */
 public class StagingDatabaseDTOReader extends SQLResultSetBaseReader<StagingDatabaseDTO> {
@@ -42,7 +42,9 @@ public class StagingDatabaseDTOReader extends SQLResultSetBaseReader<StagingData
     /** */
     private static final Logger LOGGER = Logger.getLogger(StagingDatabaseDTOReader.class);
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

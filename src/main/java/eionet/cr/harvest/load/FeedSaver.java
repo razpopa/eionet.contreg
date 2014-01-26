@@ -64,7 +64,7 @@ import eionet.cr.util.sesame.SesameUtil;
  * Helper class that reads a feed (e.g. RSS, Atom) from the given input stream and saves it into the given context (i.e. graph) in
  * the given repository. Repository connections and the context are given via constructor, the stream is given via
  * {@link #save(InputStream)} method.
- *
+ * 
  * @author Jaanus Heinlaid
  */
 public class FeedSaver {
@@ -102,7 +102,7 @@ public class FeedSaver {
      * @throws ContentParsingException
      * @throws IOException
      * @throws OpenRDFException
-     *
+     * 
      */
     public void save(InputStream inputStream) throws ContentParsingException, IOException, OpenRDFException {
 
@@ -166,7 +166,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param item
      * @return
      */
@@ -229,17 +229,17 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param feedUri
      * @param feed
      * @throws RepositoryException
      */
-    private void saveFeedImageMetadata(String feedUri, SyndFeed feed) throws RepositoryException{
+    private void saveFeedImageMetadata(String feedUri, SyndFeed feed) throws RepositoryException {
 
         SyndImage feedImage = feed.getImage();
 
         // The image object must not be null, and its URL must not be blank.
-        if (feedImage == null || StringUtils.isBlank(feedImage.getUrl())){
+        if (feedImage == null || StringUtils.isBlank(feedImage.getUrl())) {
             return;
         }
 
@@ -267,12 +267,12 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param feedUri
      * @param feed
      * @throws RepositoryException
      */
-    private void saveTextInputMetadata(String feedUri, SyndFeed feed) throws RepositoryException{
+    private void saveTextInputMetadata(String feedUri, SyndFeed feed) throws RepositoryException {
 
         // SyndFeed itself does not return textInput metadata, because it is a normalization of teh various RSS/Atom formats,
         // and not all of them have a TextInput. So we get the original WireFeed object that this SyndFeed was created from,
@@ -280,13 +280,13 @@ public class FeedSaver {
         // earlier on, so that the original WireFeed is preserved indeed.
 
         WireFeed originalWireFeed = feed.originalWireFeed();
-        if (originalWireFeed == null || !(originalWireFeed instanceof Channel)){
+        if (originalWireFeed == null || !(originalWireFeed instanceof Channel)) {
             return;
         }
 
         TextInput textInput = ((Channel) originalWireFeed).getTextInput();
         // The input must not be null and its link must not be blank.
-        if (textInput == null || StringUtils.isBlank(textInput.getLink())){
+        if (textInput == null || StringUtils.isBlank(textInput.getLink())) {
             return;
         }
 
@@ -360,7 +360,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param subjectUri
      * @param predicateUri
      * @param persons
@@ -445,7 +445,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param feedUri
      * @param itemUri
      * @param position
@@ -462,7 +462,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param subjectUri
      * @param predicateUri
      * @param object
@@ -481,7 +481,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param subjectUri
      * @param predicateUri
      * @param objectUri
@@ -510,7 +510,7 @@ public class FeedSaver {
     }
 
     /**
-     *
+     * 
      * @param subjectUri
      * @param predicateUri
      * @param object
@@ -534,7 +534,7 @@ public class FeedSaver {
 
     /**
      * Removes any HTML content from the given text.
-     *
+     * 
      * @param text
      * @return
      */

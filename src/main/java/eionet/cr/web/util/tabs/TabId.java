@@ -4,24 +4,15 @@ import org.apache.commons.lang.WordUtils;
 
 public enum TabId {
 
-    RESOURCE_PROPERTIES,
-    RESOURCE_REFERENCES,
-    OBJECTS_IN_SOURCE,
-    SHOW_ON_MAP,
-    BOOKMARKED_SPARQL("Bookmarked SPARQL"),
-    COMPILED_DATASET,
-    REVIEW_FOLDER("Reviews"),
-    FOLDER("Contents"),
-    BOOKMARKS,
-    REGISTRATIONS,
-    HISTORY,
-    TABLE_FILE_CONTENTS("CSV/TSV contents");
+    RESOURCE_PROPERTIES, RESOURCE_REFERENCES, OBJECTS_IN_SOURCE, SHOW_ON_MAP, BOOKMARKED_SPARQL("Bookmarked SPARQL"),
+    COMPILED_DATASET, REVIEW_FOLDER("Reviews"), FOLDER("Contents"), BOOKMARKS, REGISTRATIONS, HISTORY, TABLE_FILE_CONTENTS(
+            "CSV/TSV contents");
 
     /** */
     private String title;
 
     /**
-     *
+     * 
      * Class constructor.
      */
     TabId() {

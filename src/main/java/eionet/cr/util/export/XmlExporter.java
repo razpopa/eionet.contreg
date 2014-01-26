@@ -163,7 +163,7 @@ public class XmlExporter extends Exporter implements SubjectExportEvent {
 
     /**
      * Write doument start element(s).
-     *
+     * 
      * @param writer
      * @throws XMLStreamException
      */
@@ -173,7 +173,7 @@ public class XmlExporter extends Exporter implements SubjectExportEvent {
 
     /**
      * Write document end element(s).
-     *
+     * 
      * @param writer
      * @throws XMLStreamException
      */
@@ -183,7 +183,7 @@ public class XmlExporter extends Exporter implements SubjectExportEvent {
 
     /**
      * Get elements.
-     *
+     * 
      * @return the list of element names.
      */
     public Map<String, XmlElementMetadata> getElements() {

@@ -44,7 +44,7 @@ public class VirtuosoFilteredSearchHelperTest {
     public void testOrderedQuery() {
         PagingRequest pagingRequest = PagingRequest.create(1);
         SortingRequest sortingRequest =
-            new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.DESCENDING.toString()));
+                new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.DESCENDING.toString()));
 
         Map<String, String> filters = new HashMap<String, String>();
         filters.put("http://purl.org/dc/elements/1.1/creator", "Roug");
@@ -78,8 +78,9 @@ public class VirtuosoFilteredSearchHelperTest {
 
         assertEquals(
                 query,
-                SPARQLQueryUtil.getCrInferenceDefinitionStr() + "select distinct ?s where {?s ?p1 ?o1 . "
-                + "filter(?p1 = ?p1Val) . filter(?o1 = ?o1Val) . ?s ?p2 ?o2 . filter(?p2 = ?p2Val) . filter bif:contains(?o2, ?o2Val)}");
+                SPARQLQueryUtil.getCrInferenceDefinitionStr()
+                        + "select distinct ?s where {?s ?p1 ?o1 . "
+                        + "filter(?p1 = ?p1Val) . filter(?o1 = ?o1Val) . ?s ?p2 ?o2 . filter(?p2 = ?p2Val) . filter bif:contains(?o2, ?o2Val)}");
     }
 
     @Test
@@ -126,7 +127,7 @@ public class VirtuosoFilteredSearchHelperTest {
     public void testOrderedQueryIncludingLabel() {
         PagingRequest pagingRequest = PagingRequest.create(1);
         SortingRequest sortingRequest =
-            new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.ASCENDING.toString()));
+                new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.ASCENDING.toString()));
 
         Map<String, String> filters = new HashMap<String, String>();
         filters.put("http://www.w3.org/2000/01/rdf-schema#label", "ippc");
@@ -137,22 +138,23 @@ public class VirtuosoFilteredSearchHelperTest {
         String query = helper.getOrderedQuery(inParams);
 
         assertEquals(
-                SPARQLQueryUtil.getCrInferenceDefinitionStr() + "select distinct ?s where {?s ?p1 ?o1 . "
-                + "filter(?p1 = ?p1Val) . filter bif:contains(?o1, ?sortObjVal)} order by asc(bif:either( bif:isnull(?sortObjVal) , "
-                + "(bif:lcase(bif:subseq (bif:replace (?s, '/', '#'), bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , "
-                + "bif:lcase(?sortObjVal)))", query);
+                SPARQLQueryUtil.getCrInferenceDefinitionStr()
+                        + "select distinct ?s where {?s ?p1 ?o1 . "
+                        + "filter(?p1 = ?p1Val) . filter bif:contains(?o1, ?sortObjVal)} order by asc(bif:either( bif:isnull(?sortObjVal) , "
+                        + "(bif:lcase(bif:subseq (bif:replace (?s, '/', '#'), bif:strrchr (bif:replace (?s, '/', '#'), '#')+1))) , "
+                        + "bif:lcase(?sortObjVal)))", query);
     }
 
     @Test
     public void testOrderedQueryIncludingLabelNoInference() {
         PagingRequest pagingRequest = PagingRequest.create(1);
         SortingRequest sortingRequest =
-            new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.ASCENDING.toString()));
+                new SortingRequest("http://www.w3.org/2000/01/rdf-schema#label", SortOrder.parse(SortOrder.ASCENDING.toString()));
 
         Map<String, String> filters = new HashMap<String, String>();
         filters.put("http://www.w3.org/2000/01/rdf-schema#label", "ippc");
         VirtuosoFilteredSearchHelper helper =
-            new VirtuosoFilteredSearchHelper(filters, null, pagingRequest, sortingRequest, false);
+                new VirtuosoFilteredSearchHelper(filters, null, pagingRequest, sortingRequest, false);
         ArrayList<Object> inParams = new ArrayList<Object>();
 
         String query = helper.getOrderedQuery(inParams);

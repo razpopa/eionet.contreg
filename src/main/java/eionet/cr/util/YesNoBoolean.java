@@ -21,25 +21,25 @@
 package eionet.cr.util;
 
 /**
- *
+ * 
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
+ * 
  */
 public enum YesNoBoolean {
 
     Y, N;
 
     /**
-     *
+     * 
      * @param b
      * @return
      */
     public static String format(boolean b) {
-        return b == true ? Y.toString() : N.toString();
+        return b ? Y.toString() : N.toString();
     }
 
     /**
-     *
+     * 
      * @param s
      * @return
      */
@@ -47,14 +47,11 @@ public enum YesNoBoolean {
 
         if (s == null) {
             return false;
-        }
-        else if (s.equals(Y.toString())) {
+        } else if (s.equals(Y.toString())) {
             return true;
-        }
-        else if (s.equals(N.toString())) {
+        } else if (s.equals(N.toString())) {
             return false;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(s);
         }
     }

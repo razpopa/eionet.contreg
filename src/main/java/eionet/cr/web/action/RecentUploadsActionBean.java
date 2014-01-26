@@ -46,9 +46,9 @@ import eionet.cr.web.util.columns.SubjectPredicateColumn;
 import eionet.cr.web.util.columns.SubjectUploadedColumn;
 
 /**
- *
+ * 
  * @author altnyris
- *
+ * 
  */
 @UrlBinding("/recentUploads.action")
 public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO> {
@@ -106,7 +106,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     @DefaultHandler
@@ -121,7 +121,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
     }
 
     /**
-     *
+     * 
      * @return String
      */
     public String getType() {
@@ -129,7 +129,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
     }
 
     /**
-     *
+     * 
      * @param type
      */
     public void setType(String type) {
@@ -137,7 +137,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
     }
 
     /**
-     *
+     * 
      * @return List<Map<String, String>>
      */
     public List<Map<String, String>> getTypes() {
@@ -145,7 +145,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
     }
 
     /**
-     *
+     * 
      * @return int
      */
     public int getMaxResults() {
@@ -154,7 +154,7 @@ public class RecentUploadsActionBean extends AbstractSearchActionBean<SubjectDTO
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
     public List<SearchResultColumn> getColumns() {

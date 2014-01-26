@@ -38,6 +38,13 @@ public class ObjectTypes {
     private static final LinkedHashMap<String, ObjectType> TYPES_BY_URI = load();
 
     /**
+     * Disable utility class constructor.
+     */
+    private ObjectTypes() {
+        // Empty constructor.
+    }
+
+    /**
      * Gets the by uri.
      *
      * @param uri the uri

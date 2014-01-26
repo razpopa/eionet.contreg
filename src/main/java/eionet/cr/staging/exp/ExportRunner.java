@@ -64,7 +64,7 @@ import eionet.cr.util.sql.SQLUtil;
  *
  * @author jaanus
  */
-public class ExportRunner extends Thread {
+public final class ExportRunner extends Thread {
 
     /** */
     private static final String DEFAULT_INDICATOR_CODE = "*";

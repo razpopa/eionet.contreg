@@ -49,7 +49,7 @@ import eionet.cr.web.action.admin.postHarvest.PostHarvestScriptsActionBean.Actio
 import eionet.cr.web.util.ApplicationCache;
 
 /**
- *
+ * 
  * @author Jaanus Heinlaid
  */
 @UrlBinding("/admin/postHarvestScript")
@@ -90,7 +90,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     private String cancelUrl;
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -114,7 +114,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
 
     /**
      * Resolution after paste action.
-     *
+     * 
      * @return The same page
      * @throws DAOException
      *             if paste fails
@@ -134,7 +134,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -162,7 +162,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -200,7 +200,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      * @throws DAOException
      */
@@ -229,7 +229,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     private RedirectResolution resolutionToScripts() {
@@ -245,7 +245,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @throws DAOException
      */
     @ValidationMethod(on = {"save"})
@@ -293,7 +293,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
 
     /**
      * Validates if the script(s) in the buffer can be pasted.
-     *
+     * 
      * @throws DAOException
      *             if validating fails.
      */
@@ -309,7 +309,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
         if (StringUtils.isBlank(targetUrl)) {
             addGlobalValidationError("Target URL has to be selected");
         } else {
-            //no need to process the other checks to avoid unnecessary error messages
+            // no need to process the other checks to avoid unnecessary error messages
             TargetType clipboardTargetType = (TargetType) getSession().getAttribute(SCRIPTS_CLIPBOARD_TYPE);
             List<String> validationErros =
                     PostHarvestScriptUtil.getValidateScriptErrors(getClipBoardScripts(), clipboardTargetType, targetType,
@@ -321,7 +321,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @throws DAOException
      */
     @ValidationMethod(on = {"test"})
@@ -440,7 +440,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public List<String> getTypeUris() {
@@ -489,7 +489,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getPageToRender() {
@@ -498,7 +498,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getBackToTargetUrl() {
@@ -506,7 +506,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @param backToTargetUrl
      */
     public void setBackToTargetUrl(String backToTargetUrl) {
@@ -514,7 +514,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public List<Map<String, ObjectDTO>> getTestResults() {
@@ -522,7 +522,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public List<String> getTestResultColumns() {
@@ -556,7 +556,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getHarvestedSourceVariable() {
@@ -564,7 +564,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
     }
 
     /**
-     *
+     * 
      * @return
      */
     public String getAssociatedTypeVariable() {
@@ -588,7 +588,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
 
     /**
      * True if something is selected for this target type.
-     *
+     * 
      * @return true if scripts selected
      */
     public boolean isPastePossible() {
@@ -600,7 +600,7 @@ public class PostHarvestScriptActionBean extends AbstractActionBean {
 
     /**
      * Scripts selected for copy/cut - pasting.
-     *
+     * 
      * @return List of script data objects
      */
 

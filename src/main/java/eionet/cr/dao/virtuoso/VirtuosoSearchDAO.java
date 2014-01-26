@@ -57,7 +57,7 @@ import eionet.cr.web.util.CustomPaginatedList;
 
 /**
  * DAO methods for search in Virtuoso.
- *
+ * 
  * @author jaanus
  */
 public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
@@ -67,7 +67,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Free text search implementation in Virtuoso.
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchByFreeText(eionet.cr.dao.util.SearchExpression,
      *      eionet.cr.dao.helpers.FreeTextSearchHelper.FilterType, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest)
@@ -158,11 +158,11 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * {@link #searchByFilters(Map, boolean, PagingRequest, SortingRequest, List, boolean)}, which is a so-called "two-step"
      * approach where the first query gets the URIs of the matching subjects in the requested order, and the second query gets the
      * requested predicates of these subjects.
-     *
+     * 
      * This version was tried as faster alternative to the "two-step" approach. However, after a performance bug was fixed in the
      * latter, this version was again dropped, as it is much more complicated and harder to follow. However, we keep it here in case
      * we need to bring it back for whichever reason after all.
-     *
+     * 
      * @param filters
      * @param checkFiltersRange
      * @param pagingRequest
@@ -172,7 +172,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * @return
      * @throws DAOException
      */
-    private SearchResultDTO<SubjectDTO> searchByFilters_alternative(Map<String, String> filters, boolean checkFiltersRange,
+    private SearchResultDTO<SubjectDTO> searchByFiltersAlternative(Map<String, String> filters, boolean checkFiltersRange,
             PagingRequest pagingRequest, SortingRequest sortingRequest, List<String> selectPredicates, boolean useInference)
             throws DAOException {
 
@@ -302,7 +302,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Builds the query 's "where contents", i.e. the part that goes in between the curly brackets in "where {}".
-     *
+     * 
      * @return Query parameter string for SPARQL
      */
     private String getWhereContents(Map<String, String> filters, Bindings bindings) {
@@ -352,7 +352,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchByFilters(java.util.Map, java.util.Set, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest, java.util.List)
      */
@@ -421,7 +421,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchDeliveries(java.lang.String, java.lang.String, java.lang.String,
      * eionet.cr.util.pagination.PagingRequest, eionet.cr.util.SortingRequest)
      */
@@ -464,7 +464,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchReferences(java.lang.Long, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -477,7 +477,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchBySpatialBox(eionet.cr.dao.util.BBOX, java.lang.String,
      * eionet.cr.util.pagination.PagingRequest, eionet.cr.util.SortingRequest, boolean)
      */
@@ -542,7 +542,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchByTypeAndFilters(java.util.Map, java.util.Set, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest, java.util.List)
      */
@@ -555,7 +555,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchBySource(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -609,7 +609,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchDeliveriesForROD(eionet.cr.util.pagination.PagingRequest)
      */
     @Override
@@ -643,7 +643,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Search by tags implementation in Virtuoso.
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchByTags(java.util.List, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest, java.util.List)
      * @param tags
@@ -713,7 +713,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Helper method to convert array of tag to a map required by search method.
-     *
+     * 
      * @param tags
      *            List<String> tag names
      * @return Map<String, String> in format [tag predicate: tag name]
@@ -728,7 +728,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#getExactRowCountLimit()
      */
     @Override
@@ -739,7 +739,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#searchReferences(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -801,7 +801,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#getTypes()
      */
     @Override
@@ -814,105 +814,9 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
         return resultList;
     }
 
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see eionet.cr.dao.SearchDAO#searchDataCubeObservations(eionet.cr.dto.ObservationDTO, java.lang.String,
-    // * eionet.cr.util.SortOrder)
-    // */
-    // @Override
-    // public List<ObservationDTO> searchDataCubeObservations(ObservationDTO filter, String sortAlias, SortOrder order)
-    // throws DAOException {
-    //
-    // if (filter == null) {
-    // throw new IllegalArgumentException("The filter object must not be null!");
-    // }
-    //
-    // LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
-    //
-    // Hashtable<String, String> predicateAliases = new Hashtable<String, String>();
-    //
-    // StringBuilder sb = new StringBuilder();
-    // sb.append("select\n");
-    // sb.append("  ?s ?dataset ?indicator ?breakdown ?refArea ?timePeriod ?unit ?obsValue\n");
-    // sb.append("where {\n");
-    // sb.append("  ?s a <").append(Subjects.DCTYPE_DATASET_CLASS).append(">");
-    //
-    // Bindings bindings = new Bindings();
-    // String filterStr = "?s <predicateUri> ?predicateAlias. filter (?predicateAlias = ?predicateAliasValue)";
-    //
-    // for (Entry<String, String> entry : filterMap.entrySet()) {
-    //
-    // String predicateUri = entry.getKey();
-    // String value = entry.getValue();
-    // String predicateAlias = predicateAliases.get(predicateUri);
-    //
-    // filterStr = StringUtils.replace(filterStr, "predicateUri", predicateUri);
-    // filterStr = StringUtils.replace(filterStr, "predicateAlias", predicateAlias);
-    //
-    // sb.append(".\n  ").append(filterStr);
-    // bindings.set(predicateAlias + "Value", value);
-    // }
-    //
-    // String optionalStr = "optional {?s <predicateUri> ?predicateAlias}";
-    // for (Entry<String, String> entry : predicateAliases.entrySet()) {
-    //
-    // String predicateUri = entry.getKey();
-    // if (!filterMap.containsKey(predicateUri)) {
-    //
-    // String predicateAlias = entry.getValue();
-    // optionalStr = StringUtils.replace(optionalStr, "predicateUri", predicateUri);
-    // optionalStr = StringUtils.replace(optionalStr, "predicateAlias", predicateAlias);
-    // sb.append(".\n  ").append(filterStr);
-    // }
-    // }
-    //
-    // sb.append("\n}");
-    //
-    // if (sortAlias != null && predicateAliases.values().contains(sortAlias)) {
-    // sb.append("\norder by ").append(order == null ? "" : order).append("?").append(sortAlias);
-    // }
-    //
-    // return null;
-    // }
-
-    public static void main(String[] args) throws DAOException {
-
-        HashMap<String, String> filters = new HashMap<String, String>();
-        filters.put(Predicates.RDF_TYPE, "http://purl.org/linked-data/cube#Observation");
-        // filters.put(Predicates.DAS_INDICATOR, "http://semantic.digital-agenda-data.eu/codelist/indicator/i_csk_ge_me");
-        filters.put(Predicates.DAS_UNITMEASURE, "http://semantic.digital-agenda-data.eu/codelist/unit-measure/pc_ind");
-        // filters.put(Predicates.DAS_TIMEPERIOD, "http://reference.data.gov.uk/id/year/2006");
-
-        int pageNo = 16;
-        PagingRequest pagingRequest = PagingRequest.create(pageNo);
-        SortingRequest sortRequest =
-                new SortingRequest("http://semantic.digital-agenda-data.eu/def/property/ref-area", SortOrder.DESCENDING);
-
-        SearchDAO dao = DAOFactory.get().getDao(SearchDAO.class);
-
-        long start = System.currentTimeMillis();
-        SearchResultDTO<SubjectDTO> result = dao.searchByFilters(filters, false, pagingRequest, sortRequest, null, false);
-        long durationMillis = System.currentTimeMillis() - start;
-
-        result.getMatchCount();
-        List<SubjectDTO> items = result.getItems();
-
-        if (items == null || items.isEmpty()) {
-            System.out.println("None found!");
-        } else {
-            int size = result.getMatchCount() == 0 ? items.size() : result.getMatchCount();
-            System.out.println(size + " found! Time taken in ms: " + durationMillis);
-            System.out.println("Displaying page #" + pageNo);
-            for (SubjectDTO subjectDTO : items) {
-                System.out.println(subjectDTO.getUri());
-            }
-        }
-    }
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see eionet.cr.dao.SearchDAO#getSubjectsData(java.util.List, java.lang.String[])
      */
     @Override

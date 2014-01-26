@@ -45,7 +45,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.log4j.Logger;
 
 import eionet.cr.staging.AvailableFile;
 import eionet.cr.staging.FileDownloader;
@@ -63,9 +62,6 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
  */
 @UrlBinding("/admin/availFiles.action")
 public class AvailableFilesActionBean extends AbstractActionBean {
-
-    /** */
-    private static final Logger LOGGER = Logger.getLogger(AvailableFilesActionBean.class);
 
     /** */
     private static final String LIST_JSP = "/pages/admin/staging/availableFiles.jsp";
@@ -148,18 +144,17 @@ public class AvailableFilesActionBean extends AbstractActionBean {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                addWarningMessage("Technical error when attempting to detect the download status!" +
-                        "Please refresh the page within the next minute to see if the download started.");
+                addWarningMessage("Technical error when attempting to detect the download status!"
+                        + "Please refresh the page within the next minute to see if the download started.");
                 return new RedirectResolution(this.getClass());
             }
         } while (!downloader.isDownloadStarted() && i++ <= 15);
 
         if (downloader.isDownloadStarted()) {
             addSystemMessage("File download started! Refresh the page to see progress.");
-        }
-        else {
-            addCautionMessage("Still establishing the connection!" +
-            		"Please refresh the page within the next minute to see if the download started.");
+        } else {
+            addCautionMessage("Still establishing the connection!"
+                    + "Please refresh the page within the next minute to see if the download started.");
         }
         return new RedirectResolution(this.getClass());
     }
@@ -177,14 +172,14 @@ public class AvailableFilesActionBean extends AbstractActionBean {
             for (String fileName : fileNames) {
                 File file = new File(FileDownloader.FILES_DIR, fileName);
                 boolean success = file.delete();
-                if (success == false) {
+                if (!success) {
                     FileDeletionJob.register(file);
                 }
             }
 
             if (FileDownloader.FILES_DIR.listFiles().length != noOfFilesBefore - fileNames.size()) {
-                addWarningMessage("Failed to delete some of the files! This might be a temporary resource locking problem." +
-                        "Please refresh in a dozen of seconds, and if the file is still present, try its deletion again.");
+                addWarningMessage("Failed to delete some of the files! This might be a temporary resource locking problem."
+                        + "Please refresh in a dozen of seconds, and if the file is still present, try its deletion again.");
             } else {
                 addSystemMessage("Files successfully deleted!");
             }

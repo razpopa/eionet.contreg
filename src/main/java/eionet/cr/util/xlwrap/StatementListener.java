@@ -14,7 +14,7 @@ import eionet.cr.web.action.admin.XLWrapUploadActionBean;
 /**
  * An implementation of {@link RDFHandler} that will be used to listen to statements
  * imported by the {@link XLWrapUploadActionBean#upload()}.
- *
+ * 
  * @author jaanus
  */
 public class StatementListener implements RDFHandler {
@@ -40,7 +40,7 @@ public class StatementListener implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.openrdf.rio.RDFHandler#endRDF()
      */
     @Override
@@ -50,7 +50,7 @@ public class StatementListener implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.openrdf.rio.RDFHandler#handleComment(java.lang.String)
      */
     @Override
@@ -60,7 +60,7 @@ public class StatementListener implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.openrdf.rio.RDFHandler#handleNamespace(java.lang.String, java.lang.String)
      */
     @Override
@@ -70,7 +70,7 @@ public class StatementListener implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.openrdf.rio.RDFHandler#handleStatement(org.openrdf.model.Statement)
      */
     @Override
@@ -94,7 +94,7 @@ public class StatementListener implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.openrdf.rio.RDFHandler#startRDF()
      */
     @Override
