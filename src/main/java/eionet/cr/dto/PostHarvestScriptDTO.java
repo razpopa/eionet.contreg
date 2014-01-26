@@ -23,29 +23,53 @@ package eionet.cr.dto;
 
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO for post-harvest scripts.
  *
  * @author Jaanus Heinlaid
  */
 public class PostHarvestScriptDTO {
 
-    /** */
+    /** Target type of a post-harvest script. */
     public enum TargetType {
-        SOURCE, TYPE
+
+        /** Source-specific post-harvest script. */
+        SOURCE,
+        /** Type-specific post-harvest script. */
+        TYPE
     };
 
-    /** */
+    /** The target type. */
     private TargetType targetType;
+
+    /** The target url. */
     private String targetUrl;
+
+    /** The title. */
     private String title;
+
+    /** The script. */
     private String script;
+
+    /** The position. */
     private int position;
+
+    /** The active. */
     private boolean active;
+
+    /** The run once. */
     private boolean runOnce = true;
+
+    /** The id. */
     private int id;
+
+    /** The last modified. */
     private Date lastModified;
 
     /**
+     * Checks if is active.
+     *
      * @return the active
      */
     public boolean isActive() {
@@ -53,6 +77,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the active.
+     *
      * @param active the active to set
      */
     public void setActive(boolean active) {
@@ -60,6 +86,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the target type.
+     *
      * @return the targetType
      */
     public TargetType getTargetType() {
@@ -67,6 +95,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the target url.
+     *
      * @return the targetUrl
      */
     public String getTargetUrl() {
@@ -74,6 +104,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the title.
+     *
      * @return the title
      */
     public String getTitle() {
@@ -81,6 +113,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the script.
+     *
      * @return the script
      */
     public String getScript() {
@@ -88,6 +122,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the position.
+     *
      * @return the position
      */
     public int getPosition() {
@@ -95,6 +131,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the id.
+     *
      * @return the id
      */
     public int getId() {
@@ -102,6 +140,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the id.
+     *
      * @param id the id to set
      */
     public void setId(int id) {
@@ -109,6 +149,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the target type.
+     *
      * @param targetType the targetType to set
      */
     public void setTargetType(TargetType targetType) {
@@ -116,6 +158,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the target url.
+     *
      * @param targetUrl the targetUrl to set
      */
     public void setTargetUrl(String targetUrl) {
@@ -123,6 +167,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the title.
+     *
      * @param title the title to set
      */
     public void setTitle(String title) {
@@ -130,6 +176,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the script.
+     *
      * @param script the script to set
      */
     public void setScript(String script) {
@@ -137,6 +185,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the position.
+     *
      * @param position the position to set
      */
     public void setPosition(int position) {
@@ -144,6 +194,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Checks if is run once.
+     *
      * @return the runOnce
      */
     public boolean isRunOnce() {
@@ -151,6 +203,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the run once.
+     *
      * @param runOnce the runOnce to set
      */
     public void setRunOnce(boolean runOnce) {
@@ -158,6 +212,8 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Gets the last modified.
+     *
      * @return the lastModified
      */
     public Date getLastModified() {
@@ -165,15 +221,21 @@ public class PostHarvestScriptDTO {
     }
 
     /**
+     * Sets the last modified.
+     *
      * @param lastModified the lastModified to set
      */
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return title;
     }
-
 }

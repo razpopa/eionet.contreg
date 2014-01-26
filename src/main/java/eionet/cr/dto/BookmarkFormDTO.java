@@ -2,28 +2,45 @@ package eionet.cr.dto;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The DTO for BookmarkForm.
+ */
 public class BookmarkFormDTO {
 
+    /** The id. */
     private Long id;
+
+    /** The source. */
     private String source;
+
+    /** The title. */
     private String title;
+
+    /** The description. */
     private String description;
+
+    /** The tags. */
     private String tags;
+
+    /** The methodology. */
     private String methodology;
 
     /**
-     *
+     * Instantiates a new bookmark form dto.
      */
     public BookmarkFormDTO() {
     }
 
     /**
+     * Instantiates a new bookmark form dto.
      *
-     * @param id
-     * @param source
-     * @param title
-     * @param description
-     * @param tags
+     * @param id the id
+     * @param source the source
+     * @param title the title
+     * @param description the description
+     * @param tags the tags
+     * @param methodology the methodology
      */
     public BookmarkFormDTO(Long id, String source, String title, String description, String tags, String methodology) {
         this.id = id;
@@ -35,6 +52,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Gets the id.
+     *
      * @return the id
      */
     public Long getId() {
@@ -42,6 +61,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the id.
+     *
      * @param id the id to set
      */
     public void setId(Long id) {
@@ -49,6 +70,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Gets the source.
+     *
      * @return the source
      */
     public String getSource() {
@@ -56,6 +79,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the source.
+     *
      * @param source the source to set
      */
     public void setSource(String source) {
@@ -63,6 +88,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Gets the title.
+     *
      * @return the title
      */
     public String getTitle() {
@@ -70,6 +97,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the title.
+     *
      * @param title the title to set
      */
     public void setTitle(String title) {
@@ -77,6 +106,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Gets the description.
+     *
      * @return the description
      */
     public String getDescription() {
@@ -84,6 +115,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the description.
+     *
      * @param description the description to set
      */
     public void setDescription(String description) {
@@ -91,6 +124,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Gets the tags.
+     *
      * @return the tags
      */
     public String getTags() {
@@ -98,18 +133,27 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the tags.
+     *
      * @param tags the tags to set
      */
     public void setTags(String tags) {
         this.tags = tags;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
     }
 
     /**
+     * Gets the methodology.
+     *
      * @return the methodology
      */
     public String getMethodology() {
@@ -117,6 +161,8 @@ public class BookmarkFormDTO {
     }
 
     /**
+     * Sets the methodology.
+     *
      * @param methodology the methodology to set
      */
     public void setMethodology(String methodology) {

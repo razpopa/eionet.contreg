@@ -23,53 +23,92 @@ package eionet.cr.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class DeliveryFilesDTO.
  *
  * @author altnyris
- *
  */
 public class DeliveryFilesDTO extends HarvestBaseDTO implements java.io.Serializable {
 
-    /**
-     *
-     */
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /** The files. */
     private List<FileDTO> files;
+
+    /** The uri. */
     private String uri;
+
+    /** The title. */
     private String title;
 
     /**
-     *
+     * Instantiates a new delivery files dto.
      */
     public DeliveryFilesDTO() {
     }
 
+    /**
+     * Instantiates a new delivery files dto.
+     *
+     * @param uri the uri
+     */
     public DeliveryFilesDTO(String uri) {
         this.uri = uri;
         files = new ArrayList<FileDTO>();
     }
 
+    /**
+     * Gets the uri.
+     *
+     * @return the uri
+     */
     public String getUri() {
         return uri;
     }
 
+    /**
+     * Sets the uri.
+     *
+     * @param uri the new uri
+     */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    /**
+     * Gets the files.
+     *
+     * @return the files
+     */
     public List<FileDTO> getFiles() {
         return files;
     }
 
+    /**
+     * Sets the files.
+     *
+     * @param files the new files
+     */
     public void setFiles(List<FileDTO> files) {
         this.files = files;
     }
 
+    /**
+     * Gets the title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the title.
+     *
+     * @param title the new title
+     */
     public void setTitle(String title) {
         this.title = title;
     }

@@ -22,74 +22,94 @@ package eionet.cr.dto;
 
 import eionet.cr.harvest.util.HarvestMessageType;
 
+// TODO: Auto-generated Javadoc
 /**
+ * Base DTO for harvests.
  *
  * @author heinljab
  *
  */
 public class HarvestBaseDTO {
 
-    /** */
+    /** The has fatals. */
     private Boolean hasFatals;
+
+    /** The has errors. */
     private Boolean hasErrors;
+
+    /** The has warnings. */
     private Boolean hasWarnings;
 
     /**
-     * @return the hasFatals
+     * Gets the checks for fatals.
+     *
+     * @return the checks for fatals
      */
     public Boolean getHasFatals() {
         return hasFatals;
     }
 
     /**
-     * @param hasFatals the hasFatals to set
+     * Sets the checks for fatals.
+     *
+     * @param hasFatals the new checks for fatals
      */
     public void setHasFatals(Boolean hasFatals) {
         this.hasFatals = hasFatals;
     }
 
     /**
-     * @return the hasErrors
+     * Gets the checks for errors.
+     *
+     * @return the checks for errors
      */
     public Boolean getHasErrors() {
         return hasErrors;
     }
 
     /**
-     * @param hasErrors the hasErrors to set
+     * Sets the checks for errors.
+     *
+     * @param hasErrors the new checks for errors
      */
     public void setHasErrors(Boolean hasErrors) {
         this.hasErrors = hasErrors;
     }
 
     /**
-     * @return the hasWarnings
+     * Gets the checks for warnings.
+     *
+     * @return the checks for warnings
      */
     public Boolean getHasWarnings() {
         return hasWarnings;
     }
 
     /**
-     * @param hasWarnings the hasWarnings to set
+     * Sets the checks for warnings.
+     *
+     * @param hasWarnings the new checks for warnings
      */
     public void setHasWarnings(Boolean hasWarnings) {
         this.hasWarnings = hasWarnings;
     }
 
     /**
+     * Adds the message type.
      *
-     * @param dto
-     * @param messageType
+     * @param dto the dto
+     * @param messageType the message type
      */
     public static final void addMessageType(HarvestBaseDTO dto, String messageType) {
 
         if (dto != null && messageType != null) {
-            if (messageType.equals(HarvestMessageType.FATAL.toString()))
+            if (messageType.equals(HarvestMessageType.FATAL.toString())) {
                 dto.setHasFatals(Boolean.TRUE);
-            else if (messageType.equals(HarvestMessageType.ERROR.toString()))
+            } else if (messageType.equals(HarvestMessageType.ERROR.toString())) {
                 dto.setHasErrors(Boolean.TRUE);
-            else if (messageType.equals(HarvestMessageType.WARNING.toString()))
+            } else if (messageType.equals(HarvestMessageType.WARNING.toString())) {
                 dto.setHasWarnings(Boolean.TRUE);
+            }
         }
     }
 }

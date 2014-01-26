@@ -27,6 +27,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import eionet.cr.staging.imp.ImportStatus;
 
+// TODO: Auto-generated Javadoc
 /**
  * The DTO object representing a staging database.
  *
@@ -34,17 +35,33 @@ import eionet.cr.staging.imp.ImportStatus;
  */
 public class StagingDatabaseDTO {
 
-    /** */
+    /** The id. */
     private int id;
+
+    /** The name. */
     private String name;
+
+    /** The creator. */
     private String creator;
+
+    /** The created. */
     private Date created;
+
+    /** The description. */
     private String description;
+
+    /** The default query. */
     private String defaultQuery;
+
+    /** The import status. */
     private ImportStatus importStatus;
+
+    /** The import log. */
     private String importLog;
 
     /**
+     * Gets the name.
+     *
      * @return the name
      */
     public String getName() {
@@ -52,6 +69,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the name.
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -59,6 +78,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the creator.
+     *
      * @return the creator
      */
     public String getCreator() {
@@ -66,6 +87,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the creator.
+     *
      * @param creator the creator to set
      */
     public void setCreator(String creator) {
@@ -73,6 +96,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the created.
+     *
      * @return the created
      */
     public Date getCreated() {
@@ -80,6 +105,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the created.
+     *
      * @param created the created to set
      */
     public void setCreated(Date created) {
@@ -87,6 +114,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the description.
+     *
      * @return the description
      */
     public String getDescription() {
@@ -94,6 +123,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the description.
+     *
      * @param description the description to set
      */
     public void setDescription(String description) {
@@ -111,6 +142,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the id.
+     *
      * @return the id
      */
     public int getId() {
@@ -118,6 +151,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the id.
+     *
      * @param id the id to set
      */
     public void setId(int id) {
@@ -125,6 +160,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the import status.
+     *
      * @return the importStatus
      */
     public ImportStatus getImportStatus() {
@@ -132,6 +169,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the import status.
+     *
      * @param importStatus the importStatus to set
      */
     public void setImportStatus(ImportStatus importStatus) {
@@ -139,6 +178,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the import log.
+     *
      * @return the importLog
      */
     public String getImportLog() {
@@ -146,6 +187,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the import log.
+     *
      * @param importLog the importLog to set
      */
     public void setImportLog(String importLog) {
@@ -153,6 +196,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Gets the default query.
+     *
      * @return the defaultQuery
      */
     public String getDefaultQuery() {
@@ -160,6 +205,8 @@ public class StagingDatabaseDTO {
     }
 
     /**
+     * Sets the default query.
+     *
      * @param defaultQuery the defaultQuery to set
      */
     public void setDefaultQuery(String defaultQuery) {

@@ -26,34 +26,62 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 
 import eionet.cr.web.util.WebConstants;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO representing a harvest.
  *
  * @author heinljab
  *
  */
 public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
 
+    /** The harvest id. */
     private Integer harvestId;
+
+    /** The harvest source id. */
     private Integer harvestSourceId;
+
+    /** The harvest type. */
     private String harvestType;
+
+    /** The user. */
     private String user;
+
+    /** The status. */
     private String status;
+
+    /** The datetime started. */
     private java.util.Date datetimeStarted;
+
+    /** The datetime finished. */
     private java.util.Date datetimeFinished;
+
+    /** The encoding schemes. */
     private Integer encodingSchemes;
+
+    /** The total statements. */
     private Integer totalStatements;
+
+    /** The lit obj statements. */
     private Integer litObjStatements;
+
+    /** The date string. */
     private String dateString;
 
-    /** http response code. */
+    /** HTTP response code. */
     private int responseCode;
 
     /**
-     *
+     * Instantiates a new harvest dto.
      */
     public HarvestDTO() {
     }
 
+    /**
+     * Gets the duration string.
+     *
+     * @return the duration string
+     */
     public String getDurationString() {
         if (datetimeStarted == null) {
             return WebConstants.NOT_AVAILABLE;
@@ -66,6 +94,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the harvest id.
+     *
      * @return the harvestId
      */
     public Integer getHarvestId() {
@@ -73,6 +103,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the harvest id.
+     *
      * @param harvestId the harvestId to set
      */
     public void setHarvestId(Integer harvestId) {
@@ -80,6 +112,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the harvest source id.
+     *
      * @return the harvestSourceId
      */
     public Integer getHarvestSourceId() {
@@ -87,6 +121,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the harvest source id.
+     *
      * @param harvestSourceId the harvestSourceId to set
      */
     public void setHarvestSourceId(Integer harvestSourceId) {
@@ -94,6 +130,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the harvest type.
+     *
      * @return the harvestType
      */
     public String getHarvestType() {
@@ -101,6 +139,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the harvest type.
+     *
      * @param harvestType the harvestType to set
      */
     public void setHarvestType(String harvestType) {
@@ -108,6 +148,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the user.
+     *
      * @return the user
      */
     public String getUser() {
@@ -115,6 +157,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the user.
+     *
      * @param user the user to set
      */
     public void setUser(String user) {
@@ -122,6 +166,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the status.
+     *
      * @return the status
      */
     public String getStatus() {
@@ -129,6 +175,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the status.
+     *
      * @param status the status to set
      */
     public void setStatus(String status) {
@@ -136,6 +184,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the datetime started.
+     *
      * @return the datetimeStarted
      */
     public java.util.Date getDatetimeStarted() {
@@ -143,6 +193,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the datetime started.
+     *
      * @param datetimeStarted the datetimeStarted to set
      */
     public void setDatetimeStarted(java.util.Date datetimeStarted) {
@@ -150,6 +202,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the datetime finished.
+     *
      * @return the datetimeFinished
      */
     public java.util.Date getDatetimeFinished() {
@@ -157,6 +211,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the datetime finished.
+     *
      * @param datetimeFinished the datetimeFinished to set
      */
     public void setDatetimeFinished(java.util.Date datetimeFinished) {
@@ -164,6 +220,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the total statements.
+     *
      * @return the totalStatements
      */
     public Integer getTotalStatements() {
@@ -171,6 +229,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the total statements.
+     *
      * @param totalStatements the totalStatements to set
      */
     public void setTotalStatements(Integer totalStatements) {
@@ -178,6 +238,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the lit obj statements.
+     *
      * @return the litObjStatements
      */
     public Integer getLitObjStatements() {
@@ -185,6 +247,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the lit obj statements.
+     *
      * @param litObjStatements the litObjStatements to set
      */
     public void setLitObjStatements(Integer litObjStatements) {
@@ -192,6 +256,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the encoding schemes.
+     *
      * @return the encodingSchemes
      */
     public Integer getEncodingSchemes() {
@@ -199,6 +265,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the encoding schemes.
+     *
      * @param encodingSchemes the encodingSchemes to set
      */
     public void setEncodingSchemes(Integer encodingSchemes) {
@@ -206,6 +274,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the date string.
+     *
      * @return the dateString
      */
     public String getDateString() {
@@ -213,6 +283,8 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the date string.
+     *
      * @param dateString the dateString to set
      */
     public void setDateString(String dateString) {
@@ -228,10 +300,20 @@ public class HarvestDTO extends HarvestBaseDTO implements java.io.Serializable {
         return (responseCode == 0 ? "N/A" : String.valueOf(responseCode));
     }
 
+    /**
+     * Gets the response code.
+     *
+     * @return the response code
+     */
     public int getResponseCode() {
         return responseCode;
     }
 
+    /**
+     * Sets the response code.
+     *
+     * @param responseCode the new response code
+     */
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }

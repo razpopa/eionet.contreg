@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eionet.cr.dto.UploadDTO;
 
+// TODO: Auto-generated Javadoc
 /**
  * VoID xml writer.
  *
@@ -39,19 +40,43 @@ import eionet.cr.dto.UploadDTO;
  */
 public class VoIDXmlWriter {
 
+    /** The Constant ENCODING. */
     private static final String ENCODING = "UTF-8";
+
+    /** The Constant RDF_NS. */
     private static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+    /** The Constant RDF_NS_PREFIX. */
     private static final String RDF_NS_PREFIX = "rdf";
+
+    /** The Constant RDFS_NS. */
     private static final String RDFS_NS = "http://www.w3.org/2000/01/rdf-schema#";
+
+    /** The Constant RDFS_NS_PREFIX. */
     private static final String RDFS_NS_PREFIX = "rdfs";
+
+    /** The Constant OWL_NS. */
     private static final String OWL_NS = "http://www.w3.org/2002/07/owl#";
+
+    /** The Constant OWL_NS_PREFIX. */
     private static final String OWL_NS_PREFIX = "owl";
+
+    /** The Constant DCT_NS. */
     private static final String DCT_NS = "http://purl.org/dc/terms/";
+
+    /** The Constant DCT_NS_PREFIX. */
     private static final String DCT_NS_PREFIX = "dct";
+
+    /** The Constant VOID_NS. */
     private static final String VOID_NS = "http://rdfs.org/ns/void#";
+
+    /** The Constant VOID_NS_PREFIX. */
     private static final String VOID_NS_PREFIX = "void";
+
+    /** The Constant ROOT_ELEMENT. */
     private static final String ROOT_ELEMENT = "RDF";
 
+    /** The context root. */
     private String contextRoot;
 
     /**

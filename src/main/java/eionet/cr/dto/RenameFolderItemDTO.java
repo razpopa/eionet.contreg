@@ -21,6 +21,7 @@
 
 package eionet.cr.dto;
 
+// TODO: Auto-generated Javadoc
 /**
  * Folder item object that is used for selecting, renaming and deleting.
  *
@@ -28,17 +29,24 @@ package eionet.cr.dto;
  */
 public class RenameFolderItemDTO {
 
+    /** The uri. */
     private String uri;
 
+    /** The name. */
     private String name;
 
+    /** The new name. */
     private String newName;
 
+    /** The type. */
     private FolderItemDTO.Type type;
 
+    /** The selected. */
     private boolean selected;
 
     /**
+     * Gets the uri.
+     *
      * @return the uri
      */
     public String getUri() {
@@ -46,6 +54,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Sets the uri.
+     *
      * @param uri the uri to set
      */
     public void setUri(String uri) {
@@ -53,6 +63,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Gets the name.
+     *
      * @return the name
      */
     public String getName() {
@@ -60,6 +72,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Sets the name.
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -67,6 +81,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Gets the new name.
+     *
      * @return the newName
      */
     public String getNewName() {
@@ -74,6 +90,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Sets the new name.
+     *
      * @param newName the newName to set
      */
     public void setNewName(String newName) {
@@ -81,6 +99,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Gets the type.
+     *
      * @return the type
      */
     public FolderItemDTO.Type getType() {
@@ -88,6 +108,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Sets the type.
+     *
      * @param type the type to set
      */
     public void setType(FolderItemDTO.Type type) {
@@ -95,6 +117,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Checks if is selected.
+     *
      * @return the selected
      */
     public boolean isSelected() {
@@ -102,6 +126,8 @@ public class RenameFolderItemDTO {
     }
 
     /**
+     * Sets the selected.
+     *
      * @param selected the selected to set
      */
     public void setSelected(boolean selected) {

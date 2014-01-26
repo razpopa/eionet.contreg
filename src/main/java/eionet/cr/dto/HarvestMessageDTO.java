@@ -22,27 +22,42 @@ package eionet.cr.dto;
 
 import eionet.cr.harvest.util.HarvestMessageType;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO representing a harvest message.
  *
  * @author heinljab
  *
  */
 public class HarvestMessageDTO implements java.io.Serializable {
 
-    /** */
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 5769350408372163478L;
+
+    /** The harvest id. */
     Integer harvestId = null;
+
+    /** The type. */
     String type = null;
+
+    /** The message. */
     String message = null;
+
+    /** The stack trace. */
     String stackTrace = null;
+
+    /** The harvest message id. */
     Integer harvestMessageId = null;
 
     /**
-     *
+     * Instantiates a new harvest message dto.
      */
     public HarvestMessageDTO() {
     }
 
     /**
+     * Gets the harvest id.
+     *
      * @return the harvestId
      */
     public Integer getHarvestId() {
@@ -50,6 +65,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the harvest id.
+     *
      * @param harvestId the harvestId to set
      */
     public void setHarvestId(Integer harvestId) {
@@ -57,6 +74,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the type.
+     *
      * @return the type
      */
     public String getType() {
@@ -64,6 +83,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the type.
+     *
      * @param type the type to set
      */
     public void setType(String type) {
@@ -71,6 +92,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the message.
+     *
      * @return the message
      */
     public String getMessage() {
@@ -78,6 +101,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the message.
+     *
      * @param message the message to set
      */
     public void setMessage(String message) {
@@ -85,6 +110,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Gets the stack trace.
+     *
      * @return the stackTrace
      */
     public String getStackTrace() {
@@ -92,6 +119,8 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
+     * Sets the stack trace.
+     *
      * @param stackTrace the stackTrace to set
      */
     public void setStackTrace(String stackTrace) {
@@ -99,25 +128,30 @@ public class HarvestMessageDTO implements java.io.Serializable {
     }
 
     /**
-     * @return
+     * Gets the harvest message id.
+     *
+     * @return the harvest message id
      */
     public Integer getHarvestMessageId() {
         return harvestMessageId;
     }
 
     /**
-     * @param harvestMessageId
+     * Sets the harvest message id.
+     *
+     * @param harvestMessageId the new harvest message id
      */
     public void setHarvestMessageId(Integer harvestMessageId) {
         this.harvestMessageId = harvestMessageId;
     }
 
     /**
+     * Creates the DTO with give parameters.
      *
-     * @param message
-     * @param messageType
-     * @param stackTrace
-     * @return
+     * @param message the message
+     * @param messageType the message type
+     * @param stackTrace the stack trace
+     * @return the harvest message dto
      */
     public static HarvestMessageDTO create(String message, HarvestMessageType messageType, String stackTrace) {
 

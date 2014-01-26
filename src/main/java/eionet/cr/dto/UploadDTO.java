@@ -20,22 +20,30 @@
  * Jaanus Heinlaid, Tieto Eesti*/
 package eionet.cr.dto;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO for user uploads.
  *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
  */
 public class UploadDTO {
 
-    /** */
+    /** The subject uri. */
     private String subjectUri;
+
+    /** The label. */
     private String label;
+
+    /** The date modified. */
     private String dateModified;
+
+    /** The triples. */
     private String triples;
 
     /**
+     * Instantiates a new upload dto.
      *
-     * @param subjectUri
+     * @param subjectUri the subject uri
      */
     public UploadDTO(String subjectUri) {
 
@@ -46,6 +54,8 @@ public class UploadDTO {
     }
 
     /**
+     * Gets the subject uri.
+     *
      * @return the subjectUri
      */
     public String getSubjectUri() {
@@ -53,6 +63,8 @@ public class UploadDTO {
     }
 
     /**
+     * Gets the label.
+     *
      * @return the label
      */
     public String getLabel() {
@@ -60,6 +72,8 @@ public class UploadDTO {
     }
 
     /**
+     * Sets the label.
+     *
      * @param label the label to set
      */
     public void setLabel(String label) {
@@ -67,6 +81,8 @@ public class UploadDTO {
     }
 
     /**
+     * Gets the date modified.
+     *
      * @return the dateModified
      */
     public String getDateModified() {
@@ -74,6 +90,8 @@ public class UploadDTO {
     }
 
     /**
+     * Sets the date modified.
+     *
      * @param dateModified the dateModified to set
      */
     public void setDateModified(String dateModified) {
@@ -81,6 +99,8 @@ public class UploadDTO {
     }
 
     /**
+     * Gets the triples.
+     *
      * @return the triples
      */
     public String getTriples() {
@@ -88,6 +108,8 @@ public class UploadDTO {
     }
 
     /**
+     * Sets the triples.
+     *
      * @param triples the triples to set
      */
     public void setTriples(String triples) {

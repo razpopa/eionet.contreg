@@ -27,45 +27,80 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author altnyris
+ * A DTO representing a harvest source.
  *
+ * @author altnyris
  */
 public class HarvestSourceDTO implements Serializable, Cloneable {
 
-    /**
-     * serial.
-     */
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
-    /** */
+
+    /** The Constant COUNT_UNAVAIL_THRESHOLD. */
     public static final int COUNT_UNAVAIL_THRESHOLD = 5;
+
+    /** The Constant DEFAULT_REFERRALS_INTERVAL. */
     public static final int DEFAULT_REFERRALS_INTERVAL = 60480;
 
-    /** */
+    /** The source id. */
     private Integer sourceId;
+
+    /** The url. */
     private String url;
+
+    /** The emails. */
     private String emails;
+
+    /** The time created. */
     private Date timeCreated;
+
+    /** The statements. */
     private Integer statements;
+
+    /** The count unavail. */
     private Integer countUnavail;
+
+    /** The last harvest. */
     private Date lastHarvest;
+
+    /** The last harvest failed. */
     private boolean lastHarvestFailed;
+
+    /** The interval minutes. */
     private Integer intervalMinutes;
+
+    /** The url hash. */
     private Long urlHash;
+
+    /** The priority source. */
     private boolean prioritySource;
+
+    /** The owner. */
     private String owner;
+
+    /** The permanent error. */
     private boolean permanentError;
+
+    /** The media type. */
     private String mediaType;
+
+    /** The last harvest id. */
     private Integer lastHarvestId;
+
+    /** The is sparql endpoint. */
     private boolean isSparqlEndpoint;
 
     /**
-     *
+     * Instantiates a new harvest source dto.
      */
     public HarvestSourceDTO() {
     }
 
     /**
+     * Gets the source id.
+     *
      * @return the sourceId
      */
     public Integer getSourceId() {
@@ -73,14 +108,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param sourceId
-     *            the sourceId to set
+     * Sets the source id.
+     *
+     * @param sourceId            the sourceId to set
      */
     public void setSourceId(Integer sourceId) {
         this.sourceId = sourceId;
     }
 
     /**
+     * Gets the url.
+     *
      * @return the url
      */
     public String getUrl() {
@@ -88,14 +126,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param url
-     *            the url to set
+     * Sets the url.
+     *
+     * @param url            the url to set
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
+     * Gets the emails.
+     *
      * @return the emails
      */
     public String getEmails() {
@@ -103,14 +144,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param emails
-     *            the emails to set
+     * Sets the emails.
+     *
+     * @param emails            the emails to set
      */
     public void setEmails(String emails) {
         this.emails = emails;
     }
 
     /**
+     * Gets the time created.
+     *
      * @return the timeCreated
      */
     public Date getTimeCreated() {
@@ -118,14 +162,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param timeCreated
-     *            the timeCreated to set
+     * Sets the time created.
+     *
+     * @param timeCreated            the timeCreated to set
      */
     public void setTimeCreated(Date timeCreated) {
         this.timeCreated = timeCreated;
     }
 
     /**
+     * Gets the statements.
+     *
      * @return the statements
      */
     public Integer getStatements() {
@@ -133,14 +180,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param statements
-     *            the statements to set
+     * Sets the statements.
+     *
+     * @param statements            the statements to set
      */
     public void setStatements(Integer statements) {
         this.statements = statements;
     }
 
     /**
+     * Gets the count unavail.
+     *
      * @return the countUnavail
      */
     public Integer getCountUnavail() {
@@ -148,14 +198,16 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param countUnavail
-     *            the countUnavail to set
+     * Sets the count unavail.
+     *
+     * @param countUnavail            the countUnavail to set
      */
     public void setCountUnavail(Integer countUnavail) {
         this.countUnavail = countUnavail;
     }
 
     /**
+     * Checks if is unavailable.
      *
      * @return boolean
      */
@@ -165,6 +217,8 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
+     * Gets the interval minutes.
+     *
      * @return Integer
      */
     public Integer getIntervalMinutes() {
@@ -172,13 +226,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param intervalMinutes
+     * Sets the interval minutes.
+     *
+     * @param intervalMinutes the new interval minutes
      */
     public void setIntervalMinutes(Integer intervalMinutes) {
         this.intervalMinutes = intervalMinutes;
     }
 
     /**
+     * Gets the last harvest.
+     *
      * @return the lastHarvest
      */
     public Date getLastHarvest() {
@@ -186,8 +244,9 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param lastHarvest
-     *            the lastHarvest to set
+     * Sets the last harvest.
+     *
+     * @param lastHarvest            the lastHarvest to set
      */
     public void setLastHarvest(Date lastHarvest) {
         this.lastHarvest = lastHarvest;
@@ -204,6 +263,8 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
+     * Checks if is last harvest failed.
+     *
      * @return the lastHarvestFailed
      */
     public boolean isLastHarvestFailed() {
@@ -211,14 +272,17 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param lastHarvestFailed
-     *            the lastHarvestFailed to set
+     * Sets the last harvest failed.
+     *
+     * @param lastHarvestFailed            the lastHarvestFailed to set
      */
     public void setLastHarvestFailed(boolean lastHarvestFailed) {
         this.lastHarvestFailed = lastHarvestFailed;
     }
 
     /**
+     * Gets the url hash.
+     *
      * @return the urlHash
      */
     public Long getUrlHash() {
@@ -226,46 +290,89 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param urlHash
-     *            the urlHash to set
+     * Sets the url hash.
+     *
+     * @param urlHash            the urlHash to set
      */
     public void setUrlHash(Long urlHash) {
         this.urlHash = urlHash;
     }
 
+    /**
+     * Checks if is priority source.
+     *
+     * @return true, if is priority source
+     */
     public boolean isPrioritySource() {
         return prioritySource;
     }
 
+    /**
+     * Sets the priority source.
+     *
+     * @param prioritySource the new priority source
+     */
     public void setPrioritySource(boolean prioritySource) {
         this.prioritySource = prioritySource;
     }
 
+    /**
+     * Gets the owner.
+     *
+     * @return the owner
+     */
     public String getOwner() {
         return owner;
     }
 
+    /**
+     * Sets the owner.
+     *
+     * @param owner the new owner
+     */
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
+    /**
+     * Checks if is permanent error.
+     *
+     * @return true, if is permanent error
+     */
     public boolean isPermanentError() {
         return permanentError;
     }
 
+    /**
+     * Sets the permanent error.
+     *
+     * @param permanentError the new permanent error
+     */
     public void setPermanentError(boolean permanentError) {
         this.permanentError = permanentError;
     }
 
+    /**
+     * Gets the media type.
+     *
+     * @return the media type
+     */
     public String getMediaType() {
         return mediaType;
     }
 
+    /**
+     * Sets the media type.
+     *
+     * @param mediaType the new media type
+     */
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
 
     /**
+     * Gets the last harvest id.
+     *
      * @return the lastHarvestId
      */
     public Integer getLastHarvestId() {
@@ -273,19 +380,22 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
-     * @param lastHarvestId
-     *            the lastHarvestId to set
+     * Sets the last harvest id.
+     *
+     * @param lastHarvestId            the lastHarvestId to set
      */
     public void setLastHarvestId(Integer lastHarvestId) {
         this.lastHarvestId = lastHarvestId;
     }
 
     /**
+     * Creates a harvest source with given inputs.
      *
-     * @param url
-     * @param prioritySource
-     * @param intervalMinutes
-     * @return
+     * @param url the url
+     * @param prioritySource the priority source
+     * @param intervalMinutes the interval minutes
+     * @param owner the owner
+     * @return the harvest source dto
      */
     public static HarvestSourceDTO create(String url, boolean prioritySource, int intervalMinutes, String owner) {
 
@@ -298,8 +408,9 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
+     * Gets the harvest urgency score.
      *
-     * @return
+     * @return the harvest urgency score
      */
     public double getHarvestUrgencyScore() {
 
@@ -346,6 +457,8 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
+     * Checks if is sparql endpoint.
+     *
      * @return the isSparqlEndpoint
      */
     public boolean isSparqlEndpoint() {
@@ -353,6 +466,8 @@ public class HarvestSourceDTO implements Serializable, Cloneable {
     }
 
     /**
+     * Sets the sparql endpoint.
+     *
      * @param isSparqlEndpoint the isSparqlEndpoint to set
      */
     public void setSparqlEndpoint(boolean isSparqlEndpoint) {

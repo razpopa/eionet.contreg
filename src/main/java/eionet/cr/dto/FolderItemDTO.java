@@ -21,6 +21,7 @@
 
 package eionet.cr.dto;
 
+// TODO: Auto-generated Javadoc
 /**
  * Folder item DTO.
  *
@@ -43,14 +44,37 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     /** Last modified. */
     private String lastModified;
 
+    /**
+     * The Enum Type.
+     */
     public enum Type {
-        RESERVED_FOLDER(1), FOLDER(2), RESERVED_FILE(3), FILE(4);
+
+        /** The reserved folder. */
+        RESERVED_FOLDER(1),
+        /** The folder. */
+        FOLDER(2),
+        /** The reserved file. */
+        RESERVED_FILE(3),
+        /** The file. */
+        FILE(4);
+
+        /** The order. */
         int order;
 
+        /**
+         * Instantiates a new type.
+         *
+         * @param order the order
+         */
         Type(int order) {
             this.order = order;
         }
 
+        /**
+         * Gets the order.
+         *
+         * @return the order
+         */
         public int getOrder() {
             return order;
         }
@@ -59,7 +83,7 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     /**
      * True, if type is reserved folder.
      *
-     * @return
+     * @return true, if is reserved folder
      */
     public boolean isReservedFolder() {
         return Type.RESERVED_FOLDER.equals(type);
@@ -68,7 +92,7 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     /**
      * True, if type is folder.
      *
-     * @return
+     * @return true, if is folder
      */
     public boolean isFolder() {
         return Type.FOLDER.equals(type);
@@ -77,7 +101,7 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     /**
      * True, if type is file.
      *
-     * @return
+     * @return true, if is file
      */
     public boolean isFile() {
         return Type.FILE.equals(type);
@@ -86,7 +110,7 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     /**
      * True, if type is reserved file.
      *
-     * @return
+     * @return true, if is reserved file
      */
     public boolean isReservedFile() {
         return Type.RESERVED_FILE.equals(type);
@@ -106,6 +130,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Gets the uri.
+     *
      * @return the uri
      */
     public String getUri() {
@@ -113,6 +139,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Sets the uri.
+     *
      * @param uri the uri to set
      */
     public void setUri(String uri) {
@@ -120,6 +148,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Gets the title.
+     *
      * @return the title
      */
     public String getTitle() {
@@ -127,6 +157,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Sets the title.
+     *
      * @param title the title to set
      */
     public void setTitle(String title) {
@@ -134,6 +166,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Gets the type.
+     *
      * @return the type
      */
     public Type getType() {
@@ -141,6 +175,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Sets the type.
+     *
      * @param type the type to set
      */
     public void setType(Type type) {
@@ -148,6 +184,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Gets the name.
+     *
      * @return the name
      */
     public String getName() {
@@ -155,6 +193,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Sets the name.
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -162,6 +202,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Gets the last modified.
+     *
      * @return the lastModified
      */
     public String getLastModified() {
@@ -169,6 +211,8 @@ public class FolderItemDTO implements Comparable<FolderItemDTO> {
     }
 
     /**
+     * Sets the last modified.
+     *
      * @param lastModified the lastModified to set
      */
     public void setLastModified(String lastModified) {

@@ -22,25 +22,32 @@ package eionet.cr.dto;
 
 import java.io.Serializable;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO representing urgent harvest queue items.
  *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- *
  */
 public class UrgentHarvestQueueItemDTO implements Serializable {
 
-    /** */
+    /** The url. */
     private String url;
+
+    /** The time added. */
     private java.util.Date timeAdded;
+
+    /** The pushed content. */
     private String pushedContent;
 
     /**
-     *
+     * Instantiates a new urgent harvest queue item dto.
      */
     public UrgentHarvestQueueItemDTO() {
     }
 
     /**
+     * Gets the url.
+     *
      * @return the url
      */
     public String getUrl() {
@@ -48,6 +55,8 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Sets the url.
+     *
      * @param url the url to set
      */
     public void setUrl(String url) {
@@ -55,6 +64,8 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Gets the time added.
+     *
      * @return the timeAdded
      */
     public java.util.Date getTimeAdded() {
@@ -62,6 +73,8 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Sets the time added.
+     *
      * @param timeAdded the timeAdded to set
      */
     public void setTimeAdded(java.util.Date timeAdded) {
@@ -69,6 +82,8 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Gets the pushed content.
+     *
      * @return the pushedContent
      */
     public String getPushedContent() {
@@ -76,6 +91,8 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Sets the pushed content.
+     *
      * @param pushedContent the pushedContent to set
      */
     public void setPushedContent(String pushedContent) {
@@ -83,8 +100,9 @@ public class UrgentHarvestQueueItemDTO implements Serializable {
     }
 
     /**
+     * Checks if is push harvest.
      *
-     * @return
+     * @return true, if is push harvest
      */
     public boolean isPushHarvest() {
         return pushedContent != null;

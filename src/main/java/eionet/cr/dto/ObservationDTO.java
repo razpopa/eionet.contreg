@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eionet.cr.common.Predicates;
 
+// TODO: Auto-generated Javadoc
 /**
  * A DTO for representing a DataCube observation.
  *
@@ -14,22 +15,42 @@ import eionet.cr.common.Predicates;
  */
 public class ObservationDTO {
 
-    /** */
+    /** The Constant PREDICATE_ALIASES. */
     public static final Map<String, String> PREDICATE_ALIASES = createPredicateAliases();
 
-    /** */
+    /** The uri. */
     private String uri;
+
+    /** The data set. */
     private String dataSet;
+
+    /** The indicator. */
     private String indicator;
+
+    /** The breakdown. */
     private String breakdown;
+
+    /** The ref area. */
     private String refArea;
+
+    /** The time period. */
     private String timePeriod;
+
+    /** The unit. */
     private String unit;
+
+    /** The note. */
     private String note;
+
+    /** The flag. */
     private String flag;
+
+    /** The obs value. */
     private Double obsValue;
 
     /**
+     * Gets the uri.
+     *
      * @return the uri
      */
     public String getUri() {
@@ -37,14 +58,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param uri
-     *            the uri to set
+     * Sets the uri.
+     *
+     * @param uri            the uri to set
      */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
     /**
+     * Gets the data set.
+     *
      * @return the dataSet
      */
     public String getDataSet() {
@@ -52,14 +76,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param dataSet
-     *            the dataSet to set
+     * Sets the data set.
+     *
+     * @param dataSet            the dataSet to set
      */
     public void setDataSet(String dataSet) {
         this.dataSet = dataSet;
     }
 
     /**
+     * Gets the indicator.
+     *
      * @return the indicator
      */
     public String getIndicator() {
@@ -67,14 +94,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param indicator
-     *            the indicator to set
+     * Sets the indicator.
+     *
+     * @param indicator            the indicator to set
      */
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }
 
     /**
+     * Gets the breakdown.
+     *
      * @return the breakdown
      */
     public String getBreakdown() {
@@ -82,14 +112,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param breakdown
-     *            the breakdown to set
+     * Sets the breakdown.
+     *
+     * @param breakdown            the breakdown to set
      */
     public void setBreakdown(String breakdown) {
         this.breakdown = breakdown;
     }
 
     /**
+     * Gets the ref area.
+     *
      * @return the refArea
      */
     public String getRefArea() {
@@ -97,14 +130,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param refArea
-     *            the refArea to set
+     * Sets the ref area.
+     *
+     * @param refArea            the refArea to set
      */
     public void setRefArea(String refArea) {
         this.refArea = refArea;
     }
 
     /**
+     * Gets the time period.
+     *
      * @return the timePeriod
      */
     public String getTimePeriod() {
@@ -112,14 +148,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param timePeriod
-     *            the timePeriod to set
+     * Sets the time period.
+     *
+     * @param timePeriod            the timePeriod to set
      */
     public void setTimePeriod(String timePeriod) {
         this.timePeriod = timePeriod;
     }
 
     /**
+     * Gets the unit.
+     *
      * @return the unit
      */
     public String getUnit() {
@@ -127,14 +166,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param unit
-     *            the unit to set
+     * Sets the unit.
+     *
+     * @param unit            the unit to set
      */
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
     /**
+     * Gets the obs value.
+     *
      * @return the obsValue
      */
     public Double getObsValue() {
@@ -142,14 +184,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param obsValue
-     *            the obsValue to set
+     * Sets the obs value.
+     *
+     * @param obsValue            the obsValue to set
      */
     public void setObsValue(Double obsValue) {
         this.obsValue = obsValue;
     }
 
     /**
+     * Gets the note.
+     *
      * @return the note
      */
     public String getNote() {
@@ -157,14 +202,17 @@ public class ObservationDTO {
     }
 
     /**
-     * @param note
-     *            the note to set
+     * Sets the note.
+     *
+     * @param note            the note to set
      */
     public void setNote(String note) {
         this.note = note;
     }
 
     /**
+     * Gets the flag.
+     *
      * @return the flag
      */
     public String getFlag() {
@@ -172,16 +220,18 @@ public class ObservationDTO {
     }
 
     /**
-     * @param flag
-     *            the flag to set
+     * Sets the flag.
+     *
+     * @param flag            the flag to set
      */
     public void setFlag(String flag) {
         this.flag = flag;
     }
 
     /**
+     * Creates and returns filters map.
      *
-     * @return
+     * @return The map.
      */
     public Map<String, String> createFilterMap() {
 
@@ -210,8 +260,9 @@ public class ObservationDTO {
     }
 
     /**
+     * Creates predicate aliases map.
      *
-     * @return
+     * @return The map.
      */
     private static Map<String, String> createPredicateAliases() {
 

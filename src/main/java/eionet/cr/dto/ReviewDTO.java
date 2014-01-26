@@ -5,32 +5,49 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO for representing reviews of a folder item.
  *
  * @author <a href="mailto:jaak.kapten@tieto.com">Jaak Kapten</a>
- *
  */
 
 public class ReviewDTO implements Serializable {
 
-    /** */
+    /** The review subject uri. */
     private String reviewSubjectUri;
+
+    /** The title. */
     private String title;
+
+    /** The object url. */
     private String objectUrl;
+
+    /** The review content. */
     private String reviewContent;
+
+    /** The review id. */
     private int reviewID;
+
+    /** The attachments. */
     private List<String> attachments;
+
+    /** The review content type. */
     private String reviewContentType;
 
     /**
-     * @return
+     * Gets the review subject uri.
+     *
+     * @return the review subject uri
      */
     public String getReviewSubjectUri() {
         return reviewSubjectUri;
     }
 
     /**
-     * @param reviewSubjectUri
+     * Sets the review subject uri.
+     *
+     * @param reviewSubjectUri the new review subject uri
      */
     public void setReviewSubjectUri(String reviewSubjectUri) {
 
@@ -55,91 +72,117 @@ public class ReviewDTO implements Serializable {
     }
 
     /**
-     * @return
+     * Gets the title.
+     *
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * @param title
+     * Sets the title.
+     *
+     * @param title the new title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * @return
+     * Gets the object url.
+     *
+     * @return the object url
      */
     public String getObjectUrl() {
         return objectUrl;
     }
 
     /**
-     * @return
+     * Gets the object url html.
+     *
+     * @return the object url html
      */
     public String getObjectUrlHTML() {
         return StringEscapeUtils.escapeHtml(objectUrl);
     }
 
     /**
-     * @param objectUrl
+     * Sets the object url.
+     *
+     * @param objectUrl the new object url
      */
     public void setObjectUrl(String objectUrl) {
         this.objectUrl = objectUrl;
     }
 
     /**
-     * @return
+     * Gets the review content.
+     *
+     * @return the review content
      */
     public String getReviewContent() {
         return reviewContent;
     }
 
     /**
-     * @param reviewContent
+     * Sets the review content.
+     *
+     * @param reviewContent the new review content
      */
     public void setReviewContent(String reviewContent) {
         this.reviewContent = reviewContent;
     }
 
     /**
-     * @return
+     * Gets the review subject html formatted.
+     *
+     * @return the review subject html formatted
      */
     public String getReviewSubjectHtmlFormatted() {
         return StringEscapeUtils.escapeHtml(reviewSubjectUri);
     }
 
     /**
-     * @return
+     * Gets the review id.
+     *
+     * @return the review id
      */
     public int getReviewID() {
         return reviewID;
     }
 
     /**
-     * @return
+     * Gets the attachments.
+     *
+     * @return the attachments
      */
     public List<String> getAttachments() {
         return attachments;
     }
 
     /**
-     * @param attachments
+     * Sets the attachments.
+     *
+     * @param attachments the new attachments
      */
     public void setAttachments(List<String> attachments) {
         this.attachments = attachments;
     }
 
     /**
-     * @return
+     * Gets the review content type.
+     *
+     * @return the review content type
      */
     public String getReviewContentType() {
         return reviewContentType;
     }
 
     /**
-     * @param reviewContentType
+     * Sets the review content type.
+     *
+     * @param reviewContentType the new review content type
      */
     public void setReviewContentType(String reviewContentType) {
         this.reviewContentType = reviewContentType;

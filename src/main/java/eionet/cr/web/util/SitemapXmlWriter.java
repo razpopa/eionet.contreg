@@ -30,6 +30,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import eionet.cr.dto.UploadDTO;
 
+// TODO: Auto-generated Javadoc
 /**
  * Sitemap xml writer.
  *
@@ -37,17 +38,40 @@ import eionet.cr.dto.UploadDTO;
  */
 public class SitemapXmlWriter {
 
+    /** The Constant ENCODING. */
     private static final String ENCODING = "UTF-8";
+
+    /** The Constant DEFAULT_NS. */
     private static final String DEFAULT_NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
+
+    /** The Constant DEFAULT_NS_LOCATION. */
     private static final String DEFAULT_NS_LOCATION = "http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd";
+
+    /** The Constant SCHEMA_NS_URI. */
     private static final String SCHEMA_NS_URI = "http://sw.deri.org/2007/07/sitemapextension/scschema.xsd";
+
+    /** The Constant SCHEMA_NS_PREFIX. */
     private static final String SCHEMA_NS_PREFIX = "sc";
+
+    /** The Constant XSI_NS_URI. */
     private static final String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
+
+    /** The Constant XSI_NS_PREFIX. */
     private static final String XSI_NS_PREFIX = "xsi";
+
+    /** The Constant ROOT_ELEMENT. */
     private static final String ROOT_ELEMENT = "urlset";
+
+    /** The Constant DATASET_ELEMENT. */
     private static final String DATASET_ELEMENT = "dataset";
+
+    /** The Constant DATASET_LABEL_ELEMENT. */
     private static final String DATASET_LABEL_ELEMENT = "datasetLabel";
+
+    /** The Constant DATA_DUMP_LOCATION_ELEMENT. */
     private static final String DATA_DUMP_LOCATION_ELEMENT = "dataDumpLocation";
+
+    /** The Constant LAST_MODIFIED_ELEMENT. */
     private static final String LAST_MODIFIED_ELEMENT = "lastmod";
 
     /**

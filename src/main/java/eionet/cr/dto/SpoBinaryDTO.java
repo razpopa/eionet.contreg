@@ -20,22 +20,31 @@
  * Jaanus Heinlaid, Tieto Eesti*/
 package eionet.cr.dto;
 
+// TODO: Auto-generated Javadoc
 /**
+ * A DTO for representing binary objects of triples.
  *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
  *
  */
 public class SpoBinaryDTO {
 
-    /** */
+    /** The subject hash. */
     private long subjectHash;
+
+    /** The content type. */
     private String contentType;
+
+    /** The language. */
     private String language;
+
+    /** The must embed. */
     private boolean mustEmbed;
 
     /**
+     * Instantiates a new spo binary dto.
      *
-     * @param subjectHash
+     * @param subjectHash the subject hash
      */
     public SpoBinaryDTO(long subjectHash) {
 
@@ -43,6 +52,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Gets the content type.
+     *
      * @return the contentType
      */
     public String getContentType() {
@@ -50,6 +61,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Sets the content type.
+     *
      * @param contentType the contentType to set
      */
     public void setContentType(String contentType) {
@@ -57,6 +70,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Gets the language.
+     *
      * @return the language
      */
     public String getLanguage() {
@@ -64,6 +79,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Sets the language.
+     *
      * @param language the language to set
      */
     public void setLanguage(String language) {
@@ -71,6 +88,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Checks if is must embed.
+     *
      * @return the mustEmbed
      */
     public boolean isMustEmbed() {
@@ -78,6 +97,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Sets the must embed.
+     *
      * @param mustEmbed the mustEmbed to set
      */
     public void setMustEmbed(boolean mustEmbed) {
@@ -85,6 +106,8 @@ public class SpoBinaryDTO {
     }
 
     /**
+     * Gets the subject hash.
+     *
      * @return the subjectHash
      */
     public long getSubjectHash() {
