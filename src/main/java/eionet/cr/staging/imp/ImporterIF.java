@@ -26,14 +26,14 @@ import java.io.File;
 /**
  * Implementors of this interface are capable of importing a given database file into a "real" staging database in the underlying
  * DBMS.
- * 
+ *
  * @author jaanus
  */
 public interface ImporterIF {
 
     /**
      * Imports a staging database from the given file into a real DBMS database by the given name.
-     * 
+     *
      * @param file the file
      * @param dbName the db name
      * @throws ImportException the import exception

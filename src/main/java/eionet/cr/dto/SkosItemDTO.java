@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * A generic DTO for representing resources that can have a skos:notation, skos:prefLabel, etc.
  * This could be an object whose rdf:type is skos:Concept or skos:ConceptScheme, for exmaple.
- * 
+ *
  * @author jaanus
  */
 public class SkosItemDTO {
@@ -21,7 +21,7 @@ public class SkosItemDTO {
 
     /**
      * Simple constructor for the given SKOS item URI.
-     * 
+     *
      * @param uri The URI.
      */
     public SkosItemDTO(String uri) {
@@ -69,7 +69,7 @@ public class SkosItemDTO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

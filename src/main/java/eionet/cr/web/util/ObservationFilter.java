@@ -6,9 +6,9 @@ import org.apache.commons.lang.WordUtils;
 import eionet.cr.common.Predicates;
 
 /**
- * 
+ *
  * Type definition ...
- * 
+ *
  * @author jaanus
  */
 public enum ObservationFilter {
@@ -33,9 +33,9 @@ public enum ObservationFilter {
     private boolean isAnySupprted;
 
     /**
-     * 
+     *
      * Class constructor.
-     * 
+     *
      * @param predicate
      * @param title
      */
@@ -45,7 +45,7 @@ public enum ObservationFilter {
 
     /**
      * Constructor.
-     * 
+     *
      * @param predicate
      * @param title
      */
@@ -57,7 +57,7 @@ public enum ObservationFilter {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getAlias() {
@@ -75,7 +75,7 @@ public enum ObservationFilter {
     }
 
     /**
-     * 
+     *
      * @param alias
      * @return
      */
@@ -93,7 +93,7 @@ public enum ObservationFilter {
     }
 
     /**
-     * 
+     *
      * @param alias
      * @return
      */
@@ -114,7 +114,7 @@ public enum ObservationFilter {
     }
 
     /**
-     * 
+     *
      * @param alias
      * @return
      */

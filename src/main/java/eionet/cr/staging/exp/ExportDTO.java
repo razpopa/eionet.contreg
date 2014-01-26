@@ -25,7 +25,7 @@ import java.util.Date;
 
 /**
  * DTO (Data Transfer Object) for records in STAGING_DB table.
- * 
+ *
  * @author jaanus
  */
 public class ExportDTO {

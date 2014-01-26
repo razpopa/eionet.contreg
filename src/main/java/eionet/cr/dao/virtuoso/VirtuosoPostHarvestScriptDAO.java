@@ -53,7 +53,7 @@ import eionet.cr.util.sql.SingleObjectReader;
 import eionet.cr.web.action.admin.postHarvest.PostHarvestScriptParser;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class VirtuosoPostHarvestScriptDAO extends VirtuosoBaseDAO implements PostHarvestScriptDAO {
@@ -528,7 +528,7 @@ public class VirtuosoPostHarvestScriptDAO extends VirtuosoBaseDAO implements Pos
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.PostHarvestScriptDAO#search(java.lang.String)
      */
     @Override

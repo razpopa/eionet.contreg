@@ -42,7 +42,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 /**
  * An action bean that lists RDF export from a given staging database. The latter might not be provided, in which case RDF exports
  * from all staging databases are listed.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/admin/rdfExports.action")
@@ -62,7 +62,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
 
     /**
      * Default event handler.
-     * 
+     *
      * @return resolution
      * @throws DAOException If database access error happens when getting the export DTOs from database.
      */
@@ -76,7 +76,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
 
     /**
      * Initialization done before event handling.
-     * 
+     *
      * @throws DAOException In case database access error happened.
      */
     @Before(stages = LifecycleStage.EventHandling)
@@ -123,7 +123,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link StagingDatabasesActionBean}, used in JSPs. This way the JSPs get automatically fixed, when
      * refactoring the class name.
-     * 
+     *
      * @return The class.
      */
     public Class getDatabasesActionBeanClass() {
@@ -133,7 +133,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link StagingDatabaseActionBean}, used in JSPs. This way the JSPs get automatically fixed, when
      * refactoring the class name.
-     * 
+     *
      * @return The class.
      */
     public Class getDatabaseActionBeanClass() {
@@ -143,7 +143,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link RDFExportActionBean}, used in JSPs. This way the JSPs get automatically fixed, when refactoring
      * the class name.
-     * 
+     *
      * @return The class.
      */
     public Class getExportActionBeanClass() {
@@ -153,7 +153,7 @@ public class RDFExportsActionBean extends AbstractActionBean {
     /**
      * Returns the class of {@link RDFExportWizardActionBean}, used in JSPs. This way the JSPs get automatically fixed, when
      * refactoring the class name.
-     * 
+     *
      * @return The class.
      */
     public Class getExportWizardActionBeanClass() {

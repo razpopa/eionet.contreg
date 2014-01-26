@@ -29,9 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 
+ *
  * @author heinljab
- * 
+ *
  */
 public final class GeneralConfig {
 
@@ -158,7 +158,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @param name
      * @return
      */
@@ -172,7 +172,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param defaultValue
      * @return
@@ -188,7 +188,7 @@ public final class GeneralConfig {
 
     /**
      * Returns integer property.
-     * 
+     *
      * @param key property key in the properties file
      * @param defaultValue default value that is returned if not specified or in incorrect format
      * @return property value or default if not specified correctly
@@ -212,7 +212,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      * @throws CRConfigException
@@ -228,7 +228,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static synchronized Properties getProperties() {
@@ -241,7 +241,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static synchronized boolean useVirtuoso() {
@@ -251,7 +251,7 @@ public final class GeneralConfig {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static synchronized boolean isUseCentralAuthenticationService() {
@@ -262,7 +262,7 @@ public final class GeneralConfig {
 
     /**
      * If ruleset name property is available in cr.properties, then use inferencing in queries.
-     * 
+     *
      * @return
      */
     public static synchronized boolean isUseInferencing() {

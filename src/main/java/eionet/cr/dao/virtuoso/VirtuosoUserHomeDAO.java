@@ -35,7 +35,7 @@ import eionet.cr.util.pagination.PagingRequest;
 
 /**
  * User home folder methods in Virtuoso.
- * 
+ *
  * @author Enriko Käsper
  */
 public class VirtuosoUserHomeDAO extends VirtuosoBaseDAO implements UserHomeDAO {

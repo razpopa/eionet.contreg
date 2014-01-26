@@ -33,9 +33,9 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 /**
  * An extension of {@link SPARQLResultSetBaseReader} that exports Scoreboard codelist items into a given spreadsheet template file.
  * The mapping of codelist item properties to corresponding spreadsheet columns is also a pre-requisite.
- * 
+ *
  * @author Jaanus Heinlaid
- * 
+ *
  */
 @SuppressWarnings("rawtypes")
 public class CodelistExporter extends SPARQLResultSetBaseReader {
@@ -89,7 +89,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /**
      * Construct new instance with the given spreadsheet template reference and the properties to spreadsheet columns mapping.
-     * 
+     *
      * @param template The spreadsheet template reference.
      * @param mappings The properties to spreadsheet columns mapping.
      * @param target The target spreadsheet file where the exported workbook will be saved to.
@@ -132,7 +132,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -184,7 +184,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /**
      * Puts the given column-index-to-value pair into the {@link #rowMap}. The latter is initialized if null.
-     * 
+     *
      * @param columnIndex
      * @param value
      */
@@ -207,7 +207,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /**
      * Puts the given column-index-to-string-value pair into the given row-map.{@link #rowMap}.
-     * 
+     *
      * @param map The given row-map.
      * @param columnIndex Column index, i.e. the key of the map entry.
      * @param value Column value, i.e. the value of the map entry.
@@ -257,7 +257,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /**
      * Saves a "distinct row" into the target worksheet.
      * See inside {@link #saveRowMap()} for more comments on what's a "distinct row".
-     * 
+     *
      * @param distinctRow The "distinct row" to save.
      */
     private void saveDistinctRow(ArrayList<String> distinctRow) {
@@ -306,7 +306,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     /**
      * To be called after last codelist item has been exported. The purpose of the method is to properly save the spreadsheet
      * template file and close all resources.
-     * 
+     *
      * @throws DAOException
      */
     public void saveAndClose() throws DAOException {
@@ -325,7 +325,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetBaseReader#endResultSet()
      */
     @Override
@@ -339,7 +339,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
 
     /**
      * Returns the number of codelist items exported by this exporter at the time this method is called.
-     * 
+     *
      * @return As described.
      */
     public int getItemsExported() {
@@ -347,7 +347,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static Map<String, String> createSpecialBindingsMap() {
@@ -359,7 +359,7 @@ public class CodelistExporter extends SPARQLResultSetBaseReader {
     }
 
     /**
-     * 
+     *
      * @param map
      * @return
      */

@@ -47,7 +47,7 @@ import eionet.cr.web.security.CRUser;
  *
  */
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class SubjectDTO implements Serializable {
@@ -73,7 +73,7 @@ public class SubjectDTO implements Serializable {
     private long hitSource;
 
     /**
-     * 
+     *
      * @param uri
      * @param anonymous
      */
@@ -91,7 +91,7 @@ public class SubjectDTO implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString() This toString is used in the Unit-tests.
      */
     @Override
@@ -100,7 +100,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param object
      */
@@ -115,7 +115,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param object
      */
@@ -127,7 +127,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param objects
      */
@@ -137,7 +137,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Map<String, Collection<ObjectDTO>> getPredicates() {
@@ -145,7 +145,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Set<String> getPredicateUris() {
@@ -153,7 +153,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @return
      */
@@ -163,7 +163,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicateUri
      * @param languages
      * @param preferHitSource
@@ -224,7 +224,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param objectType
      * @return
@@ -249,7 +249,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @return
      */
@@ -259,7 +259,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param objectType
      * @return
@@ -270,7 +270,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @return
      */
@@ -281,7 +281,7 @@ public class SubjectDTO implements Serializable {
 
     /**
      * Create the list of object values.
-     * 
+     *
      * @param predicate URL
      * @return the list of object values.
      */
@@ -299,7 +299,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @return
      */
@@ -309,7 +309,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getPredicateCount() {
@@ -317,7 +317,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUri() {
@@ -325,7 +325,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isAnonymous() {
@@ -334,7 +334,7 @@ public class SubjectDTO implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -354,7 +354,7 @@ public class SubjectDTO implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -364,7 +364,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUrl() {
@@ -378,7 +378,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicateUri
      * @return
      */
@@ -388,7 +388,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param objectValue
      * @return
@@ -423,7 +423,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param predicate
      * @param objectValue
      * @param sourceHash
@@ -474,7 +474,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getLabel() {
@@ -491,7 +491,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param user
      * @return
      */
@@ -515,7 +515,7 @@ public class SubjectDTO implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getTripleCount() {
@@ -531,7 +531,7 @@ public class SubjectDTO implements Serializable {
 
     /**
      * Returns a set of URIs of all distinct harvest sources in the triples of this subject.
-     * 
+     *
      * @return Set of distinct harvest source URIs.
      */
     public Set<String> getSources() {

@@ -34,9 +34,9 @@ import com.healthmarketscience.jackcess.Table;
 
 // TODO: Auto-generated Javadoc
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public final class MySQLUtil {
 
@@ -68,7 +68,7 @@ public final class MySQLUtil {
 
     /**
      * Creates the table statement.
-     * 
+     *
      * @param table the table
      * @return the string
      */
@@ -121,7 +121,7 @@ public final class MySQLUtil {
 
     /**
      * Parameterized insert statement.
-     * 
+     *
      * @param tableName the table name
      * @param columnNames the column names
      * @return the string
@@ -148,7 +148,7 @@ public final class MySQLUtil {
 
     /**
      * Sanitize table or column name.
-     * 
+     *
      * @param name the name
      * @return the string
      */
@@ -158,7 +158,7 @@ public final class MySQLUtil {
 
     /**
      * Jackcess to my sql data type.
-     * 
+     *
      * @param column the column
      * @return the string
      */

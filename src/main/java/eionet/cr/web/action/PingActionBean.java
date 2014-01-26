@@ -50,9 +50,9 @@ import eionet.cr.util.Util;
 /**
  * An action bean that implements the CR's "ping" API. It is a RESTful API that enables other application to force an urgent harvest
  * of a source. The latter may or may not already exist in CR database and triple store.
- * 
+ *
  * See also http://taskman.eionet.europa.eu/issues/10034
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/ping")
@@ -82,7 +82,7 @@ public class PingActionBean extends AbstractActionBean {
 
     /**
      * The default handler of this API's calls.
-     * 
+     *
      * @return
      */
     @DefaultHandler
@@ -156,7 +156,7 @@ public class PingActionBean extends AbstractActionBean {
 
     /**
      * Returns true if the requester identified by the given host and/or IP address is trusted. Otherwise returns false.
-     * 
+     *
      * @param host
      *            The requester's host.
      * @param ip
@@ -183,7 +183,7 @@ public class PingActionBean extends AbstractActionBean {
      * If the given hostName differs from the given IP address then this method returns the hostName as it is. Otherwise it uses
      * {@link InetAddress} to detect the given IP address's true host name. If that still fails, the method returns the IP address
      * as given.
-     * 
+     *
      * @param hostName
      *            As indicated above.
      * @param ip
@@ -221,7 +221,7 @@ public class PingActionBean extends AbstractActionBean {
 
     /**
      * Utility method for obtaining the set of ping whitelist (i.e. hosts allowed to call CR's ping API) from configuration.
-     * 
+     *
      * @return The ping whitelist as a hash-set
      */
     private static HashSet<String> getPingWhiteList() {

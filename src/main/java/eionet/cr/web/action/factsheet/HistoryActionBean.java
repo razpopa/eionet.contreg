@@ -45,7 +45,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * History tab on factsheet page.
- * 
+ *
  * @author Juhan Voolaid
  */
 @UrlBinding("/history.action")
@@ -62,7 +62,7 @@ public class HistoryActionBean extends AbstractActionBean {
 
     /**
      * View action.
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -77,7 +77,7 @@ public class HistoryActionBean extends AbstractActionBean {
 
     /**
      * Initializes tabs.
-     * 
+     *
      * @throws DAOException
      */
     private void initTabs() throws DAOException {

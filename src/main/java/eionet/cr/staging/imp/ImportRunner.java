@@ -36,7 +36,7 @@ import eionet.cr.util.LogUtil;
 
 /**
  * A runnable that creates a given staging database and populates it from a given DB file.
- * 
+ *
  * @author jaanus
  */
 public final class ImportRunner extends Thread {
@@ -61,7 +61,7 @@ public final class ImportRunner extends Thread {
 
     /**
      * Constructs a {@link ImportRunner} for the given database DTO and DB file.
-     * 
+     *
      * @param dbDTO The given database DTO.
      * @param dbFile The given file from where the database should be created.
      */
@@ -74,7 +74,7 @@ public final class ImportRunner extends Thread {
 
     /**
      * Creates import logger for the given database-
-     * 
+     *
      * @param dbDTO The given database, as DTO.
      * @return The created import logger.
      */
@@ -89,7 +89,7 @@ public final class ImportRunner extends Thread {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Thread#run()
      */
     @Override
@@ -110,7 +110,7 @@ public final class ImportRunner extends Thread {
 
     /**
      * The thread's execution body called by {@link #run()}.
-     * 
+     *
      * @param importLogger Logger that should be used by this database creation (i.e. import) thread.
      * @throws DAOException Thrown if database access error happens.
      * @throws ImportException If any other import error happens.
@@ -131,7 +131,7 @@ public final class ImportRunner extends Thread {
     /**
      * Convenience method that creates an instance of {@link ImportRunner} for the given database from given file, and then starts
      * it.
-     * 
+     *
      * @param dbDTO Will be passed into the private constructor.
      * @param dbFile Will be passed into the private constructor
      * @return The created and started thread.
@@ -160,7 +160,7 @@ public final class ImportRunner extends Thread {
 
     /**
      * Updates this import's status in the database.
-     * 
+     *
      * @param importStatus The status to update to.
      */
     private void updateImportStatus(ImportStatus importStatus) {
@@ -173,7 +173,7 @@ public final class ImportRunner extends Thread {
 
     /**
      * Lazy getter for the {@link StagingDatabaseDAO} that this thread should use.
-     * 
+     *
      * @return The DAO.
      */
     private StagingDatabaseDAO getDao() {

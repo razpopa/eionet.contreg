@@ -53,7 +53,7 @@ import eionet.cr.util.xml.ConversionsParser;
 import eionet.cr.util.xml.XmlAnalysis;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class FileToRdfProcessor {
@@ -73,7 +73,7 @@ public class FileToRdfProcessor {
     private RDFFormat rdfFormat;
 
     /**
-     * 
+     *
      * @param file
      * @param contextUrl
      */
@@ -88,7 +88,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     * 
+     *
      * @param messageObject
      * @return
      */
@@ -97,7 +97,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     * 
+     *
      * @return file if type was known and detected otherwise null
      * @throws IOException
      *             if error at I/O level
@@ -178,7 +178,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     * 
+     *
      * @param file
      * @return
      */
@@ -207,7 +207,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     * 
+     *
      * @param file
      * @return
      * @throws IOException
@@ -241,7 +241,7 @@ public class FileToRdfProcessor {
     }
 
     /**
-     * 
+     *
      * @param conversionSchema
      * @return
      * @throws SAXException
@@ -298,7 +298,7 @@ public class FileToRdfProcessor {
 
     /**
      * Returns the {@link RDFFormat} of the analysed and/or converted file.
-     * 
+     *
      * @return RDF
      */
     public RDFFormat getRdfFormat() {

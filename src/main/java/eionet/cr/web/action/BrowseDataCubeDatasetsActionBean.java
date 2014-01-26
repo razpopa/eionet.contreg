@@ -30,7 +30,7 @@ import eionet.cr.web.util.CustomPaginatedList;
 
 /**
  * An action bean enabling to browse subjects whose rdf:type is that of {@link Subjects.DATACUBE_DATA_SET}.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/dataCubeDatasets")
@@ -58,7 +58,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     private String dctermsDescription;
 
     /**
-     * 
+     *
      * @return
      */
     @DefaultHandler
@@ -82,7 +82,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Resolution createNew() {
@@ -100,7 +100,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
 
     /**
      * @throws DAOException
-     * 
+     *
      */
     @ValidationMethod(on = {"createNew"})
     public void validateCreateNew() throws DAOException {
@@ -140,7 +140,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     }
 
     /**
-     * 
+     *
      * @param alias
      * @return
      */
@@ -160,7 +160,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Class getFactsheetActionBeanClass() {
@@ -168,7 +168,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<HashMap<String, String>> getAvailColumns() {
@@ -176,7 +176,7 @@ public class BrowseDataCubeDatasetsActionBean extends DisplaytagSearchActionBean
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static List<HashMap<String, String>> createAvailColumns() {

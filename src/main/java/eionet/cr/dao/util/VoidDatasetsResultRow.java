@@ -23,7 +23,7 @@ package eionet.cr.dao.util;
 
 /**
  * Objects of this class represent rows in the "browse VoID datasets" result set, i.e. datasets matching the search criteria.
- * 
+ *
  * @author jaanus
  */
 public class VoidDatasetsResultRow {
@@ -92,7 +92,7 @@ public class VoidDatasetsResultRow {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

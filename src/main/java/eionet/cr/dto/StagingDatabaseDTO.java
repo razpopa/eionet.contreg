@@ -29,7 +29,7 @@ import eionet.cr.staging.imp.ImportStatus;
 
 /**
  * The DTO object representing a staging database.
- * 
+ *
  * @author jaanus
  */
 public class StagingDatabaseDTO {
@@ -102,7 +102,7 @@ public class StagingDatabaseDTO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

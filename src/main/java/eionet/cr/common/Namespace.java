@@ -23,9 +23,9 @@ package eionet.cr.common;
 
 /**
  * Prefixes for common namespaces.
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public enum Namespace {
 
@@ -79,7 +79,7 @@ public enum Namespace {
 
     /**
      * Simple constructor for the given namespace uri-prefix pair.
-     * 
+     *
      * @param uri The URI.
      * @param prefix The prefix.
      */

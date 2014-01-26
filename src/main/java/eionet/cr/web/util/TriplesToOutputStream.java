@@ -52,7 +52,7 @@ public final class TriplesToOutputStream {
     }
 
     /**
-     * 
+     *
      * @param out
      * @param subjectUri
      * @param triples
@@ -127,7 +127,7 @@ public final class TriplesToOutputStream {
     }
 
     /**
-     * 
+     *
      * @param out
      * @param subjectUri
      * @param triples

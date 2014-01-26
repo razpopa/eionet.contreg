@@ -2,7 +2,7 @@ package eionet.cr.web.util;
 
 /**
  * Helper bean for representing options of an HTML <select>.
- * 
+ *
  * @author jaanus
  */
 public class HTMLSelectOption {

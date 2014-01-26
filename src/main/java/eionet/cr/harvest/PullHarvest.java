@@ -95,7 +95,7 @@ import eionet.cr.util.sesame.SesameUtil;
 import eionet.cr.util.xml.ConversionsParser;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class PullHarvest extends BaseHarvest {
@@ -130,7 +130,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param contextSourceDTO
      * @throws DAOException
      */
@@ -140,7 +140,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Harvests file already uploaded to a CR folder and residing in the filestore.
-     * 
+     *
      * @throws HarvestException
      *             if harvest fails
      */
@@ -216,7 +216,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @throws HarvestException
      */
     private void doEndpointHarvest() throws HarvestException {
@@ -305,7 +305,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private EndpointHttpClient prepareEndpointHttpClient() {
@@ -334,7 +334,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Harvests external source.
-     * 
+     *
      * @throws HarvestException
      *             if harvest fails
      */
@@ -451,7 +451,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#doHarvest()
      */
     @Override
@@ -470,7 +470,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @param noOfTriples
      */
@@ -491,7 +491,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @param noOfTriples
      */
@@ -580,7 +580,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Marks redirected sources with error markers.
-     * 
+     *
      * @param lastHarvest
      *            last harvest time
      * @param responseCode
@@ -596,7 +596,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Stores error in HarvestSource DTO.
-     * 
+     *
      * @param harvestSourceDTO
      *            / source DTO object
      */
@@ -617,7 +617,7 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Returns the {@link Date} to which the source's last harvest time should be set in case of temporary harvest error. It should
      * be set to "now - harvest_interval + max(harvest_interval*0,1, 120 min)". The "now" is given as method input.
-     * 
+     *
      * @param now As indicated above.
      * @return The calculated last harvest date as indicated above.
      */
@@ -648,7 +648,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @param responseCode
      * @param exception
@@ -712,11 +712,11 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Download and process content. If response content type is one of RDF, then proceed straight to loading. Otherwise process the
      * file to see if it's zipped, it's an XML with RDF conversion, or actually an RDF file.
-     * 
+     *
      * @param urlConn
      *            - connection to the remote source.
      * @return number of triples harvested.
-     * 
+     *
      * @throws IOException
      * @throws DAOException
      * @throws SAXException
@@ -768,7 +768,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param redirectedToUrl
      * @param responseCode
      *            HTTP Code from the redirected URL
@@ -824,7 +824,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param sourceDTO
      * @param redirectionSeen
      * @param redirectedToUrl
@@ -856,7 +856,7 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Download file from remote source to a temporary file locally. Side effect: adds the file size to the metadata to save in the
      * harvester context.
-     * 
+     *
      * @param urlConn
      *            - connection to the remote source.
      * @return object representing the temporary file.
@@ -892,7 +892,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param connectUrl
      * @return
      * @throws IOException
@@ -950,7 +950,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param connection
      * @return
      * @throws MalformedURLException
@@ -977,7 +977,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param harvestSourceUrl
      * @return
      * @throws DAOException
@@ -1006,7 +1006,7 @@ public class PullHarvest extends BaseHarvest {
 
     /**
      * Returns RDF format from url connection.
-     * 
+     *
      * @param contentType
      * @return
      */
@@ -1037,7 +1037,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @return
      */
@@ -1052,7 +1052,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @return
      */
@@ -1074,7 +1074,7 @@ public class PullHarvest extends BaseHarvest {
     }
 
     /**
-     * 
+     *
      * @param urlConn
      * @throws ContentTooLongException
      */
@@ -1091,7 +1091,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#getHarvestType()
      */
     @Override
@@ -1109,7 +1109,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#isSendNotifications()
      */
     @Override
@@ -1122,7 +1122,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#isBeingHarvested(java.lang.String)
      */
     @Override
@@ -1134,7 +1134,7 @@ public class PullHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#afterFinish()
      */
     @Override

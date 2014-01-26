@@ -7,9 +7,9 @@ import net.sourceforge.stripes.action.UrlBinding;
 import eionet.cr.dto.PostHarvestScriptDTO.TargetType;
 
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public final class Tabs {
 
@@ -21,7 +21,7 @@ public final class Tabs {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static List<Tab> generate(TargetType targetType) {

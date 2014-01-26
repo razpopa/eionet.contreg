@@ -27,9 +27,9 @@ import eionet.cr.common.CRRuntimeException;
 
 /**
  * Utility class for generating various hashes used in CR.
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public final class Hashes {
 
@@ -44,7 +44,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return long
      */
@@ -53,7 +53,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param s
      * @param seed
      * @return long
@@ -63,7 +63,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -72,7 +72,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -88,7 +88,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return String
      */
@@ -97,7 +97,7 @@ public final class Hashes {
     }
 
     /**
-     * 
+     *
      * @param src
      * @param algorithm
      * @return String
@@ -132,7 +132,7 @@ public final class Hashes {
 
     /**
      * Just used for getting an spoHash() of a string and printing it in System.out.
-     * 
+     *
      * @param args Command line arguments.
      */
     public static void main(String[] args) {

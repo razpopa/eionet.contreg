@@ -40,7 +40,7 @@ import eionet.cr.util.Util;
  * Generates ODP (Open Data Portal, http://open-data.europa.eu) datasets' metadata packages from the metadata of
  * a selected set of indicators. The output generated into a given stream, and is a ZIP file consisting of one RDF/XML formatted
  * metadata file per indicator.
- * 
+ *
  * @author Jaanus
  */
 public class ODPDatasetsPacker {
@@ -99,7 +99,7 @@ public class ODPDatasetsPacker {
 
     /**
      * Main constructor for generating ODP dataset metadata package for the given indicators.
-     * 
+     *
      * @param datasetUri
      * @param indicatorUris The URIs of the indicators whose metadata is to be packaged.
      * @param odpAction
@@ -124,11 +124,11 @@ public class ODPDatasetsPacker {
     /**
      * Does preparations for the {@link #execute(OutputStream)} method, so it should be called before tha latter, otherwise the
      * latter will throw {@link IllegalStateException}.
-     * 
+     *
      * The reason for this method is that we can do preparations (e.g. get various stuff from database and triplestore) before
      * we start streaming the output. This is convenient for exception handling in Stripes action bean events that return a
      * streaming resolution.
-     * 
+     *
      * @throws DAOException If data access error occurs.
      */
     public void prepare() throws DAOException {
@@ -163,9 +163,9 @@ public class ODPDatasetsPacker {
 
     /**
      * The main execution method.
-     * 
+     *
      * @param outputStream Output stream where the zipped file should be written into.
-     * 
+     *
      * @throws IOException If any sort of output stream writing error occurs.
      * @throws XMLStreamException Thrown by methods from the {@link XMLStreamWriter} that is used by called methods.
      */
@@ -190,11 +190,11 @@ public class ODPDatasetsPacker {
 
     /**
      * Creates and writes a ZIP archive entry file for the given indicator.
-     * 
+     *
      * @param zipOutput ZIP output where the entry goes into.
      * @param indSubject The indicator whose for whom the entry is written.
      * @param index 0-based index of the indicator (in the indicator list received from dataabse) that is being written.
-     * 
+     *
      * @throws IOException If any sort of output stream writing error occurs.
      * @throws XMLStreamException Thrown by methods from the {@link XMLStreamWriter} that is used by called methods.
      */
@@ -214,11 +214,11 @@ public class ODPDatasetsPacker {
 
     /**
      * Writes a ZIP archive entry file for the given indicator.
-     * 
+     *
      * @param zipOutput ZIP output where the entry goes into.
      * @param indSubject The indicator whose for whom the entry is written.
      * @param index 0-based index of the indicator (in the indicator list received from dataabse) that is being written.
-     * 
+     *
      * @throws XMLStreamException Thrown by methods from the {@link XMLStreamWriter} that is used by called methods.
      */
     private void writeDatasetEntry(ZipArchiveOutputStream zipOutput, SubjectDTO indSubject, int index) throws XMLStreamException {
@@ -738,7 +738,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param zipOutput
      * @throws XMLStreamException
      * @throws IOException
@@ -763,7 +763,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param writer
      * @param indicatorSubject
      * @param index
@@ -845,7 +845,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param writer
      * @throws XMLStreamException
      */
@@ -856,7 +856,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param indSubject
      * @return
      */
@@ -930,7 +930,7 @@ public class ODPDatasetsPacker {
 
     /**
      * Registers the given namespaces in the given {@link XMLStreamWriter}, by calling setPrefix(...) of the latter for each.
-     * 
+     *
      * @param xmlWriter The namespaces to register.
      * @param xmlWriter The writer to register in.
      * @throws XMLStreamException In case the write throws exception.
@@ -944,7 +944,7 @@ public class ODPDatasetsPacker {
 
     /**
      * Build a list of namespaces used in the generated RDF/XML files about the datasets.
-     * 
+     *
      * @return The list.
      */
     private static List<Namespace> buildDatasetFileNamespaces() {
@@ -967,7 +967,7 @@ public class ODPDatasetsPacker {
 
     /**
      * Build a list of namespaces used in the generated manifest file.
-     * 
+     *
      * @return The list.
      */
     private static List<Namespace> buildManifestFileNamespaces() {
@@ -979,7 +979,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static DateFormat buildXmlSchemaDateFormat() {
@@ -990,7 +990,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param url
      */
     private void addLastModificationDate(String url) {
@@ -1001,7 +1001,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * 
+     *
      * @param url
      * @return
      */

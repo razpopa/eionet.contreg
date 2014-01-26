@@ -32,14 +32,14 @@ import eionet.cr.util.YesNoBoolean;
 import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class PostHarvestScriptDTOReader extends SQLResultSetBaseReader<PostHarvestScriptDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

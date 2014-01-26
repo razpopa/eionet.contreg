@@ -26,9 +26,9 @@ import java.util.HashSet;
 
 // TODO: Auto-generated Javadoc
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public final class URIUtil {
 
@@ -47,9 +47,9 @@ public final class URIUtil {
      * <code>new java.net.URI(str)</code> without the <code>java.net.URISyntaxException</code> being thrown - the given string is an
      * <strong>absolute</strong> URI, meaning it has a scheme part specified - URI scheme in the given string matches one of those
      * specified by [RFC4395] (see http://www.iana.org/assignments/uri-schemes.html)
-     * 
+     *
      * Otherwise returns false.
-     * 
+     *
      * @param str
      * @return boolean
      */
@@ -76,7 +76,7 @@ public final class URIUtil {
     }
 
     /**
-     * 
+     *
      * @param str
      * @return
      */
@@ -95,7 +95,7 @@ public final class URIUtil {
     }
 
     /**
-     * 
+     *
      * @param uri
      * @return String
      */
@@ -117,7 +117,7 @@ public final class URIUtil {
     }
 
     /**
-     * 
+     *
      * @param uri
      * @param dflt
      * @return String

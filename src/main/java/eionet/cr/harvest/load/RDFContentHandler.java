@@ -43,7 +43,7 @@ import eionet.cr.util.sql.SQLUtil;
 /**
  * Implementation of OpenRDF's {@link RDFHandler} that will be used by implementations of {@link ContentLoader}. Contains callback
  * methods for listening to the content coming from {@link ContentLoader} and loading them into repository.
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class RDFContentHandler implements RDFHandler {
@@ -99,7 +99,7 @@ public class RDFContentHandler implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openrdf.rio.RDFHandler#startRDF()
      */
     @Override
@@ -110,7 +110,7 @@ public class RDFContentHandler implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openrdf.rio.RDFHandler#handleNamespace(java.lang.String, java.lang.String)
      */
     @Override
@@ -134,7 +134,7 @@ public class RDFContentHandler implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openrdf.rio.RDFHandler#handleStatement(org.openrdf.model.Statement)
      */
     @Override
@@ -165,7 +165,7 @@ public class RDFContentHandler implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openrdf.rio.RDFHandler#handleComment(java.lang.String)
      */
     @Override
@@ -175,7 +175,7 @@ public class RDFContentHandler implements RDFHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.openrdf.rio.RDFHandler#endRDF()
      */
     @Override
@@ -185,10 +185,10 @@ public class RDFContentHandler implements RDFHandler {
 
     /**
      * Does some pre-processing on the given RDF statement if necessary, and returns the resulting the statement.
-     * 
+     *
      * For example objects of http://www.openlinksw.com/schemas/virtrdf#Geometry data-type are converted into
      * http://www.w3.org/2001/XMLSchema#string, because the former is not supported by Virtuoso's Open-Source edition.
-     * 
+     *
      * @param statement
      * @return
      */

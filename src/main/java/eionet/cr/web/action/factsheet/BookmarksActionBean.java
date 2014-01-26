@@ -46,7 +46,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Bookmarks tab on factsheet page.
- * 
+ *
  * @author Juhan Voolaid
  */
 @UrlBinding("/bookmarks.action")
@@ -66,7 +66,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * View action.
-     * 
+     *
      * @return
      * @throws DAOException if DAO call fails
      */
@@ -80,7 +80,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Delete action.
-     * 
+     *
      * @return
      * @throws DAOException if DAO call fails
      */
@@ -107,7 +107,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Initializes tabs.
-     * 
+     *
      * @throws DAOException if DAO call fails
      */
     private void initTabs() throws DAOException {
@@ -124,7 +124,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Checks if the bookmarks reside in a user home folder.
-     * 
+     *
      * @return true if the folder is in users home
      */
     public boolean isUsersBookmarks() {
@@ -139,7 +139,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Returns user or project name of the bookmarks file.
-     * 
+     *
      * @return owner name
      */
     public String getOwnerName() {
@@ -213,7 +213,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Check from ACL if user has permission to delete bookmarks.
-     * 
+     *
      * @return boolean
      */
     public boolean isDeletePermission() {
@@ -223,7 +223,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * True if project bookmarks file.
-     * 
+     *
      * @return boolean
      */
     public boolean isProjectBookmarks() {
@@ -232,7 +232,7 @@ public class BookmarksActionBean extends AbstractActionBean {
 
     /**
      * Returns selected projet name where the user wants to add the bookmark.
-     * 
+     *
      * @return project dropdown value
      */
     public String getProjectName() {

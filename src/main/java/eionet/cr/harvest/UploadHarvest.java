@@ -39,9 +39,9 @@ import eionet.cr.harvest.util.HarvestMessageType;
 import eionet.cr.util.Util;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public class UploadHarvest extends BaseHarvest {
 
@@ -83,7 +83,7 @@ public class UploadHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#doHarvest()
      */
     @Override
@@ -121,7 +121,7 @@ public class UploadHarvest extends BaseHarvest {
 
     /**
      * Harvest successfully finished and store required metadata.
-     * 
+     *
      * @param noOfTriples nuber of triples.
      */
     private void finishWithOK(int noOfTriples) {
@@ -141,7 +141,7 @@ public class UploadHarvest extends BaseHarvest {
 
     /**
      * Harvest finished with errors, store relevant metadata for harves source.
-     * 
+     *
      * @param error Error message.
      * @param noOfTriples number of triples.
      */
@@ -183,7 +183,7 @@ public class UploadHarvest extends BaseHarvest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.harvest.BaseHarvest#afterFinishActions()
      */
     @Override

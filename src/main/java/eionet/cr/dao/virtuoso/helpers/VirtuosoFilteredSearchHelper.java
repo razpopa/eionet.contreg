@@ -19,9 +19,9 @@ import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 // TODO: Auto-generated Javadoc
 /**
- * 
+ *
  * @author Enriko Käsper
- * 
+ *
  */
 public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
@@ -52,9 +52,9 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
     protected boolean useInferencing = true;
 
     /**
-     * 
+     *
      * Class constructor.
-     * 
+     *
      * @param filters
      * @param literalRangeFilters
      * @param pagingRequest
@@ -91,7 +91,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getUnorderedQuery(java.util.List)
      */
     @Override
@@ -105,7 +105,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -140,7 +140,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getCountQuery(java.util.List)
      */
     @Override
@@ -154,7 +154,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /**
      * Builds the query 's "where contents", i.e. the part that goes in between the curly brackets in "where {}".
-     * 
+     *
      * @return Query parameter string for SPARQL
      */
     public String getWhereContents() {
@@ -217,7 +217,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getQueryBindings()
      */
     @Override
@@ -228,7 +228,7 @@ public class VirtuosoFilteredSearchHelper extends AbstractSearchHelper {
     /**
      * Returns StringBuilder based on useInference settings. Definition of the rule is at the beginning of the query if the helper
      * must use inferencing
-     * 
+     *
      * @return StringBuilder to be used for the query.
      */
     private StringBuilder initQueryStringBuilder() {

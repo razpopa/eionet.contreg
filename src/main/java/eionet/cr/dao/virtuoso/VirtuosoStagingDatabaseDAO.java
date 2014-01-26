@@ -64,7 +64,7 @@ import eionet.cr.util.sql.SingleObjectReader;
 
 /**
  * Virtuoso-specific implementation of {@link StagingDatabaseDAO}.
- * 
+ *
  * @author jaanus
  */
 public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements StagingDatabaseDAO {
@@ -167,7 +167,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#createDatabase()
      */
     @Override
@@ -180,7 +180,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#createRecord(eionet.cr.dto.StagingDatabaseDTO, java.lang.String)
      */
     @Override
@@ -209,7 +209,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#updateDatabaseMetadata(int, java.lang.String, java.lang.String)
      */
     @Override
@@ -233,7 +233,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#startRDEExport(int, java.lang.String, eionet.cr.staging.exp.QueryConfiguration)
      */
     @Override
@@ -263,7 +263,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getExportedResourceUris(int)
      */
     @Override
@@ -275,7 +275,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#finishRDFExport(int, eionet.cr.staging.exp.ExportRunner,
      * eionet.cr.staging.exp.ExportStatus)
      */
@@ -305,7 +305,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getDatabaseById(int)
      */
     @Override
@@ -319,7 +319,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getDatabaseByName(java.lang.String)
      */
     @Override
@@ -333,7 +333,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getTablesColumns(java.lang.String)
      */
     @Override
@@ -366,7 +366,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#updateImportStatus(int, eionet.cr.staging.ImportStatus)
      */
     @Override
@@ -389,7 +389,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#updateExportStatus(int, eionet.cr.staging.exp.ExportStatus)
      */
     @Override
@@ -412,7 +412,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#addImportLogMessage(java.lang.String, eionet.cr.staging.ImportLogLevel)
      */
     @Override
@@ -435,7 +435,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#appendToExportLog(int, java.lang.String)
      */
     @Override
@@ -458,7 +458,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#listAll()
      */
     @Override
@@ -469,7 +469,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#delete(java.util.List)
      */
     @Override
@@ -510,7 +510,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /**
      * Deletes the given databases from Virtuoso.
-     * 
+     *
      * @param dbNames
      *            The database names.
      * @param conn
@@ -555,7 +555,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#exists(java.lang.String)
      */
     @Override
@@ -578,7 +578,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getImportLog(int)
      */
     @Override
@@ -621,7 +621,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getExportLog(int)
      */
     @Override
@@ -664,7 +664,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#prepareStatement(java.lang.String, java.lang.String)
      */
     @Override
@@ -699,7 +699,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#listRDFExports(int)
      */
     @Override
@@ -712,7 +712,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getRDFExport(int)
      */
     @Override
@@ -726,7 +726,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#existsRDFExport(int, java.lang.String)
      */
     @Override
@@ -742,7 +742,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getIndicators()
      */
     @Override
@@ -755,7 +755,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getBreakdowns()
      */
     @Override
@@ -768,7 +768,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getUnits()
      */
     @Override
@@ -781,7 +781,7 @@ public class VirtuosoStagingDatabaseDAO extends VirtuosoBaseDAO implements Stagi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.StagingDatabaseDAO#getRefAreas()
      */
     @Override

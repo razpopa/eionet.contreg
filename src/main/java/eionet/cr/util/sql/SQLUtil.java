@@ -36,9 +36,9 @@ import eionet.cr.common.CRException;
 import eionet.cr.dao.readers.ResultSetReaderException;
 
 /**
- * 
+ *
  * @author heinljab
- * 
+ *
  */
 public final class SQLUtil {
 
@@ -53,7 +53,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param sql
      * @param conn
      * @return Object
@@ -74,7 +74,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param conn
@@ -97,7 +97,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param rsReader
@@ -131,7 +131,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param sql
      * @param conn
      * @return List<Map<String,SQLValue>>
@@ -147,7 +147,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param sql
      * @param rsReader
      * @param conn
@@ -179,7 +179,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param conn
@@ -205,7 +205,7 @@ public final class SQLUtil {
 
     /**
      * TODO
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param conn
@@ -233,7 +233,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param sql
      * @param conn
      * @return int
@@ -251,7 +251,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param conn
@@ -279,7 +279,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param parameterizedSQL
      * @param values
      * @param conn
@@ -307,7 +307,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param conn
      */
     public static void close(Connection conn) {
@@ -322,7 +322,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param stmt
      */
     public static void close(Statement stmt) {
@@ -337,7 +337,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param rs
      */
     public static void close(ResultSet rs) {
@@ -352,7 +352,7 @@ public final class SQLUtil {
     }
 
     /**
-     * 
+     *
      * @param conn
      */
     public static void rollback(Connection conn) {

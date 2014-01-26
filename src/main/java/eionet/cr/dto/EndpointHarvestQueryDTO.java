@@ -27,7 +27,7 @@ import eionet.cr.util.Hashes;
 
 /**
  * A DTO for a remote SPARQL endpoint harvest query.
- * 
+ *
  * @author jaanus
  */
 public class EndpointHarvestQueryDTO {
@@ -133,7 +133,7 @@ public class EndpointHarvestQueryDTO {
 
     /**
      * Gets the endpoint url hash.
-     * 
+     *
      * @return the endpoint url hash
      */
     public long getEndpointUrlHash() {

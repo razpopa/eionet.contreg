@@ -64,7 +64,7 @@ import eionet.cr.web.security.CRUser;
 
 /**
  * Virtuoso implementation for the {@link FolderDAO}.
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class VirtuosoFolderDAO extends VirtuosoBaseDAO implements FolderDAO {
@@ -78,7 +78,7 @@ public class VirtuosoFolderDAO extends VirtuosoBaseDAO implements FolderDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.FolderDAO#createUserHomeFolder(java.lang.String)
      */
     @Override
@@ -121,7 +121,7 @@ public class VirtuosoFolderDAO extends VirtuosoBaseDAO implements FolderDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.FolderDAO#createFolder(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
@@ -219,7 +219,7 @@ public class VirtuosoFolderDAO extends VirtuosoBaseDAO implements FolderDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.FolderDAO#fileOrFolderExists(java.lang.String)
      */
     @Override
@@ -461,7 +461,7 @@ public class VirtuosoFolderDAO extends VirtuosoBaseDAO implements FolderDAO {
     }
 
     /**
-     * 
+     *
      * @param user
      * @return
      */

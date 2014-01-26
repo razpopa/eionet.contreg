@@ -22,7 +22,7 @@ package eionet.cr.common;
 
 /**
  * Constants indicating commonly used RDF subjects, mostly classes.
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public interface Subjects {

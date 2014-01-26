@@ -43,7 +43,7 @@ import eionet.cr.web.util.tabs.TabId;
 
 /**
  * Sparql bookmark tab controller.
- * 
+ *
  * @author Juhan Voolaid
  */
 @UrlBinding("/sparqlBookmark.action")
@@ -76,7 +76,7 @@ public class SparqlBookmarkActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
+     *
      * @return boolean
      * @throws DAOException if query fails if query fails
      */

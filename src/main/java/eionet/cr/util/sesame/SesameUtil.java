@@ -39,9 +39,9 @@ import eionet.cr.util.Bindings;
 import eionet.cr.util.Util;
 
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public final class SesameUtil {
 
@@ -56,7 +56,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @return RepositoryConnection
      * @throws RepositoryException
      */
@@ -66,7 +66,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @return Connection
      * @throws SQLException
      */
@@ -76,7 +76,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param dbName
      * @return
      * @throws SQLException
@@ -87,7 +87,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param bindings
@@ -102,7 +102,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param bindings
@@ -149,7 +149,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param reader
@@ -164,7 +164,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param reader
@@ -184,7 +184,7 @@ public final class SesameUtil {
      * {@link UnsupportedOperationException} if the given connection is not a {@link VirtuosoRepositoryConnection}, because it uses
      * {@link VirtuosoRepositoryConnection#executeSPARUL(String)} to execute the given SPARQL/Update statement. The latter supports
      * not variable bindings, hence no bindings given in the method's input too.
-     * 
+     *
      * @param sparul
      *            The SPARUL statement to execute.
      * @param conn
@@ -213,7 +213,7 @@ public final class SesameUtil {
 
     /**
      * Executes a SPARQL/Update (SPARUL) query (i.e. one that performs modifications on data).
-     * 
+     *
      * @param sparul
      * @param conn
      *            repository connection
@@ -235,7 +235,7 @@ public final class SesameUtil {
 
     /**
      * Executes SPARQL Query producing RDF and exports to the passed RDF handler.
-     * 
+     *
      * @param sparql
      *            SPARQL for (CONSTRUCT) query
      * @param rdfHandler
@@ -266,7 +266,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param queryResult
      *            Query Result
      */
@@ -283,7 +283,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param repositoryResult
      */
     public static <T> void close(RepositoryResult<T> repositoryResult) {
@@ -299,7 +299,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param queryResult
      */
     public static void close(GraphQueryResult queryResult) {
@@ -315,7 +315,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param repo
      */
     public static void shutdown(Repository repo) {
@@ -331,7 +331,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param conn
      */
     public static void close(RepositoryConnection conn) {
@@ -347,7 +347,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param conn
      */
     public static void rollback(RepositoryConnection conn) {
@@ -363,7 +363,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param sparulQuery
      * @return
      */
@@ -382,7 +382,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param sparqlQuery
      * @return
      */
@@ -401,7 +401,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param query
      * @return
      */
@@ -411,7 +411,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param query
      * @return
      */
@@ -421,7 +421,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param query
      * @return
      */
@@ -431,7 +431,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param query
      * @return
      */
@@ -442,7 +442,7 @@ public final class SesameUtil {
 
     /**
      * Sets dataset to query, if default-graph-uri or named-graph-uri parameters are used.
-     * 
+     *
      * @param query
      * @param connection
      * @param defaultGraphUris
@@ -467,7 +467,7 @@ public final class SesameUtil {
     }
 
     /**
-     * 
+     *
      * @param uriString
      * @param valueFactory
      * @return
@@ -491,15 +491,15 @@ public final class SesameUtil {
      * implementation (and hence also the datatype) of the literal is chosen based on the class of the given object. A
      * java.lang.Integer object will return a literal with integer datatype, a java.util.Date object will return a literal with
      * dateTime datatype, etc.
-     * 
+     *
      * Note that when the given object is a String, its language cannot be detected from the method inputs, so you have to use
      * {@link ValueFactory#createLiteral(String, String)} explicitly.
-     * 
+     *
      * Also note that a stirng object is trimmed before creating a literal from it.
-     * 
+     *
      * If the given object is null, the returned Literal is also null. If the given object's datatype could not be detected for some
      * reason, a literal of object.toString() is returned.
-     * 
+     *
      * @param object
      * @param valueFactory
      * @return
@@ -545,7 +545,7 @@ public final class SesameUtil {
      * For input values of "name" and 5 returns "?name1, ?name2, ?name3, ?name4, ?name5".
      * For input values of "title" and 6 returns "?title1, ?title2, ?title3, ?title4, ?title5, ?title6".
      * And so forth.
-     * 
+     *
      * @param varName
      * @param times
      * @return

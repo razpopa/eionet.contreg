@@ -62,9 +62,9 @@ import eionet.cr.util.export.XmlUtil;
 
 /**
  * Utility methods.
- * 
+ *
  * @author heinljab
- * 
+ *
  */
 public final class Util {
 
@@ -76,7 +76,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param t
      * @return
      */
@@ -89,7 +89,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param array
      * @param separator
      * @return
@@ -111,7 +111,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param date
      * @param datePattern
      * @return
@@ -127,7 +127,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param str
      * @return java.util.Date
      */
@@ -146,7 +146,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param date
      * @param datePattern
      * @return
@@ -162,7 +162,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param str
      * @param datePattern
      * @return
@@ -182,7 +182,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @return String
      */
     public static String currentDateAsString() {
@@ -197,7 +197,7 @@ public final class Util {
 
     /**
      * Current time in seconds.
-     * 
+     *
      * @return current time in seconds.
      */
     public static long currentTimeSeconds() {
@@ -206,7 +206,7 @@ public final class Util {
 
     /**
      * Converts milliseconds to seconds.
-     * 
+     *
      * @param milliSeconds
      *            milliseconds
      * @return seconds
@@ -217,7 +217,7 @@ public final class Util {
 
     /**
      * Returns true if given String is null or empty.
-     * 
+     *
      * @param str
      *            String
      * @return boolean if String is empty or null.
@@ -228,7 +228,7 @@ public final class Util {
 
     /**
      * Returns true if the given string has any whitespace in it, including the leading and trailing whitespace.
-     * 
+     *
      * @param s
      * @return
      */
@@ -247,7 +247,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param array
      * @return
      */
@@ -256,7 +256,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param array
      * @return
      */
@@ -265,7 +265,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param array
      * @return
      */
@@ -294,7 +294,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param pageContext
      * @param objectClass
      * @return
@@ -323,7 +323,7 @@ public final class Util {
 
     /**
      * Convenience method for URL-encoding the given string.
-     * 
+     *
      * @param s
      * @return
      */
@@ -337,7 +337,7 @@ public final class Util {
 
     /**
      * Convenience method for URL-decoding the given string.
-     * 
+     *
      * @param s
      * @return
      */
@@ -350,7 +350,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param o
      * @return
      */
@@ -365,7 +365,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param expression
      */
     public static boolean isValidQuartzCronExpression(String expression) {
@@ -378,7 +378,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param coll
      * @return
      */
@@ -398,7 +398,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param coll
      * @param surroundWith
      * @return
@@ -419,7 +419,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param coll
      * @return
      */
@@ -441,7 +441,7 @@ public final class Util {
     /**
      * Create a comma-separated list of tag enclosed URIs. The result can be used in sparql queries. eg.: [uri1,uri2,uri3] is
      * transformed to <uri1>,<uri2>,<uri3>.
-     * 
+     *
      * @param uriList
      *            list of URIs
      * @return comma separated list of tag enclosed URIs
@@ -465,7 +465,7 @@ public final class Util {
 
     /**
      * Converts string to double.
-     * 
+     *
      * @param s
      *            String to convert.
      * @return Double
@@ -484,7 +484,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param language
      */
     public static String normalizeHTTPAcceptedLanguage(String httpAcceptedLanguage) {
@@ -520,7 +520,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param acceptLanguageHeader
      * @return
      */
@@ -565,7 +565,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param startTime
      * @return
      */
@@ -575,7 +575,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param duration
      * @return
      */
@@ -600,7 +600,7 @@ public final class Util {
 
     /**
      * Algorithm calculates the estimated number of hashes.
-     * 
+     *
      * @param minHash
      * @param maxHash
      * @return
@@ -618,7 +618,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param subjectString
      * @return
      */
@@ -643,7 +643,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param map
@@ -664,7 +664,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param l
      * @return
      */
@@ -677,7 +677,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -687,7 +687,7 @@ public final class Util {
 
     /**
      * Escape HTML characters and replace new lines with HTML brake tag.
-     * 
+     *
      * @param s
      * @return escaped string
      */
@@ -704,7 +704,7 @@ public final class Util {
      * Converts given string into boolean. The following inputs are covered (case-insensitively): - null string returns false -
      * "true" returns true - "false" return false - "yes" and "y" return true - "no" and "n" return false - "0", "-1", "-2", etc
      * return false - "1", "2", "3", etc return true - any other string, including an empty one, returns false
-     * 
+     *
      * @param s
      *            String to represent boolean.
      * @return boolean
@@ -732,7 +732,7 @@ public final class Util {
 
     /**
      * Returns true if the given integer is >0, otherwise returns false.
-     * 
+     *
      * @param i
      *            int
      * @return boolean
@@ -744,7 +744,7 @@ public final class Util {
 
     /**
      * Removes surrounding quotes of the given String.
-     * 
+     *
      * @param s
      *            String to remove quotes from
      * @return Given String without surrounding quotes. If the method parameter is not surrounded with quotes the original String is
@@ -760,7 +760,7 @@ public final class Util {
     /**
      * If the given element name already exists (case insensitive) in the list of element names, then append a trailing unique
      * number.
-     * 
+     *
      * @param element
      * @param elements
      *            elements
@@ -792,7 +792,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param str
      * @param token
      * @return
@@ -802,7 +802,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param str
      * @param token
      * @return
@@ -812,7 +812,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param str
      * @param token
      * @param ignoreCase
@@ -837,7 +837,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param request
      * @return
      */
@@ -865,7 +865,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param actionBeanClass
      * @return
      */
@@ -881,7 +881,7 @@ public final class Util {
     /**
      * Returns true if the given text matches the given wildcard (i.e. '*') pattern.
      * Code borrowed from http://www.adarshr.com/papers/wildcard.
-     * 
+     *
      * @param text as indicated above
      * @param pattern as indicated above
      * @return as indicated above
@@ -909,7 +909,7 @@ public final class Util {
     }
 
     /**
-     * 
+     *
      * @param coll
      * @return
      */

@@ -57,7 +57,7 @@ import eionet.cr.web.util.CustomPaginatedList;
 
 /**
  * DAO methods for search in Virtuoso.
- * 
+ *
  * @author jaanus
  */
 public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
@@ -67,7 +67,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Free text search implementation in Virtuoso.
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchByFreeText(eionet.cr.dao.util.SearchExpression,
      *      eionet.cr.dao.helpers.FreeTextSearchHelper.FilterType, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest)
@@ -158,11 +158,11 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
      * {@link #searchByFilters(Map, boolean, PagingRequest, SortingRequest, List, boolean)}, which is a so-called "two-step"
      * approach where the first query gets the URIs of the matching subjects in the requested order, and the second query gets the
      * requested predicates of these subjects.
-     * 
+     *
      * This version was tried as faster alternative to the "two-step" approach. However, after a performance bug was fixed in the
      * latter, this version was again dropped, as it is much more complicated and harder to follow. However, we keep it here in case
      * we need to bring it back for whichever reason after all.
-     * 
+     *
      * @param filters
      * @param checkFiltersRange
      * @param pagingRequest
@@ -302,7 +302,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Builds the query 's "where contents", i.e. the part that goes in between the curly brackets in "where {}".
-     * 
+     *
      * @return Query parameter string for SPARQL
      */
     private String getWhereContents(Map<String, String> filters, Bindings bindings) {
@@ -352,7 +352,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchByFilters(java.util.Map, java.util.Set, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest, java.util.List)
      */
@@ -421,7 +421,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchDeliveries(java.lang.String, java.lang.String, java.lang.String,
      * eionet.cr.util.pagination.PagingRequest, eionet.cr.util.SortingRequest)
      */
@@ -464,7 +464,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchReferences(java.lang.Long, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -477,7 +477,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchBySpatialBox(eionet.cr.dao.util.BBOX, java.lang.String,
      * eionet.cr.util.pagination.PagingRequest, eionet.cr.util.SortingRequest, boolean)
      */
@@ -542,7 +542,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchByTypeAndFilters(java.util.Map, java.util.Set, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest, java.util.List)
      */
@@ -555,7 +555,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchBySource(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -609,7 +609,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchDeliveriesForROD(eionet.cr.util.pagination.PagingRequest)
      */
     @Override
@@ -643,7 +643,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Search by tags implementation in Virtuoso.
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchByTags(java.util.List, eionet.cr.util.pagination.PagingRequest,
      *      eionet.cr.util.SortingRequest, java.util.List)
      * @param tags
@@ -713,7 +713,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /**
      * Helper method to convert array of tag to a map required by search method.
-     * 
+     *
      * @param tags
      *            List<String> tag names
      * @return Map<String, String> in format [tag predicate: tag name]
@@ -728,7 +728,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#getExactRowCountLimit()
      */
     @Override
@@ -739,7 +739,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#searchReferences(java.lang.String, eionet.cr.util.pagination.PagingRequest,
      * eionet.cr.util.SortingRequest)
      */
@@ -801,7 +801,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#getTypes()
      */
     @Override
@@ -816,7 +816,7 @@ public class VirtuosoSearchDAO extends VirtuosoBaseDAO implements SearchDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.SearchDAO#getSubjectsData(java.util.List, java.lang.String[])
      */
     @Override

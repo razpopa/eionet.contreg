@@ -39,7 +39,7 @@ import eionet.cr.util.sql.SQLUtil;
 
 /**
  * A utility class for importing a Scoreboard dimension's metadata from a staging database.
- * 
+ *
  * @author jaanus
  */
 public class DimensionMetadataImporter extends Thread {
@@ -108,7 +108,7 @@ public class DimensionMetadataImporter extends Thread {
 
     /**
      * Class constructor.
-     * 
+     *
      * @param dbName
      * @param query
      * @param dimension
@@ -122,7 +122,7 @@ public class DimensionMetadataImporter extends Thread {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Thread#run()
      */
     @Override
@@ -193,7 +193,7 @@ public class DimensionMetadataImporter extends Thread {
     }
 
     /**
-     * 
+     *
      * @param vf
      */
     private void prepareValues(ValueFactory vf) {
@@ -244,7 +244,7 @@ public class DimensionMetadataImporter extends Thread {
     }
 
     /**
-     * 
+     *
      * @param rs
      * @param rowIndex
      * @param repoConn
@@ -274,7 +274,7 @@ public class DimensionMetadataImporter extends Thread {
     }
 
     /**
-     * 
+     *
      * @param rs
      * @param rowIndex
      * @param repoConn
@@ -310,7 +310,7 @@ public class DimensionMetadataImporter extends Thread {
     }
 
     /**
-     * 
+     *
      * @param rs
      * @param rowIndex
      * @param repoConn

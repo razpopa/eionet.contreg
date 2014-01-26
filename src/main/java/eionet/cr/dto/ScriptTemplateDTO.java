@@ -23,7 +23,7 @@ package eionet.cr.dto;
 
 /**
  * Script template.
- * 
+ *
  * @author Juhan Voolaid
  */
 public class ScriptTemplateDTO {

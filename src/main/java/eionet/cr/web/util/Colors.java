@@ -21,9 +21,9 @@
 package eionet.cr.web.util;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public final class Colors {
 
@@ -35,7 +35,7 @@ public final class Colors {
     }
 
     /**
-     * 
+     *
      * @param hash
      * @return
      */
@@ -48,7 +48,7 @@ public final class Colors {
     }
 
     /**
-     * 
+     *
      * @param rgbColor
      * @return
      */

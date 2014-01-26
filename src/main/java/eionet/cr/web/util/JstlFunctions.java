@@ -57,9 +57,9 @@ import eionet.cr.web.security.CRUser;
 import eionet.cr.web.util.columns.SearchResultColumn;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public final class JstlFunctions {
 
@@ -75,7 +75,7 @@ public final class JstlFunctions {
      * If such a token is found, returns the given string's <code>substring(0, i + cutAtLength) + "..."</code>, where <code>i</code>
      * is the start index of the found token. If no tokens are found that exceed the length of <tt>cutAtLength</tt>, then this
      * method simply return the given string.
-     * 
+     *
      * @return
      */
     public static java.lang.String cutAtFirstLongToken(java.lang.String str, int cutAtLength) {
@@ -106,7 +106,7 @@ public final class JstlFunctions {
     /**
      * Checks if the given string (after being trimmed first) contains any whitespace. If yes, returns the given string surrounded
      * by quotes. Otherwise returns the given string. If the given string is <code>null</code>, returns null.
-     * 
+     *
      * @param str
      * @return
      */
@@ -125,7 +125,7 @@ public final class JstlFunctions {
 
     /**
      * Returns the value of {@link CRUser#hasPermission(HttpSession, String, String)}, using the given inputs.
-     * 
+     *
      * @param session
      * @param aclPath
      * @param permission
@@ -139,7 +139,7 @@ public final class JstlFunctions {
      * Returns a string that is constructed by concatenating the given bean request's getRequestURI() + "?" + the given bean
      * request's getQueryString(), and replacing the sort predicate with the given one. The present sort order is replaced by the
      * opposite.
-     * 
+     *
      * @param request
      * @param sortP
      * @param sortO
@@ -193,7 +193,7 @@ public final class JstlFunctions {
      * Finds the label for the given predicate in the given predicate-label map. If there is no match, then looks for the last
      * occurrence of '#' or '/' or ':' in the predicate. If such an occurrence is found, returns everything after that occurrence.
      * Otherwise returns the predicate as it was given.
-     * 
+     *
      * @param predicateLabels
      * @param predicate
      * @return
@@ -213,7 +213,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param subjectDTO
      * @param predicates
      * @param object
@@ -238,7 +238,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param objects
      * @param findObjectHash
      * @return
@@ -259,7 +259,7 @@ public final class JstlFunctions {
 
     /**
      * Returns a color for the given source by supplying the source's hash to the <code>Colors.colorByModulus(long)</code>.
-     * 
+     *
      * @param source
      * @return
      */
@@ -269,7 +269,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -279,7 +279,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param column
      * @param object
      * @param actionBean
@@ -291,7 +291,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -300,7 +300,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param subject
      * @param predicate
      * @return
@@ -316,7 +316,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param actionBean
      * @param object
      * @return
@@ -327,7 +327,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param object
      * @return
      */
@@ -347,7 +347,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param hash
      * @param objects
      * @return
@@ -369,7 +369,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param objectValue
      * @param pageContext
      * @return
@@ -395,7 +395,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param throwable
      * @return
      */
@@ -404,7 +404,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param stackTrace
      * @return
      */
@@ -426,7 +426,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param factsheetActionBean
      * @param predicateUri
      * @param pageNumber
@@ -448,7 +448,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param factsheetActionBean
      * @param predicateUri
      * @return
@@ -492,7 +492,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param matchCount
      * @param pageSize
      * @return
@@ -508,7 +508,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param condition
      * @param ifTrue
      * @param ifFalse
@@ -521,7 +521,7 @@ public final class JstlFunctions {
 
     /**
      * Removes root home URI part from given URI
-     * 
+     *
      * @param uri
      * @return String
      */
@@ -535,7 +535,7 @@ public final class JstlFunctions {
 
     /**
      * Extract folder
-     * 
+     *
      * @param uri
      * @return String
      */
@@ -548,7 +548,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param s
      * @return
      */
@@ -558,7 +558,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param arrayOrCollection
      * @param object
      * @return
@@ -586,7 +586,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param object
      * @return
      */
@@ -595,7 +595,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param coll
      * @param separator
      * @param sort
@@ -654,7 +654,7 @@ public final class JstlFunctions {
     }
 
     /**
-     * 
+     *
      * @param uri
      * @return
      */

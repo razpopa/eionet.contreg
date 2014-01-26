@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
 import eionet.cr.web.util.WebConstants;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class FactsheetDTO extends SubjectDTO {
@@ -57,7 +57,7 @@ public class FactsheetDTO extends SubjectDTO {
     }
 
     /**
-     * 
+     *
      * @param predicateUri
      * @param objectCount
      */
@@ -66,7 +66,7 @@ public class FactsheetDTO extends SubjectDTO {
     }
 
     /**
-     * 
+     *
      * @param predicateUri
      * @param objectPage
      */
@@ -89,7 +89,7 @@ public class FactsheetDTO extends SubjectDTO {
     }
 
     /**
-     * 
+     *
      * @param predicateUri
      * @param label
      */
@@ -98,7 +98,7 @@ public class FactsheetDTO extends SubjectDTO {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public LinkedHashMap<String, Collection<ObjectDTO>> getSortedPredicates() {
@@ -114,7 +114,7 @@ public class FactsheetDTO extends SubjectDTO {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getMaxObjectLength() {
@@ -128,7 +128,7 @@ public class FactsheetDTO extends SubjectDTO {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         @Override

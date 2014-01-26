@@ -11,9 +11,9 @@ import eionet.cr.util.SortingRequest;
 import eionet.cr.util.pagination.PagingRequest;
 
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
 
@@ -47,7 +47,7 @@ public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
     }
 
     /**
-     * 
+     *
      * @param sourceUrl
      * @param skipAnonymous
      * @param pagingRequest
@@ -65,7 +65,7 @@ public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getUnorderedQuery(java.util.List)
      */
     @Override
@@ -75,7 +75,7 @@ public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -108,7 +108,7 @@ public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getCountQuery(java.util.List)
      */
     @Override
@@ -118,7 +118,7 @@ public class VirtuosoSearchBySourceHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getQueryBindings()
      */
     @Override

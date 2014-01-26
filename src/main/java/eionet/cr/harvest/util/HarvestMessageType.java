@@ -23,9 +23,9 @@ package eionet.cr.harvest.util;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public enum HarvestMessageType {
 
@@ -35,7 +35,7 @@ public enum HarvestMessageType {
     private String value;
 
     /**
-     * 
+     *
      * @param value
      */
     private HarvestMessageType(String value) {
@@ -44,7 +44,7 @@ public enum HarvestMessageType {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Enum#toString()
      */
     @Override
@@ -53,7 +53,7 @@ public enum HarvestMessageType {
     }
 
     /**
-     * 
+     *
      * @param str
      * @return
      */

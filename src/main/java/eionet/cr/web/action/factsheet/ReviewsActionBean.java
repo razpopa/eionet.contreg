@@ -41,10 +41,10 @@ import eionet.cr.web.util.tabs.TabElement;
 import eionet.cr.web.util.tabs.TabId;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaak.kapten@tieto.com">Jaak Kapten</a>
  * @author Risto Alt
- * 
+ *
  */
 
 @UrlBinding("/reviews.action")
@@ -68,7 +68,7 @@ public class ReviewsActionBean extends AbstractActionBean {
     private FileBean attachment;
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -318,7 +318,7 @@ public class ReviewsActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
+     *
      * @param sourceUrl
      * @param uploadedFile
      * @param dcTitle
@@ -402,7 +402,7 @@ public class ReviewsActionBean extends AbstractActionBean {
 
     /**
      * Extracts username from review uri
-     * 
+     *
      * @return username
      */
     public String getAttemptedUserName() {
@@ -553,7 +553,7 @@ public class ReviewsActionBean extends AbstractActionBean {
 
     /**
      * True, if the review with given uri belongs to the currently logged in user.
-     * 
+     *
      * @return
      */
     public boolean isUsersReview() {

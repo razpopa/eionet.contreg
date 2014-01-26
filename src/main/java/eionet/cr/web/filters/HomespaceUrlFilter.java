@@ -50,10 +50,10 @@ import eionet.cr.web.action.factsheet.ViewActionBean;
  * Purpose of this filter is to enable RESTful download of files stored at CR. Since it is assumed that all these will have a URL
  * pointing to some user home directory of CR, then this filter is relevant (and should be applied to) only URLs with pattern
  * /home/*.
- * 
+ *
  * See https://svn.eionet.europa.eu/projects/Reportnet/ticket/2464 and https://svn.eionet.europa.eu/projects/Reportnet/ticket/2054
  * for more background.
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
  */
 public class HomespaceUrlFilter implements Filter {
@@ -63,7 +63,7 @@ public class HomespaceUrlFilter implements Filter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     @Override
@@ -73,7 +73,7 @@ public class HomespaceUrlFilter implements Filter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     @Override
@@ -149,7 +149,7 @@ public class HomespaceUrlFilter implements Filter {
 
     /**
      * Checks if requestPath is like user's SPARQL bookmark.
-     * 
+     *
      * @param requestPathInfo
      * @return
      */
@@ -162,7 +162,7 @@ public class HomespaceUrlFilter implements Filter {
     }
 
     /**
-     * 
+     *
      * @param requestPathInfo
      * @return
      */
@@ -189,7 +189,7 @@ public class HomespaceUrlFilter implements Filter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.Filter#destroy()
      */
     @Override

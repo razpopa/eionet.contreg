@@ -64,7 +64,7 @@ import eionet.cr.util.sesame.SesameUtil;
  * Helper class that reads a feed (e.g. RSS, Atom) from the given input stream and saves it into the given context (i.e. graph) in
  * the given repository. Repository connections and the context are given via constructor, the stream is given via
  * {@link #save(InputStream)} method.
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class FeedSaver {
@@ -102,7 +102,7 @@ public class FeedSaver {
      * @throws ContentParsingException
      * @throws IOException
      * @throws OpenRDFException
-     * 
+     *
      */
     public void save(InputStream inputStream) throws ContentParsingException, IOException, OpenRDFException {
 
@@ -166,7 +166,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param item
      * @return
      */
@@ -229,7 +229,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param feedUri
      * @param feed
      * @throws RepositoryException
@@ -267,7 +267,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param feedUri
      * @param feed
      * @throws RepositoryException
@@ -360,7 +360,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param subjectUri
      * @param predicateUri
      * @param persons
@@ -445,7 +445,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param feedUri
      * @param itemUri
      * @param position
@@ -462,7 +462,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param subjectUri
      * @param predicateUri
      * @param object
@@ -481,7 +481,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param subjectUri
      * @param predicateUri
      * @param objectUri
@@ -510,7 +510,7 @@ public class FeedSaver {
     }
 
     /**
-     * 
+     *
      * @param subjectUri
      * @param predicateUri
      * @param object
@@ -534,7 +534,7 @@ public class FeedSaver {
 
     /**
      * Removes any HTML content from the given text.
-     * 
+     *
      * @param text
      * @return
      */

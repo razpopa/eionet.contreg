@@ -18,7 +18,7 @@ import eionet.cr.util.sql.SQLUtil;
 // TODO: Auto-generated Javadoc
 /**
  * The Class MySQLHandler.
- * 
+ *
  * @author jaanus
  */
 public class MySQLHandler implements MSAccessImportHandlerIF {
@@ -46,7 +46,7 @@ public class MySQLHandler implements MSAccessImportHandlerIF {
 
     /**
      * Instantiates a new my sql handler.
-     * 
+     *
      * @param conn the conn
      */
     public MySQLHandler(Connection conn) {
@@ -55,7 +55,7 @@ public class MySQLHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see das.conv.msaccess.ConversionHandlerIF#newTable(com.healthmarketscience .jackcess.Table)
      */
     @Override
@@ -72,7 +72,7 @@ public class MySQLHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see das.conv.msaccess.ConversionHandlerIF#processRow(com.healthmarketscience .jackcess.Table, java.util.Map)
      */
     @Override
@@ -108,7 +108,7 @@ public class MySQLHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see das.conv.msaccess.ConversionHandlerIF#endOfFile()
      */
     @Override
@@ -125,7 +125,7 @@ public class MySQLHandler implements MSAccessImportHandlerIF {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see das.conv.msaccess.ConversionHandlerIF#close()
      */
     @Override

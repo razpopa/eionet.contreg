@@ -41,7 +41,7 @@ import eionet.cr.web.action.factsheet.FactsheetActionBean;
 /**
  * Action bean that provides functions for browsing VoID (Vocabulary of Interlinked Datasets) datasets. Browsing done by two facets:
  * dct:creator and dct:subject, where "dct" stands for DublinCore Terms (http://purl.org/dc/terms/).
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/browseVoidDatasets.action")
@@ -81,7 +81,7 @@ public class BrowseVoidDatasetsActionBean extends AbstractActionBean {
     private HashMap<String, String> selectedSubjects = new HashMap<String, String>();
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -142,7 +142,7 @@ public class BrowseVoidDatasetsActionBean extends AbstractActionBean {
 
     /**
      * Returns true if user changed his creators' selection, otherwise return false.
-     * 
+     *
      * @return the boolean as described
      */
     private boolean isCreatorsChanged() {
@@ -152,7 +152,7 @@ public class BrowseVoidDatasetsActionBean extends AbstractActionBean {
 
     /**
      * Returns true if user changed his subjects' selection, otherwise return false.
-     * 
+     *
      * @return the boolean as described
      */
     private boolean isSubjectsChanged() {
@@ -170,7 +170,7 @@ public class BrowseVoidDatasetsActionBean extends AbstractActionBean {
     /**
      * Returns the Java class object of the {@link FactsheetActionBean}. Used for building refactoring-safe links to that bean in
      * JSP page(s).
-     * 
+     *
      * @return
      */
     public Class getFactsheetActionBeanClass() {

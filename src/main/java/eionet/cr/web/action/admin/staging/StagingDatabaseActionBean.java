@@ -47,7 +47,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
 /**
  * Action bean for operations with a single staging database.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/admin/stagingDb.action")
@@ -87,7 +87,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * The bean's default event handler method.
-     * 
+     *
      * @return Resolution to go to.
      * @throws DAOException the dAO exception
      */
@@ -112,7 +112,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Handles edit event.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens.
      */
@@ -139,7 +139,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Handles the save event.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens
      */
@@ -152,7 +152,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Handles the "Save & close" event.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens.
      */
@@ -165,7 +165,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Handles the Cancel edit.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens.
      */
@@ -176,7 +176,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Handles the "add" event.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens.
      */
@@ -209,7 +209,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sends back to db list.
-     * 
+     *
      * @return the resolution
      */
     public Resolution backToDbList() {
@@ -217,7 +217,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Resolution toAvailableFilesList() {
@@ -226,7 +226,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the database.
-     * 
+     *
      * @return the database
      */
     public StagingDatabaseDTO getDatabase() {
@@ -235,7 +235,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the db name.
-     * 
+     *
      * @return the dbName
      */
     public String getDbName() {
@@ -244,7 +244,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sets the db name.
-     * 
+     *
      * @param dbName the dbName to set
      */
     public void setDbName(String dbName) {
@@ -253,7 +253,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the db description.
-     * 
+     *
      * @return the dbDescription
      */
     public String getDbDescription() {
@@ -262,7 +262,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sets the db description.
-     * 
+     *
      * @param dbDescription the dbDescription to set
      */
     public void setDbDescription(String dbDescription) {
@@ -271,7 +271,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Validate request on "add" event.
-     * 
+     *
      * @throws DAOException the dAO exception
      */
     @ValidationMethod(on = {"add"})
@@ -315,7 +315,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sets the file name.
-     * 
+     *
      * @param fileName the fileName to set
      */
     public void setFileName(String fileName) {
@@ -324,7 +324,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the file name.
-     * 
+     *
      * @return the fileName
      */
     public String getFileName() {
@@ -333,7 +333,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the file size.
-     * 
+     *
      * @return the file size
      */
     public long getFileSize() {
@@ -342,7 +342,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the suggested db name.
-     * 
+     *
      * @return the suggested db name
      */
     public String getSuggestedDbName() {
@@ -351,7 +351,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the db dto.
-     * 
+     *
      * @return the dbDTO
      */
     public StagingDatabaseDTO getDbDTO() {
@@ -360,7 +360,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sets the db id.
-     * 
+     *
      * @param dbId the dbId to set
      */
     public void setDbId(int dbId) {
@@ -369,7 +369,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the staging databases action bean url binding.
-     * 
+     *
      * @return the staging databases action bean url binding
      */
     public String getStagingDatabasesActionBeanUrlBinding() {
@@ -379,7 +379,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the staging databases action bean class.
-     * 
+     *
      * @return the staging databases action bean class
      */
     public Class getStagingDatabasesActionBeanClass() {
@@ -388,7 +388,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the rdf export wizard action bean class.
-     * 
+     *
      * @return the rdf export wizard action bean class
      */
     public Class getRdfExportWizardActionBeanClass() {
@@ -397,7 +397,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the rdf exports action bean class.
-     * 
+     *
      * @return the rdf exports action bean class
      */
     public Class getRdfExportsActionBeanClass() {
@@ -406,7 +406,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the tables columns.
-     * 
+     *
      * @return the tablesColumns
      */
     public List<StagingDatabaseTableColumnDTO> getTablesColumns() {
@@ -415,7 +415,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Gets the default query.
-     * 
+     *
      * @return the defaultQuery
      */
     public String getDefaultQuery() {
@@ -424,7 +424,7 @@ public class StagingDatabaseActionBean extends AbstractActionBean {
 
     /**
      * Sets the default query.
-     * 
+     *
      * @param defaultQuery the defaultQuery to set
      */
     public void setDefaultQuery(String defaultQuery) {

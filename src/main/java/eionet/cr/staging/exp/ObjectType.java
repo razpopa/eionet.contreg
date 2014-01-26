@@ -31,7 +31,7 @@ import eionet.cr.util.LinkedCaseInsensitiveMap;
 
 /**
  * Describes a possible type (as in RDF) of objects returned by an RDF export query on a staging database.
- * 
+ *
  * @author jaanus
  */
 public class ObjectType {
@@ -65,7 +65,7 @@ public class ObjectType {
 
     /**
      * Constructs object type with the given uri and label..
-     * 
+     *
      * @param uri the uri
      * @param label the label
      */
@@ -78,7 +78,7 @@ public class ObjectType {
 
     /**
      * Adds the property.
-     * 
+     *
      * @param property the property
      * @param isRequired indicates if this is a required property
      * @param defaultForColumn the default for column
@@ -102,7 +102,7 @@ public class ObjectType {
 
     /**
      * Adds the hidden property.
-     * 
+     *
      * @param property the property
      */
     public void addHiddenProperty(ObjectHiddenProperty property) {
@@ -111,7 +111,7 @@ public class ObjectType {
 
     /**
      * Gets the default property.
-     * 
+     *
      * @param column the column
      * @return the default property
      */
@@ -121,7 +121,7 @@ public class ObjectType {
 
     /**
      * Gets the properties.
-     * 
+     *
      * @return the properties
      */
     public List<ObjectProperty> getProperties() {
@@ -130,7 +130,7 @@ public class ObjectType {
 
     /**
      * Gets the property by predicate.
-     * 
+     *
      * @param predicateUri the predicate uri
      * @return the property by predicate
      */
@@ -140,7 +140,7 @@ public class ObjectType {
 
     /**
      * Gets the uri.
-     * 
+     *
      * @return the uri
      */
     public String getUri() {
@@ -149,7 +149,7 @@ public class ObjectType {
 
     /**
      * Gets the label.
-     * 
+     *
      * @return the label
      */
     public String getLabel() {
@@ -158,7 +158,7 @@ public class ObjectType {
 
     /**
      * Returns true if this type has this particular object property by plain '==' comparison. Otherwise returns false.
-     * 
+     *
      * @param property The property to check.
      * @return As indicated above.
      */
@@ -182,7 +182,7 @@ public class ObjectType {
 
     /**
      * Gets the hidden properties.
-     * 
+     *
      * @return the hiddenProperties
      */
     public Set<ObjectHiddenProperty> getHiddenProperties() {

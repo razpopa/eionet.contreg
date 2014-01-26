@@ -32,9 +32,9 @@ import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 /**
- * 
+ *
  * @author Enriko Käsper
- * 
+ *
  */
 public class VirtuosoUserFolderSearchHelper extends AbstractSearchHelper {
 

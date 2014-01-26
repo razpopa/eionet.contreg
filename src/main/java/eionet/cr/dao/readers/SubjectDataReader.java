@@ -33,7 +33,7 @@ import eionet.cr.util.Hashes;
 
 /**
  * Base class for the readers that read predicate-object pairs of all or specific predicates of a given collection of subjects.
- * 
+ *
  * @author jaanus
  */
 public abstract class SubjectDataReader extends ResultSetMixedReader<SubjectDTO> {
@@ -46,7 +46,7 @@ public abstract class SubjectDataReader extends ResultSetMixedReader<SubjectDTO>
 
     /**
      * Constructs an instance for reading the subjects whose URIs are given by the input list.
-     * 
+     *
      * @param subjectUris The URIs of the subjects to be read.
      */
     public SubjectDataReader(List<String> subjectUris) {
@@ -67,7 +67,7 @@ public abstract class SubjectDataReader extends ResultSetMixedReader<SubjectDTO>
 
     /**
      * Returns the SPARQL query that this reader expects to be executed and the results of which it will read.
-     * 
+     *
      * @param bindings Bindings to be associated with the returned query.
      * @return The query.
      */
@@ -75,7 +75,7 @@ public abstract class SubjectDataReader extends ResultSetMixedReader<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.readers.ResultSetMixedReader#getResultList()
      */
     @Override
@@ -85,7 +85,7 @@ public abstract class SubjectDataReader extends ResultSetMixedReader<SubjectDTO>
 
     /**
      * Creates an instance of {@link SubjectDataReader} based on the given inputs.
-     * 
+     *
      * @param subjectUris The list of subjects that will be read by this reader.
      * @param predicateUris The list of predicates whose values the reader will collect.
      * @return A {@link SubjectDataReader} as described above.

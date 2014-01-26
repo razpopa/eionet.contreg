@@ -31,14 +31,14 @@ import eionet.cr.dto.EndpointHarvestQueryDTO;
 
 /**
  * DAO interface for operations with SPARQL endpoint harvest queries.
- * 
+ *
  * @author jaanus
  */
 public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Creates a new endpoint harvest query record, returns its ID.
-     * 
+     *
      * @param dto The DTo from which to create.
      * @return The created record's id.
      * @throws DAOException If any sort of database access error happens.
@@ -48,7 +48,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
     /**
      * Returns a list of {@link EndpointHarvestQueryDAO} matching to the given endpoint URL. The latter may be null in which case
      * all will be returned.
-     * 
+     *
      * @param url The endpoint url to search by. May be null in which case all will be returned.
      * @return The list of matching objects.
      * @throws DAOException If any sort of database access error happens.
@@ -58,7 +58,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
     /**
      * Same as {@link #listByEndpointUrl(String)}, but additional boolean input enables to control whether the matching queries
      * should be active (true) or not (false).
-     * 
+     *
      * @param url The endpoint url to search by. May be null in which case all will be returned.
      * @param active If true, only active queries will be searched for, otherwise only non-active are searched.
      * @return The list of matching objects.
@@ -68,7 +68,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Fetches a {@link EndpointHarvestQueryDAO} by the given id.
-     * 
+     *
      * @param id The given id.
      * @return The matching {@link EndpointHarvestQueryDAO} or null if no match found.
      * @throws DAOException If any sort of database access error happens.
@@ -77,7 +77,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Returns a list of SPARQL endpoint URLs currently listed in HARVEST_SOURCE table.
-     * 
+     *
      * @return The list.
      * @throws DAOException If any sort of database access error happens.
      */
@@ -85,7 +85,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Updates the given endpoint harvest query in the database.
-     * 
+     *
      * @param dto The given endpoint harvest query.
      * @throws DAOException If any sort of database access error happens.
      */
@@ -95,11 +95,11 @@ public interface EndpointHarvestQueryDAO extends DAO {
      * Tests the given CONSTRUCT query at the given remote endpoint URL. Neither of the two must be blank!
      * The query is assumed to be a CONSTRUCT query abd the method assures that a reasonable LIMIT clause is added to the query
      * before sending it!
-     * 
+     *
      * The method returns the statements of the graph that the query returned.
-     * 
+     *
      * This method should really not be in a DAO layer, but let it be here until we have no service layer.
-     * 
+     *
      * @param query The query.
      * @param endpointUrl The endpoint URL.
      * @return The statements.
@@ -109,7 +109,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Moves the given queries up/down in terms of their position in the queries of the given endpoint.
-     * 
+     *
      * @param endpointUrl Given endpoint URL.
      * @param ids IDs of the queries to move.
      * @param direction The moving direction: -1 == move down, 1 == move up.
@@ -119,7 +119,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Deletes endpoint harvest queries by the given ids.
-     * 
+     *
      * @param selectedIds Given query ids.
      * @throws DAOException If any sort of database access error happens.
      */
@@ -127,7 +127,7 @@ public interface EndpointHarvestQueryDAO extends DAO {
 
     /**
      * Activates/deactivates the given queries (i.e. sets their ACTIVE field in the database accordingly).
-     * 
+     *
      * @param ids Given query ids.
      * @throws DAOException If any sort of database access error happens.
      */

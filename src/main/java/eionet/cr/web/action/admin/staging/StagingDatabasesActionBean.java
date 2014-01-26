@@ -48,7 +48,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
  * An action bean for listing the currently available "staging databases" and performing bulk operations with them (e.g. delete).
  * The feature of "staging databases" has been developed specifically for the European Commission's "Digital Agenda Scoreboard"
  * project (https://ec.europa.eu/digital-agenda/en/scoreboard) but as of Jan 2013 looks perfectly useful for other projects as well.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/admin/stagingDbs.action")
@@ -74,7 +74,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * The bean's default event handler method.
-     * 
+     *
      * @return Resolution to go to.
      * @throws DAOException If database access error happens.
      */
@@ -86,7 +86,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Handles the delete event.
-     * 
+     *
      * @return the resolution
      */
     public Resolution delete() {
@@ -108,7 +108,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Handles the "Open import log" event.
-     * 
+     *
      * @return the resolution
      * @throws DAOException If database access error happens.
      */
@@ -129,7 +129,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Gets the databases.
-     * 
+     *
      * @return the databases
      */
     public List<StagingDatabaseDTO> getDatabases() {
@@ -138,7 +138,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Gets the database action bean class.
-     * 
+     *
      * @return the database action bean class
      */
     public Class getDatabaseActionBeanClass() {
@@ -147,7 +147,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Gets the available files action bean class.
-     * 
+     *
      * @return the available files action bean class
      */
     public Class getAvailableFilesActionBeanClass() {
@@ -156,7 +156,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Gets the rdf exports action bean class.
-     * 
+     *
      * @return the rdf exports action bean class
      */
     public Class getRdfExportsActionBeanClass() {
@@ -179,7 +179,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Sets the db names.
-     * 
+     *
      * @param dbNames the dbNames to set
      */
     public void setDbNames(List<String> dbNames) {
@@ -188,7 +188,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Gets the import statuses.
-     * 
+     *
      * @return the import statuses
      */
     public Map<String, String> getImportStatuses() {
@@ -197,7 +197,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Creates and returns a map of database import statuses. The keys are the status names, the values are their friendly names.
-     * 
+     *
      * @return the map
      */
     private static Map<String, String> createImportStatuses() {
@@ -213,7 +213,7 @@ public class StagingDatabasesActionBean extends AbstractActionBean {
 
     /**
      * Sets the database id.
-     * 
+     *
      * @param databaseId the databaseId to set
      */
     public void setDatabaseId(int databaseId) {

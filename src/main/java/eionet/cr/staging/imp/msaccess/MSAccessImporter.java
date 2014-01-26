@@ -38,7 +38,7 @@ import eionet.cr.util.LogUtil;
 // TODO: Auto-generated Javadoc
 /**
  * An implementation of {@link ImporterIF} that is capable of importing MS Access files.
- * 
+ *
  * @author jaanus
  */
 public class MSAccessImporter implements ImporterIF {
@@ -57,7 +57,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /**
      * Constructs a new instance with the given {@link ImportLoggerImpl}.
-     * 
+     *
      * @param importLogger
      *            the import logger
      */
@@ -68,7 +68,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.staging.imp.ImporterIF#doImport(java.io.File, java.lang.String)
      */
     @Override
@@ -121,7 +121,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /**
      * Gets the table.
-     * 
+     *
      * @param database
      *            the database
      * @param tableName
@@ -140,7 +140,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /**
      * Gets the table names.
-     * 
+     *
      * @param database
      *            the database
      * @return the table names
@@ -158,7 +158,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /**
      * Open database.
-     * 
+     *
      * @param file
      *            the file
      * @return the database
@@ -179,7 +179,7 @@ public class MSAccessImporter implements ImporterIF {
 
     /**
      * Close.
-     * 
+     *
      * @param database
      *            the database
      */
@@ -194,7 +194,7 @@ public class MSAccessImporter implements ImporterIF {
     }
 
     /**
-     * 
+     *
      * @param file
      * @return
      */

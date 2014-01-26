@@ -10,7 +10,7 @@ import eionet.cr.dto.UserFolderDTO;
 
 /**
  * Reader for user homes.
- * 
+ *
  * @author kaido
  */
 public class UserHomesReader extends ResultSetMixedReader<UserFolderDTO> {

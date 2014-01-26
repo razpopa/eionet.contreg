@@ -17,7 +17,7 @@ import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 /**
  * user folder test.
- * 
+ *
  * @author kaido
  */
 public class UserFolderDAOTest {

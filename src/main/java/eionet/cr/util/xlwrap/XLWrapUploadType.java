@@ -41,7 +41,7 @@ public enum XLWrapUploadType {
 
     /**
      * Basic constructor.
-     * 
+     *
      * @param title
      * @param hint
      */
@@ -92,7 +92,7 @@ public enum XLWrapUploadType {
 
     /**
      * Calls basic constructor and sets the graph URI and the subjects type URI to the ones given in this constructor input.
-     * 
+     *
      * @param title
      * @param hint
      * @param graphUri
@@ -127,7 +127,7 @@ public enum XLWrapUploadType {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getName() {
@@ -156,7 +156,7 @@ public enum XLWrapUploadType {
     }
 
     /**
-     * 
+     *
      * @param graphUri
      * @return
      */

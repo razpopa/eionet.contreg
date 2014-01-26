@@ -34,9 +34,9 @@ import eionet.cr.util.sql.SQLUtil;
 import eionet.cr.util.sql.SingleObjectReader;
 
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public abstract class VirtuosoBaseDAO {
 
@@ -48,7 +48,7 @@ public abstract class VirtuosoBaseDAO {
     protected Logger logger = Logger.getLogger(VirtuosoBaseDAO.class);
 
     /**
-     * 
+     *
      * @return
      */
     protected Connection getSQLConnection() throws SQLException {
@@ -57,7 +57,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param dbName
      * @return
      * @throws SQLException
@@ -67,7 +67,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param graphUri
      * @throws DAOException
      */
@@ -85,7 +85,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param bindings
@@ -108,7 +108,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param reader
@@ -123,7 +123,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Executes SPARQL query that updates data.
-     * 
+     *
      * @param sparql SPARQL
      * @param bindings Query bindings, if no bindings, null is accepted as the value
      * @param conn Virtuoso repository connection
@@ -138,7 +138,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param sparul
      * @param defautGraphUri
      * @return
@@ -161,7 +161,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Executes SPARQL with no bindings that is expected to have only one result and returns the unique value.
-     * 
+     *
      * @param <T>
      * @param sql
      * @param params
@@ -176,7 +176,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Executes SPARQL that is expected to have only one result and returns the unique value.
-     * 
+     *
      * @param <T>
      * @param sparql
      * @param bindings Binding values for the prepared SPARQL
@@ -195,7 +195,7 @@ public abstract class VirtuosoBaseDAO {
     /**
      * Finds any triples for the given subject, and if at least one found, forms {@link SubjectDTO} and returns it. Otherwise
      * returns null.
-     * 
+     *
      * @param subjectUri The URI of the subject to look for. Can be null or blank, in which case null is returned,
      * @return The subject's {@link SubjectDTO} as described above.
      * @throws DAOException If any sort of data access error occurs.
@@ -260,12 +260,12 @@ public abstract class VirtuosoBaseDAO {
      * of URIs of predicates to query for. i.e. the returned {@link SubjectDTO} objects will contain predicates only from this
      * array. If none of these predicates was found for these subjects, the returned {@link SubjectDTO} objects will simply contain
      * no predicates. If the predicates array is null or empty, the method queries for all predicates!
-     * 
+     *
      * NB! This method assumes that the given subjects have already been found by the caller of this method, i.e. at least one
      * triple for each exists. This means that if the method will not find the specific predicates queried for, {@link SubjectDTO}
      * objects will still be returned for every such subject. Therefore this method should not be used to determine if a subject
      * exists, because it returns an "empty" {@link SubjectDTO} even if the repository contains no triples for this subject.
-     * 
+     *
      * @param subjectUris The list of URIs of subjects to query for.
      * @param predicateUris The list of URIs of predicates to query for.
      * @return List where there is a {@link SubjectDTO} for every queried subject.
@@ -297,7 +297,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Count the total number of rows retrieved by the query constructed in SearchHelper.
-     * 
+     *
      * @param helper SearchHelper object.
      * @return number of rows
      * @throws DAOException
@@ -312,7 +312,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Count the total number of rows retrieved by the query constructed in SearchHelper.
-     * 
+     *
      * @param helper SearchHelper object.
      * @param inParams
      * @return number of rows
@@ -326,7 +326,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * helper method to execute sql queries. Handles connection init, close. Wraps Exceptions into {@link DAOException}
-     * 
+     *
      * @param <T> - type of the returned object
      * @param sql - sql string
      * @param params - parameters to insert into sql string
@@ -350,7 +350,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * executes insert or update with given sql and parameters.
-     * 
+     *
      * @param sql - sql string to execute
      * @param params - sql params
      * @throws DAOException
@@ -375,7 +375,7 @@ public abstract class VirtuosoBaseDAO {
     }
 
     /**
-     * 
+     *
      * @param <T>
      * @param sql
      * @param params
@@ -390,7 +390,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Orders the map the same way as subjectUris list is ordered. Returns new list.
-     * 
+     *
      * @param <T>
      * @param subjectUris
      * @param map
@@ -411,7 +411,7 @@ public abstract class VirtuosoBaseDAO {
 
     /**
      * Just delegates the call to {@link SesameUtil#createSPARQLVariablesCSV(String, int)}.
-     * 
+     *
      * @param varName
      * @param times
      * @return

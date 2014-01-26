@@ -26,7 +26,7 @@ import java.util.Date;
 
 /**
  * Data of harvest statistics.
- * 
+ *
  * @author Juhan Voolaid
  */
 public class HarvestStatDTO extends HarvestDTO {

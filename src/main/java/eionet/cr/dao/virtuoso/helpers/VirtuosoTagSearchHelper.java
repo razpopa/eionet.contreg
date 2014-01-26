@@ -34,7 +34,7 @@ import eionet.cr.util.sesame.SPARQLQueryUtil;
 
 /**
  * Search helper for tagged data search.
- * 
+ *
  * @author Juhan Voolaid
  */
 public class VirtuosoTagSearchHelper extends VirtuosoFilteredSearchHelper {
@@ -49,7 +49,7 @@ public class VirtuosoTagSearchHelper extends VirtuosoFilteredSearchHelper {
 
     /**
      * Returns sorted query for tagged data search.
-     * 
+     *
      * @param inParams
      * @return
      */
@@ -84,7 +84,7 @@ public class VirtuosoTagSearchHelper extends VirtuosoFilteredSearchHelper {
     /**
      * Returns StringBuilder based on useInference settings. Definition of the rule is at the beginning of the query if the helper
      * must use inferencing
-     * 
+     *
      * @return StringBuilder to be used for the query.
      */
     private StringBuilder initQueryStringBuilder() {
@@ -93,7 +93,7 @@ public class VirtuosoTagSearchHelper extends VirtuosoFilteredSearchHelper {
 
     /**
      * Builds the query 's "where contents", i.e. the part that goes in between the curly brackets in "where {}".
-     * 
+     *
      * @return Query parameter string for SPARQL
      */
     @Override

@@ -22,7 +22,7 @@
 package eionet.cr.harvest;
 
 /**
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public final class ResponseCodeUtil {
@@ -35,7 +35,7 @@ public final class ResponseCodeUtil {
     }
 
     /**
-     * 
+     *
      * @param code
      * @return
      */
@@ -44,7 +44,7 @@ public final class ResponseCodeUtil {
     }
 
     /**
-     * 
+     *
      * @param code
      * @return
      */
@@ -53,7 +53,7 @@ public final class ResponseCodeUtil {
     }
 
     /**
-     * 
+     *
      * @param code
      * @return
      */
@@ -62,7 +62,7 @@ public final class ResponseCodeUtil {
     }
 
     /**
-     * 
+     *
      * @param code
      * @return
      */

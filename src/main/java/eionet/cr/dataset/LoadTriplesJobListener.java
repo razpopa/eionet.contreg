@@ -12,7 +12,7 @@ import org.quartz.JobListener;
 
 /**
  * @author Risto Alt
- * 
+ *
  */
 public class LoadTriplesJobListener implements JobListener {
 
@@ -21,7 +21,7 @@ public class LoadTriplesJobListener implements JobListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.quartz.JobListener#getName()
      */
     @Override
@@ -31,7 +31,7 @@ public class LoadTriplesJobListener implements JobListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.quartz.JobListener#jobExecutionVetoed(org.quartz.JobExecutionContext)
      */
     @Override
@@ -41,7 +41,7 @@ public class LoadTriplesJobListener implements JobListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.quartz.JobListener#jobToBeExecuted(org.quartz.JobExecutionContext)
      */
     @Override
@@ -54,7 +54,7 @@ public class LoadTriplesJobListener implements JobListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.quartz.JobListener#jobWasExecuted(org.quartz.JobExecutionContext, org.quartz.JobExecutionException)
      */
     @Override

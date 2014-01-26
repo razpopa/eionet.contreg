@@ -22,7 +22,7 @@ package eionet.cr.dto;
 
 /**
  * Object representing User home folder.
- * 
+ *
  * @author Enriko Käsper
  */
 public class UserFolderDTO {

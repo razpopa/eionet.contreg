@@ -29,14 +29,14 @@ import eionet.cr.util.sql.SQLResultSetBaseReader;
 
 /**
  * Gets minimal properties from result set.
- * 
+ *
  * @author Juhan Voolaid
  */
 public class MinimalHarvestDTOReader extends SQLResultSetBaseReader<HarvestDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Override

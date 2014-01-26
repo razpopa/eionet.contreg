@@ -16,7 +16,7 @@ public class PairsToMapReader<L, R> extends PairReader<L, R> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.PairReader#readRow(java.sql.ResultSet)
      */
     @Override
@@ -27,7 +27,7 @@ public class PairsToMapReader<L, R> extends PairReader<L, R> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.PairReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override

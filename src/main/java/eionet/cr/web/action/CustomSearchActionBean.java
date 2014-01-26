@@ -60,9 +60,9 @@ import eionet.cr.web.util.columns.SubjectLastModifiedColumn;
 import eionet.cr.web.util.columns.SubjectPredicateColumn;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 @UrlBinding("/customSearch.action")
 public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
@@ -94,7 +94,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     private String queryString;
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -132,7 +132,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     @Override
@@ -168,7 +168,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#getResultList()
      */
     @Override
@@ -178,7 +178,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#getPagination()
      */
     @Override
@@ -188,7 +188,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#getMatchCount()
      */
     @Override
@@ -198,7 +198,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -215,7 +215,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -272,7 +272,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Map<String, String> getSelectedFilters() {
@@ -281,7 +281,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @param create
      * @return
      */
@@ -501,7 +501,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isShowPicklist() {
@@ -509,7 +509,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isRemoveFilter() {
@@ -517,7 +517,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      */
     public boolean isAddFilter() {
@@ -529,7 +529,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
     }
 
     /**
-     * 
+     *
      * @return
      */
     private Map<String, String> buildSearchCriteria() {
@@ -553,7 +553,7 @@ public class CustomSearchActionBean extends AbstractSearchActionBean<SubjectDTO>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
     @Override

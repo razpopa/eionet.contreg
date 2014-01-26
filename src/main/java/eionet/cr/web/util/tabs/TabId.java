@@ -12,7 +12,7 @@ public enum TabId {
     private String title;
 
     /**
-     * 
+     *
      * Class constructor.
      */
     TabId() {

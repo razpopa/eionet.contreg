@@ -42,7 +42,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
 /**
  * An action bean for getting the properties of a resource at a remote SPARQL endpoint.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/admin/endpointResource.action")
@@ -62,7 +62,7 @@ public class EndpointResourceActionBean extends AbstractActionBean {
     private Collection<Statement> queryResult;
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */

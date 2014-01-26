@@ -55,7 +55,7 @@ import eionet.cr.util.sql.SingleObjectReader;
 
 /**
  * Virtuoso-specific implementation of {@link EndpointHarvestQueryDAO}.
- * 
+ *
  * @author jaanus
  */
 public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements EndpointHarvestQueryDAO {
@@ -107,7 +107,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#createEndpointHarvestQuery(eionet.cr.dto.EndpointHarvestQueryDTO)
      */
     @Override
@@ -141,7 +141,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#listByEndpointUrl(java.lang.String)
      */
     @Override
@@ -155,7 +155,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#listByEndpointUrl(java.lang.String, boolean)
      */
     @Override
@@ -170,7 +170,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#fetchById(int)
      */
     @Override
@@ -185,7 +185,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#getEndpoints()
      */
     @Override
@@ -196,7 +196,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#update(eionet.cr.dto.EndpointHarvestQueryDTO)
      */
     @Override
@@ -217,7 +217,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#testConstructQuery(java.lang.String, java.lang.String)
      */
     @Override
@@ -255,7 +255,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /**
      * Ensures that the given test CONSTRUCT query has a limit included, and it does not exceed the given allowed maximum.
-     * 
+     *
      * @param query The given query.
      * @param maxLimit The maximum allowed limit size.
      * @return The query with the reasonable limit ensured.
@@ -310,7 +310,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#move(java.util.Set, int)
      */
     @Override
@@ -394,7 +394,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
     }
 
     /**
-     * 
+     *
      * @param endpointUrl
      * @return
      * @throws DAOException
@@ -412,7 +412,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#delete(java.util.List)
      */
     @Override
@@ -445,7 +445,7 @@ public class VirtuosoEndpointHarvestQueryDAO extends VirtuosoBaseDAO implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.EndpointHarvestQueryDAO#activateDeactivate(java.util.List)
      */
     @Override

@@ -42,7 +42,7 @@ import eionet.cr.web.action.BrowseCodelistsActionBean;
 
 /**
  * Helper for creating factsheet tab menu.
- * 
+ *
  * @author Juhan Voolaid
  */
 public final class FactsheetTabMenuHelper {
@@ -76,9 +76,9 @@ public final class FactsheetTabMenuHelper {
     private HashSet<String> rdfTypes = new HashSet<String>();
 
     /**
-     * 
+     *
      * Class constructor.
-     * 
+     *
      * @param uri
      * @param subject
      * @param harvesterSourceDao
@@ -117,7 +117,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * 
+     *
      * @param selectedTab
      * @return
      */
@@ -153,7 +153,7 @@ public final class FactsheetTabMenuHelper {
 
     /**
      * Returns the list of tab objects without a selected tab.
-     * 
+     *
      * @return
      */
     public List<TabElement> getTypeSpecificTabs() {
@@ -161,7 +161,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * 
+     *
      * @param selectedTab
      * @return
      */
@@ -305,7 +305,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private boolean isScoreboardCodelist() {
@@ -314,7 +314,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private String getTypeLabel() {
@@ -329,7 +329,7 @@ public final class FactsheetTabMenuHelper {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static Map<String, String> createLabelledTypes() {

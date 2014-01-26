@@ -37,9 +37,9 @@ import eionet.cr.dto.SubjectDTO;
 import eionet.cr.util.Hashes;
 
 /**
- * 
+ *
  * @author altnyris
- * 
+ *
  */
 public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
 
@@ -51,7 +51,7 @@ public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
     private List<SubjectDTO> resultlist = null;
 
     /**
-     * 
+     *
      * @param subjectsMap
      */
     public SPOReader() {
@@ -60,7 +60,7 @@ public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.ResultSetBaseReader#readRow(java.sql.ResultSet)
      */
     @Override
@@ -68,7 +68,7 @@ public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @param subjectHash
      * @param subjectDTO
      */
@@ -78,7 +78,7 @@ public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -129,7 +129,7 @@ public class SPOReader extends ResultSetMixedReader<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.readers.ResultSetMixedReader#getResultList()
      */
     @Override

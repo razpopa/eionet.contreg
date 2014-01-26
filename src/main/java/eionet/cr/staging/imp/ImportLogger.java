@@ -33,7 +33,7 @@ import eionet.cr.util.Util;
 
 /**
  * An extension of {@link Logger} that logs messages of a staging database import process into the relevant table in the database.
- * 
+ *
  * @author jaanus
  */
 public class ImportLogger extends Logger {
@@ -49,7 +49,7 @@ public class ImportLogger extends Logger {
 
     /**
      * Just call the parent constructor.
-     * 
+     *
      * @param name the logger's name
      */
     public ImportLogger(String name) {
@@ -58,7 +58,7 @@ public class ImportLogger extends Logger {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.log4j.Category#forcedLog(java.lang.String, org.apache.log4j.Priority, java.lang.Object, java.lang.Throwable)
      */
     @Override
@@ -83,7 +83,7 @@ public class ImportLogger extends Logger {
 
     /**
      * Converts the given {@link Priority} to its suitable string representation for import log.
-     * 
+     *
      * @param priority The priority to convert.
      * @return The string representation.
      */
@@ -102,7 +102,7 @@ public class ImportLogger extends Logger {
 
     /**
      * Lazy getter for the {@link #dao}.
-     * 
+     *
      * @return the DAO
      */
     private StagingDatabaseDAO getDao() {
@@ -114,7 +114,7 @@ public class ImportLogger extends Logger {
 
     /**
      * Sets the database DTO.
-     * 
+     *
      * @param dbDTO the new db dto
      */
     public void setDbDTO(StagingDatabaseDTO dbDTO) {

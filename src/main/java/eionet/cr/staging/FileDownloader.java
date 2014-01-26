@@ -40,7 +40,7 @@ import eionet.cr.util.URLUtil;
 
 /**
  * A thread that downloads from a given URL a file that will be available for creating staging databases.
- * 
+ *
  * @author jaanus
  */
 public class FileDownloader extends Thread {
@@ -67,7 +67,7 @@ public class FileDownloader extends Thread {
      * Constructs a new instance of this class, that will be used to download from the given URL. The downloaded file will be
      * renamed to the one given in the method's second input, unless it is null or blank. The file will be saved into
      * {@link #FILES_DIR}.
-     * 
+     *
      * @param url The given URL.
      * @param newFileName The name that the file will be renamed to.
      */
@@ -79,7 +79,7 @@ public class FileDownloader extends Thread {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Thread#run()
      */
     @Override
@@ -95,10 +95,10 @@ public class FileDownloader extends Thread {
 
     /**
      * The thread's execution body called by {@link #run()}.
-     * 
+     *
      * @return The downloaded file's location.
      * @throws IOException In case any sort of IO error happened.
-     * 
+     *
      */
     private File execute() throws IOException {
 
@@ -126,7 +126,7 @@ public class FileDownloader extends Thread {
 
     /**
      * Derives a name for the file to be downloaded from the given {@link URLConnection}.
-     * 
+     *
      * @param connection The given {@link URLConnection}.
      * @return The derived file name.
      */
@@ -182,7 +182,7 @@ public class FileDownloader extends Thread {
 
     /**
      * Returns a form of the given file name that will surely be unique in the folder where the files are downloaded to.
-     * 
+     *
      * @param fileName The file name for which the unique form is returned.
      * @return The unique file name.
      */
@@ -205,7 +205,7 @@ public class FileDownloader extends Thread {
     /**
      * Returns true if the given file already exists in the folder where the files are downloaded to. Takes into account the file
      * suffixes added for uniqueness!
-     * 
+     *
      * @param fileName The file name to check.
      * @return As indicated above.
      */
@@ -215,7 +215,7 @@ public class FileDownloader extends Thread {
 
     /**
      * Returns java.io.File pointing to the directory where the available files should be kept in.
-     * 
+     *
      * @return The java.io.File.
      */
     private static File getFilesDir() {

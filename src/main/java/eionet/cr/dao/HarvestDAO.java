@@ -26,14 +26,14 @@ import eionet.cr.dto.HarvestDTO;
 import eionet.cr.dto.HarvestStatDTO;
 
 /**
- * 
+ *
  * @author heinljab
- * 
+ *
  */
 public interface HarvestDAO extends DAO {
 
     /**
-     * 
+     *
      * @param harvestSourceId
      * @param harvestType
      * @param user
@@ -44,7 +44,7 @@ public interface HarvestDAO extends DAO {
     int insertStartedHarvest(int harvestSourceId, String harvestType, String user, String status) throws DAOException;
 
     /**
-     * 
+     *
      * @param harvestId
      * @param noOfTriples
      * @param httpCode HTTP Code the source returns
@@ -53,7 +53,7 @@ public interface HarvestDAO extends DAO {
     void updateFinishedHarvest(int harvestId, int noOfTriples, int httpCode) throws DAOException;
 
     /**
-     * 
+     *
      * @param harvestSourceId
      * @return List<HarvestDTO>
      * @throws DAOException
@@ -62,7 +62,7 @@ public interface HarvestDAO extends DAO {
 
     /**
      * Returns list of the last harvests statistics.
-     * 
+     *
      * @param limit how many harvests
      * @return List<HarvestStatDTO>
      * @throws DAOException
@@ -70,7 +70,7 @@ public interface HarvestDAO extends DAO {
     List<HarvestStatDTO> getLastHarvestStats(Integer limit) throws DAOException;
 
     /**
-     * 
+     *
      * @param harvestId
      * @return HarvestDTO
      * @throws DAOException
@@ -78,7 +78,7 @@ public interface HarvestDAO extends DAO {
     HarvestDTO getHarvestById(Integer harvestId) throws DAOException;
 
     /**
-     * 
+     *
      * @param harvestSourceId
      * @return HarvestDTO
      * @throws DAOException
@@ -87,7 +87,7 @@ public interface HarvestDAO extends DAO {
 
     /**
      * Deletes all the old harvest of the current harvest's harvest source, except the most recent.
-     * 
+     *
      * @param harvestId current harvest's id
      * @param preserveRecent nr of most recent messages to preserve
      * @throws DAOException
@@ -97,7 +97,7 @@ public interface HarvestDAO extends DAO {
     /**
      * Returns last harvest that has really happened.
      * Harvests that have returned http codes like 304 : source not modified are not queried.
-     * 
+     *
      * @param harvestSourceId Harvest PK
      * @return HarvestDTO Harvest data object
      * @throws DAOException if query fails

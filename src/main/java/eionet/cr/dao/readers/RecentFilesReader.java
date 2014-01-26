@@ -12,14 +12,14 @@ import eionet.cr.util.Util;
 
 /**
  * Reader for recent files shown in the front page.
- * 
+ *
  * @author kaido
  */
 public class RecentFilesReader extends ResultSetMixedReader<Pair<String, String>> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
@@ -46,7 +46,7 @@ public class RecentFilesReader extends ResultSetMixedReader<Pair<String, String>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sql.SQLResultSetReader#readRow(java.sql.ResultSet)
      */
     @Deprecated

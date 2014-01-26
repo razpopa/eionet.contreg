@@ -25,13 +25,13 @@ import eionet.cr.common.CRException;
 
 /**
  * Exception thrown on structured content parsing errors.
- * 
+ *
  * @author Jaanus Heinlaid
  */
 public class ContentParsingException extends CRException {
 
     /**
-     * 
+     *
      * Class constructor.
      */
     public ContentParsingException() {
@@ -39,7 +39,7 @@ public class ContentParsingException extends CRException {
     }
 
     /**
-     * 
+     *
      * @param message
      */
     public ContentParsingException(String message) {
@@ -47,7 +47,7 @@ public class ContentParsingException extends CRException {
     }
 
     /**
-     * 
+     *
      * @param message
      * @param cause
      */

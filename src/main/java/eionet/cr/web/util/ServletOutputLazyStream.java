@@ -32,7 +32,7 @@ import javax.servlet.ServletResponse;
  * the same methods of {@link ServletOutputStream}. The point is that it does not initialize the latter before it is needed first
  * time. Hence the "lazy" in class name. Postponing this initialization to the latest possible moment allows clients of this class
  * to do things like response.sendError(int) as late as possible before the servlet output stream gets intialized, i.e. committed.
- * 
+ *
  * @author jaanus
  */
 public class ServletOutputLazyStream extends OutputStream {
@@ -43,7 +43,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /**
      * Constructor.
-     * 
+     *
      * @param servletResponse The ServletResponse to wrap.
      */
     public ServletOutputLazyStream(ServletResponse servletResponse) {
@@ -56,7 +56,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#write(int)
      */
     @Override
@@ -66,7 +66,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#write(byte[])
      */
     @Override
@@ -76,7 +76,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#write(byte[], int, int)
      */
     @Override
@@ -86,7 +86,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#close()
      */
     @Override
@@ -96,7 +96,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#flush()
      */
     @Override
@@ -106,7 +106,7 @@ public class ServletOutputLazyStream extends OutputStream {
 
     /**
      * A "lazy" getter for the wrapped ServletResponse's output stream.
-     * 
+     *
      * @return
      * @throws IOException
      */

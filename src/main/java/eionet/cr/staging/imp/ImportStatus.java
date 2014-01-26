@@ -23,7 +23,7 @@ package eionet.cr.staging.imp;
 
 /**
  * Enumeration for the import statuses of staging databases.
- * 
+ *
  * @author jaanus
  */
 public enum ImportStatus {
@@ -37,7 +37,7 @@ public enum ImportStatus {
 
     /**
      * The constructor that takes friendly name as the input.
-     * 
+     *
      * @param friendlyName the friendly name
      */
     private ImportStatus(String friendlyName) {
@@ -46,7 +46,7 @@ public enum ImportStatus {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Enum#toString()
      */
     @Override
@@ -56,7 +56,7 @@ public enum ImportStatus {
 
     /**
      * Gets the name.
-     * 
+     *
      * @return the name
      */
     public String getName() {

@@ -13,9 +13,9 @@ import eionet.cr.web.util.WebConstants;
 import eionet.cr.web.util.columns.ReferringPredicatesColumn;
 
 /**
- * 
+ *
  * @author jaanus
- * 
+ *
  */
 public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
 
@@ -30,7 +30,7 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
 
     /**
      * Creates a new helper object.
-     * 
+     *
      * @param subjectUri
      *            resource subject URI.
      * @param pagingRequest
@@ -49,7 +49,7 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -111,7 +111,7 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
     /**
      * returns sparql query for getting predicates for reference subjects. If the object is literal, it will be maximum of 2000
      * characters long.
-     * 
+     *
      * @param subjectUris
      *            subject uris of the references
      * @param sourceUri
@@ -143,7 +143,7 @@ public class VirtuosoReferencesSearchHelper extends AbstractSearchHelper {
 
     /**
      * Bindings to be used in subjects data query. For safety are kept separately from main query bindings
-     * 
+     *
      * @return bindings for subject data query
      */
     public Bindings getSubjectDataBindings() {

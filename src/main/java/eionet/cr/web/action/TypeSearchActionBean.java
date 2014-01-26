@@ -140,7 +140,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     private boolean typesByName;
 
     /**
-     * 
+     *
      * @return Resolution.
      * @throws Exception
      */
@@ -177,7 +177,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /**
      * Exports search result as a file.
-     * 
+     *
      * @return Resolution.
      * @throws Exception
      */
@@ -281,7 +281,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#search()
      */
     @Override
@@ -395,7 +395,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Resolution setSearchColumns() {
@@ -424,7 +424,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.web.action.AbstractSearchActionBean#getColumns()
      */
     @Override
@@ -452,7 +452,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<Pair<String, String>> getAvailableTypesNoGroup() {
@@ -460,7 +460,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<Pair<String, List<Pair<String, String>>>> getAvailableTypes() {
@@ -526,7 +526,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<Pair<String, String>> getAvailableTypesByName() {
@@ -592,7 +592,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -663,7 +663,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -751,7 +751,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /**
      * set exportFormat parameter (xls, xml, ...)
-     * 
+     *
      * @param exportFormat
      */
     public void setExportFormat(String exportFormat) {
@@ -770,7 +770,7 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
     }
 
     /**
-     * 
+     *
      * @param map
      * @return
      */
@@ -802,15 +802,15 @@ public class TypeSearchActionBean extends AbstractSearchActionBean<SubjectDTO> {
 
     /**
      * Case-insensitive string comparator that handles null arguments.
-     * 
+     *
      * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
-     * 
+     *
      */
     private class CaseInsensitiveStringComparator implements Comparator<String> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         @Override

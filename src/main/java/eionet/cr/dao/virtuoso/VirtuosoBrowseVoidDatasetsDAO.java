@@ -32,14 +32,14 @@ import eionet.cr.util.sql.SingleObjectReader;
 
 /**
  * Virtuoso-specific implementation of {@link BrowseVoidDatasetsDAO}.
- * 
+ *
  * @author jaanus
  */
 public class VirtuosoBrowseVoidDatasetsDAO extends VirtuosoBaseDAO implements BrowseVoidDatasetsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.BrowseVoidDatasetsDAO#findDatasets(java.util.List, java.util.List)
      */
     @Override
@@ -92,7 +92,7 @@ public class VirtuosoBrowseVoidDatasetsDAO extends VirtuosoBaseDAO implements Br
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.BrowseVoidDatasetsDAO#findCreators(java.util.List)
      */
     @Override
@@ -131,7 +131,7 @@ public class VirtuosoBrowseVoidDatasetsDAO extends VirtuosoBaseDAO implements Br
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.BrowseVoidDatasetsDAO#findSubjects(java.util.List)
      */
     @Override

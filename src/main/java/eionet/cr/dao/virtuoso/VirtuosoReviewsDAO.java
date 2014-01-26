@@ -42,7 +42,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#generateNewReviewId(eionet.cr.web.security.CRUser )
      */
     @Override
@@ -85,7 +85,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#getLastReviewId(eionet.cr.web.security.CRUser)
      */
     @Override
@@ -108,7 +108,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#addReview(eionet.cr.dto.ReviewDTO, eionet.cr.web.security.CRUser)
      */
     @Override
@@ -164,7 +164,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#saveReview(int, eionet.cr.dto.ReviewDTO, eionet.cr.web.security.CRUser)
      */
     @Override
@@ -180,7 +180,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#getReviewList(eionet.cr.web.security.CRUser)
      */
     @Override
@@ -234,7 +234,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#getReview(eionet.cr.web.security.CRUser, int)
      */
     @Override
@@ -249,7 +249,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /**
      * Get title and feedbackFor reference for a review.
-     * 
+     *
      * @param reviewUri - URI of review.
      * @return ReviewDTO
      * @throws DAOException if query fails
@@ -297,7 +297,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.ReviewsDAO#isReviewObsolete(java.util.String reviewUri, java.util.String objectUri)
      */
     @Override
@@ -336,7 +336,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#getReviewAttachmentList(eionet.cr.web.security .CRUser, int)
      */
     @Override
@@ -353,7 +353,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#deleteReview(eionet.cr.web.security.CRUser, int, boolean)
      */
     @Override
@@ -412,7 +412,7 @@ public class VirtuosoReviewsDAO extends VirtuosoBaseDAO implements ReviewsDAO {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.HelperDAO#deleteAttachment(eionet.cr.web.security.CRUser, int, java.lang.String)
      */
     @Override

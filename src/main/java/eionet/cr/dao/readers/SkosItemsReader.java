@@ -9,14 +9,14 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 
 /**
  * A SPARQL result set reader for objects of type {@link SkosItemDTO}.
- * 
+ *
  * @author jaanus
  */
 public class SkosItemsReader extends SPARQLResultSetBaseReader<SkosItemDTO> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override

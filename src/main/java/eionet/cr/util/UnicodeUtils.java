@@ -35,7 +35,7 @@ public final class UnicodeUtils {
     }
 
     /**
-     * 
+     *
      * @param entityReference
      * @return
      */
@@ -48,7 +48,7 @@ public final class UnicodeUtils {
     /**
      * Parses the given string, replaces all occurrences of Unicode entity references with corresponding Java characters (primitive
      * type char) and returns the resulting string.
-     * 
+     *
      * @param literal
      * @return
      */
@@ -95,7 +95,7 @@ public final class UnicodeUtils {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static HashMap<String, String> getEntityRefrenceMap() {

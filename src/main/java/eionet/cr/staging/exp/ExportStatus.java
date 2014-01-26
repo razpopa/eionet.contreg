@@ -24,7 +24,7 @@ package eionet.cr.staging.exp;
 // TODO: Auto-generated Javadoc
 /**
  * Enumeration for the RDF export statuses of staging databases.
- * 
+ *
  * @author jaanus
  */
 public enum ExportStatus {
@@ -38,7 +38,7 @@ public enum ExportStatus {
 
     /**
      * The constructor that takes friendly name as the input.
-     * 
+     *
      * @param friendlyName the friendly name
      */
     private ExportStatus(String friendlyName) {
@@ -47,7 +47,7 @@ public enum ExportStatus {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Enum#toString()
      */
     @Override
@@ -57,7 +57,7 @@ public enum ExportStatus {
 
     /**
      * Gets the name.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -66,7 +66,7 @@ public enum ExportStatus {
 
     /**
      * Checks if is finished.
-     * 
+     *
      * @return true, if is finished
      */
     public boolean isFinished() {

@@ -41,7 +41,7 @@ import eionet.cr.web.util.ObservationFilter;
 /**
  * An action bean for browsing the available DataCube observations (i.e. resources of type
  * http://purl.org/linked-data/cube#Observation).
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/observations")
@@ -71,7 +71,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
 
     /**
      * @throws DAOException
-     * 
+     *
      */
     @DefaultHandler
     public Resolution search() throws DAOException {
@@ -128,7 +128,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Resolution reset() {
@@ -137,7 +137,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @param alias
      * @return
      */
@@ -171,7 +171,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @param filterAlias
      * @return
      */
@@ -195,7 +195,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFilterValuesAttrNameTemplate() {
@@ -203,7 +203,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public ObservationFilter[] getAvailFilters() {
@@ -240,7 +240,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Class getFactsheetActionBeanClass() {
@@ -248,7 +248,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @param filterValues
      * @param filterUri
      * @return
@@ -265,7 +265,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @param selections
      * @return
      */
@@ -293,7 +293,7 @@ public class BrowseObservationsActionBean extends DisplaytagSearchActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     private static List<HashMap<String, String>> createAvailColumns() {

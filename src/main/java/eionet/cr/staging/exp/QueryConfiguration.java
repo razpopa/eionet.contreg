@@ -29,7 +29,7 @@ import eionet.cr.util.LinkedCaseInsensitiveMap;
 
 /**
  * A bean that represents an RDF export query's configuration (in the context of staging databases).
- * 
+ *
  * @author jaanus
  */
 public class QueryConfiguration implements Serializable {
@@ -95,7 +95,7 @@ public class QueryConfiguration implements Serializable {
 
     /**
      * Put column mapping.
-     * 
+     *
      * @param columnName the column name
      * @param propertyConf the property conf
      */
@@ -105,7 +105,7 @@ public class QueryConfiguration implements Serializable {
 
     /**
      * Put column names.
-     * 
+     *
      * @param columnNames the column names
      */
     public void putColumnNames(Iterable<String> columnNames) {
@@ -160,7 +160,7 @@ public class QueryConfiguration implements Serializable {
     /**
      * Returns a string "dump" of this {@link QueryConfiguration} that is suitable for storage into the RDF export table in the
      * database.
-     * 
+     *
      * @return The string "dump".
      */
     public String toLongString() {

@@ -44,7 +44,7 @@ import eionet.cr.util.pagination.PagingRequest;
 
 /**
  * @author altnyris
- * 
+ *
  */
 public interface HarvestSourceDAO extends DAO {
     /**
@@ -82,7 +82,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns all the failed harvest sources, except the ones which are unauthorized (http error 401).
-     * 
+     *
      * @param searchString
      * @param pagingRequest
      * @param sortingRequest
@@ -95,7 +95,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns failed harvest sources which are unauthorized (http error 401).
-     * 
+     *
      * @param searchString
      * @param pagingRequest
      * @param sortingRequest
@@ -107,7 +107,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns harvest sources that are marked as remote SPARQL endpoints.
-     * 
+     *
      * @param searchString
      * @param pagingRequest
      * @param sortingRequest
@@ -126,7 +126,7 @@ public interface HarvestSourceDAO extends DAO {
     HarvestSourceDTO getHarvestSourceById(Integer harvestSourceID) throws DAOException;
 
     /**
-     * 
+     *
      * @param url
      * @return HarvestSourceDTO
      * @throws DAOException
@@ -138,7 +138,7 @@ public interface HarvestSourceDAO extends DAO {
      * Calculate the number of sources that need harvesting. Harvesting is done on a priority basis. The priority score is
      * calculated based on how many minutes ago the source was last harvested divided by how often it must be harvested. Any source
      * with a priority score of 1.0 or above needs to be harvested.
-     * 
+     *
      * @return number of sources to be harvested.
      * @throws DAOException
      *             if relational database is unavailable.
@@ -146,7 +146,7 @@ public interface HarvestSourceDAO extends DAO {
     Long getUrgencySourcesCount() throws DAOException;
 
     /**
-     * 
+     *
      * @param source
      * @return Integer
      * @throws DAOException
@@ -155,7 +155,7 @@ public interface HarvestSourceDAO extends DAO {
     Integer addSource(HarvestSourceDTO source) throws DAOException;
 
     /**
-     * 
+     *
      * @param conn
      * @param source
      * @return
@@ -164,7 +164,7 @@ public interface HarvestSourceDAO extends DAO {
     Integer addSource(Connection conn, HarvestSourceDTO source) throws DAOException;
 
     /**
-     * 
+     *
      * @param source
      * @throws DAOException
      *             if relational database is unavailable.
@@ -172,7 +172,7 @@ public interface HarvestSourceDAO extends DAO {
     void addSourceIgnoreDuplicate(HarvestSourceDTO source) throws DAOException;
 
     /**
-     * 
+     *
      * @param conn
      * @param source
      * @throws DAOException
@@ -195,7 +195,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Get a list of sources to harvest in the next harvesting round. The result is ordered with highest priority first.
-     * 
+     *
      * @param limit
      *            - max number of sources to return.
      * @return List<HarvestSourceDTO>
@@ -233,7 +233,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Add a source to the default inference rule. The name of the default is read from the config file.
-     * 
+     *
      * @param url
      * @return boolean
      * @throws DAOException
@@ -243,7 +243,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Remove a source from the default inference rule. The name of the default is read from the config file.
-     * 
+     *
      * @param url
      * @return boolean
      * @throws DAOException
@@ -253,7 +253,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Loads the given file into the triple store (i.e. repository). File format must be supported by the triple store.
-     * 
+     *
      * @param file
      * @param rdfFormat
      * @param graphUrl
@@ -268,7 +268,7 @@ public interface HarvestSourceDAO extends DAO {
     /**
      * Loads the given input stream into the triple store (i.e. repository). The stream must be formatted by a format supported by
      * the triple store.
-     * 
+     *
      * @param inputStream
      * @param rdfFormat
      * @param graphUrl
@@ -281,7 +281,7 @@ public interface HarvestSourceDAO extends DAO {
             throws IOException, OpenRDFException;
 
     /**
-     * 
+     *
      * @param file
      * @param contentLoader
      * @param graphUri
@@ -292,7 +292,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Loads structured content from the given input stream into the given graph, using the given content loader object.
-     * 
+     *
      * @param inputStream
      * @param contentLoader
      * @param graphUri
@@ -304,7 +304,7 @@ public interface HarvestSourceDAO extends DAO {
     /**
      * Adds the meta information the harvester has collected about the source. The meta data is considered part of the harvester and
      * not the source. Therefore the meta data is stored in the harvester's named graph (or context).
-     * 
+     *
      * @param sourceMetadata
      * @throws DAOException
      *             if relational database is unavailable.
@@ -317,7 +317,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns metadata from /harvester context.
-     * 
+     *
      * @param harvestSourceUri
      * @param predicateUri
      * @return String
@@ -328,7 +328,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Inserts given metadata into /harvester context.
-     * 
+     *
      * @param subject
      *            URL of the source.
      * @param predicate
@@ -346,7 +346,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Inserts given metadata into /harvester context.
-     * 
+     *
      * @param conn
      * @param subject
      * @param predicate
@@ -359,7 +359,7 @@ public interface HarvestSourceDAO extends DAO {
             throws DAOException, RepositoryException, IOException;
 
     /**
-     * 
+     *
      * @param subjectUri
      * @param sourceUri
      * @throws DAOException
@@ -368,7 +368,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Clear the given graph.
-     * 
+     *
      * @param graphUri
      * @throws DAOException
      */
@@ -376,7 +376,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Increases COUNT_UNAVAIL by 1.
-     * 
+     *
      * @param sourceUrl
      * @throws DAOException
      *             if relational database is unavailable.
@@ -385,7 +385,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Statistics : count of last harvested URLs.
-     * 
+     *
      * @param days
      *            days from today backwards
      * @return Pair<Integer, List<HarvestedUrlCountDTO>>
@@ -396,7 +396,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns urgency of coming harvests.
-     * 
+     *
      * @param limit
      *            size of list
      * @return Pair <Integer, List <HarvestUrgencyScoreDTO>>
@@ -406,21 +406,21 @@ public interface HarvestSourceDAO extends DAO {
     List<HarvestSourceDTO> getMostUrgentHarvestSources(int limit) throws DAOException;
 
     /**
-     * 
+     *
      * @param sourceDTO
      * @throws DAOException
      */
     void updateSourceHarvestFinished(HarvestSourceDTO sourceDTO) throws DAOException;
 
     /**
-     * 
+     *
      * @param sourceUrls
      * @throws DAOException
      */
     void removeHarvestSources(Collection<String> sourceUrls) throws DAOException;
 
     /**
-     * 
+     *
      * @param substring
      * @param limit
      *            TODO
@@ -433,7 +433,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * Returns the number of total statements (triples).
-     * 
+     *
      * @return
      * @throws DAOException
      */
@@ -443,18 +443,18 @@ public interface HarvestSourceDAO extends DAO {
      * Derives new harvest sources from the graph represented by the given source url, and inserts them into the HARVEST_SOURCE
      * table. The method does not use inferencing for finding new soureces. They are created by POST-HARVEST scripts with SPARQL
      * INSERT statements.
-     * 
+     *
      * @param sourceUrl
      *            The given source URL.
      * @return The number of sources found and inserted.
-     * 
+     *
      * @throws DAOException
      */
     int deriveNewHarvestSources(String sourceUrl) throws DAOException;
 
     /**
      * Returns the number of harvest sources whose harvest urgency score is greater than the given threshold.
-     * 
+     *
      * @param threshold
      *            The given threshold.
      * @return The number of sources whose harvest urgency score is greater than the given threshold.
@@ -465,7 +465,7 @@ public interface HarvestSourceDAO extends DAO {
 
     /**
      * At first deletes triple with cr:harvestedStatements predicate and then adds it with updated value.
-     * 
+     *
      * @param sourceUri
      * @throws DAOException
      */

@@ -34,7 +34,7 @@ import eionet.cr.dto.UploadDTO;
 
 /**
  * VoID xml writer.
- * 
+ *
  * @author Juhan Voolaid
  */
 public class VoIDXmlWriter {
@@ -60,9 +60,9 @@ public class VoIDXmlWriter {
     private XMLStreamWriter writer = null;
 
     /**
-     * 
+     *
      * Class constructor.
-     * 
+     *
      * @param out
      * @param contextRoot
      * @throws XMLStreamException
@@ -74,7 +74,7 @@ public class VoIDXmlWriter {
 
     /**
      * Writes sitemap xml into stream based of the uploads data.
-     * 
+     *
      * @param uploads
      * @throws XMLStreamException
      */

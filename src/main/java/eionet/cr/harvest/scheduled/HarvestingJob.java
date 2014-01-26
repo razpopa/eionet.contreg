@@ -53,9 +53,9 @@ import eionet.cr.harvest.PushHarvest;
 import eionet.cr.web.security.CRUser;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public class HarvestingJob implements StatefulJob, ServletContextListener {
 
@@ -81,7 +81,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     @Override
@@ -143,7 +143,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     }
 
     /**
-     * 
+     *
      * @throws DAOException
      */
     private void handleBatchQueue() throws DAOException {
@@ -232,7 +232,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     }
 
     /**
-     * 
+     *
      * @return List<HarvestSourceDTO>
      * @throws DAOException
      */
@@ -248,7 +248,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * This method should be used classes other than {@link HarvestingJob} itself. It returns list of harvest source currently in
      * batch queue. The method returns clone of the original queue, to prevent clients from corrupting the original.
-     * 
+     *
      * @return List<HarvestSourceDTO>
      */
     public static List<HarvestSourceDTO> getBatchQueue() {
@@ -265,7 +265,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
      * are given as comma separated from-to spans (e.g 10-15, 19-23) in the configuration file. In every span both "from" and "to"
      * are inclusive, and "from" must be sooner than "to". So, to say from 18.00 to 9.00, the configuration value must be 18-23,0-8.
      * (leave the field completely empty to disable batch harvesting)
-     * 
+     *
      * @return list containing the activeHours
      */
     public static synchronized List<HourSpan> getBatchHarvestingHours() {
@@ -305,7 +305,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * Returns the interval in seconds where the harvester checks for checks for new urgent or scheduled tasks. The interval can't
      * be more than 3600 seconds or less than 5 seconds. The value is retrieved from the general configuration file.
-     * 
+     *
      * @return the interval in seconds
      */
     public static Integer getIntervalSeconds() {
@@ -325,7 +325,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * Returns the upper limit on the number of sources that are harvested in each interval. The value is retrieved from the general
      * configuration file.
-     * 
+     *
      * @return the upper limit
      */
     public static Integer getHarvesterUpperLimit() {
@@ -345,7 +345,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * Returns the interval in minutes where the harvester checks for checks for new urgent or scheduled tasks. Value can be less
      * than 1.0.
-     * 
+     *
      * @return interval in minutes
      */
     public static float getIntervalMinutes() {
@@ -356,7 +356,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * Calculates how many minutes a day the batch harvester is active. If the batch harvesting is from 5-6, then the return value
      * is 120.
-     * 
+     *
      * @return the dailyActiveMinutes
      */
     public static Integer getDailyActiveMinutes() {
@@ -378,7 +378,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     }
 
     /**
-     * 
+     *
      * @param url
      * @param pushedContent
      */
@@ -410,7 +410,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     }
 
     /**
-     * 
+     *
      * @param harvestSource
      * @throws DAOException
      */
@@ -431,7 +431,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     }
 
     /**
-     * 
+     *
      * @param harvest
      */
     private void executeHarvest(Harvest harvest) {
@@ -457,7 +457,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
     /**
      * Calculates how many harvesting segments there is in a day. If the harvester is active 120 minutes and the interval is 15
      * seconds (i.e. 1/4 minute, then there are 480 harvesting segments in the day.
-     * 
+     *
      * @return the number of harvesting segments
      */
     private static int getNumberOfSegments() {
@@ -471,7 +471,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
      * <p>
      * Example: If there are 4320 time segments, and there are 216 sources with a score of 1.0 or above, the number of sources to
      * harvest in this round is 216 / 4320 = 0.05. This we then round up to one.
-     * 
+     *
      * @return the limit of sources returned
      */
     private static int getSourcesLimitForInterval() {
@@ -499,7 +499,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
 
     /**
      * Returns true if batch the current hour is a batch harvesting hour. Otherwise returns false.
-     * 
+     *
      * @return
      */
     private boolean isBatchHarvestingHour() {
@@ -517,7 +517,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
 
     /**
      * Returns true if batch harvesting is enabled, otherwise returns false.
-     * 
+     *
      * @return true if batch harvesting is enabled
      */
     private static boolean isBatchHarvestingEnabled() {
@@ -526,7 +526,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     @Override
@@ -551,7 +551,7 @@ public class HarvestingJob implements StatefulJob, ServletContextListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     @Override

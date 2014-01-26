@@ -27,7 +27,7 @@ import eionet.cr.dto.ScriptTemplateDTO;
 
 /**
  * Script template DAO.
- * 
+ *
  * @author Juhan Voolaid
  */
 public interface ScriptTemplateDAO {

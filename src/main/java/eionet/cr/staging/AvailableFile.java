@@ -26,7 +26,7 @@ import java.util.Date;
 
 /**
  * A bean that represents a file available for creating a staging database.
- * 
+ *
  * @author jaanus
  */
 public class AvailableFile {
@@ -42,7 +42,7 @@ public class AvailableFile {
 
     /**
      * Convenience method that creates a new instance of {@link AvailableFile} on the basis of the given {@link File}.
-     * 
+     *
      * @param file The given file.
      * @return The new instance of {@link AvailableFile}.
      */
@@ -57,7 +57,7 @@ public class AvailableFile {
 
     /**
      * Setter for the file's name.
-     * 
+     *
      * @param name The name.
      */
     public void setName(String name) {

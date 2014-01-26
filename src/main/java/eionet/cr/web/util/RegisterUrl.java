@@ -13,9 +13,9 @@ import eionet.cr.harvest.scheduled.UrgentHarvestQueue;
 import eionet.cr.web.security.CRUser;
 
 /**
- * 
+ *
  * @author <a href="mailto:jaanus.heinlaid@tietoenator.com">Jaanus Heinlaid</a>
- * 
+ *
  */
 public final class RegisterUrl {
 
@@ -28,7 +28,7 @@ public final class RegisterUrl {
 
     /**
      * Register a URL.
-     * 
+     *
      * @param url - URL to register
      * @param user - Authentication object
      * @param saveToBookmarks - a flag to say whether to also create a bookmark in user's bookmarks

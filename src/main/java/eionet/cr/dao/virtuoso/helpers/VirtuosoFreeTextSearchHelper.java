@@ -14,9 +14,9 @@ import eionet.cr.util.pagination.PagingRequest;
 import eionet.cr.util.sql.VirtuosoFullTextQuery;
 
 /**
- * 
+ *
  * @author risto
- * 
+ *
  */
 public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
@@ -34,7 +34,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /**
      * Creates a new helper object.
-     * 
+     *
      * @param expression search expression based on the query is built
      * @param virtExpression Helper object to parse Virtuoso query
      * @param exactMatch indicates if exact match is searched
@@ -54,7 +54,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getUnorderedQuery(java.util.List)
      */
     @Override
@@ -74,7 +74,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.FreeTextSearchHelper#getOrderedQuery(java.util.List)
      */
     @Override
@@ -110,7 +110,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getCountQuery(java.util.List)
      */
     @Override
@@ -130,7 +130,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.dao.helpers.AbstractSearchHelper#getQueryBindings()
      */
     @Override
@@ -141,7 +141,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
     /**
      * Builds the part of the the WHERE clause that constitutes the type filter (user can set the type of resources where he is
      * searching for his free text).
-     * 
+     *
      * @return The built part of the WHERE clause.
      */
     private String buildTypeFilterPart() {
@@ -166,7 +166,7 @@ public class VirtuosoFreeTextSearchHelper extends FreeTextSearchHelper {
 
     /**
      * Builds the part of the the WHERE clause that constitutes the free-text filter.
-     * 
+     *
      * @return The built part of the WHERE clause.
      */
     private String buildTextFilterPart() {

@@ -42,7 +42,7 @@ import eionet.cr.web.action.admin.AdminWelcomeActionBean;
 
 /**
  * Action bean for operations with a SPARQL endpoint's harvest queries.
- * 
+ *
  * @author jaanus
  */
 @UrlBinding("/admin/endpointQuery.action")
@@ -59,7 +59,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * The bean's default handler event. Basically handles all GET requests to this bean.
-     * 
+     *
      * @return The resolution.
      * @throws DAOException If any sort of data access error happens.
      */
@@ -75,7 +75,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * Handles the "save" event.
-     * 
+     *
      * @return The resolution.
      * @throws DAOException If any sort of data access error happens.
      */
@@ -87,7 +87,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * Handles the "save & close" event.
-     * 
+     *
      * @return The resolution.
      * @throws DAOException If any sort of data access error happens.
      */
@@ -104,7 +104,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * A utility method that does the save, regardless of whether the event was "save" or "save & close".
-     * 
+     *
      * @throws DAOException If any sort of data access error happens.
      */
     private void doSave() throws DAOException {
@@ -124,7 +124,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * Handles the "test" event.
-     * 
+     *
      * @return The resolution.
      * @throws DAOException If any sort of data access error happens.
      */
@@ -144,7 +144,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
 
     /**
      * Handles the "cancel" event.
-     * 
+     *
      * @return The resolution.
      * @throws DAOException If any sort of data access error happens.
      */
@@ -158,7 +158,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Class getEndpointQueriesActionBeanClass() {
@@ -187,7 +187,7 @@ public class EndpointQueryActionBean extends AbstractActionBean {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Class getEndpointResourceActionBeanClass() {

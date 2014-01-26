@@ -28,14 +28,14 @@ import eionet.cr.util.sesame.SPARQLResultSetBaseReader;
 
 /**
  * A result set reader for objects of type {@link VoidDatasetsResultRow}.
- * 
+ *
  * @author jaanus
  */
 public class VoidDatasetsReader extends SPARQLResultSetBaseReader<VoidDatasetsResultRow> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see eionet.cr.util.sesame.SPARQLResultSetReader#readRow(org.openrdf.query.BindingSet)
      */
     @Override
