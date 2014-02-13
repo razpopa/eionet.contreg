@@ -701,7 +701,7 @@ public class ODPDatasetsPacker {
         // Write ecodp:datasetStatus
         writer.writeStartElement(Namespace.ECODP.getUri(), "datasetStatus");
         writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "resource", StringUtils.replace(datasetStatus,
+        writer.writeAttribute(Namespace.RDF.getUri(), "about", StringUtils.replace(datasetStatus,
                 "http://purl.org/adms/status/", "http://open-data.europa.eu/kos/dataset-status/"));
         writer.writeEndElement();
 
