@@ -418,6 +418,8 @@ public class FactsheetActionBean extends AbstractActionBean {
      */
     public Resolution delete() throws DAOException {
 
+        LOGGER.debug("rowId = " + rowId);
+
         if (rowId != null && !rowId.isEmpty()) {
 
             ArrayList<TripleDTO> triples = new ArrayList<TripleDTO>();
@@ -444,6 +446,9 @@ public class FactsheetActionBean extends AbstractActionBean {
             }
 
             HelperDAO helperDao = factory.getDao(HelperDAO.class);
+
+            LOGGER.debug("Issuing helperDao.deleteTriple() with: " + triples);
+
             helperDao.deleteTriples(triples);
             helperDao.updateUserHistory(getUser(), uri);
         } else {

@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -95,9 +96,11 @@ import eionet.cr.web.util.WebConstants;
  * Virtuoso DAO helper methods.
  */
 public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
-    /**
-     * SPARQL for last harvested files cache.
-     */
+
+    /** Static logger for this class. */
+    private static final Logger LOGGER = Logger.getLogger(VirtuosoHelperDAO.class);
+
+    /** SPARQL for last harvested files cache. */
     private static final String LATEST_FILES_SPARQL = SPARQLQueryUtil.getCrInferenceDefinitionStr()
             + "SELECT DISTINCT ?s ?l ?d WHERE {?s a <" + Predicates.CR_FILE + "> " + ". OPTIONAL { ?s <"
             + Predicates.CR_FIRST_SEEN + "> ?d } . OPTIONAL { ?s <" + Predicates.RDFS_LABEL + "> ?l } } "
@@ -1024,18 +1027,24 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
      */
     private void deleteTriple(TripleDTO triple, RepositoryConnection conn) throws RepositoryException {
 
+        LOGGER.debug("Deleting triple: " + triple);
+
         URI sub = conn.getValueFactory().createURI(triple.getSubjectUri());
         URI pred = triple.getPredicateUri() == null ? null : conn.getValueFactory().createURI(triple.getPredicateUri());
         URI source = conn.getValueFactory().createURI(triple.getSourceUri());
         String strObject = triple.getObject();
 
         if (triple.isLiteralObject()) {
+
+            LOGGER.debug("Deleting literal triple: " + triple);
+
             Literal literalObject = null;
             if (strObject != null) {
                 literalObject = conn.getValueFactory().createLiteral(strObject);
             }
             conn.remove(sub, pred, literalObject, source);
         } else {
+            LOGGER.debug("Deleting resource triple: " + triple);
             URI object = null;
             if (strObject != null) {
                 object = conn.getValueFactory().createURI(triple.getObject());
