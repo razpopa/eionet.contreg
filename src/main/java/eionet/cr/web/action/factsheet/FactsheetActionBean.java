@@ -418,8 +418,6 @@ public class FactsheetActionBean extends AbstractActionBean {
      */
     public Resolution delete() throws DAOException {
 
-        LOGGER.debug("rowId = " + rowId);
-
         if (rowId != null && !rowId.isEmpty()) {
 
             ArrayList<TripleDTO> triples = new ArrayList<TripleDTO>();
@@ -437,7 +435,7 @@ public class FactsheetActionBean extends AbstractActionBean {
                 String objectValue = getContext().getRequest().getParameter("obj_".concat(objectHash));
                 String sourceUri = getContext().getRequest().getParameter("source_".concat(objectHash));
 
-                TripleDTO triple = new TripleDTO(uri, predicate, objectValue);
+                TripleDTO triple = new TripleDTO(uri, predicate, objectValue == null ? null : objectValue.replace("\r", ""));
                 // FIXME - find a better way to determine if the object is literal or not, URIs may be literals also
                 triple.setLiteralObject(!URLUtil.isURL(objectValue));
                 triple.setSourceUri(sourceUri);
@@ -446,9 +444,6 @@ public class FactsheetActionBean extends AbstractActionBean {
             }
 
             HelperDAO helperDao = factory.getDao(HelperDAO.class);
-
-            LOGGER.debug("Issuing helperDao.deleteTriple() with: " + triples);
-
             helperDao.deleteTriples(triples);
             helperDao.updateUserHistory(getUser(), uri);
         } else {

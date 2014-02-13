@@ -80,13 +80,15 @@ public class JenaUtil {
                 com.hp.hpl.jena.rdf.model.Resource jenaSubject = statement.getSubject();
                 String subjectUri = jenaSubject.getURI();
                 org.openrdf.model.Resource sesameSubject =
-                        subjectUri != null ? vf.createURI(subjectUri) : vf.createBNode(jenaSubject.getId().toString());
+                        subjectUri != null ? vf.createURI(subjectUri.trim()) : vf.createBNode(jenaSubject.getId().toString());
 
                 Property jenaPredicate = statement.getPredicate();
                 String predicateUri = jenaPredicate.getURI();
                 // Skip anonymous predicates as they should be theoretically impossible, and in case practically useless.
                 if (predicateUri == null) {
                     continue;
+                } else {
+                    predicateUri = predicateUri.trim();
                 }
                 URI sesamePredicate = vf.createURI(predicateUri);
 
@@ -97,21 +99,23 @@ public class JenaUtil {
 
                     Literal jenaLiteral = jenaObject.asLiteral();
                     String language = jenaLiteral.getLanguage();
+                    String lexicalForm = jenaLiteral.getLexicalForm();
+
                     if (StringUtils.isNotBlank(language)) {
-                        sesameObject = vf.createLiteral(jenaLiteral.getLexicalForm(), language);
+                        sesameObject = vf.createLiteral(lexicalForm, language);
                     } else {
                         String datatypeUri = jenaLiteral.getDatatypeURI();
                         if (StringUtils.isNotBlank(datatypeUri)) {
-                            sesameObject = vf.createLiteral(jenaLiteral.getLexicalForm(), vf.createURI(datatypeUri));
+                            sesameObject = vf.createLiteral(lexicalForm, vf.createURI(datatypeUri));
                         } else {
-                            sesameObject = vf.createLiteral(jenaLiteral.getLexicalForm());
+                            sesameObject = vf.createLiteral(lexicalForm);
                         }
                     }
                 } else {
                     com.hp.hpl.jena.rdf.model.Resource jenaResource = jenaObject.asResource();
                     String uri = jenaResource.getURI();
                     if (uri != null) {
-                        sesameObject = vf.createURI(uri);
+                        sesameObject = vf.createURI(uri.trim());
                     } else {
                         sesameObject = vf.createBNode(jenaResource.getId().toString());
                     }

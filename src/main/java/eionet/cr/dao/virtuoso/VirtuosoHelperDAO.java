@@ -1027,8 +1027,6 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
      */
     private void deleteTriple(TripleDTO triple, RepositoryConnection conn) throws RepositoryException {
 
-        LOGGER.debug("Deleting triple: " + triple);
-
         URI sub = conn.getValueFactory().createURI(triple.getSubjectUri());
         URI pred = triple.getPredicateUri() == null ? null : conn.getValueFactory().createURI(triple.getPredicateUri());
         URI source = conn.getValueFactory().createURI(triple.getSourceUri());
@@ -1036,15 +1034,12 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
 
         if (triple.isLiteralObject()) {
 
-            LOGGER.debug("Deleting literal triple: " + triple);
-
             Literal literalObject = null;
             if (strObject != null) {
                 literalObject = conn.getValueFactory().createLiteral(strObject);
             }
             conn.remove(sub, pred, literalObject, source);
         } else {
-            LOGGER.debug("Deleting resource triple: " + triple);
             URI object = null;
             if (strObject != null) {
                 object = conn.getValueFactory().createURI(triple.getObject());
