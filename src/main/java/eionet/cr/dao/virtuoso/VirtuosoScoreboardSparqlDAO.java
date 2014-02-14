@@ -978,17 +978,28 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
 
         Statement stmt = null;
         Connection sqlConn = null;
+        RepositoryConnection repoConn = null;
         try {
             sqlConn = SesameUtil.getSQLConnection();
             stmt = sqlConn.createStatement();
             String sql = "SPARQL\n" + sparql;
             int updateCount = stmt.executeUpdate(sql);
+
+            repoConn = SesameUtil.getRepositoryConnection();
+            ValueFactory vf = repoConn.getValueFactory();
+            URI datasetURI = vf.createURI(datasetUri);
+            Literal dateValue = vf.createLiteral(Util.virtuosoDateToString(new Date()), XMLSchema.DATETIME);
+            repoConn.add(datasetURI, vf.createURI(Predicates.DCTERMS_MODIFIED), dateValue, datasetURI);
+
             return new Pair<Integer, String>(Integer.valueOf(updateCount), sql);
         } catch (SQLException e) {
+            throw new DAOException(e.getMessage(), e);
+        } catch (OpenRDFException e) {
             throw new DAOException(e.getMessage(), e);
         } finally {
             SQLUtil.close(stmt);
             SQLUtil.close(sqlConn);
+            SesameUtil.close(repoConn);
         }
     }
 }
