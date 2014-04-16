@@ -2,6 +2,8 @@ package eionet.cr.util.odp;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import eionet.cr.common.CRRuntimeException;
 import eionet.cr.common.Namespace;
 import eionet.cr.common.Predicates;
 import eionet.cr.dao.DAOException;
@@ -70,6 +73,9 @@ public class ODPDatasetsPacker {
     /** Prefix for the package ID that goes into the manifest file header. */
     private static final String PACKAGE_ID_PREFIX = "Digital_Agenda_Scoreboard_";
 
+    /** URL of the native SPARQL endpoint of the underlying triplestore. */
+    private static final String NATIVE_SPARQL_ENDPOINT_URL = "http://digital-agenda-data.eu/sparql";
+
     /** URIs of indicators for which the RDF/XML formatted metadata shall be generated. */
     private List<String> indicatorUris;
 
@@ -93,6 +99,9 @@ public class ODPDatasetsPacker {
 
     /** */
     private HashMap<String, Date> urlLastModificationDates = new HashMap<String, Date>();
+
+    /** Earliest observation years found for each indicator. Key = indicator URI, value = year. */
+    private HashMap<String, Integer> indicatorYears = new HashMap<String, Integer>();
 
     /** */
     private ODPAction odpAction;
@@ -122,7 +131,7 @@ public class ODPDatasetsPacker {
     }
 
     /**
-     * Does preparations for the {@link #execute(OutputStream)} method, so it should be called before tha latter, otherwise the
+     * Does preparations for the {@link #execute(OutputStream)} method, so it should be called before the latter, otherwise the
      * latter will throw {@link IllegalStateException}.
      *
      * The reason for this method is that we can do preparations (e.g. get various stuff from database and triplestore) before
@@ -158,6 +167,9 @@ public class ODPDatasetsPacker {
                 SubjectDTO indSourceDTO = helperDao.getSubject(indSourceUri);
                 indicatorSources.put(indSourceUri, indSourceDTO);
             }
+
+            int earliestYear = ssDao.getEarliestObservationYear(indUri, datasetUri);
+            indicatorYears.put(indUri, earliestYear == 0 ? null : Integer.valueOf(earliestYear));
         }
     }
 
@@ -267,24 +279,19 @@ public class ODPDatasetsPacker {
 
         // Prepare download URLs.
         String csvDownloadUrl = "http://digital-agenda-data.eu/download/" + mainDstIdentifier + ".csv.zip";
-        // String tsvDownloadUrl = "http://digital-agenda-data.eu/download/" + mainDstIdentifier + ".tsv.zip";
         String ttlDownloadUrl = "http://digital-agenda-data.eu/download/" + mainDstIdentifier + ".ttl.zip";
         String codelistsDownloadUrl = "http://digital-agenda-data.eu/datasets/" + mainDstIdentifierForLinks + "/@@codelists";
         String dsdDownloadUrl = "http://digital-agenda-data.eu/datasets/" + mainDstIdentifierForLinks + "/@@structure";
+        String observationsCsvDownloadUrl = buildIndicatorObservationsDownloadUrl(datasetUri, uri, "text/csv");
+        String observationsRdfDownloadUrl = buildIndicatorObservationsDownloadUrl(datasetUri, uri, "application/rdf+xml");
         addLastModificationDate(csvDownloadUrl);
-        // addLastModificationDate(tsvDownloadUrl);
         addLastModificationDate(ttlDownloadUrl);
-        // addLastModificationDate(codelistsDownloadUrl);
-        // addLastModificationDate(dsdDownloadUrl);
 
         // Prepare the main dataset's status.
         String datasetStatus = mainDstSubject.getObjectValue(Predicates.ADMS_STATUS);
         if (StringUtils.isBlank(datasetStatus)) {
             datasetStatus = "http://purl.org/adms/status/UnderDevelopment";
         }
-
-        // Prepare the main dataset's accrual periodicity.
-        String accrualPeriodicity = mainDstSubject.getObjectValue(Predicates.DCTERMS_ACCRUAL_PERIODICITY);
 
         // Prepare STAX indenting writer based on a Java XMLStreamWriter that is based on the given zipped output.
         XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(zipOutput, ENCODING);
@@ -345,7 +352,31 @@ public class ODPDatasetsPacker {
         writer.writeAttribute(Namespace.RDF.getUri(), "about", "http://open-data.europa.eu/kos/dataset-type/Statistical");
         writer.writeEndElement();
 
-        // Write ecodp:isDocumentedBy for the main home page about the main dataset
+        // Write ecodp:isDocumentedBy for the main dataset's visualisation page.
+        writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
+        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
+        writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
+        writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
+        writer.writeAttribute(Namespace.RDF.getUri(), "about",
+                "http://open-data.europa.eu/kos/documentation-type/RelatedDocumentation");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                "http://www.w3.org/2001/XMLSchema#anyURI");
+        writer.writeCharacters("http://digital-agenda-data.eu/charts/analyse-one-indicator-and-compare-countries#"
+                + "chart={\"indicator-group\":\"any\",\"indicator\":\"" + skosNotation + "\"}");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "title");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("Dataset visualizations.");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "description");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("Dynamically generated visualizations (i.e. charts, diagrams) of the dataset contents.");
+        writer.writeEndElement();
+        writer.writeEndElement();
+
+        // Write ecodp:isDocumentedBy for the main home page about the main dataset.
         writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
@@ -360,15 +391,16 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("The dataset homepage");
+        writer.writeCharacters("Parent dataset homepage.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("The main information about the dataset, with its key metadata and further links to downloads.");
+        writer.writeCharacters("Main information about metadata, structure, "
+                + "links to downloads, used in the parent dataset this indicator comes from.");
         writer.writeEndElement();
         writer.writeEndElement();
 
-        // Write ecodp:isDocumentedBy for the Scoreboard documentation page
+        // Write ecodp:isDocumentedBy for the DSD download.
         writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
@@ -379,20 +411,19 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/documentation");
+        writer.writeCharacters(dsdDownloadUrl);
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Reports and notes about the technical characteristics.");
+        writer.writeCharacters("Data Structrue Definition of the parent dataset.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("This page presents some reports and notes about the technical characteristics of the project"
-                + "developing the dataset's present visualisation tool and semantic repository.");
+        writer.writeCharacters("RDF/XML formatted Data Structrue Definition of the parent dataset.");
         writer.writeEndElement();
         writer.writeEndElement();
 
-        // Write ecodp:isDocumentedBy for the main dataset's visualisation page
+        // Write ecodp:isDocumentedBy for the Codelists download.
         writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
@@ -403,97 +434,29 @@ public class ODPDatasetsPacker {
         writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifierForLinks + "/visualizations");
+        writer.writeCharacters(codelistsDownloadUrl);
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("The dataset's visualisations");
+        writer.writeCharacters("Metadata codelists used in the parent dataset.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Various dynamically generated visualisations (i.e. charts, diagrams) of the dataset contents.");
+        writer.writeCharacters("RDF/XML formatted codelists for metadata used in the parent dataset this indicator comes from.");
         writer.writeEndElement();
         writer.writeEndElement();
 
-        // Write ecodp:isDocumentedBy for the list of main dataset's indicators
-        writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
-        writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "about",
-                "http://open-data.europa.eu/kos/documentation-type/RelatedDocumentation");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                "http://www.w3.org/2001/XMLSchema#anyURI");
-        // writer.writeCharacters("http://digital-agenda-data.eu/datasets/digital_agenda_scoreboard_key_indicators/indicators");
-        writer.writeCharacters("http://digital-agenda-data.eu/datasets/" + mainDstIdentifierForLinks + "/indicators");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "title");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("List and facts about all key indicators related.");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "description");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("A page that lists metadata about all key indicators related to this dataset.");
-        writer.writeEndElement();
-        writer.writeEndElement();
-
-        // Write ecodp:isDocumentedBy for the Digital Agenda Scoreboard home page
-        writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
-        writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "about", "http://open-data.europa.eu/kos/documentation-type/RelatedWebPage");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://ec.europa.eu/digital-agenda/en/scoreboard");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "title");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Home page of the Digital Agenda Scoreboard");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "description");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Digital Agenda Scoreboard home page to which the visualisation page subordinates.");
-        writer.writeEndElement();
-        writer.writeEndElement();
-
-        // Write ecodp:isDocumentedBy for the Digital Agenda's home page
-        writer.writeStartElement(Namespace.ECODP.getUri(), "isDocumentedBy");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "documentationType");
-        writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "about", "http://open-data.europa.eu/kos/documentation-type/RelatedWebPage");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.ECODP.getUri(), "accessURL");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters("http://ec.europa.eu/digital-agenda");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "title");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Home page of the Digital Agenda for Europe");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "description");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Home page of the EU initiative in the context of which the dataset has been produced.");
-        writer.writeEndElement();
-        writer.writeEndElement();
-
-        // Write dcat:distribution for the CSV download link
+        // Write dcat:distribution for the SPARQL query that returns indicator observations in CSV format.
         writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("CSV download of the data.");
+        writer.writeCharacters("All available observations for the indicator, in CSV format.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters(csvDownloadUrl);
+        writer.writeCharacters(observationsCsvDownloadUrl);
         writer.writeEndElement();
         writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
@@ -503,61 +466,23 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Zipped and CSV-formatted download of the data, i.e. the statistical observations in this dataset.");
+        writer.writeCharacters("All indicator observations in CSV format. "
+                + "A simple query that returns table-file having a flat structure, "
+                + "with one row for each statistical observation and one column for each dimension or attribute.");
         writer.writeEndElement();
-        String lastModificationDate = getLastModificationDateString(csvDownloadUrl);
-        if (StringUtils.isNotBlank(lastModificationDate)) {
-            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
-            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                    "http://www.w3.org/2001/XMLSchema#dateTime");
-            writer.writeCharacters(lastModificationDate);
-            writer.writeEndElement();
-        }
         writer.writeEndElement();
 
-        // Write dcat:distribution for the TTL download link
+        // Write dcat:distribution for the SPARQL query that returns indicator observations in RDF format.
         writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("N3/Turtle download of the data.");
+        writer.writeCharacters("All available observations for the indicator, in RDF/XML format.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
                 "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters(ttlDownloadUrl);
-        writer.writeEndElement();
-        writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
-                "http://www.w3.org/TR/vocab-dcat#Download");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "distributionFormat");
-        writer.writeCharacters("text/n3");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "description");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("Zipped and N3-formatted download of the data, i.e. the statistical observations in this dataset.");
-        writer.writeEndElement();
-        lastModificationDate = getLastModificationDateString(ttlDownloadUrl);
-        if (StringUtils.isNotBlank(lastModificationDate)) {
-            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
-            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                    "http://www.w3.org/2001/XMLSchema#dateTime");
-            writer.writeCharacters(lastModificationDate);
-            writer.writeEndElement();
-        }
-        writer.writeEndElement();
-
-        // Write dcat:distribution for the codelists download link.
-        writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.DCT.getUri(), "title");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("RDF download of the codelists metadata.");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters(codelistsDownloadUrl);
+        writer.writeCharacters(observationsRdfDownloadUrl);
         writer.writeEndElement();
         writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
@@ -567,56 +492,17 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("RDF/XML formatted download of the metadata of the codelists used in this dataset.");
+        writer.writeCharacters("All indicator observations in RDF/XML format. "
+                + "A simple query that returns observations as triples in RDF/XML format.");
         writer.writeEndElement();
-        lastModificationDate = getLastModificationDateString(codelistsDownloadUrl);
-        if (StringUtils.isNotBlank(lastModificationDate)) {
-            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
-            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                    "http://www.w3.org/2001/XMLSchema#dateTime");
-            writer.writeCharacters(lastModificationDate);
-            writer.writeEndElement();
-        }
         writer.writeEndElement();
 
-        // Write dcat:distribution for the DSD download link.
+        // Write dcat:distribution for the SPARQL endpoint.
         writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
         writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
         writer.writeStartElement(Namespace.DCT.getUri(), "title");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("RDF download of the Data Structrue Definition.");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                "http://www.w3.org/2001/XMLSchema#anyURI");
-        writer.writeCharacters(dsdDownloadUrl);
-        writer.writeEndElement();
-        writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
-        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
-                "http://www.w3.org/TR/vocab-dcat#Download");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "distributionFormat");
-        writer.writeCharacters("application/rdf+xml");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.DCT.getUri(), "description");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("RDF/XML formatted download of the Data Structrue Definition of this dataset.");
-        writer.writeEndElement();
-        lastModificationDate = getLastModificationDateString(codelistsDownloadUrl);
-        if (StringUtils.isNotBlank(lastModificationDate)) {
-            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
-            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
-                    "http://www.w3.org/2001/XMLSchema#dateTime");
-            writer.writeCharacters(lastModificationDate);
-            writer.writeEndElement();
-        }
-        writer.writeEndElement();
-
-        // Write dcat:distribution for the SPARQL endpoint
-        writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.DCT.getUri(), "title");
-        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("SPARQL endpoint of the dataset.");
+        writer.writeCharacters("SPARQL endpoint of the entire parent dataset.");
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
         writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
@@ -631,9 +517,72 @@ public class ODPDatasetsPacker {
         writer.writeEndElement();
         writer.writeStartElement(Namespace.DCT.getUri(), "description");
         writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
-        writer.writeCharacters("This SPARQL endpoint offers a public "
-                + "service to the statistical data allowing anyone to build applications based on the most recent data.");
+        writer.writeCharacters("SPARQL endpoint for querying and creating applications based on the most recent data.");
         writer.writeEndElement();
+        writer.writeEndElement();
+
+        // Write dcat:distribution for the CSV download link.
+        writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
+        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
+        writer.writeStartElement(Namespace.DCT.getUri(), "title");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("CSV download of the entire parent dataset.");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                "http://www.w3.org/2001/XMLSchema#anyURI");
+        writer.writeCharacters(csvDownloadUrl);
+        writer.writeEndElement();
+        writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
+                "http://www.w3.org/TR/vocab-dcat#Download");
+        writer.writeStartElement(Namespace.ECODP.getUri(), "distributionFormat");
+        writer.writeCharacters("text/csv");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "description");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("Zipped and CSV-formatted entire parent dataset: " + mainDstIdentifier);
+        writer.writeEndElement();
+        String lastModificationDate = getLastModificationDateString(csvDownloadUrl);
+        if (StringUtils.isNotBlank(lastModificationDate)) {
+            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
+            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                    "http://www.w3.org/2001/XMLSchema#dateTime");
+            writer.writeCharacters(lastModificationDate);
+            writer.writeEndElement();
+        }
+        writer.writeEndElement();
+
+        // Write dcat:distribution for the TTL download link.
+        writer.writeStartElement(Namespace.DCAT.getUri(), "distribution");
+        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
+        writer.writeStartElement(Namespace.DCT.getUri(), "title");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("N3/Turtle download of the entire parent dataset.");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCAT.getUri(), "accessURL");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                "http://www.w3.org/2001/XMLSchema#anyURI");
+        writer.writeCharacters(ttlDownloadUrl);
+        writer.writeEndElement();
+        writer.writeEmptyElement(Namespace.RDF.getUri(), "type");
+        writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "resource",
+                "http://www.w3.org/TR/vocab-dcat#Download");
+        writer.writeStartElement(Namespace.ECODP.getUri(), "distributionFormat");
+        writer.writeCharacters("text/n3");
+        writer.writeEndElement();
+        writer.writeStartElement(Namespace.DCT.getUri(), "description");
+        writer.writeAttribute(Namespace.XML.getPrefix(), Namespace.XML.getUri(), "lang", "en");
+        writer.writeCharacters("Zipped and N3-formatted entire parent dataset: " + mainDstIdentifier);
+        writer.writeEndElement();
+        lastModificationDate = getLastModificationDateString(ttlDownloadUrl);
+        if (StringUtils.isNotBlank(lastModificationDate)) {
+            writer.writeStartElement(Namespace.DCT.getUri(), "modified");
+            writer.writeAttribute(Namespace.RDF.getPrefix(), Namespace.RDF.getUri(), "datatype",
+                    "http://www.w3.org/2001/XMLSchema#dateTime");
+            writer.writeCharacters(lastModificationDate);
+            writer.writeEndElement();
+        }
         writer.writeEndElement();
 
         // Write reference areas.
@@ -701,8 +650,8 @@ public class ODPDatasetsPacker {
         // Write ecodp:datasetStatus
         writer.writeStartElement(Namespace.ECODP.getUri(), "datasetStatus");
         writer.writeEmptyElement(Namespace.SKOS.getUri(), "Concept");
-        writer.writeAttribute(Namespace.RDF.getUri(), "about", StringUtils.replace(datasetStatus,
-                "http://purl.org/adms/status/", "http://open-data.europa.eu/kos/dataset-status/"));
+        writer.writeAttribute(Namespace.RDF.getUri(), "about", StringUtils.replace(datasetStatus, "http://purl.org/adms/status/",
+                "http://open-data.europa.eu/kos/dataset-status/"));
         writer.writeEndElement();
 
         // Write dct:language
@@ -717,15 +666,16 @@ public class ODPDatasetsPacker {
                 "http://open-data.europa.eu/kos/accrual-periodicity/other");
 
         // Write dct:temporal
-        writer.writeStartElement(Namespace.DCT.getUri(), "temporal");
-        writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
-        writer.writeStartElement(Namespace.ECODP.getUri(), "periodStart");
-        writer.writeCharacters("2001-01-01");
-        writer.writeEndElement();
-        writer.writeStartElement(Namespace.ECODP.getUri(), "periodEnd");
-        writer.writeCharacters("2013-12-31");
-        writer.writeEndElement();
-        writer.writeEndElement();
+        Integer earliestObservationYear = indicatorYears.get(uri);
+        if (earliestObservationYear != null && earliestObservationYear.intValue() > 0) {
+
+            writer.writeStartElement(Namespace.DCT.getUri(), "temporal");
+            writer.writeAttribute(Namespace.RDF.getUri(), "parseType", "Resource");
+            writer.writeStartElement(Namespace.ECODP.getUri(), "periodStart");
+            writer.writeCharacters(earliestObservationYear.toString());
+            writer.writeEndElement();
+            writer.writeEndElement();
+        }
 
         // End the dataset tag.
         writer.writeEndElement();
@@ -1009,5 +959,37 @@ public class ODPDatasetsPacker {
 
         Date date = urlLastModificationDates.get(url);
         return date == null ? null : XML_SCHEMA_DATETIME_FORMAT.format(date);
+    }
+
+    /**
+     *
+     * @param datasetUri
+     * @param indicatorUri
+     * @param mimeType
+     * @return
+     */
+    private String buildIndicatorObservationsDownloadUrl(String datasetUri, String indicatorUri, String mimeType) {
+
+        try {
+            String strQuery = null;
+            IndicatorObservationsQuery query = new IndicatorObservationsQuery(datasetUri, indicatorUri);
+            if ("text/csv".equals(mimeType)) {
+                strQuery = query.asSelect();
+            } else if ("application/rdf+xml".equals(mimeType)) {
+                strQuery = query.asConstruct();
+            }
+
+            StringBuilder sb = new StringBuilder(NATIVE_SPARQL_ENDPOINT_URL);
+            if (StringUtils.isNotBlank(strQuery)) {
+                sb.append("?query=").append(URLEncoder.encode(strQuery, "UTF-8"));
+                if (StringUtils.isNotBlank(mimeType)) {
+                    sb.append("&format=").append(URLEncoder.encode(mimeType, "UTF-8"));
+                }
+            }
+
+            return sb.toString();
+        } catch (UnsupportedEncodingException e) {
+            throw new CRRuntimeException(e.getMessage(), e);
+        }
     }
 }

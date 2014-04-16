@@ -58,10 +58,12 @@ import eionet.cr.web.util.ObservationFilter;
  */
 public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements ScoreboardSparqlDAO {
 
-    /** */
+    /** Static logger for this class. */
     private static final Logger LOGGER = Logger.getLogger(VirtuosoScoreboardSparqlDAO.class);
 
     // @formatter:off
+
+    /** The Constant GET_CODELISTS_SPARQL. */
     private static final String GET_CODELISTS_SPARQL = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "select\n" +
@@ -73,6 +75,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "}\n" +
             "group by ?uri order by ?uri";
 
+    /** The Constant GET_CODELIST_ITEMS_SPARQL. */
     private static final String GET_CODELIST_ITEMS_SPARQL = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "select\n" +
@@ -86,6 +89,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "group by ?uri\n" +
             "order by ?uri";
 
+    /** The Constant EXPORT_CODELIST_ITEMS_SPARQL. */
     private static final String EXPORT_CODELIST_ITEMS_SPARQL = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "PREFIX prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
@@ -101,6 +105,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "}\n" +
             "order by ?s ?p";
 
+    /** The Constant GET_SUBJECTS_WITH_PROPERTY_SPARQL. */
     private static final String GET_SUBJECTS_WITH_PROPERTY_SPARQL = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "PREFIX dct: <http://purl.org/dc/terms/>\n" +
@@ -113,6 +118,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  filter (bound(?propValue))\n" +
             "}";
 
+    /** The Constant GET_NOGROUP_MEMBERSHIPS. */
     private static final String GET_NOGROUP_MEMBERSHIPS = "" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
             "select ?y where {\n" +
@@ -121,6 +127,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  filter (?groupUri = ?groupUriValue)\n" +
             "}";
 
+    /** The Constant DELETE_INVALID_CODELIST_GROUP_MEMBERSHIPS. */
     private static final String DELETE_INVALID_CODELIST_GROUP_MEMBERSHIPS = "" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
             "DELETE {\n" +
@@ -137,6 +144,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  }\n" +
             "}";
 
+    /** The Constant DELETE_DATASET_STATUS. */
     private static final String DELETE_DATASET_STATUS = "" +
             "PREFIX adms: <http://www.w3.org/ns/adms#>\n" +
             "DELETE {\n" +
@@ -150,12 +158,14 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "  }\n" +
             "}";
 
+    /** The Constant INSERT_DATASET_STATUS. */
     private static final String INSERT_DATASET_STATUS = "" +
             "PREFIX adms: <http://www.w3.org/ns/adms#>\n" +
             "INSERT DATA INTO GRAPH <DATASET_URI> {\n" +
             "  <DATASET_URI> adms:status <STATUS_URI>\n" +
             "}";
 
+    /** The Constant INDICATORS_FOR_ODP_ZIPPING. */
     private static final String INDICATORS_FOR_ODP_ZIPPING = "" +
             "PREFIX dcterms: <http://purl.org/dc/terms/>\n" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
@@ -173,6 +183,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "group by ?uri\n" +
             "order by ?uri";
 
+    /** The Constant GET_DISTINCT_USED_REF_AREAS. */
     private static final String GET_DISTINCT_USED_REF_AREAS = "" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
@@ -186,6 +197,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "}\n" +
             "ORDER BY ?refArea";
 
+    /** The Constant GET_INDICATOR_SOURCES_USED_IN_DATASET. */
     private static final String GET_INDICATOR_SOURCES_USED_IN_DATASET = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
@@ -206,6 +218,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "group by ?uri\n" +
             "order by ?uri";
 
+    /** The Constant INDICATORS_FOR_ODP_ZIPPING2. */
     private static final String INDICATORS_FOR_ODP_ZIPPING2 = "" +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
@@ -227,6 +240,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "group by ?uri\n" +
             "order by ?uri";
 
+    /** The Constant GET_DISTINCT_DATASET_URIS. */
     private static final String GET_DISTINCT_DATASET_URIS = "" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
             "select distinct ?datasetUri where {\n" +
@@ -234,6 +248,7 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "}\n" +
             "order by ?datasetUri";
 
+    /** The Constant DELETE_OBSERVATIONS_OF_INDICATOR_AND_TIME. */
     private static final String DELETE_OBSERVATIONS_OF_INDICATOR_AND_TIME = "" +
             "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
             "PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
@@ -250,6 +265,20 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             "    @TIME_PERIOD_FILTER@\n" +
             "  }\n" +
             "}";
+
+    /** The Constant GET_EARLIEST_OBSERVATION_BY_INDICATOR_AND_DATASET. */
+    private static final String GET_EARLIEST_OBSERVATION_BY_INDICATOR_AND_DATASET = "" +
+            "PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>\n" +
+    		"PREFIX cube: <http://purl.org/linked-data/cube#>\n" +
+    		"\n" +
+    		"select \n" +
+    		"   min(bif:left(bif:subseq(str(?time), bif:strrchr(bif:replace(str(?time), '/', '#'), '#') + 1), 4)) as ?minTime \n" +
+    		"where {\n" +
+    		"   ?s a cube:Observation .\n" +
+    		"   ?s cube:dataSet <@datasetUri@> .\n" +
+    		"   ?s dad-prop:indicator <@indicatorUri@> .\n" +
+    		"   ?s dad-prop:time-period ?time\n" +
+    		"}";
 
     // @formatter:on
 
@@ -1001,5 +1030,25 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             SQLUtil.close(sqlConn);
             SesameUtil.close(repoConn);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see eionet.cr.dao.ScoreboardSparqlDAO#getEarliestObservationDate(java.lang.String, java.lang.String)
+     */
+    @Override
+    public int getEarliestObservationYear(String indicatorUri, String datasetUri) throws DAOException {
+
+        if (StringUtils.isBlank(indicatorUri) || StringUtils.isBlank(datasetUri)) {
+            throw new IllegalArgumentException("URIs of indicator and dataset must not be blank!");
+        }
+
+        String sparql = GET_EARLIEST_OBSERVATION_BY_INDICATOR_AND_DATASET.replace("@indicatorUri@", indicatorUri);
+        sparql = sparql.replace("@datasetUri@", datasetUri);
+
+        String value = executeUniqueResultSPARQL(sparql, new SingleObjectReader<String>());
+        int result = NumberUtils.toInt(value, 0);
+        return result;
     }
 }

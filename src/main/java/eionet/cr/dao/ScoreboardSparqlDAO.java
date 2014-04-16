@@ -250,4 +250,14 @@ public interface ScoreboardSparqlDAO extends DAO {
     Pair<Integer, String>
             deleteObservations(String datasetUri, Collection<String> indicatorUris, Collection<String> timePeriodUris)
                     throws DAOException;
+
+    /**
+     * Returns earliest observation year of the given indicator in the given dataset.
+     *
+     * @param indicatorUri The indicator URI.
+     * @param datasetUri The dataset URI.
+     * @return Year of the earliest observation. Returns 0 if the year could not be determined.
+     * @throws DAOException Any sort of exception that happens is wrapped into this one.
+     */
+    int getEarliestObservationYear(String indicatorUri, String datasetUri) throws DAOException;
 }

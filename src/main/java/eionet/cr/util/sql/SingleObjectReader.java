@@ -66,19 +66,23 @@ public class SingleObjectReader<T> extends ResultSetMixedReader<T> {
             if (binding != null) {
 
                 Value value = binding.getValue();
-                String stringValue = value.stringValue();
-                if (!StringUtils.isBlank(stringValue)) {
+                if (value != null) {
+                    String stringValue = value.stringValue();
+                    if (!StringUtils.isBlank(stringValue)) {
 
-                    if (value instanceof BNode) {
-                        if (blankNodeUriPrefix != null && !stringValue.startsWith(blankNodeUriPrefix)) {
-                            stringValue = blankNodeUriPrefix + stringValue;
+                        if (value instanceof BNode) {
+                            if (blankNodeUriPrefix != null && !stringValue.startsWith(blankNodeUriPrefix)) {
+                                stringValue = blankNodeUriPrefix + stringValue;
+                            }
+                        }
+
+                        if (stringValue != null) {
+                            // this casting is done because of the generilization in the interface
+                            resultList.add((T) stringValue);
                         }
                     }
-
-                    if (stringValue != null) {
-                        // this casting is done because of the generilization in the interface
-                        resultList.add((T) stringValue);
-                    }
+                } else {
+                    resultList.add((T) null);
                 }
             }
         }
