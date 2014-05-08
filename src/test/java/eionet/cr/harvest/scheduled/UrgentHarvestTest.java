@@ -60,9 +60,9 @@ public class UrgentHarvestTest extends CRDatabaseTestCase {
         DAOFactory.get().getDao(UrgentHarvestQueueDAO.class).removeUrl(url);
         UrgentHarvestQueue.addPullHarvest(url, "enriko");
 
-        assertTrue(UrgentHarvestQueue.isInQueue(url));
+        assertTrue("Expected this URL in harvest queue: " + url, UrgentHarvestQueue.isInQueue(url));
         UrgentHarvestQueue.poll();
         Thread.sleep(1000);
-        assertFalse(UrgentHarvestQueue.isInQueue(url));
+        assertFalse("Didn't expect this URL in harvest queue: " + url, UrgentHarvestQueue.isInQueue(url));
     }
 }
