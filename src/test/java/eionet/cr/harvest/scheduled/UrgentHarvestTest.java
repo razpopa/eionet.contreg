@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import eionet.cr.dao.DAOFactory;
 import eionet.cr.dao.UrgentHarvestQueueDAO;
+import eionet.cr.dto.UrgentHarvestQueueItemDTO;
 import eionet.cr.test.helpers.CRDatabaseTestCase;
 
 /**
@@ -57,12 +58,18 @@ public class UrgentHarvestTest extends CRDatabaseTestCase {
 
         String url = "http://www.google.com/öö";
 
-        DAOFactory.get().getDao(UrgentHarvestQueueDAO.class).removeUrl(url);
-        UrgentHarvestQueue.addPullHarvest(url, "enriko");
-
-        assertTrue("Expected this URL in harvest queue: " + url, UrgentHarvestQueue.isInQueue(url));
-        UrgentHarvestQueue.poll();
-        Thread.sleep(1000);
+        UrgentHarvestQueueDAO dao = DAOFactory.get().getDao(UrgentHarvestQueueDAO.class);
+        dao.removeUrl(url);
         assertFalse("Didn't expect this URL in harvest queue: " + url, UrgentHarvestQueue.isInQueue(url));
+
+        UrgentHarvestQueue.addPullHarvest(url, "enriko");
+        assertTrue("Expected this URL in harvest queue: " + url, UrgentHarvestQueue.isInQueue(url));
+
+        UrgentHarvestQueueItemDTO dto = UrgentHarvestQueue.poll();
+        assertNotNull("Expected non-null poll result", dto);
+        assertTrue("Expected poll-result to have this URL: " + url, url.equals(dto.getUrl()));
+
+        Thread.sleep(1000);
+        assertFalse("Didn't expect this URL in harvest queue any more: " + url, UrgentHarvestQueue.isInQueue(url));
     }
 }
