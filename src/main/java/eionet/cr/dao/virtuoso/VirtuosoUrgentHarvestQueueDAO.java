@@ -56,7 +56,8 @@ public class VirtuosoUrgentHarvestQueueDAO extends VirtuosoBaseDAO implements Ur
     /** */
     private static final String PEEK_SQL = "select top 1 * from URGENT_HARVEST_QUEUE order by \"TIMESTAMP\" asc";
     /** */
-    private static final String DELETE_QUEUE_ITEM_SQL = "delete from URGENT_HARVEST_QUEUE where URL=? and \"TIMESTAMP\"=?";
+    private static final String DELETE_QUEUE_ITEM_SQL = "delete from URGENT_HARVEST_QUEUE "
+            + "where URL=? and datediff('second', \"TIMESTAMP\", ?) = 0";
 
     /** SQL for removing occurrences of a given URL from urgent harvest queue table. */
     private static final String REMOVE_URL_SQL = "delete from URGENT_HARVEST_QUEUE where URL=?";
@@ -66,6 +67,7 @@ public class VirtuosoUrgentHarvestQueueDAO extends VirtuosoBaseDAO implements Ur
 
     /*
      * (non-Javadoc)
+     *
      * @see eionet.cr.dao.UrgentHarvestQueueDAO#addPullHarvests(java.util.List, java.lang.String)
      */
     @Override
