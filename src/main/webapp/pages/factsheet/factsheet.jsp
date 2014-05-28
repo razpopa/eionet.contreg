@@ -66,7 +66,7 @@
                             modal: true,
                             closeOnEscape: true
                         });
-                        
+
                         // Actions for the display/closing of the "Change dataset status" popup
                         $("#changeDatasetStatusLink").click(function() {
                             $('#changeDatasetStatusDialog').dialog('option','width', 800);
@@ -138,7 +138,7 @@
                                                 <a id="wait_link" href="${oldUrl}" onclick="javascript:loadAndWait('The resource is being harvested. Please wait ...', '${url}', '${pageContext.request.contextPath}'); return false;">Harvest</a>
                                             </li>
                                         </c:if>
-                                        <c:if test="${uriIsDataCubeDataset}">
+                                        <c:if test="${editAllowed && uriIsDataCubeDataset}">
                                             <li>
                                                 <a href="#" id="changeDatasetStatusLink" title="Change the dataset status (i.e. Completed, Under development, etc)">Change status</a>
                                             </li>
@@ -372,13 +372,13 @@
                 <div>&nbsp;</div>
             </c:otherwise>
         </c:choose>
-        
+
         <%-- The "Change dataset status" popup, relevant for the factsheets of DataCube datasets only. Displayed when user clicks on the relevant popup link. --%>
 
         <div id="changeDatasetStatusDialog" title="Change dataset status">
-        
+
             <c:set var="currentDatasetStatus" value="${actionBean.subject.predicates['http://www.w3.org/ns/adms#status'][0].value}"/>
-        
+
             <stripes:form beanclass="${actionBean.class.name}" method="post">
 
                 <table>
@@ -411,7 +411,7 @@
                         </td>
                     </tr>
                 </table>
-                
+
                 <fieldset style="display:none">
                     <stripes:hidden name="uri"/>
                 </fieldset>
