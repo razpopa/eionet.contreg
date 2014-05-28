@@ -367,11 +367,11 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
         List<String> subjectTypes =
                 executeSPARQL("select distinct ?type where {?subjectUri a ?type}", bindings, new SingleObjectReader<String>());
 
+        // Get DublinCore attributes.
         ObjectLabelReader reader = new ObjectLabelReader(true);
         executeSPARQL(PROPS_DUBLINCORE_QUERY, reader);
 
-        /* get the properties for given subject types */
-        // TODO - actually it is a static set based on DC properties
+        // Get the properties for given subject types.
         if (subjectUri != null && !subjectUri.isEmpty()) {
 
             bindings = new Bindings();
@@ -380,10 +380,6 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
                     "PREFIX rdfs: <" + Namespace.RDFS.getUri() + "> "
                             + "select distinct ?object ?label WHERE { ?object rdfs:label ?label . ?object rdfs:domain ?o "
                             + ". FILTER (?o IN (" + subjectTypesCSV + "))}";
-
-            // PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> select
-            // distinct ?object ?label WHERE { ?object rdfs:label ?label . ?object rdfs:domain ?o .
-            // FILTER (?o IN (<http://www.eea.europa.eu/portal_types/Article#Article>))}
             executeSPARQL(sparql, bindings, reader);
         }
 

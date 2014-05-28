@@ -20,12 +20,15 @@
  */
 package eionet.cr.web.action.factsheet;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +47,7 @@ import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -92,6 +96,9 @@ import eionet.cr.web.util.tabs.TabId;
  */
 @UrlBinding("/factsheet.action")
 public class FactsheetActionBean extends AbstractActionBean {
+
+    /** Name of the resource file containing the list of fully editable types. */
+    private static final String FULLY_EDITABLE_TYPES_FILE_NAME = "fully-editable-types.txt";
 
     /** */
     private static final Logger LOGGER = Logger.getLogger(FactsheetActionBean.class);
@@ -493,6 +500,7 @@ public class FactsheetActionBean extends AbstractActionBean {
      * @return
      * @throws DAOException
      */
+    @SuppressWarnings("unchecked")
     public List<HTMLSelectOption> getAddibleProperties() throws DAOException {
 
         String sessionAttrName = ADDBL_PROPS_SESSION_ATTR_PREFIX + uri;
@@ -1098,29 +1106,23 @@ public class FactsheetActionBean extends AbstractActionBean {
      */
     private static Set<String> createEditableTypes() {
 
-        HashSet<String> set = new HashSet<String>();
-        set.add("http://purl.org/linked-data/cube#AttributeProperty");
-        set.add("http://purl.org/linked-data/cube#CodedProperty");
-        set.add("http://purl.org/linked-data/cube#ComponentSpecification");
-        set.add("http://purl.org/linked-data/cube#DataStructureDefinition");
-        set.add("http://purl.org/linked-data/cube#DimensionProperty");
-        set.add("http://purl.org/linked-data/sdmx#Concept");
-        set.add("http://purl.org/linked-data/sdmx#ConceptRole");
-        set.add("http://purl.org/linked-data/sdmx#DataStructureDefinition");
-        set.add("http://purl.org/linked-data/sdmx#IdentityRole");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/DimensionGroupProperty");
-        set.add("http://www.w3.org/1999/02/22-rdf-syntax-ns#Property");
-        set.add("http://www.w3.org/2000/01/rdf-schema#Class");
-        set.add("http://www.w3.org/2004/02/skos/core#Concept");
-        set.add("http://www.w3.org/2004/02/skos/core#ConceptScheme");
-        set.add("http://www.w3.org/ns/dcat#WebService");
-        set.add("http://purl.org/linked-data/cube#DataSet");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/IndicatorGroup");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/Indicator");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/BreakdownGroup");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/Breakdown");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/UnitMeasure");
-        set.add("http://semantic.digital-agenda-data.eu/def/class/Source");
-        return set;
+        LinkedHashSet<String> result = new LinkedHashSet<String>();
+
+        InputStream inputStream = null;
+        try {
+            inputStream = FactsheetActionBean.class.getClassLoader().getResourceAsStream(FULLY_EDITABLE_TYPES_FILE_NAME);
+            List<String> lines = IOUtils.readLines(inputStream, "UTF-8");
+            for (String line : lines) {
+                result.add(line.trim());
+            }
+        } catch (IOException e) {
+            LOGGER.error("Failed reading lines from " + FULLY_EDITABLE_TYPES_FILE_NAME, e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
+        LOGGER.debug("Found these fully editable types: " + result);
+
+        return result;
     }
 }
