@@ -530,6 +530,8 @@ public class VirtuosoScoreboardSparqlDAO extends VirtuosoBaseDAO implements Scor
             date = new Date();
         }
 
+        LOGGER.debug("Setting dcterms:modified of <" + subjectUri + "> in graph <" + graphUri + "> to this value: " + date);
+
         RepositoryConnection repoConn = null;
         try {
             repoConn = SesameUtil.getRepositoryConnection();
