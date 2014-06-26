@@ -1,3 +1,4 @@
+http://purl.org/linked-data/cube#Observation
 http://purl.org/linked-data/cube#AttributeProperty
 http://purl.org/linked-data/cube#CodedProperty
 http://purl.org/linked-data/cube#ComponentSpecification
