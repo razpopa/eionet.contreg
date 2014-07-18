@@ -980,16 +980,19 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
     @Override
     public void deleteTriples(Collection<TripleDTO> triples) throws DAOException {
 
-        RepositoryConnection conn = null;
+        Connection sqlConn = null;
+        RepositoryConnection repoConn = null;
         try {
-            conn = SesameUtil.getRepositoryConnection();
+            sqlConn = SesameUtil.getSQLConnection();
+            repoConn = SesameUtil.getRepositoryConnection();
             for (TripleDTO triple : triples) {
-                deleteTriple(triple, conn);
+                deleteTriple(triple, sqlConn, repoConn);
             }
-        } catch (RepositoryException e) {
+        } catch (Exception e) {
             throw new DAOException(e.toString(), e);
         } finally {
-            SesameUtil.close(conn);
+            SQLUtil.close(sqlConn);
+            SesameUtil.close(repoConn);
         }
     }
 
@@ -1000,47 +1003,66 @@ public class VirtuosoHelperDAO extends VirtuosoBaseDAO implements HelperDAO {
      */
     @Override
     public void deleteTriple(TripleDTO triple) throws DAOException {
-        RepositoryConnection conn = null;
+
+        Connection sqlConn = null;
+        RepositoryConnection repoConn = null;
         try {
-            conn = SesameUtil.getRepositoryConnection();
-            deleteTriple(triple, conn);
-        } catch (RepositoryException e) {
+            sqlConn = SesameUtil.getSQLConnection();
+            repoConn = SesameUtil.getRepositoryConnection();
+            deleteTriple(triple, sqlConn, repoConn);
+        } catch (Exception e) {
             throw new DAOException(e.toString(), e);
         } finally {
-            SesameUtil.close(conn);
+            SQLUtil.close(sqlConn);
+            SesameUtil.close(repoConn);
         }
     }
 
     /**
-     * Deletes the triple from the store.
+     * Deletes a given triple, using SPARUL.
+     * The triple is identified by its graph (i.e. source), subject, predicate and object's string representation.
+     * The latter means that if you delete a triple whose object string is "11", then it will also delete the triple where
+     * that data type is xsd:integer and value is 11!
      *
-     * @param triple
-     *            Triple object to be deleted
-     * @param conn
-     *            current Virtuoso connextion
-     * @throws RepositoryException
-     *             if delete fails
+     * @param triple The triple object.
+     * @param sqlConn The SQL connection against which the SPARUL statement will be executed.
+     * @param repoConn The repository connection whose value factory will be used to validate subj-pred-obj-graph values.
+     * @throws RepositoryException If any sort of repository error happens.
+     * @throws SQLException If any sort of SQL error happens.
      */
-    private void deleteTriple(TripleDTO triple, RepositoryConnection conn) throws RepositoryException {
+    private void deleteTriple(TripleDTO triple, Connection sqlConn, RepositoryConnection repoConn) throws RepositoryException,
+            SQLException {
 
-        URI sub = conn.getValueFactory().createURI(triple.getSubjectUri());
-        URI pred = triple.getPredicateUri() == null ? null : conn.getValueFactory().createURI(triple.getPredicateUri());
-        URI source = conn.getValueFactory().createURI(triple.getSourceUri());
-        String strObject = triple.getObject();
+        ValueFactory vf = repoConn.getValueFactory();
+        URI subject = vf.createURI(triple.getSubjectUri());
+        URI predicate = triple.getPredicateUri() == null ? null : vf.createURI(triple.getPredicateUri());
+        URI graph = vf.createURI(triple.getSourceUri());
 
-        if (triple.isLiteralObject()) {
+        String objectString = triple.getObject();
+        Literal object = objectString == null ? null : vf.createLiteral(objectString);
 
-            Literal literalObject = null;
-            if (strObject != null) {
-                literalObject = conn.getValueFactory().createLiteral(strObject);
-            }
-            conn.remove(sub, pred, literalObject, source);
-        } else {
-            URI object = null;
-            if (strObject != null) {
-                object = conn.getValueFactory().createURI(triple.getObject());
-            }
-            conn.remove(sub, pred, object, source);
+        StringBuilder sb = new StringBuilder();
+        sb.append("sparql \n");
+        sb.append("delete from <" + graph.stringValue() + "> {\n");
+        sb.append("   ?s ?p ?o\n");
+        sb.append("}\n");
+        sb.append("where {\n");
+        sb.append("   ?s ?p ?o\n");
+        sb.append("   filter (?s = <" + subject.stringValue() + ">)\n");
+        if (predicate != null) {
+            sb.append("   filter (?p = <" + predicate.stringValue() + ">)\n");
+        }
+        if (object != null) {
+            sb.append("   filter (str(?o) = \"" + object.stringValue() + "\")");
+        }
+        sb.append("}");
+
+        java.sql.Statement stmt = null;
+        try {
+            stmt = sqlConn.createStatement();
+            stmt.executeUpdate(sb.toString());
+        } finally {
+            SQLUtil.close(stmt);
         }
     }
 
