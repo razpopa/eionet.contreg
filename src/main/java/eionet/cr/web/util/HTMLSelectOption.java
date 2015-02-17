@@ -1,5 +1,7 @@
 package eionet.cr.web.util;
 
+import eionet.cr.util.URIUtil;
+
 /**
  * Helper bean for representing options of an HTML <select>.
  *
@@ -79,5 +81,15 @@ public class HTMLSelectOption {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     *
+     * @param uri
+     * @param defaultLabel
+     * @return
+     */
+    public static HTMLSelectOption createFromUri(String uri, String defaultLabel) {
+        return new HTMLSelectOption(uri, URIUtil.extractURILabel(uri, defaultLabel));
     }
 }

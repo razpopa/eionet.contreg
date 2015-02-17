@@ -1170,6 +1170,16 @@ public class FactsheetActionBean extends AbstractActionBean {
         option = new HTMLSelectOption(Predicates.DCTERMS_SUBJECT, "Subject");
         result.add(option);
 
+        option = new HTMLSelectOption(Predicates.RDFS_DOMAIN, "rdfs:domain");
+        result.add(option);
+
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_ALT_LABEL, "altLabel"));
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_PREF_LABEL, "prefLabel"));
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_NOTATION, "notation"));
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_NOTES, "notes"));
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_DEFINITION, "definition"));
+        result.add(HTMLSelectOption.createFromUri(Predicates.SKOS_HAS_TOP_CONCEPT, "hasTopConcept"));
+
         return result;
     }
 

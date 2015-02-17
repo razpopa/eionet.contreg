@@ -101,7 +101,7 @@ public class VirtuosoHandler implements MSAccessImportHandlerIF {
         String tableName = table.getName();
         try {
             if (prevTableName == null || !tableName.equals(prevTableName)) {
-                if (stmtCounter > 0) {
+                if (stmtCounter > 0 && currRowInsertStmt != null) {
                     currRowInsertStmt.executeBatch();
                 }
                 SQLUtil.close(currRowInsertStmt);
