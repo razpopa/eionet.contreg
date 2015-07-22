@@ -546,7 +546,7 @@ public class PullHarvest extends BaseHarvest {
 
         // update context source DTO (since the server returned unauthorized status
         // the number of harvested statements stays as it already is, i.e. we're not setting it)
-        getContextSourceDTO().setLastHarvest(new Date());
+        getContextSourceDTO().setLastHarvest(lastHarvest);
         getContextSourceDTO().setLastHarvestFailed(true);
         getContextSourceDTO().setPermanentError(false);
         getContextSourceDTO().setCountUnavail(countUnavail);
