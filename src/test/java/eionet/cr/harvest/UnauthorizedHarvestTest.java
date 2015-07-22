@@ -92,8 +92,8 @@ public class UnauthorizedHarvestTest extends CRDatabaseTestCase {
             harvest = new PullHarvest(url);
             harvest.execute();
 
-            // Assert that the harvest went fine and no triples were harvested.
-            assertTrue("Expected this URL to be available: " + url, harvest.isSourceAvailable());
+            // Assert that the harvest was unauthorized and no triples were harvested.
+            assertTrue("Expected this URL to be unavailable: " + url, !harvest.isSourceAvailable());
             assertEquals("Unexpected number of harvested triples", 0, harvest.getStoredTriplesCount());
             source = harvestSourceDao.getHarvestSourceByUrl(url);
             assertNotNull("Expected a stored harvest source for this URL: " + url, source);

@@ -273,7 +273,7 @@ public class PullHarvest extends BaseHarvest {
                         }
                     } else if (isUnauthorized(httpResponseCode)) {
                         LOGGER.debug(loggerMsg("Source unauthorized!"));
-                        finishWithUnauthorized();
+                        finishWithUnauthorized(httpResponseCode, responseMessage);
                         return;
                     } else if (isError(httpResponseCode)) {
                         LOGGER.debug(loggerMsg("Server returned error code " + httpResponseCode));
@@ -422,7 +422,7 @@ public class PullHarvest extends BaseHarvest {
 
             } else if (isUnauthorized(httpResponseCode)) {
                 LOGGER.debug(loggerMsg("Source unauthorized!"));
-                finishWithUnauthorized();
+                finishWithUnauthorized(httpResponseCode, responseMessage);
 
             } else if (isError(httpResponseCode)) {
                 LOGGER.debug(loggerMsg("Server returned error code " + httpResponseCode));
@@ -531,23 +531,38 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Helper method for taking actions in case of "unauthorized" response from source.
      */
-    private void finishWithUnauthorized() {
+    private void finishWithUnauthorized(int responseCode, String responseMessage) {
 
-        addHarvestMessage("Source unauthorized", HarvestMessageType.INFO);
-        isSourceAvailable = true;
+        addHarvestMessage("Server returned error: " + responseMessage + " (HTTP response code: " + responseCode + ")",
+                HarvestMessageType.ERROR);
 
-        // update context source DTO (since the server returned source-not-modified,
+        boolean sourceNotAvailable = isUnauthorized(responseCode);
+        // if source was not available, the new unavailability-count is increased by one, otherwise reset
+        int countUnavail = sourceNotAvailable ? getContextSourceDTO().getCountUnavail() + 1 : 0;
+
+
+        // set last harvest date now
+        Date lastHarvest = new Date();
+
+        // update context source DTO (since the server returned unauthorized status
         // the number of harvested statements stays as it already is, i.e. we're not setting it)
         getContextSourceDTO().setLastHarvest(new Date());
-        getContextSourceDTO().setLastHarvestFailed(false);
+        getContextSourceDTO().setLastHarvestFailed(true);
         getContextSourceDTO().setPermanentError(false);
-        getContextSourceDTO().setCountUnavail(0);
+        getContextSourceDTO().setCountUnavail(countUnavail);
 
+        // save same error parameters to parent sources where this source was redirected from
+        handleRedirectedHarvestDTOs(lastHarvest, responseCode, sourceNotAvailable);
+
+        // clean all previously harvested content of this source
         setClearTriplesInHarvestFinish(true);
         LOGGER.debug("Old harvested content will be removed, because of source unauthorized error!");
 
-        setCleanAllPreviousSourceMetadata(false);
+        // since the server returned unauthorized status, clean previously harvested metadata of this source
+        // and add the cr:lastRefreshed
+        setCleanAllPreviousSourceMetadata(true);
         addSourceMetadata(Predicates.CR_LAST_REFRESHED, ObjectDTO.createLiteral(formatDate(new Date()), XMLSchema.DATETIME));
+
     }
 
     /**
@@ -1082,7 +1097,7 @@ public class PullHarvest extends BaseHarvest {
     /**
      * Returns RDF format from url connection.
      *
-     * @param contentType
+     * @param urlConn
      * @return
      */
     private RDFFormat getRdfFormat(HttpURLConnection urlConn) {
